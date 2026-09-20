@@ -40,6 +40,14 @@ export default function Contact() {
               {site.supportEmail}
             </a>
           </p>
+          <p className="mt-2 font-mono text-[11px] uppercase tracking-wide">
+            <a
+              href={site.phoneHref}
+              className="underline decoration-line2 underline-offset-2 hover:text-ink"
+            >
+              {site.phone}
+            </a>
+          </p>
         </Card>
         <Card title="Support">
           <p>
@@ -52,6 +60,14 @@ export default function Contact() {
               className="underline decoration-line2 underline-offset-2 hover:text-ink"
             >
               {site.supportEmail}
+            </a>
+          </p>
+          <p className="mt-2 font-mono text-[11px] uppercase tracking-wide">
+            <a
+              href={site.phoneHref}
+              className="underline decoration-line2 underline-offset-2 hover:text-ink"
+            >
+              {site.phone}
             </a>
           </p>
         </Card>

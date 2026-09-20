@@ -20,6 +20,13 @@ export default function Support() {
             className="underline decoration-line2 underline-offset-2 hover:text-ink"
           >
             {site.supportEmail}
+          </a>{" "}
+          or call{" "}
+          <a
+            href={site.phoneHref}
+            className="underline decoration-line2 underline-offset-2 hover:text-ink"
+          >
+            {site.phone}
           </a>
           . We answer within one business day and sooner on trading days.
           Inside BAI, the Help panel attaches a diagnostic bundle that never
@@ -125,12 +132,15 @@ export default function Support() {
           Outside the United States? Payroll, websites, and BAI are US-only at
           launch. ConnectionLoop is available where its stores are.
         </p>
-        <div className="mt-8">
+        <div className="mt-8 flex flex-wrap gap-3">
           <GhostLink
             href={`mailto:${site.supportEmail}`}
             external
           >
             Email support
+          </GhostLink>
+          <GhostLink href={site.phoneHref} small external>
+            Call {site.phone}
           </GhostLink>
         </div>
       </section>

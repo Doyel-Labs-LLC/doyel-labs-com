@@ -145,3 +145,28 @@ Pages via `output: 'export'`, with `_headers` carrying CSP + HSTS and
 `_redirects` carrying the legacy `/download` and `/pricing` paths to
 `/programs/bai`. Any Netlify-only conveniences from the existing site
 (server functions, blob-backed forms) are not carried over.
+
+## Contact data on the site
+
+- Support email: `support@doyel-labs.com`.
+- Security disclosure email: `security@doyel-labs.com`.
+- Phone: `(813) 686-4559`. Rendered as a `tel:+18136864559` link
+  everywhere it appears (footer, `/contact`, `/support`, `/company`).
+
+## Analytics decision
+
+- **Plausible** (`plausible.io`) — approved. Cookieless, no personal
+  data, no session replay. Loaded via a single external `<script>` tag
+  (`https://plausible.io/js/script.outbound-links.js`) only when
+  `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` is set at build time. The CSP
+  `script-src` allows `https://plausible.io`. No `'unsafe-inline'` for
+  scripts.
+- **Microsoft Clarity** — refused. Clarity is session replay: it records
+  mouse movement, clicks, scroll, form values, and DOM snapshots. Adding
+  it would contradict the "no third-party marketing scripts / no session
+  recording" claim across `/security` and the payroll and BAI security
+  bands. It also requires `'unsafe-inline'` on `script-src` for its
+  loader. The decision to run Plausible-only is recorded in
+  `src/lib/site.ts` and `content/legal/privacy.md`.
+- Google Analytics, Meta Pixel, Hotjar, FullStory, LogRocket — refused
+  for the same reasons.

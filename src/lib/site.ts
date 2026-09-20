@@ -10,12 +10,31 @@ export const site = {
   city: "Casper, Wyoming",
   supportEmail: "support@doyel-labs.com",
   securityEmail: "security@doyel-labs.com",
+  // Human-readable and machine-callable forms. `phoneHref` is E.164 for
+  // `tel:` links; `phone` is the printed form.
+  phone: "(813) 686-4559",
+  phoneHref: "tel:+18136864559",
   // The BAI control plane. Only /status calls it, from the viewer's own
   // browser, so a Cloudflare Pages deploy needs no server piece.
   apiBase: (
     process.env.NEXT_PUBLIC_API_BASE ||
     "https://bai-control-plane-staging.fly.dev"
   ).replace(/\/$/, ""),
+};
+
+/**
+ * Analytics. Plausible-only, cookieless, no personal data, no session
+ * replay. Injected from a Cloudflare Pages env var at build time; if
+ * `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` is not set, the script never renders
+ * and no third-party network I/O occurs.
+ *
+ * Microsoft Clarity was considered and refused: it does session replay
+ * (mouse, clicks, form values, DOM snapshots), which contradicts the
+ * "no third-party marketing scripts on marketing pages" claim across
+ * `/security` and would require `'unsafe-inline'` in the CSP.
+ */
+export const analytics = {
+  plausibleDomain: process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || "",
 };
 
 /** Company-scale legal line — used in the footer of every page. */

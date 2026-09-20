@@ -78,6 +78,15 @@ export function Footer() {
           <span className="text-ink">
             {site.company} · {site.city}
           </span>
+          <a
+            href={`mailto:${site.supportEmail}`}
+            className="hover:text-ink"
+          >
+            {site.supportEmail}
+          </a>
+          <a href={site.phoneHref} className="hover:text-ink">
+            {site.phone}
+          </a>
           <span className="grow" />
           <Link href="/legal/terms/" className="hover:text-ink">
             Legal

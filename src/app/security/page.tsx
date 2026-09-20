@@ -88,9 +88,9 @@ const CONTROLS: { area: string; control: string; means: string }[] = [
   {
     area: "Web pages",
     control:
-      "Strict content-security policy on every page. HSTS. No third-party marketing scripts.",
+      "Strict content-security policy on every page. HSTS with preload. Frame-ancestors 'none'. Only Plausible (plausible.io) is allowed as a third-party script host; no session replay, no marketing pixels, no cookies.",
     means:
-      "An injected string on any of our pages renders as text and cannot run.",
+      "An injected string on any of our pages renders as text and cannot run. Analytics is coarse and cookieless.",
   },
   {
     area: "Logs",
@@ -163,11 +163,12 @@ const CONNECTIONLOOP_MAP = {
 const WEBSITES_MAP = {
   yes: [
     "Static HTML, CSS, JavaScript on Cloudflare Pages",
-    "Forms your operator wired to their own inbox (Formspree or similar)",
-    "Optional privacy-respecting analytics (Plausible) if the operator picked it",
+    "Plausible Analytics (plausible.io) — cookieless, no personal data — enabled per site",
+    "Forms your operator wired to their own inbox (Formspree or similar), if the site takes forms",
   ],
   no: [
-    "Marketing pixels the operator did not agree to install",
+    "Session-replay tools (Clarity, FullStory, Hotjar, LogRocket) — refused across the board",
+    "Google Analytics, Meta Pixel, or any advertising cookie",
     "Server-side runtime that Doyel Labs can push mutations to",
     "Personal data on Doyel Labs servers — visitor data goes to the operator's chosen tools",
   ],

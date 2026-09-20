@@ -53,6 +53,13 @@ export default function Company() {
             >
               {site.supportEmail}
             </a>{" "}
+            ·{" "}
+            <a
+              href={site.phoneHref}
+              className="underline decoration-line2 underline-offset-2 hover:text-ink"
+            >
+              {site.phone}
+            </a>{" "}
             · one-business-day SLA.
           </Card>
           <Card title="Security disclosure">
@@ -109,12 +116,22 @@ export default function Company() {
         </H2>
         <div className="mt-8 grid gap-4 md:grid-cols-3">
           <Card title="Support">
-            <a
-              href={`mailto:${site.supportEmail}`}
-              className="underline decoration-line2 underline-offset-2 hover:text-ink"
-            >
-              {site.supportEmail}
-            </a>
+            <p>
+              <a
+                href={`mailto:${site.supportEmail}`}
+                className="underline decoration-line2 underline-offset-2 hover:text-ink"
+              >
+                {site.supportEmail}
+              </a>
+            </p>
+            <p className="mt-2">
+              <a
+                href={site.phoneHref}
+                className="underline decoration-line2 underline-offset-2 hover:text-ink"
+              >
+                {site.phone}
+              </a>
+            </p>
           </Card>
           <Card title="Security">
             <a

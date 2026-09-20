@@ -77,10 +77,21 @@ npm run build           # static export to out/
 1. Push the repo to Git (see AUDIT.md — no remote is set at initial commit).
 2. In Cloudflare Pages, add the project pointing at the repo.
 3. Build command: `npm ci && npm run build`. Build output directory: `out`.
-4. Environment: `NEXT_PUBLIC_API_BASE` (optional, defaults to the staging
-   control plane).
+4. Environment variables:
+   - `NEXT_PUBLIC_API_BASE` — optional. Defaults to the staging BAI control
+     plane. `/status` pings this endpoint from the viewer's browser.
+   - `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` — optional. Set to the marketing domain
+     configured in Plausible (`doyel-labs.com`). If left empty, no analytics
+     script renders and marketing pages emit zero third-party network I/O.
 5. Point the custom domain `doyel-labs.com` at the Pages project. `_headers`
    and `_redirects` are read automatically from the `out/` folder.
+
+### Analytics posture
+
+Plausible Analytics only. Cookieless. No personal data. No session replay.
+No Google Analytics, no Meta Pixel, no Microsoft Clarity, no Hotjar. The
+decision is recorded in `src/lib/site.ts`, `content/legal/privacy.md`, and
+`AUDIT.md`.
 
 ## Adding a changelog entry
 

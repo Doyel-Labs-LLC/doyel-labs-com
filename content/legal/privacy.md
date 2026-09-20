@@ -57,8 +57,23 @@ status of your subscription and the last four digits of your card for support.
 
 Off by default in BAI. If you turn them on, they are scrubbed of anything that identifies you
 or your trading before they leave your computer. ConnectionLoop crash notes are scrubbed at
-the source and again on the server. The company website itself records no analytics on
-marketing pages; there are no third-party marketing scripts on `/` through `/programs/*`.
+the source and again on the server.
+
+## Analytics on this website
+
+`doyel-labs.com` uses **Plausible Analytics** (plausible.io), and only Plausible.
+
+- Plausible is cookieless: it sets no cookies on your device and stores no cross-session
+  identifier.
+- Plausible records page views, referrers, screen sizes, browsers, and coarse country from
+  your IP address (which is discarded after the request).
+- It does not record mouse movement, clicks inside forms, keystrokes, form values, page
+  content, or replay sessions.
+- It is not used for advertising, retargeting, or any cross-site profile.
+
+There are no other third-party marketing scripts on `/` through `/programs/*`. We do not use
+Google Analytics, Meta Pixel, Microsoft Clarity, Hotjar, FullStory, LogRocket, or any
+session-replay tool.
 
 ## Where
 
