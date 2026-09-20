@@ -1,0 +1,26 @@
+# Build output
+.next/
+out/
+next-env.d.ts
+
+# Deps
+node_modules/
+
+# Env — never commit
+.env
+.env.*
+!.env.example
+
+# OS / editors
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+.idea/
+.vscode/
+
+# TypeScript build artefacts
+*.tsbuildinfo
+
+# Local logs
+*.log

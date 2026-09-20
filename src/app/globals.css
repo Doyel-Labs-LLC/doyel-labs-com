@@ -1,0 +1,116 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: dark;
+  --m-fast: 160ms;
+  --m-base: 240ms;
+  --m-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+html,
+body {
+  background: #000000;
+  color: #f0f0fa;
+  font-feature-settings: "ss01", "tnum", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Selection uses the hairline so highlighted text keeps contrast on black. */
+::selection {
+  background: rgba(240, 240, 250, 0.24);
+  color: #ffffff;
+}
+
+/* Focus rings honour the same spectral off-white as body type. */
+:focus-visible {
+  outline: 2px solid rgba(240, 240, 250, 0.62);
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Wordmark is spaced small caps, not italic — SpaceX-analogue, not the
+ * previous BAI wordmark. */
+.wordmark {
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+}
+
+/* Legal / docs prose. Sentence case, generous leading, tabular numbers. */
+.prose-legal {
+  color: rgba(240, 240, 250, 0.72);
+}
+.prose-legal h1 {
+  color: #f0f0fa;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 1rem;
+}
+.prose-legal h2 {
+  color: #f0f0fa;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 2rem 0 0.5rem;
+}
+.prose-legal p,
+.prose-legal li {
+  line-height: 1.7;
+  margin: 0.7rem 0;
+  font-size: 15px;
+}
+.prose-legal ol {
+  padding-left: 1.4rem;
+  list-style: decimal;
+}
+.prose-legal ul {
+  padding-left: 1.4rem;
+  list-style: disc;
+}
+.prose-legal a {
+  color: #f0f0fa;
+  text-decoration: underline;
+  text-decoration-color: rgba(240, 240, 250, 0.35);
+  text-underline-offset: 3px;
+}
+.prose-legal a:hover {
+  text-decoration-color: #f0f0fa;
+}
+.prose-legal code {
+  font-family: "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+  font-size: 0.9em;
+  color: #f0f0fa;
+}
+.prose-legal strong {
+  color: #f0f0fa;
+}
+
+/* Product frame corner label */
+.frame-label {
+  font-family: "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(240, 240, 250, 0.44);
+}
+
+/* Thin scrollbars everywhere */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(240, 240, 250, 0.14) transparent;
+}
+
+/* Reduced motion — the site has minimal motion, but the hero and any
+ * looping frames respect this. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

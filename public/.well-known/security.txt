@@ -1,0 +1,5 @@
+Contact: mailto:security@doyel-labs.com
+Preferred-Languages: en
+Canonical: https://doyel-labs.com/.well-known/security.txt
+Policy: https://doyel-labs.com/security/
+Expires: 2027-12-31T23:59:59.000Z

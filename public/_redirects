@@ -1,0 +1,18 @@
+# Cloudflare Pages redirect table.
+#
+# The previous site was branded as "BAI by Doyel Labs" and had /download and
+# /pricing as top-level BAI-only surfaces. Both now belong on the BAI program
+# page. `/services` alone lands on the payroll product; both `/services/*`
+# and `/programs/*` live under the App Router.
+
+/download            /programs/bai/                 301
+/download/*          /programs/bai/                 301
+/pricing             /programs/bai/                 301
+/pricing/*           /programs/bai/                 301
+
+/community           /support/                      301
+/community/*         /support/                      301
+
+/early-access        /contact/                      301
+/reset               /support/                      301
+/verify              /support/                      301
