@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import {
+  AccentChip,
   Card,
   Eyebrow,
   GhostLink,
+  Grid2,
+  Grid3,
   H1,
   H2,
   Lead,
@@ -11,6 +14,7 @@ import {
   Page,
   StatusChip,
 } from "@/components/chrome";
+import { ContactWidget } from "@/components/contact-modal";
 import { BaiArmFrame } from "@/components/frames/bai-arm";
 import { BaiBookFrame } from "@/components/frames/bai-book";
 import { baiDisclaimer, programStatus, site } from "@/lib/site";
@@ -18,16 +22,9 @@ import { baiDisclaimer, programStatus, site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "BAI",
   description:
-    "BAI — a trading desk that runs on your own computer, at your own broker, under your own rules. In private testing; public availability no earlier than 2027.",
+    "BAI is a trading desk that runs on the operator's own computer, at their broker, under their rules. In private testing.",
 };
 
-/**
- * The BAI program page. Copy is ported from the existing site
- * `BAI-Desk/website/src/app/page.tsx`, compressed, with the primary
- * install / download CTA removed and replaced with a request-access
- * link to /contact. The full trading disclaimer is repeated in the
- * page's own band footer, not just the site footer.
- */
 export default function BaiProgram() {
   return (
     <Page
@@ -37,54 +34,51 @@ export default function BaiProgram() {
             {baiDisclaimer}
           </p>
           <MetaRow>
-            Source of truth · BAI-Desk/website/src/app/page.tsx · BAI-Desk/website/src/app/security/page.tsx
+            BAI is a Doyel Labs program. It is not the company.
           </MetaRow>
         </div>
       }
     >
       {/* HERO */}
-      <section className="pt-24">
+      <section className="hero-glow pt-24 md:pt-32">
         <Eyebrow>Programs · BAI</Eyebrow>
-        <H1>A trading desk that runs on your computer, at your broker, under your rules.</H1>
+        <H1>
+          A trading desk that runs on <span className="text-accent">your</span> computer.
+        </H1>
         <div className="mt-6">
           <StatusChip>{programStatus.bai.label}</StatusChip>
         </div>
         <Lead>
-          BAI is installed software, not a service that holds your money. It
-          connects to the brokerage account you already have, watches the names
-          you allow, and enters and manages trades only after you type the
-          phrase that arms it. You set the rules: which names, how much, the
-          stop and the target on every trade, the loss that stops the day. The
-          desk applies them without asking and shows you its whole record, wins
-          and losses, on its Book page.
+          BAI is installed software, not a service that holds your money.
+          It connects to the brokerage you already have, watches the names
+          you allow, and enters trades only after you type the phrase that
+          arms it. You set the rules; the desk applies them.
         </Lead>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <GhostLink href="/contact/">Request access</GhostLink>
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <ContactWidget label="Request access" />
           <GhostLink href="/security/" small>
             Security posture
           </GhostLink>
         </div>
         <p className="mt-6 font-mono text-[10px] uppercase tracking-wide text-muted">
-          Windows 10 and 11 · macOS later · United States only at launch
+          Windows 10 and 11 · macOS later · US-only at launch
         </p>
       </section>
 
-      {/* PROOF · Arm bar */}
+      {/* ARM BAR FRAME */}
       <section className="mt-24 border-t border-line pt-16">
         <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
           <div>
-            <Eyebrow>Three locks</Eyebrow>
+            <Eyebrow>The three locks</Eyebrow>
             <H2>
               <span className="mt-2 block">
                 Between a scan and an order.
               </span>
             </H2>
             <p className="mt-6 max-w-prose text-[16px] leading-[1.7] text-mute">
-              First lock: your broker. You connect your own account. Your
-              credentials and tokens stay on your computer in the operating
-              system's credential store. Second lock: the phrase. Allow live
-              orders once, arm the desk each session — typed by you, on the
-              machine. Third lock: one position, one exit. Every entry goes
+              Your broker credentials stay on your computer in the OS
+              credential store. You type a phrase to allow live orders on
+              this machine. You type Arm each session. Every entry ships
               with a stop and a target held at the broker.
             </p>
           </div>
@@ -92,35 +86,41 @@ export default function BaiProgram() {
         </div>
       </section>
 
-      {/* HOW */}
+      {/* HOW IT WORKS */}
       <section className="mt-24 border-t border-line pt-16">
-        <Eyebrow>How it works</Eyebrow>
-        <H2>
-          <span className="mt-2 block">The four cards on the desk.</span>
-        </H2>
-        <div className="mt-10 grid gap-4 md:grid-cols-2">
-          <Card title="Your broker, your keys">
-            Connect one of the brokers BAI knows how to talk to. Alpaca and
-            Tradier at launch, more later. The keys live in Windows Credential
-            Manager. Doyel Labs never sees them and cannot place an order.
-          </Card>
-          <Card title="Allow live, then arm">
-            Connecting a broker is not trading. You type{" "}
-            <code className="font-mono text-ink">I_UNDERSTAND_THIS_IS_REAL_MONEY</code>{" "}
-            once to allow live orders on this computer. You type Arm each
-            session. Nothing in chat, email, or on this website can arm the
-            desk.
-          </Card>
-          <Card title="One position, one exit">
-            Every entry ships to the broker as a bracket — entry + stop +
-            target. If the laptop sleeps, the exit still stands. The desk
-            manages exits; it never invents a fill.
-          </Card>
-          <Card title="Fail closed">
-            A stale quote, a missing account snapshot, an unknown earnings
-            date, a vendor rate limit — each one blocks an entry rather than
-            guessing. An outage looks like an outage.
-          </Card>
+        <div className="max-w-3xl">
+          <Eyebrow>How it works</Eyebrow>
+          <H2>
+            <span className="mt-2 block">The four cards on the desk.</span>
+          </H2>
+        </div>
+        <div className="mt-12">
+          <Grid2>
+            <Card title="Your broker, your keys">
+              Connect Alpaca or Tradier at launch. The keys live in
+              Windows Credential Manager. Doyel Labs never sees them and
+              cannot place an order.
+            </Card>
+            <Card title="Allow live, then arm">
+              Connecting a broker is not trading. You type{" "}
+              <code className="font-mono text-ink">
+                I_UNDERSTAND_THIS_IS_REAL_MONEY
+              </code>{" "}
+              once to allow live orders on this computer. You type Arm
+              each session. Nothing in chat, email, or on this website
+              can arm the desk.
+            </Card>
+            <Card title="One position, one exit">
+              Every entry ships to the broker as a bracket — entry, stop,
+              and target. If the laptop sleeps, the exit still stands.
+              The desk manages exits; it never invents a fill.
+            </Card>
+            <Card title="Unknown data blocks">
+              Stale quote, missing snapshot, unknown earnings date, vendor
+              rate limit — each blocks an entry rather than guessing. An
+              outage looks like an outage.
+            </Card>
+          </Grid2>
         </div>
       </section>
 
@@ -128,80 +128,77 @@ export default function BaiProgram() {
       <section className="mt-24 border-t border-line pt-16">
         <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
           <div>
-            <Eyebrow>Book</Eyebrow>
+            <Eyebrow>The Book</Eyebrow>
             <H2>
-              <span className="mt-2 block">The whole record, on one page.</span>
+              <span className="mt-2 block">The record, on one page.</span>
             </H2>
             <p className="mt-6 max-w-prose text-[16px] leading-[1.7] text-mute">
-              Every trade the desk did or refused to do. Wins and losses side
-              by side. Sortable, searchable, exportable. The paper book on the
-              practice tape uses the same shape — read the book, then decide
-              whether to arm live.
+              Every trade the desk did or refused to do. Wins and losses
+              side by side. Sortable, searchable, exportable. Read the
+              Book, then decide whether to arm live.
             </p>
           </div>
           <BaiBookFrame />
         </div>
       </section>
 
-      {/* SAFETY */}
+      {/* WHAT STOPS IT */}
       <section className="mt-24 border-t border-line pt-16">
-        <Eyebrow>What stops it</Eyebrow>
-        <H2>
-          <span className="mt-2 block">Multiple, redundant, deliberate.</span>
-        </H2>
-        <div className="mt-10 grid gap-4 md:grid-cols-2">
-          <Card title="Stops at the broker">
-            Every trade carries a broker-held stop. Whether or not your
-            computer is on.
-          </Card>
-          <Card title="Loss limits">
-            Daily, monthly, and per-campaign. Each ends new entries at its own
-            threshold and never sells to enforce itself.
-          </Card>
-          <Card title="Kill switches">
-            In the desk. In the alert email. A watchdog on your computer that
-            pulls the switch if the desk goes silent for two minutes. Our side
-            server-side if your account is compromised. A kill disarms and
-            blocks new orders; it never sells your holdings behind your back.
-          </Card>
-          <Card title="Chat cannot spend">
-            The research chat can read and explain. It cannot arm, raise a
-            cap, or place a ticket, and that is pinned by tests, not by policy.
-          </Card>
-          <Card title="Subscription is not a cliff">
-            A failed payment or a cancel stops new entries. Exits on positions
-            already opened stay managed. Nothing is abandoned to the broker's
-            bracket alone.
-          </Card>
-          <Card title="Unknown data blocks">
-            A stale quote or a missing snapshot returns nothing. The desk
-            waits.
-          </Card>
+        <div className="max-w-3xl">
+          <Eyebrow>What stops it</Eyebrow>
+          <H2>
+            <span className="mt-2 block">
+              Multiple, redundant, deliberate.
+            </span>
+          </H2>
+        </div>
+        <div className="mt-12">
+          <Grid3>
+            <Card title="Stops at the broker">
+              Every trade carries a broker-held stop, whether the computer
+              is on or asleep.
+            </Card>
+            <Card title="Loss limits">
+              Daily, monthly, per-campaign. Each ends new entries at its
+              threshold. None sells to enforce itself.
+            </Card>
+            <Card title="Kill switches">
+              In the app. In an email link. A local watchdog if the desk
+              goes silent for two minutes. Our side if your account is
+              compromised. A kill disarms and blocks new orders; it never
+              sells behind your back.
+            </Card>
+            <Card title="Chat cannot spend">
+              The research chat reads and explains. It cannot arm, raise
+              a cap, or place a ticket. Pinned by tests, not by policy.
+            </Card>
+            <Card title="Subscription is not a cliff">
+              A failed payment stops new entries and keeps managing exits
+              on positions the desk already opened.
+            </Card>
+            <Card title="Signed updates">
+              No code we did not sign runs on your machine. Refused mid-trade.
+            </Card>
+          </Grid3>
         </div>
       </section>
 
-      {/* WHAT IT IS NOT */}
+      {/* HONEST LINE */}
       <section className="mt-24 border-t border-line pt-16">
-        <Eyebrow>What it is not</Eyebrow>
-        <H2>
-          <span className="mt-2 block">Say the honest thing.</span>
-        </H2>
         <Notice>
-          BAI is not financial advice. Doyel Labs LLC is not a broker-dealer or
-          an investment adviser. Every scan, verdict, and sized ticket is an
-          evaluation of the rules you set against market data you chose to
-          receive. You decide what to trade, when to arm, and how much to
-          risk. Trading can lose money, including all of it.
+          BAI is not financial advice. Doyel Labs LLC is not a
+          broker-dealer or an investment adviser. Every scan and sized
+          ticket is an evaluation of the rules you set against market
+          data you chose to receive. You decide what to trade, when to
+          arm, and how much to risk. Trading can lose money, including
+          all of it.
         </Notice>
-        <div className="mt-6 flex flex-wrap gap-3">
+        <div className="mt-8 flex flex-wrap gap-3">
           <GhostLink href="/security/" small>
             Security
           </GhostLink>
           <GhostLink href="/docs/" small>
             Docs
-          </GhostLink>
-          <GhostLink href="/support/" small>
-            Support
           </GhostLink>
           <GhostLink
             href={`mailto:${site.supportEmail}?subject=BAI%20access%20request`}
@@ -211,6 +208,9 @@ export default function BaiProgram() {
             Request access
           </GhostLink>
         </div>
+        <p className="mt-6">
+          <AccentChip>Doyel Labs company site → doyel-labs.com</AccentChip>
+        </p>
       </section>
     </Page>
   );
