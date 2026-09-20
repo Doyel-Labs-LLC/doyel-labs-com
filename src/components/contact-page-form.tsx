@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { Turnstile } from "@/components/turnstile";
 import { site } from "@/lib/site";
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
 
 type SubmitState =
   | { status: "idle" }
@@ -16,6 +19,7 @@ type SubmitState =
  */
 export function ContactPageForm() {
   const [state, setState] = useState<SubmitState>({ status: "idle" });
+  const [turnstileToken, setTurnstileToken] = useState("");
 
   async function submit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -28,6 +32,7 @@ export function ContactPageForm() {
       subject: (fd.get("subject") as string) || "",
       message: (fd.get("message") as string) || "",
       website: (fd.get("website") as string) || "",
+      turnstileToken,
     };
     if (payload.website) {
       setState({ status: "success" });
@@ -131,6 +136,9 @@ export function ContactPageForm() {
           className={`${fieldClass} resize-y`}
         />
       </Field>
+      {TURNSTILE_SITE_KEY ? (
+        <Turnstile sitekey={TURNSTILE_SITE_KEY} onToken={setTurnstileToken} />
+      ) : null}
       {state.status === "error" ? (
         <p className="border-l-2 border-fall bg-fall/10 px-3 py-2 text-[12px] text-ink">
           {state.message}

@@ -21,10 +21,11 @@ interface Env {
   RESEND_API_KEY?: string;
   RESEND_FROM?: string;
   /** Destination inbox for contact-form messages. Defaults to
-   *  support@doyel-labs.com once the domain is verified in Resend.
-   *  Until then, this can be set to any address the Resend account
-   *  is allowed to send to (e.g. the account owner's own email). */
+   *  support@doyel-labs.com. Can be overridden per environment. */
   CONTACT_TO?: string;
+  /** Cloudflare Turnstile secret key. If unset, token verification is
+   *  skipped so local dev builds still work. */
+  TURNSTILE_SECRET_KEY?: string;
 }
 
 interface ContactPayload {
@@ -33,6 +34,7 @@ interface ContactPayload {
   subject?: unknown;
   message?: unknown;
   website?: unknown;
+  turnstileToken?: unknown;
 }
 
 function j(status: number, body: Record<string, unknown>): Response {
@@ -104,6 +106,48 @@ async function handleContact({
   }
   if (!message || message.length < 5) {
     return j(400, { error: "Please include a message." });
+  }
+
+  // Verify Turnstile if configured.
+  if (env.TURNSTILE_SECRET_KEY) {
+    const tsToken = trim(raw.turnstileToken, 2048);
+    if (!tsToken) {
+      return j(400, {
+        error: "Please complete the CAPTCHA challenge before sending.",
+      });
+    }
+    try {
+      const clientIp = request.headers.get("cf-connecting-ip") || "";
+      const form = new URLSearchParams();
+      form.set("secret", env.TURNSTILE_SECRET_KEY);
+      form.set("response", tsToken);
+      if (clientIp) form.set("remoteip", clientIp);
+      const tsResp = await fetch(
+        "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: form.toString(),
+        },
+      );
+      const tsBody = (await tsResp.json()) as {
+        success?: boolean;
+        "error-codes"?: string[];
+      };
+      if (!tsResp.ok || !tsBody.success) {
+        return j(400, {
+          error: "CAPTCHA verification failed. Please refresh and try again.",
+          codes: tsBody["error-codes"] || [],
+        });
+      }
+    } catch (e) {
+      return j(500, {
+        error: "Could not verify the CAPTCHA. Please try again.",
+        detail: e instanceof Error ? e.message : String(e),
+      });
+    }
   }
 
   const key = env.RESEND_API_KEY;

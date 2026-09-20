@@ -12,6 +12,7 @@ const paths = [
   "/services/payroll/",
   "/services/websites/",
   "/work/",
+  "/case-studies/steadfast/",
   "/programs/",
   "/programs/bai/",
   "/programs/connectionloop/",

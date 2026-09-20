@@ -1,7 +1,10 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { Turnstile } from "@/components/turnstile";
 import { site } from "@/lib/site";
+
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
 
 type SubmitState =
   | { status: "idle" }
@@ -52,6 +55,7 @@ export function ContactWidget({
 /** The modal itself + the form. Client-side only. */
 function Modal({ onClose }: { onClose: () => void }) {
   const [state, setState] = useState<SubmitState>({ status: "idle" });
+  const [turnstileToken, setTurnstileToken] = useState("");
   const firstFieldRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -78,6 +82,7 @@ function Modal({ onClose }: { onClose: () => void }) {
       message: (fd.get("message") as string) || "",
       // Honeypot — real users leave this blank.
       website: (fd.get("website") as string) || "",
+      turnstileToken,
     };
     if (payload.website) {
       // Silently drop bots that filled the honeypot.
@@ -221,6 +226,12 @@ function Modal({ onClose }: { onClose: () => void }) {
                 className={`${fieldClass} resize-y`}
               />
             </Field>
+            {TURNSTILE_SITE_KEY ? (
+              <Turnstile
+                sitekey={TURNSTILE_SITE_KEY}
+                onToken={setTurnstileToken}
+              />
+            ) : null}
             {state.status === "error" ? (
               <p className="border-l-2 border-fall bg-fall/10 px-3 py-2 text-[12px] text-ink">
                 {state.message}

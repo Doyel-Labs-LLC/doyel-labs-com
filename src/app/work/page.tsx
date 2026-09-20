@@ -71,6 +71,9 @@ export default function Work() {
               <AccentChip>Live at {steadfastCase.domain}</AccentChip>
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
+              <GhostLink href="/case-studies/steadfast/" small>
+                Full case study
+              </GhostLink>
               <GhostLink href="/services/websites/" small>
                 Websites service
               </GhostLink>
