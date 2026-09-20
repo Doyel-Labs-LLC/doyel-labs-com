@@ -11,6 +11,7 @@ const paths = [
   "/services/",
   "/services/payroll/",
   "/services/websites/",
+  "/work/",
   "/programs/",
   "/programs/bai/",
   "/programs/connectionloop/",

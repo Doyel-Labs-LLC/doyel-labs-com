@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import {
   AccentChip,
   Card,
@@ -11,20 +10,19 @@ import {
   H1,
   H2,
   Lead,
-  MetaRow,
   Notice,
   Page,
-  PrimaryLink,
 } from "@/components/chrome";
-import { PayrollScaFrame } from "@/components/frames/payroll-sca";
+import { ContactWidget } from "@/components/contact-modal";
 import { WebsiteSteadfastFrame } from "@/components/frames/websites-preview";
+import { PayrollScaFrame } from "@/components/frames/payroll-sca";
 import { site } from "@/lib/site";
 import { steadfastCase } from "@/lib/demo/websites";
 
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Two commercial services from Doyel Labs — payroll software for federal service contractors, and marketing websites for small operators. Live example: SteadFast Transportation Inc.",
+    "Doyel Labs builds custom software — marketing sites, payroll and compliance workspaces, internal tools, data pipelines, and one-off programs. Priced per project. Ongoing partnership available.",
 };
 
 export default function Services() {
@@ -34,22 +32,24 @@ export default function Services() {
       <section className="pt-24 md:pt-32">
         <Eyebrow>Services</Eyebrow>
         <H1>
-          Two things we sell — <span className="text-accent">honestly</span> priced.
+          What we <span className="text-accent">build</span>.
         </H1>
         <Lead>
-          Payroll software for federal service contractors, and websites for
-          small operators. We do not sell CRMs, applicant-tracking, booking
-          systems, or anything that has to live inside an enterprise
-          directory. If the software has to move money or make a compliance
-          claim, we build it local-first and say what it does not do.
+          Doyel Labs builds custom software. Marketing sites, payroll
+          workspaces, internal tools, data pipelines, portals, mobile apps,
+          and one-off programs. If the business needs it and it's legal to
+          build, we can build it.
         </Lead>
         <div className="mt-10 flex flex-wrap gap-3">
-          <PrimaryLink href="#payroll">Payroll</PrimaryLink>
-          <GhostLink href="#websites" small>
-            Websites
+          <ContactWidget label="Start a project" />
+          <GhostLink href="#capabilities" small>
+            Capabilities
           </GhostLink>
-          <GhostLink href="#engagement" small>
-            How an engagement works
+          <GhostLink href="#work" small>
+            Past work
+          </GhostLink>
+          <GhostLink href="#partnership" small>
+            Ongoing partnership
           </GhostLink>
           <GhostLink href="#pricing" small>
             Pricing
@@ -57,358 +57,272 @@ export default function Services() {
         </div>
       </section>
 
-      {/* ═══ PAYROLL ═══════════════════════════════════════════════════ */}
-      <section id="payroll" className="mt-32 border-t border-line pt-16 md:pt-24">
-        <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
-          <div>
-            <Eyebrow>Service 01 · Payroll</Eyebrow>
-            <H2>
-              <span className="mt-2 block">
-                Pay day-rate contractors the SCA way.
-              </span>
-            </H2>
-            <p className="mt-6 max-w-prose text-[16px] leading-[1.7] text-mute">
-              A pay-run workspace built for federal service contractors and
-              small operators paying day-rate independent contractors under
-              the Service Contract Act. Every draft passes the day-rate
-              floor before it leaves the app.
-            </p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <AccentChip>
-                In use at SteadFast Transportation Inc.
-              </AccentChip>
-            </div>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <PrimaryLink href="/services/payroll/" small>
-                Payroll product page
-              </PrimaryLink>
-              <GhostLink
-                href={`mailto:${site.supportEmail}?subject=Payroll%20inquiry`}
-                small
-                external
-              >
-                Talk to us
-              </GhostLink>
-            </div>
-          </div>
-          <PayrollScaFrame />
-        </div>
-
-        {/* Feature grid */}
-        <div className="mt-16">
-          <p className="font-mono text-[11px] uppercase tracking-eyebrow text-muted">
-            <span className="accent-bar" />
-            What is in the app today
+      {/* CAPABILITIES */}
+      <section id="capabilities" className="mt-32 border-t border-line pt-16 md:pt-24">
+        <div className="max-w-3xl">
+          <Eyebrow>Capabilities</Eyebrow>
+          <H2>
+            <span className="mt-2 block">The full range.</span>
+          </H2>
+          <p className="mt-6 text-[16px] leading-[1.7] text-mute">
+            These are the kinds of software we build. The list is not
+            exhaustive — if you don't see the thing you need, ask.
           </p>
-          <div className="mt-6">
-            <Grid3>
-              <Card title="Contractor register">
-                Names, SSN (encrypted), state, WD number, contract number,
-                day rate, minimum wage, H&W fringe, vacation handling (cash-in-lieu under §4.173 or accrue), YTD gross, YTD deductions.
-              </Card>
-              <Card title="Wage-determination lookup">
-                Enter a city and state. The app geocodes to a county, finds
-                the active SCA wage determination on SAM.gov, downloads it,
-                and parses the base wage and H&W fringe automatically.
-              </Card>
-              <Card title="SCA floor enforcement">
-                Every draft checks{" "}
-                <code className="font-mono text-ink">
-                  (base wage + H&W) × 8
-                </code>{" "}
-                against the day rate. Drafts under the floor are blocked
-                until the operator fixes them.
-              </Card>
-              <Card title="Batch pay run">
-                Pick a period and a set of contractors. The app runs the SCA
-                check on every row and produces the whole batch of PDF stubs
-                in one action.
-              </Card>
-              <Card title="Stub email from your domain">
-                Stubs are emailed via Resend from the operator's own
-                address (e.g. payroll@your-company.com). Doyel Labs is not
-                on the email header. Reply-to is the operator's inbox.
-              </Card>
-              <Card title="Audit log a DOL inspector can read">
-                Paystub generated, paystub emailed, WD lookup, SCA-block,
-                rate change, sign-in, passkey enrolment. CSV export.
-                180-day server retention; the operator keeps the CSV.
-              </Card>
-              <Card title="Passkeys">
-                WebAuthn passkey enrolment on the operator workspace.
-                Optional. Falls back to password with PBKDF2 hashing and
-                rate-limited lockout.
-              </Card>
-              <Card title="Server storage per operator">
-                Contractor records, drafts, and audit rows live in Netlify
-                Blobs scoped to the operator's namespace. Local browser
-                cache is a fallback only.
-              </Card>
-              <Card title="Backups you can walk away with">
-                Export a full JSON backup or a formatted DOCX report. Import
-                merges without overwriting. Your workspace, your bytes.
-              </Card>
-            </Grid3>
-          </div>
         </div>
-
-        {/* What it doesn't do */}
-        <div className="mt-16">
-          <p className="font-mono text-[11px] uppercase tracking-eyebrow text-muted">
-            <span className="accent-bar" />
-            What the payroll product does not do
-          </p>
-          <div className="mt-6">
-            <Grid2>
-              <Card title="No tax filing">
-                We do not file federal, state, or local returns. We do not
-                compute income-tax withholding. Deduction lines are
-                freeform, entered by the operator or their bookkeeper.
-              </Card>
-              <Card title="No money movement">
-                The software does not run direct deposit, ACH, wire, or any
-                form of wage transfer. The operator pays through their own
-                bank. Doyel Labs never touches funds.
-              </Card>
-              <Card title="Not a payroll processor">
-                We are a compliance and record-keeping workspace, not a
-                payroll processor, professional employer organization, or
-                reporting agent for any tax authority.
-              </Card>
-              <Card title="Not a money transmitter">
-                No customer funds are held at any time in any account
-                controlled by Doyel Labs. The software cannot move money
-                even if a user asked it to.
-              </Card>
-            </Grid2>
-          </div>
+        <div className="mt-12">
+          <Grid3>
+            <Card title="Marketing sites">
+              Custom domain, mobile-first, schema.org markup, structured
+              content, contact forms wired to your inbox. Cloudflare or
+              Netlify deploys.
+            </Card>
+            <Card title="Payroll &amp; compliance">
+              Pay-run workspaces, wage-determination checks, contractor
+              registers, audit logs, PDF stub generation, stub email from
+              your own domain.
+            </Card>
+            <Card title="Internal tools">
+              Admin dashboards, CRUD portals, moderation queues, back-office
+              consoles. The stuff a team opens every day.
+            </Card>
+            <Card title="Data pipelines">
+              CSV ingest, API scrapes, cron jobs, retries, dead-letter
+              queues, alerting. Bring your data in, put it somewhere useful.
+            </Card>
+            <Card title="Portals for partners">
+              Signed-in surfaces for contractors, vendors, or clients.
+              Document exchange, e-signature, notifications.
+            </Card>
+            <Card title="API integrations">
+              Stripe, Resend, Twilio, Plaid, DocuSign, SAM.gov, Firebase,
+              Neon, S3, whatever your operation runs on.
+            </Card>
+            <Card title="Mobile apps">
+              Expo + React Native. iOS and Android from one codebase.
+              Firebase or your own backend. Store submission included.
+            </Card>
+            <Card title="Public web apps">
+              Full-stack builds — signed-in users, billing, admin, and a
+              marketing site on the same domain.
+            </Card>
+            <Card title="Custom programs">
+              Anything a mid-market vendor would sell as a product — we
+              build it for your operation, priced honestly.
+            </Card>
+          </Grid3>
         </div>
       </section>
 
-      {/* ═══ WEBSITES ══════════════════════════════════════════════════ */}
-      <section id="websites" className="mt-32 border-t border-line pt-16 md:pt-24">
-        <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
-          <div>
-            <Eyebrow>Service 02 · Websites</Eyebrow>
-            <H2>
-              <span className="mt-2 block">
-                Fast sites that read well on a phone.
-              </span>
-            </H2>
-            <p className="mt-6 max-w-prose text-[16px] leading-[1.7] text-mute">
-              Marketing sites for small operators, built to open under two
-              seconds on a mid-tier phone. Custom domain on your own
-              registrar. Mobile-first navigation, schema.org markup, and
-              forms wired to your inbox — not ours.
+      {/* PAST WORK */}
+      <section id="work" className="mt-32 border-t border-line pt-16 md:pt-24">
+        <div className="max-w-3xl">
+          <Eyebrow>Past work</Eyebrow>
+          <H2>
+            <span className="mt-2 block">Recent shipments.</span>
+          </H2>
+        </div>
+
+        {/* SteadFast website case */}
+        <div className="mt-12 grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+          <WebsiteSteadfastFrame />
+          <div className="flex flex-col justify-center">
+            <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
+              Website · SteadFast Transportation Inc.
             </p>
-            <div className="mt-4 flex flex-wrap gap-2">
-              <AccentChip>Live at {steadfastCase.domain}</AccentChip>
-            </div>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <PrimaryLink href="/services/websites/" small>
-                Websites product page
-              </PrimaryLink>
-              <GhostLink href={steadfastCase.liveUrl} small external>
-                View live example
+            <h3 className="mt-3 text-[22px] font-semibold leading-tight text-ink">
+              A marketing site for a federal service contractor.
+            </h3>
+            <p className="mt-4 text-[14px] leading-[1.7] text-mute">
+              Ten pages, custom domain, hero video, schema.org markup,
+              mobile-first navigation, Formspree-backed contact and
+              contractor-inquiry forms, plus a password-gated payroll
+              workspace at the same domain. Live at{" "}
+              <a
+                href={steadfastCase.liveUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
+              >
+                {steadfastCase.domain}
+              </a>
+              .
+            </p>
+            <p className="mt-4 flex flex-wrap gap-2">
+              <AccentChip>Live since 2026</AccentChip>
+            </p>
+          </div>
+        </div>
+
+        {/* SteadFast Payroll case */}
+        <div className="mt-16 grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+          <PayrollScaFrame />
+          <div className="flex flex-col justify-center">
+            <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
+              Payroll · SteadFast Transportation Inc.
+            </p>
+            <h3 className="mt-3 text-[22px] font-semibold leading-tight text-ink">
+              SteadFast Payroll — SCA-first pay-run workspace.
+            </h3>
+            <p className="mt-4 text-[14px] leading-[1.7] text-mute">
+              A password-gated operator workspace for pay runs on day-rate
+              independent contractors. SAM.gov wage-determination
+              auto-lookup, per-draft floor check, batch PDF stubs, stub
+              email from the operator's own domain, 180-day audit log
+              with CSV export, passkey sign-in. Runs on Netlify Blobs.
+            </p>
+            <p className="mt-4 flex flex-wrap gap-2">
+              <AccentChip>In operator use</AccentChip>
+            </p>
+            <div className="mt-6">
+              <GhostLink href="/services/payroll/" small>
+                Payroll product page
               </GhostLink>
             </div>
           </div>
-          <WebsiteSteadfastFrame />
         </div>
 
-        {/* Every project ships with */}
-        <div className="mt-16">
-          <p className="font-mono text-[11px] uppercase tracking-eyebrow text-muted">
-            <span className="accent-bar" />
-            Every project ships with
-          </p>
-          <div className="mt-6">
-            <Grid3>
-              <Card title="Custom domain">
-                On the registrar you already own, or one we help you
-                choose. DNS on Cloudflare. HTTPS with HSTS preload.
-              </Card>
-              <Card title="Mobile-first design">
-                Every page reads on a phone before it reads on a laptop.
-                Sticky top nav, skip-link for keyboard users, focus rings
-                on every interactive element.
-              </Card>
-              <Card title="Structured data">
-                schema.org Organization, PostalAddress, and telephone
-                markup. Search engines get a clean picture of the business
-                on the first crawl.
-              </Card>
-              <Card title="Contact forms to your inbox">
-                Formspree or your provider of choice. Every submission
-                lands in an inbox you already read. No third-party CRM
-                unless you asked for one.
-              </Card>
-              <Card title="Privacy-respecting analytics">
-                Plausible if you want it. Cookieless. No personal data
-                collected. Your visitors are not the product.
-              </Card>
-              <Card title="LCP under 2.0s">
-                Static export on a global CDN. No render-blocking scripts,
-                no bloated web fonts, no video hero that stalls the fold.
-              </Card>
-              <Card title="Content edits without a bill">
-                Prices, phone numbers, copy — all live in a small set of
-                files you can edit. If we run maintenance, one email lands
-                the change within a business day.
-              </Card>
-              <Card title="Accessibility, by default">
-                WCAG AA contrast, semantic headings, keyboard-reachable
-                nav, alt text on every image that ships. Tested with a
-                screen reader before we invoice.
-              </Card>
-              <Card title="Owned by you">
-                Source lives on your Git host. If you fire us tomorrow,
-                you keep everything and any developer can pick it up.
-              </Card>
-            </Grid3>
-          </div>
-        </div>
-
-        {/* Steadfast case reference */}
-        <div className="mt-16 border-l-2 border-accent bg-accentSoft/40 p-6">
-          <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
-            Case reference
-          </p>
-          <p className="mt-3 text-[15px] text-ink">
-            <strong>SteadFast Transportation Inc.</strong> — a federal
-            service contractor running USPS contract-delivery routes across
-            rural Montana and North Dakota. We built the whole site (ten
-            pages), plus a password-gated payroll workspace on the same
-            domain. Live at{" "}
+        {/* Internal work — brief mentions with links */}
+        <div className="mt-16 grid gap-4 md:grid-cols-2">
+          <Card title="BAI — internal">
+            A trading desk that runs on the operator's computer, at their
+            broker, under their rules. In private testing. Details on{" "}
             <a
-              href={steadfastCase.liveUrl}
+              href="/programs/bai/"
               className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-              target="_blank"
-              rel="noopener noreferrer"
             >
-              {steadfastCase.domain}
+              the program page
             </a>
             .
-          </p>
+          </Card>
+          <Card title="ConnectionLoop — internal">
+            An invite-only shared calendar for families and small groups.
+            Expo + Firebase. Store submission in progress. Details on{" "}
+            <a
+              href="/programs/connectionloop/"
+              className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
+            >
+              the program page
+            </a>
+            .
+          </Card>
         </div>
       </section>
 
-      {/* ═══ ENGAGEMENT ════════════════════════════════════════════════ */}
-      <section id="engagement" className="mt-32 border-t border-line pt-16 md:pt-24">
+      {/* PARTNERSHIP */}
+      <section id="partnership" className="mt-32 border-t border-line pt-16 md:pt-24">
+        <div className="max-w-3xl">
+          <Eyebrow>Ongoing partnership</Eyebrow>
+          <H2>
+            <span className="mt-2 block">
+              We stay on to keep it running.
+            </span>
+          </H2>
+          <p className="mt-6 text-[16px] leading-[1.7] text-mute">
+            The build is where most agencies stop. We prefer to stay on —
+            fix bugs the moment they surface, ship small features month by
+            month, and give you a direct line for anything urgent.
+          </p>
+        </div>
+        <div className="mt-12">
+          <Grid3>
+            <Card title="What's included" accent>
+              <ul className="list-disc space-y-1 pl-4">
+                <li>Bug fixes on the software we built</li>
+                <li>Dependency and security updates</li>
+                <li>Small feature requests each month</li>
+                <li>One-business-day SLA on email + phone</li>
+              </ul>
+            </Card>
+            <Card title="What's optional">
+              <ul className="list-disc space-y-1 pl-4">
+                <li>Larger new features, scoped and quoted separately</li>
+                <li>Migrations to new infrastructure</li>
+                <li>Compliance updates when your regulator changes rules</li>
+              </ul>
+            </Card>
+            <Card title="How it's priced">
+              Fixed monthly rate, quoted after we understand the size of
+              the build and how much attention it needs. Cancel any time
+              on 30 days' notice.
+            </Card>
+          </Grid3>
+        </div>
+      </section>
+
+      {/* HOW AN ENGAGEMENT WORKS */}
+      <section className="mt-32 border-t border-line pt-16 md:pt-24">
         <div className="max-w-3xl">
           <Eyebrow>How an engagement works</Eyebrow>
           <H2>
-            <span className="mt-2 block">
-              Discovery, build, handoff. Fixed price by default.
-            </span>
+            <span className="mt-2 block">Discovery, build, handoff.</span>
           </H2>
         </div>
         <div className="mt-12 grid gap-6 md:grid-cols-4">
           <Feature step="Step 01" title="Discovery call">
-            A 30-minute call. You describe the operation and what has to
-            be provable on paper. We say what we can and cannot build,
-            and what tools you already own that we should reuse.
+            30 minutes. You describe the operation and what has to be
+            provable on paper. We say what we can build and what tools
+            you already own that we should reuse.
           </Feature>
           <Feature step="Step 02" title="Scope + quote">
-            Within one business day, a written scope: what ships, what does
-            not, and a fixed price. If the scope grows later, we requote —
-            no silent creep.
+            Within one business day, a written scope: what ships, what
+            does not, and a fixed price. If the scope grows later, we
+            requote — no silent creep.
           </Feature>
           <Feature step="Step 03" title="Build">
-            A marketing site: about three days. A payroll workspace: about
-            a week. You get a preview URL and a Loom the moment there is
-            something to look at, and every business day after that.
+            Preview URL and a Loom the moment there's something to look
+            at. New progress every business day. Human review on every
+            commit before it ships.
           </Feature>
-          <Feature step="Step 04" title="Handoff">
+          <Feature step="Step 04" title="Handoff + retainer">
             Source lives on your Git host, your domain, your database.
-            You get a short README, an admin credential, and a phone
-            number for the next question. Optional maintenance retainer.
+            You get a short README, an admin credential, and the option
+            to keep us on a monthly retainer.
           </Feature>
         </div>
       </section>
 
-      {/* ═══ PRICING ═══════════════════════════════════════════════════ */}
+      {/* PRICING PHILOSOPHY */}
       <section id="pricing" className="mt-32 border-t border-line pt-16 md:pt-24">
         <div className="max-w-3xl">
           <Eyebrow>Pricing</Eyebrow>
           <H2>
             <span className="mt-2 block">
-              We do not publish a rate card. Here is how we price.
+              Priced per project. Contact for a quote.
             </span>
           </H2>
           <p className="mt-6 text-[16px] leading-[1.7] text-mute">
-            Every operator's stack is different, and a rate card lies
-            about that. What we can tell you: we quote fixed prices per
-            project, we honour founding-year rates for our first cohort of
-            customers, and we do not bill hourly for AI's time.
+            Every operation is different, and a rate card lies about
+            that. What we can tell you: we quote a fixed price after a
+            short call, we do not bill hourly for AI's time, and we
+            honour founding-year rates for our first customers. If your
+            budget is tight, say so — we'd rather scope tighter than
+            underbid and cut corners.
           </p>
-        </div>
-        <div className="mt-12">
-          <Grid3>
-            <Card title="Small marketing site" accent>
-              <p>
-                A five-to-ten-page marketing site on your own domain, with
-                mobile-first design, structured data, and contact forms.
-              </p>
-              <p className="mt-3 font-mono text-[11px] uppercase tracking-wide text-accent">
-                From $1,900 · About 3 days
-              </p>
-            </Card>
-            <Card title="Payroll workspace" accent>
-              <p>
-                Contractor register, pay-run workspace, SCA floor
-                enforcement, WD auto-lookup, audit log, stub email from
-                your domain, passkey sign-in.
-              </p>
-              <p className="mt-3 font-mono text-[11px] uppercase tracking-wide text-accent">
-                From $4,800 · About 1 week
-              </p>
-            </Card>
-            <Card title="Custom program" accent>
-              <p>
-                Anything that involves money movement, compliance claims,
-                or long-running automation — quoted after a discovery
-                call.
-              </p>
-              <p className="mt-3 font-mono text-[11px] uppercase tracking-wide text-accent">
-                Quoted per project
-              </p>
-            </Card>
-          </Grid3>
-          <p className="mt-6 font-mono text-[10px] uppercase tracking-wide text-muted">
-            Founding-year rates. Prices are ceilings, not floors — a
-            simple operator often lands under.
-          </p>
+          <div className="mt-8">
+            <ContactWidget label="Get a quote" />
+          </div>
         </div>
       </section>
 
-      {/* ═══ CLOSE ════════════════════════════════════════════════════ */}
+      {/* CLOSE */}
       <section className="mt-32 border-t border-line pt-16 md:pt-24">
-        <div className="max-w-3xl">
-          <Notice>
-            Send an email to{" "}
-            <a
-              href={`mailto:${site.supportEmail}?subject=Work%20with%20us`}
-              className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-            >
-              {site.supportEmail}
-            </a>{" "}
-            with the domain you already own (or want to buy) and a
-            one-paragraph description of the operation. We answer within
-            one business day. Or call{" "}
-            <a
-              href={site.phoneHref}
-              className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-            >
-              {site.phone}
-            </a>
-            .
-          </Notice>
-        </div>
-        <MetaRow>
-          Source of truth · index/steadfast-payroll-app.html · SteadFast
-          Transportation Inc. marketing site
-        </MetaRow>
+        <Notice>
+          Or reach us directly at{" "}
+          <a
+            href={`mailto:${site.supportEmail}?subject=Work%20with%20us`}
+            className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
+          >
+            {site.supportEmail}
+          </a>{" "}
+          ·{" "}
+          <a
+            href={site.phoneHref}
+            className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
+          >
+            {site.phone}
+          </a>
+          . We answer within one business day.
+        </Notice>
       </section>
     </Page>
   );

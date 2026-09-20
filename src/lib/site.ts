@@ -21,10 +21,12 @@ export const site = {
 
 /**
  * One-line company positioning. Read this before you write copy anywhere
- * else. This is what Doyel Labs *is*, not a marketing line.
+ * else. This is what Doyel Labs *is*, not a marketing line. Never
+ * mentions size or headcount — the customer hires us for what we ship,
+ * not for how many chairs are in the office.
  */
 export const positioning =
-  "Doyel Labs is a small software studio in Casper, Wyoming. We build operational software with AI as our main tool, so a two-person team can ship what used to take ten.";
+  "Doyel Labs builds the software your business runs on. We use AI to ship fast, and we stay on to keep it running.";
 
 /** Company-scale legal line — footer only, small. */
 export const companyLegal =

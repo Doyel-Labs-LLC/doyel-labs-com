@@ -1,12 +1,11 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { companyLegal, site } from "@/lib/site";
+import { ContactWidget } from "@/components/contact-modal";
 
 const nav = [
   { href: "/services/", label: "Services" },
-  { href: "/programs/", label: "Programs" },
-  { href: "/engineering/", label: "Engineering" },
-  { href: "/security/", label: "Security" },
+  { href: "/work/", label: "Work" },
   { href: "/company/", label: "Company" },
 ];
 
@@ -63,6 +62,7 @@ export function Header() {
               {n.label}
             </Link>
           ))}
+          <ContactWidget label="Contact" variant="primary" size="small" />
         </nav>
         <MobileNav />
       </div>

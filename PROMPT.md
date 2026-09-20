@@ -1,157 +1,184 @@
-# doyel-labs.com — the design brief, v2
+# doyel-labs.com — the design brief, v3
 
 This is the reference the site is written against. If a page contradicts
 this document, the page is wrong.
 
 ## Who Doyel Labs is
 
-Doyel Labs LLC is a **small software studio** in Casper, Wyoming, formed
-in **September 2026**. The team is small on purpose. We build with AI as
-our primary tool, which means a two-person studio can ship what used to
-take a ten-person team.
+Doyel Labs LLC is a **software company** based in Casper, Wyoming,
+formed in **September 2026**. We build with AI as our primary tool, so
+we can ship complex software fast.
 
-The company is *not*:
+**We are not narrowed.** Payroll and websites are the work we've shipped
+first. They are not the totality of what we build. Doyel Labs takes on
+whatever software the customer needs — a portal, a data pipeline, an
+internal tool, a public app, a payments integration, a compliance
+workspace. The right answer to "can you build X?" is almost always
+"yes, tell us more."
 
-- A trading firm. BAI is one program the studio built. It is not what
-  the studio does.
-- A payroll processor, bank, broker-dealer, adviser, or PEO.
-- An enterprise vendor. We serve small operators who cannot afford the
-  enterprise stack.
+**We are not defined by size.** The site never says "small team,"
+"two-person," "solo," or any headcount language. Customers hire us for
+what we produce, not for how many chairs are in the office.
+
+**We do not narrow the payroll product with claims of what we cannot
+add.** The current SteadFast Payroll build does not compute federal
+withholding — but that is a feature scope decision on that build, not a
+capability limit of the company. Do not write "we cannot / we do not
+do tax filing" on the marketing pages. Legal disclaimers about *what
+the current software does* stay on the payroll product page and in the
+Terms of Service. The company page never limits itself.
 
 ## Who we serve
 
-- **Federal service contractors and small operators** who need clean
-  payroll records under labor-law scrutiny (day-rate contractors, USPS
-  contract delivery, wage-determination compliance).
-- **Small operators** who need a fast, honest marketing site that reads
-  well on a phone and does not leak visitor data.
-- **Ourselves.** Internal programs (BAI, ConnectionLoop) are things the
-  studio is trying to make work.
+Anyone with an operation and a real budget. We take work from federal
+service contractors, small operators, mid-market companies, and other
+studios who need a subcontractor. We turn down work only when we
+cannot ship it well or when the request violates the law.
 
 ## Voice
 
-The voice comes from the customer's problem, not from our engineering
-choices. Rules:
+Short sentences. Concrete nouns. One idea per sentence.
 
-- Short sentences. Concrete nouns.
-- Say what the software *does* before we say how it is built.
-- Say "we use AI to build" when it matters (positioning, pricing),
-  not as a filler adjective on every noun.
+- Say what the software *does*.
+- If we've built it before, name the client (SteadFast Transportation).
+- If we haven't built it before, say "we can build that" — not
+  "we specialize in."
 - Never write "AI-powered X" as an adjective. Say the specific thing
-  the AI does: "we generated the operator's contractor register from
-  a CSV in an afternoon."
-- Refused: revolutionize, next-gen, unlock, transform, seamless,
+  the AI does when it matters: "we generated the operator's contractor
+  register from a CSV in an afternoon."
+- Refused words: revolutionize, next-gen, unlock, transform, seamless,
   cutting-edge, world-class, best-in-class, mission-critical.
-- Save "fail closed" and "signed updates" for `/engineering` — those
-  are engineering concepts and not every band needs to sound like it.
+- Refused framings: "two things we sell," "we only do X," "small team,"
+  "one of a kind," "leading."
+- Keep engineering language ("fail closed," "signed updates") to the
+  BAI program page and `/security` — it is not the company's voice.
 
 ## Design
 
-**Palette.** A softened dark canvas with a single bright accent so the
-site has warmth without becoming a SaaS gradient. Colors are named for
-the icon.
+**Palette.** Softened dark canvas with cyan accent from the icon.
 
-| Token       | Value             | Where                                     |
-| ----------- | ----------------- | ----------------------------------------- |
-| `bg`        | `#0a0f14`         | Page canvas — softer than pure black       |
-| `surface`   | `#12181f`         | Inset panels, product frames, hover        |
-| `surface2`  | `#171e26`         | Cards on `surface`, tables, code           |
-| `ink`       | `#f0f0fa`         | Body / display text                        |
-| `mute`      | `rgba(240,240,250,0.66)` | Body below the lead                 |
-| `muted`     | `rgba(240,240,250,0.44)` | Captions, footnotes                 |
-| `line`      | `rgba(240,240,250,0.10)` | Default hairline                    |
-| `line2`     | `rgba(240,240,250,0.22)` | CTA border, active hairline         |
-| **`accent`** | `#10c7eb`         | Cyan — one accent everywhere              |
-| `accentHi`  | `#4edcfb`         | Cyan on hover                             |
-| `accentSoft`| `rgba(16,199,235,0.10)` | Cyan wash on active band            |
-| `rise`      | `#4ed4a2`         | Status up                                  |
-| `fall`      | `#ff7b8a`         | Status down                                |
-| `care`      | `#f5c15a`         | Program status chip (2027, etc.)          |
-
-The cyan is used for: the accent square in the logo, active nav item,
-one primary CTA per page, an inline highlight under a hover'd link, the
-`/status` "up" dot, and the accent bar in a product-band eyebrow. It is
-never used for body text.
+| Token       | Value             |
+| ----------- | ----------------- |
+| `bg`        | `#0a0f14`         |
+| `surface`   | `#12181f`         |
+| `surface2`  | `#171e26`         |
+| `ink`       | `#f0f0fa`         |
+| `mute`      | `rgba(240,240,250,0.66)` |
+| `muted`     | `rgba(240,240,250,0.44)` |
+| `line`      | `rgba(240,240,250,0.10)` |
+| `line2`     | `rgba(240,240,250,0.22)` |
+| **`accent`** | `#10c7eb`         |
+| `accentHi`  | `#4edcfb`         |
+| `accentDim` | `rgba(16,199,235,0.32)` |
+| `accentSoft`| `rgba(16,199,235,0.10)` |
+| `rise`      | `#4ed4a2`         |
+| `fall`      | `#ff7b8a`         |
+| `care`      | `#f5c15a`         |
 
 **Typography.** Inter with system fallbacks. Display and nav are
 uppercase with generous tracking. Body is sentence case, 16px+, line
-height 1.65. Legal / docs prose is left readable — never uppercase.
+height 1.65.
 
-**Density and rhythm.** Full-viewport bands, one idea per band. Bands
-have a clear left column (eyebrow + H2 + lead) and a right column
-(evidence — product frame, table, or a proof point grid). Bands
-separate on a hairline, not a filled divider.
+**Icon.** Four rounded squares. Dark gray, mid gray, light gray, cyan.
+No shadow, no background. Used as header wordmark preface, favicon, and
+in hero visuals.
 
-**Icon.** Four rounded squares in a 2x2 grid. Top-left dark gray,
-top-right mid gray, bottom-left light gray, bottom-right cyan. No
-shadow, no background. Rendered as SVG at every size. Used as the site
-favicon, the header wordmark preface, and in the hero of `/company`.
+## Navigation (v3)
 
-## Home page structure (v2)
+Top nav is four items. Contact is the primary CTA, not a nav link
+alongside the others.
 
-Company-first, product-second, program-third.
+- **SERVICES** — what we build (broad capabilities + past work)
+- **WORK** — a portfolio band: SteadFast site, SteadFast Payroll,
+  BAI (internal), ConnectionLoop (internal)
+- **COMPANY** — who we are, how we work
+- **CONTACT** — button that opens an inline modal with a real form
 
-1. **Hero.** Two sentences. What Doyel Labs is and who we build for.
-   One primary CTA (cyan pill: "See what we build") and one ghost
-   secondary ("How we work").
-2. **What we build.** A three-across grid: Payroll · Websites ·
-   Programs. Each cell: one-line description, a link to the relevant
-   page, and one supporting figure ("Live example: steadfasttransportation
-   inc.com" / "For USPS CDS operators" / "In private testing").
-3. **How we work.** The AI-native studio angle, four honest bullets:
-   we use AI to code, we scope tight, we ship in weeks not quarters, we
-   hand off cleanly. This is where the differentiation lives.
-4. **Where we are.** Casper, Wyoming. Founded September 2026. Small on
-   purpose. Contact.
-5. **Close.** The legal line (not a broker-dealer / not a bank / etc.)
-   moved to a small line here, not the primary disclaimer of the page.
+Removed from the top nav: Programs, Engineering, Security. They keep
+their URLs and are reachable from footer links + inline references,
+but they don't headline.
 
-No BAI demo frame on the home page. BAI lives on `/programs/bai/`.
+## Home page structure (v3)
 
-## Services page structure (v2)
+1. **Hero.** One sentence that says what we build for and one that says
+   how. One primary CTA ("Start a project" — opens contact modal) and
+   one ghost link ("See our work").
+2. **What we build.** Broad, single band: "We build the software your
+   business runs on." Six-across capability tiles, or a paragraph with
+   an inline list.
+3. **Selected work.** Four tiles, equal billing: SteadFast website,
+   SteadFast Payroll, BAI, ConnectionLoop.
+4. **How we work.** AI-as-tool framing: we use AI to code, we scope
+   tight, we ship fast, you own the source. Four rules.
+5. **Ongoing partnership.** New band. We stay on to maintain what we
+   build, fix issues, and ship new features on a monthly retainer.
+6. **Get in touch.** Prominent — big CTA that opens the contact modal.
 
-1. **Hero.** "Two things we sell."
-2. **Payroll — SCA-first.** One band with:
-   - Left: audience + promise + proof line + ghost CTA
-   - Right: SCA product frame
-   - Below: 6 feature cards ("what's in the app today")
-   - Below that: "what it does not do" (the explicit refusal band)
-3. **Websites — for small operators.** Same shape:
-   - Left: what we ship + Steadfast case reference + ghost CTA
-   - Right: Steadfast preview frame
-   - Below: 6 feature cards ("every project ships with")
-   - Below that: 3 refusal cards
-4. **How a Doyel Labs engagement works.** Discovery → build → handoff.
-   Concrete steps with typical timelines (payroll workspace: ~1 week;
-   marketing site: ~3 days for a small operator).
-5. **Pricing philosophy.** We do not publish a rate card because every
-   operator's stack is different, but we do publish our floor and our
-   ceiling. Founding-year rate. Fixed-price by default.
-6. **Close.** Two CTAs: email + phone.
+## Services page structure (v3)
 
-## Programs page structure
+1. **Hero.** "What we build."
+2. **Capabilities.** Ten or so cards that cover our full range —
+   internal tools, marketing sites, compliance workspaces, data
+   pipelines, API integrations, portals, mobile apps, etc.
+3. **Past work.** Case-study framing:
+   - **SteadFast Payroll** for SteadFast Transportation — SCA-first
+     pay-run workspace, currently in operator use.
+   - **SteadFast Transportation website** — ten pages, schema.org,
+     Formspree.
+   - Both name the client, the domain, and what shipped.
+4. **Ongoing partnership.** Retainer service: fix bugs, keep dependencies
+   current, ship new features. Priced per month.
+5. **Pricing.** No fixed dollar tiers. "Every project is priced after a
+   short discovery call." One line about honouring founding-year rates
+   for our first customers.
+6. **Contact.** Prominent CTA that opens the modal.
 
-Unchanged in spirit — keep as two full-band rows for BAI and
-ConnectionLoop. Move the current arm-bar / kill-switch demo frame OFF
-the home page and only show it here.
+## Pricing philosophy (internal — do not publish)
 
-## Company page structure
+- Every project quote is fixed price. We do not bill hourly for AI's
+  time.
+- Base every quote on:
+  - Our own labour (small vs. medium project)
+  - Cloud costs the customer will pay (Cloudflare, Neon, Resend, etc.)
+  - AI token costs during build (this can be significant on a code-heavy
+    project — figure a few hundred dollars for a complex payroll build)
+  - A buffer of ~30 % for iteration
+- The floor is: we do not lose money on an engagement.
+- The ceiling is: what an enterprise vendor would charge for the same
+  scope, minus 30–50 %. We are competitive because we ship faster with
+  fewer people, not because we undercut to bleed.
+- Ongoing retainer: $250–$1,000/month depending on load, with a clear
+  scope of what's included.
+- Anything AI-heavy at runtime (e.g. an AI-powered feature customers
+  use) is quoted with a token-cost estimate + a runtime pass-through.
+- If a discovery call reveals the project is AI-heavy at build time
+  AND runtime, quote the runtime pass-through explicitly and offer to
+  cap monthly AI spend.
 
-- Hero: LLC, city, **founded September 2026**, size ("small on purpose").
-- What we build.
-- **How we work** (AI-native studio, expanded).
-- What we are not.
-- Contact (email, phone, security email, hours).
+## Contact form
+
+- **Real form**, not `mailto:`. Fields: name, email, subject, message.
+- **Endpoint:** `POST /api/contact` — a Cloudflare Pages Function.
+- **Sends via Resend** to `support@doyel-labs.com`.
+- **Env var required:** `RESEND_API_KEY` in the Cloudflare Pages env.
+- **From address:** `Doyel Labs Website <noreply@doyel-labs.com>` once
+  the domain is verified in Resend. Fall back to
+  `onboarding@resend.dev` if the domain isn't yet verified.
+- **Reply-to:** the sender's email address.
+- **Fallback:** if the API fails, the UI shows the support email and
+  phone so the visitor can reach us anyway.
+- **Modal or page:** the modal is trigger-able from any page via a
+  Contact button. `/contact/` also renders the same form inline.
 
 ## Non-negotiables
 
 - Never claim tax filing, wage transfer, direct deposit, ACH, or money
-  movement for the payroll product.
-- Never claim trading returns or "AI trading" for BAI.
-- Never invent case studies. Steadfast Transportation is the only
-  named client, and only because they are a live customer.
+  movement for the payroll product **on the payroll product page** —
+  those are legitimate scope statements. Company-level pages do not
+  need to say them.
+- Never claim trading returns for BAI.
+- Never invent case studies. SteadFast Transportation is the only real
+  client until another one signs.
 - CSP stays strict. Plausible only. No session replay.
-- Accessibility: WCAG AA contrast on every band, visible focus, semantic
-  headings, keyboard nav.
-- Performance: LCP under 2.0s on mobile, no third-party scripts on
-  marketing pages beyond Plausible.
+- WCAG AA contrast, visible focus, keyboard nav, semantic headings.
+- LCP under 2.0s on mobile.
