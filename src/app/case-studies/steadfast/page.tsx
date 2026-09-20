@@ -16,6 +16,7 @@ import {
   Notice,
   Page,
 } from "@/components/chrome";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ClientBadge } from "@/components/client-badge";
 import { ContactWidget } from "@/components/contact-modal";
 import { PayrollPaystubFrame } from "@/components/frames/payroll-paystub";
@@ -39,8 +40,15 @@ export default function SteadfastCaseStudy() {
         </MetaRow>
       }
     >
+      <Breadcrumbs
+        items={[
+          { name: "Work", href: "/work/" },
+          { name: "SteadFast Transportation Inc.", href: "/case-studies/steadfast/" },
+        ]}
+      />
+
       {/* HERO */}
-      <section className="hero-glow pt-24 md:pt-32">
+      <section className="hero-glow">
         <div className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
           <div>
             <Eyebrow>Case study</Eyebrow>

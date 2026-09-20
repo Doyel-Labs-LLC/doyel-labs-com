@@ -10,6 +10,7 @@ import {
   Notice,
   Page,
 } from "@/components/chrome";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { PayrollAuditFrame } from "@/components/frames/payroll-audit";
 import { PayrollBatchFrame } from "@/components/frames/payroll-batch";
 import { PayrollPaystubFrame } from "@/components/frames/payroll-paystub";
@@ -41,8 +42,15 @@ export default function Payroll() {
         </div>
       }
     >
+      <Breadcrumbs
+        items={[
+          { name: "Services", href: "/services/" },
+          { name: "Payroll", href: "/services/payroll/" },
+        ]}
+      />
+
       {/* HERO */}
-      <section className="pt-24">
+      <section>
         <Eyebrow>Services · payroll</Eyebrow>
         <H1>Pay day-rate contractors and prove SCA compliance.</H1>
         <Lead>

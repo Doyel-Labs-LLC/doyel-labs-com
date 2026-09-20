@@ -9,6 +9,7 @@ import {
   Notice,
   Page,
 } from "@/components/chrome";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { WebsiteSteadfastFrame } from "@/components/frames/websites-preview";
 import { site } from "@/lib/site";
 import { steadfastCase } from "@/lib/demo/websites";
@@ -22,8 +23,15 @@ export const metadata: Metadata = {
 export default function Websites() {
   return (
     <Page>
+      <Breadcrumbs
+        items={[
+          { name: "Services", href: "/services/" },
+          { name: "Websites", href: "/services/websites/" },
+        ]}
+      />
+
       {/* HERO */}
-      <section className="pt-24">
+      <section>
         <Eyebrow>Services · websites</Eyebrow>
         <H1>Websites for small operators, built to open fast and stay honest.</H1>
         <Lead>

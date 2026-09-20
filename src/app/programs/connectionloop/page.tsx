@@ -13,6 +13,7 @@ import {
   Page,
   StatusChip,
 } from "@/components/chrome";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ContactWidget } from "@/components/contact-modal";
 import { ConnectionLoopTodayFrame } from "@/components/frames/connectionloop-today";
 import { programStatus, site } from "@/lib/site";
@@ -40,8 +41,15 @@ export default function ConnectionLoopProgram() {
         </div>
       }
     >
+      <Breadcrumbs
+        items={[
+          { name: "Programs", href: "/programs/" },
+          { name: "ConnectionLoop", href: "/programs/connectionloop/" },
+        ]}
+      />
+
       {/* HERO */}
-      <section className="hero-glow pt-24 md:pt-32">
+      <section className="hero-glow">
         <Eyebrow>Programs · ConnectionLoop</Eyebrow>
         <H1>
           Shared plans, lists, and chat — <span className="text-accent">in one loop</span>.

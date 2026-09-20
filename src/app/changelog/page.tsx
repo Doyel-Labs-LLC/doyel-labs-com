@@ -135,6 +135,14 @@ export default function Changelog() {
           The company and per-product logs. Most recent first. Every entry
           names a real change; nothing is added for marketing.
         </Lead>
+        <p className="mt-6 font-mono text-[10px] uppercase tracking-wide text-muted">
+          <a
+            href="/changelog/rss.xml"
+            className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
+          >
+            Subscribe via RSS →
+          </a>
+        </p>
       </section>
 
       <ChangelogBlock title="Company" entries={COMPANY} />

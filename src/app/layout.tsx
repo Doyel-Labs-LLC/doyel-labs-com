@@ -5,17 +5,27 @@ import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: {
-    default: `${site.company} — a small software studio in Casper, Wyoming`,
+    default: `${site.company} — the software your business runs on`,
     template: `%s · ${site.companyShort}`,
   },
   description:
-    `${site.company} is a small software studio (Casper, Wyoming) that builds operational software with AI as its main tool. Payroll for federal service contractors, marketing sites for small operators, plus two internal programs.`,
+    `${site.company} builds the software your business runs on — payroll, marketing sites, internal tools, and custom programs. Casper, Wyoming.`,
   metadataBase: new URL(`https://${site.domain}`),
-  alternates: { canonical: `https://${site.domain}/` },
+  alternates: {
+    canonical: `https://${site.domain}/`,
+    types: {
+      "application/rss+xml": [
+        {
+          url: `https://${site.domain}/changelog/rss.xml`,
+          title: `${site.company} — Changelog`,
+        },
+      ],
+    },
+  },
   openGraph: {
     title: site.company,
     description:
-      "A small software studio in Casper, Wyoming. We build payroll software for federal service contractors, websites for small operators, and two internal programs.",
+      "Doyel Labs builds the software your business runs on. Payroll, websites, internal tools, custom programs. Casper, Wyoming.",
     type: "website",
     url: `https://${site.domain}/`,
     siteName: site.company,

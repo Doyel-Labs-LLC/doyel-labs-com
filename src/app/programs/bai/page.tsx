@@ -14,6 +14,7 @@ import {
   Page,
   StatusChip,
 } from "@/components/chrome";
+import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ContactWidget } from "@/components/contact-modal";
 import { BaiArmFrame } from "@/components/frames/bai-arm";
 import { BaiBookFrame } from "@/components/frames/bai-book";
@@ -39,8 +40,15 @@ export default function BaiProgram() {
         </div>
       }
     >
+      <Breadcrumbs
+        items={[
+          { name: "Programs", href: "/programs/" },
+          { name: "BAI", href: "/programs/bai/" },
+        ]}
+      />
+
       {/* HERO */}
-      <section className="hero-glow pt-24 md:pt-32">
+      <section className="hero-glow">
         <Eyebrow>Programs · BAI</Eyebrow>
         <H1>
           A trading desk that runs on <span className="text-accent">your</span> computer.
