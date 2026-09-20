@@ -139,12 +139,17 @@ followed except for that one line.
 
 ## Deploy target
 
-The repo has no git remote. The user directed:
 `doyel-labs.com` DNS lives on Cloudflare. The build targets Cloudflare
 Pages via `output: 'export'`, with `_headers` carrying CSP + HSTS and
 `_redirects` carrying the legacy `/download` and `/pricing` paths to
 `/programs/bai`. Any Netlify-only conveniences from the existing site
 (server functions, blob-backed forms) are not carried over.
+
+The GitHub source of truth is
+**https://github.com/Doyel-Labs-LLC/doyel-labs-com** (public), created
+under the `Doyel-Labs-LLC` org so it sits alongside the BAI repo.
+Default branch: `master`. The Cloudflare Pages project has not been
+created yet; steps in `README.md` under **Deploying to Cloudflare Pages**.
 
 ## Contact data on the site
 

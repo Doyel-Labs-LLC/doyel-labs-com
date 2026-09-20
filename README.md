@@ -74,8 +74,12 @@ npm run build           # static export to out/
 
 ## Deploying to Cloudflare Pages
 
-1. Push the repo to Git (see AUDIT.md — no remote is set at initial commit).
-2. In Cloudflare Pages, add the project pointing at the repo.
+**Repo:** [github.com/Doyel-Labs-LLC/doyel-labs-com](https://github.com/Doyel-Labs-LLC/doyel-labs-com)
+· default branch `master`.
+
+1. In the Cloudflare dashboard, open **Workers & Pages → Create → Pages →
+   Connect to Git**, authorise GitHub, and pick the `Doyel-Labs-LLC/doyel-labs-com`
+   repo.
 3. Build command: `npm ci && npm run build`. Build output directory: `out`.
 4. Environment variables:
    - `NEXT_PUBLIC_API_BASE` — optional. Defaults to the staging BAI control

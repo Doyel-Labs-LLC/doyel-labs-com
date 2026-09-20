@@ -1,0 +1,25 @@
+# Cloudflare Pages project config.
+#
+# When the Pages project is connected to the Doyel-Labs-LLC/doyel-labs-com
+# GitHub repo, Cloudflare reads this file to know where the static export
+# lives and which environment variables to hydrate at build time.
+#
+# Manual deploys with the Cloudflare CLI work with:
+#
+#   npm ci && npm run build
+#   npx wrangler pages deploy out --project-name doyel-labs-com
+#
+# The `NEXT_PUBLIC_*` values below apply to preview builds. Production
+# values are set in the Cloudflare Pages dashboard under
+# Settings → Environment variables → Production.
+
+name = "doyel-labs-com"
+pages_build_output_dir = "out"
+compatibility_date = "2026-09-20"
+
+[vars]
+NEXT_PUBLIC_API_BASE = "https://bai-control-plane-staging.fly.dev"
+# Leave empty in preview. Set NEXT_PUBLIC_PLAUSIBLE_DOMAIN=doyel-labs.com
+# in the production environment in the Cloudflare dashboard once the
+# Plausible tenant exists.
+NEXT_PUBLIC_PLAUSIBLE_DOMAIN = ""
