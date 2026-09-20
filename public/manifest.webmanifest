@@ -1,0 +1,13 @@
+{
+  "name": "Doyel Labs",
+  "short_name": "Doyel Labs",
+  "description": "Doyel Labs LLC — a small software studio in Casper, Wyoming.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0f14",
+  "theme_color": "#0a0f14",
+  "icons": [
+    { "src": "/logo.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icon-192.svg", "sizes": "192x192", "type": "image/svg+xml" }
+  ]
+}

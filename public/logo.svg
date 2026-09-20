@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" role="img" aria-label="Doyel Labs">
+  <title>Doyel Labs</title>
+  <!-- Four rounded squares in a 2x2 grid. Top-left dark gray, top-right mid
+       gray, bottom-left light gray, bottom-right cyan. No shadow, no
+       background. Matches the physical icon exactly. -->
+  <rect x="4"  y="4"  width="44" height="44" rx="10" fill="#3F444B"/>
+  <rect x="52" y="4"  width="44" height="44" rx="10" fill="#878A91"/>
+  <rect x="4"  y="52" width="44" height="44" rx="10" fill="#C7CAD0"/>
+  <rect x="52" y="52" width="44" height="44" rx="10" fill="#10C7EB"/>
+</svg>

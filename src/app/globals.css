@@ -11,37 +11,54 @@
 
 html,
 body {
-  background: #000000;
+  background: #0a0f14;
   color: #f0f0fa;
   font-feature-settings: "ss01", "tnum", "cv11";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Selection uses the hairline so highlighted text keeps contrast on black. */
+/* Selection uses the cyan accent so highlighted text stands out. */
 ::selection {
-  background: rgba(240, 240, 250, 0.24);
+  background: rgba(16, 199, 235, 0.24);
   color: #ffffff;
 }
 
-/* Focus rings honour the same spectral off-white as body type. */
+/* Focus ring uses the cyan accent — visible on the dark canvas without
+ * looking like a browser default. */
 :focus-visible {
-  outline: 2px solid rgba(240, 240, 250, 0.62);
+  outline: 2px solid #10c7eb;
   outline-offset: 2px;
   border-radius: 2px;
 }
 
-/* Wordmark is spaced small caps, not italic — SpaceX-analogue, not the
- * previous BAI wordmark. */
+/* Wordmark: spaced small caps. Sits next to the four-square logo. */
 .wordmark {
   font-weight: 600;
-  letter-spacing: 0.24em;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
 }
 
-/* Legal / docs prose. Sentence case, generous leading, tabular numbers. */
+/* A subtle textured background used behind the hero. Radial cyan glow at
+ * top-left, decaying to nothing. Very quiet — this is the only "gradient"
+ * on the site. */
+.hero-glow {
+  background:
+    radial-gradient(
+      ellipse 900px 500px at 12% -10%,
+      rgba(16, 199, 235, 0.10),
+      transparent 60%
+    ),
+    radial-gradient(
+      ellipse 600px 400px at 85% 105%,
+      rgba(16, 199, 235, 0.05),
+      transparent 60%
+    );
+}
+
+/* Legal / docs prose. */
 .prose-legal {
-  color: rgba(240, 240, 250, 0.72);
+  color: rgba(240, 240, 250, 0.76);
 }
 .prose-legal h1 {
   color: #f0f0fa;
@@ -70,24 +87,28 @@ body {
   list-style: disc;
 }
 .prose-legal a {
-  color: #f0f0fa;
+  color: #10c7eb;
   text-decoration: underline;
-  text-decoration-color: rgba(240, 240, 250, 0.35);
+  text-decoration-color: rgba(16, 199, 235, 0.45);
   text-underline-offset: 3px;
 }
 .prose-legal a:hover {
-  text-decoration-color: #f0f0fa;
+  color: #4edcfb;
+  text-decoration-color: #4edcfb;
 }
 .prose-legal code {
   font-family: "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
   font-size: 0.9em;
   color: #f0f0fa;
+  background: rgba(240, 240, 250, 0.06);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
 }
 .prose-legal strong {
   color: #f0f0fa;
 }
 
-/* Product frame corner label */
+/* Product frame corner labels — small caps mono. */
 .frame-label {
   font-family: "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
   font-size: 10px;
@@ -96,14 +117,23 @@ body {
   color: rgba(240, 240, 250, 0.44);
 }
 
+/* Small accent bar used to introduce a band's eyebrow. Cyan, 24px wide. */
+.accent-bar {
+  display: inline-block;
+  width: 24px;
+  height: 2px;
+  background: #10c7eb;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
 /* Thin scrollbars everywhere */
 * {
   scrollbar-width: thin;
   scrollbar-color: rgba(240, 240, 250, 0.14) transparent;
 }
 
-/* Reduced motion — the site has minimal motion, but the hero and any
- * looping frames respect this. */
+/* Reduced motion. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

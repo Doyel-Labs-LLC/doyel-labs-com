@@ -1,25 +1,39 @@
 import type { Config } from "tailwindcss";
 
 /**
- * Tokens are documented in DESIGN.md. Keep them in sync.
- * Canvas is pure black; the surface tint is only for a subtle band separator.
+ * Tokens are documented in DESIGN.md and PROMPT.md. Keep them in sync.
+ *
+ * The palette is anchored on the physical Doyel Labs icon: four rounded
+ * squares in dark gray, mid gray, light gray, and cyan. The cyan is the
+ * one accent used across the site. Everything else is spectral off-white
+ * on a softened near-black canvas.
  */
 const config: Config = {
   content: ["./src/**/*.{ts,tsx,mdx}"],
   theme: {
     extend: {
       colors: {
-        // Canvas
-        bg: "#000000",
-        surface: "#0a0a0a",
+        // Canvas — softened from pure black so the site has warmth.
+        bg: "#0a0f14",
+        surface: "#12181f",
+        surface2: "#171e26",
         // Type
         ink: "#f0f0fa",
-        mute: "rgba(240, 240, 250, 0.62)",
+        mute: "rgba(240, 240, 250, 0.66)",
         muted: "rgba(240, 240, 250, 0.44)",
         // Hairline
-        line: "rgba(240, 240, 250, 0.14)",
-        line2: "rgba(240, 240, 250, 0.28)",
-        // Semantic (used sparingly — status/kill dots, no marketing accents)
+        line: "rgba(240, 240, 250, 0.10)",
+        line2: "rgba(240, 240, 250, 0.22)",
+        // Cyan accent — from the bottom-right icon square. Used sparingly.
+        accent: "#10c7eb",
+        accentHi: "#4edcfb",
+        accentDim: "rgba(16, 199, 235, 0.32)",
+        accentSoft: "rgba(16, 199, 235, 0.10)",
+        // Icon palette (also used as chip / step accents)
+        iconDark: "#3f444b",
+        iconMid: "#878a91",
+        iconLight: "#c7cad0",
+        // Semantic
         rise: "#4ed4a2",
         fall: "#ff7b8a",
         care: "#f5c15a",
@@ -50,6 +64,9 @@ const config: Config = {
       maxWidth: { prose: "68ch", band: "1200px" },
       transitionTimingFunction: {
         soft: "cubic-bezier(0.2, 0.8, 0.2, 1)",
+      },
+      boxShadow: {
+        accent: "0 0 0 1px rgba(16, 199, 235, 0.4)",
       },
     },
   },

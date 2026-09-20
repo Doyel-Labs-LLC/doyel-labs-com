@@ -5,31 +5,35 @@ import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: {
-    default: `${site.company} — operational software for people who cannot afford a wrong payment or a silent order`,
+    default: `${site.company} — a small software studio in Casper, Wyoming`,
     template: `%s · ${site.companyShort}`,
   },
   description:
-    `${site.company} (Casper, Wyoming) builds operational software for small companies and independent operators — ` +
-    "payroll and websites first — and internal programs (BAI, ConnectionLoop) that stay on your machine when they can spend.",
+    `${site.company} is a small software studio (Casper, Wyoming) that builds operational software with AI as its main tool. Payroll for federal service contractors, marketing sites for small operators, plus two internal programs.`,
   metadataBase: new URL(`https://${site.domain}`),
   alternates: { canonical: `https://${site.domain}/` },
   openGraph: {
     title: site.company,
     description:
-      "Software that moves money under your rules. Payroll and websites for small operators, plus internal programs that fail closed.",
+      "A small software studio in Casper, Wyoming. We build payroll software for federal service contractors, websites for small operators, and two internal programs.",
     type: "website",
     url: `https://${site.domain}/`,
     siteName: site.company,
   },
   robots: { index: true, follow: true },
   applicationName: site.company,
+  manifest: "/manifest.webmanifest",
   icons: {
-    icon: "/favicon.ico",
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "any" },
+    ],
+    apple: [{ url: "/logo.svg", type: "image/svg+xml" }],
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#000000",
+  themeColor: "#0a0f14",
   colorScheme: "dark",
 };
 
