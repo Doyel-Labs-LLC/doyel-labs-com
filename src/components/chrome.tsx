@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { companyLegal, site } from "@/lib/site";
 import { ContactWidget } from "@/components/contact-modal";
+import { MobileNav } from "@/components/mobile-nav";
 
 const nav = [
   { href: "/services/", label: "Services" },
@@ -64,28 +65,9 @@ export function Header() {
           ))}
           <ContactWidget label="Contact" variant="primary" size="small" />
         </nav>
-        <MobileNav />
+        <MobileNav items={nav} />
       </div>
     </header>
-  );
-}
-
-function MobileNav() {
-  return (
-    <nav
-      aria-label="Primary"
-      className="flex flex-wrap justify-end gap-x-4 gap-y-1 text-[10px] uppercase tracking-wide text-mute md:hidden"
-    >
-      {nav.map((n) => (
-        <Link
-          key={n.href}
-          href={n.href}
-          className="transition-colors hover:text-ink"
-        >
-          {n.label}
-        </Link>
-      ))}
-    </nav>
   );
 }
 

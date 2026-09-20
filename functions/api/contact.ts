@@ -26,7 +26,15 @@ interface Env {
   /** Cloudflare Turnstile secret key. If unset, token verification is
    *  skipped so local dev builds still work. */
   TURNSTILE_SECRET_KEY?: string;
+  /** KV binding used to rate-limit contact submissions by IP.
+   *  If missing (local dev), rate limiting is skipped. */
+  CONTACT_KV?: KVNamespace;
 }
+
+/** How many submissions to allow per IP per window. */
+const RATE_LIMIT_MAX = 5;
+/** Rate-limit window in seconds. */
+const RATE_LIMIT_WINDOW = 300; // 5 minutes
 
 interface ContactPayload {
   name?: unknown;
@@ -106,6 +114,31 @@ async function handleContact({
   }
   if (!message || message.length < 5) {
     return j(400, { error: "Please include a message." });
+  }
+
+  // Rate limit by IP if KV is bound. Keeps a single spam source from
+  // burning through Resend's send quota.
+  if (env.CONTACT_KV) {
+    const clientIp = request.headers.get("cf-connecting-ip") || "unknown";
+    const bucketKey = `rl:${clientIp}`;
+    try {
+      const current = await env.CONTACT_KV.get(bucketKey);
+      const count = current ? parseInt(current, 10) || 0 : 0;
+      if (count >= RATE_LIMIT_MAX) {
+        return j(429, {
+          error:
+            "Too many messages from your IP in a short window. Please try again in a few minutes, or email support@doyel-labs.com directly.",
+        });
+      }
+      // Increment and refresh the window TTL. TTL is set on each write, so
+      // continued activity keeps the window rolling.
+      await env.CONTACT_KV.put(bucketKey, String(count + 1), {
+        expirationTtl: RATE_LIMIT_WINDOW,
+      });
+    } catch {
+      // KV failure should not block the form — it just means no rate limit
+      // on this request. Better to accept than to reject on a KV outage.
+    }
   }
 
   // Verify Turnstile if configured.

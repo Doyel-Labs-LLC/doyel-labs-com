@@ -21,7 +21,51 @@ type Entry = { date: string; text: string };
 const COMPANY: Entry[] = [
   {
     date: "2026-09-20",
-    text: "doyel-labs.com relaunched as a Doyel Labs LLC company page. BAI moved to /programs/bai and is no longer the site brand. Services is now the primary commercial surface (payroll and websites). Cloudflare Pages deploy replaces the previous Netlify site.",
+    text: "Contact form rate-limited by IP via Cloudflare KV: 5 messages per 5-minute window. Prevents a single spam source from burning through Resend send quota.",
+  },
+  {
+    date: "2026-09-20",
+    text: "Mobile navigation upgraded to a proper full-screen drawer. Tap the menu icon on mobile → animated overlay with big-target links and a Contact CTA. Escape / backdrop click / link click all close it.",
+  },
+  {
+    date: "2026-09-20",
+    text: "404 page rewritten: cyan-accented, points visitors at the pages that moved when we relaunched (BAI, ConnectionLoop, payroll, websites, case study).",
+  },
+  {
+    date: "2026-09-20",
+    text: "Cloudflare Turnstile added to the contact form. Widget bound to doyel-labs.com and www.doyel-labs.com. Client-side widget renders on the modal and inline form; server-side check rejects requests without a valid token. CSP updated.",
+  },
+  {
+    date: "2026-09-20",
+    text: "Open Graph image published at /opengraph-image. 1200x630 branded PNG rendered by next/og at build time. Any link to doyel-labs.com now previews with the four-square logo, tagline, and URL band.",
+  },
+  {
+    date: "2026-09-20",
+    text: "Case study published at /case-studies/steadfast — real screenshots of the SteadFast Transportation site (home + contractors), SCA product frames, at-a-glance grid, 4-step approach.",
+  },
+  {
+    date: "2026-09-20",
+    text: "Security page rewritten in the company voice. Cyan accent, four product data maps, controls table, disclosure block, security changelog.",
+  },
+  {
+    date: "2026-09-20",
+    text: "Programs (BAI, ConnectionLoop) and Engineering pages rewritten in the company voice.",
+  },
+  {
+    date: "2026-09-20",
+    text: "Home + services + company rewritten to lead with capabilities and clients, not team size. \"Two things we sell\" framing removed. Real SteadFast screenshot inline. ClientBadge component with the SteadFast logo where SteadFast is credited (with their explicit permission).",
+  },
+  {
+    date: "2026-09-20",
+    text: "Contact form live end-to-end. POST /api/contact -> Cloudflare Pages Function -> Resend -> support@doyel-labs.com -> forwards via Google Workspace to blake@doyel-labs.com. Sender is Doyel Labs Website <noreply@doyel-labs.com> (verified domain).",
+  },
+  {
+    date: "2026-09-20",
+    text: "Cyan accent added to the design system (#10c7eb, from the icon). Canvas softened from pure #000 to #0a0f14. Four-square logo mark in header, footer, hero, and favicons.",
+  },
+  {
+    date: "2026-09-20",
+    text: "doyel-labs.com relaunched as a Doyel Labs LLC company page. BAI moved to /programs/bai and is no longer the site brand. Services is now the primary commercial surface (payroll, websites, and custom software). Cloudflare Pages deploy replaces the previous Netlify site.",
   },
 ];
 
