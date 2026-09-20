@@ -77,7 +77,15 @@ npm run build           # static export to out/
 **Repo:** [github.com/Doyel-Labs-LLC/doyel-labs-com](https://github.com/Doyel-Labs-LLC/doyel-labs-com)
 · default branch `master`.
 
-1. In the Cloudflare dashboard, open **Workers & Pages → Create → Pages →
+The site is a **classic Cloudflare Pages** project (not Workers with Static
+Assets). There is intentionally **no `wrangler.toml`** in the repo — its
+presence would enroll the project in the Workers-with-Assets flow and
+override the automatic upload of the `out/` directory. If you want to
+deploy from a local terminal (e.g. for a one-off hotfix), use
+`npx wrangler pages deploy out --project-name doyel-labs-com` without
+adding a config file.
+
+1. In the Cloudflare dashboard, open **Compute → Pages → Create application →
    Connect to Git**, authorise GitHub, and pick the `Doyel-Labs-LLC/doyel-labs-com`
    repo.
 3. Build command: `npm ci && npm run build`. Build output directory: `out`.

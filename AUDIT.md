@@ -148,8 +148,13 @@ Pages via `output: 'export'`, with `_headers` carrying CSP + HSTS and
 The GitHub source of truth is
 **https://github.com/Doyel-Labs-LLC/doyel-labs-com** (public), created
 under the `Doyel-Labs-LLC` org so it sits alongside the BAI repo.
-Default branch: `master`. The Cloudflare Pages project has not been
-created yet; steps in `README.md` under **Deploying to Cloudflare Pages**.
+Default branch: `master`. The Cloudflare Pages project uses the classic
+Pages upload flow — the repo intentionally does NOT contain a
+`wrangler.toml`, because in the 2026 Cloudflare dashboard the presence
+of that file enrols a new project in the Workers-with-Static-Assets
+flow and sets the deploy command to `npx wrangler deploy`, which fails
+for a static site with no Worker entry point. Steps in `README.md`
+under **Deploying to Cloudflare Pages**.
 
 ## Contact data on the site
 
