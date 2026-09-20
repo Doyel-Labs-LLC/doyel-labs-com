@@ -13,6 +13,7 @@ import {
   Notice,
   Page,
 } from "@/components/chrome";
+import { ClientBadge } from "@/components/client-badge";
 import { ContactWidget } from "@/components/contact-modal";
 import { WebsiteSteadfastFrame } from "@/components/frames/websites-preview";
 import { PayrollScaFrame } from "@/components/frames/payroll-sca";
@@ -127,7 +128,7 @@ export default function Services() {
           <WebsiteSteadfastFrame />
           <div className="flex flex-col justify-center">
             <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
-              Website · SteadFast Transportation Inc.
+              Client · Website build
             </p>
             <h3 className="mt-3 text-[22px] font-semibold leading-tight text-ink">
               A marketing site for a federal service contractor.
@@ -147,6 +148,13 @@ export default function Services() {
               </a>
               .
             </p>
+            <div className="mt-5">
+              <ClientBadge
+                name={steadfastCase.name}
+                logo={steadfastCase.logo}
+                url={steadfastCase.liveUrl}
+              />
+            </div>
             <p className="mt-4 flex flex-wrap gap-2">
               <AccentChip>Live since 2026</AccentChip>
             </p>
@@ -158,7 +166,7 @@ export default function Services() {
           <PayrollScaFrame />
           <div className="flex flex-col justify-center">
             <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
-              Payroll · SteadFast Transportation Inc.
+              Client · Payroll workspace
             </p>
             <h3 className="mt-3 text-[22px] font-semibold leading-tight text-ink">
               SteadFast Payroll — SCA-first pay-run workspace.
@@ -170,6 +178,13 @@ export default function Services() {
               email from the operator's own domain, 180-day audit log
               with CSV export, passkey sign-in. Runs on Netlify Blobs.
             </p>
+            <div className="mt-5">
+              <ClientBadge
+                name={steadfastCase.name}
+                logo={steadfastCase.logo}
+                url={steadfastCase.liveUrl}
+              />
+            </div>
             <p className="mt-4 flex flex-wrap gap-2">
               <AccentChip>In operator use</AccentChip>
             </p>

@@ -14,8 +14,10 @@ import {
   Page,
   StatusChip,
 } from "@/components/chrome";
+import { ClientBadge } from "@/components/client-badge";
 import { ContactWidget } from "@/components/contact-modal";
 import { WebsiteSteadfastFrame } from "@/components/frames/websites-preview";
+import { steadfastCase } from "@/lib/demo/websites";
 import { positioning, programStatus, site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -108,7 +110,7 @@ export default function Home() {
           </div>
           <div className="flex flex-col justify-center">
             <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
-              Website · SteadFast Transportation Inc.
+              Website · Client
             </p>
             <h3 className="mt-3 text-[22px] font-semibold leading-tight text-ink">
               A ten-page marketing site for a federal service contractor.
@@ -118,14 +120,12 @@ export default function Home() {
               hero video, contractor-inquiry form, and a password-gated
               payroll workspace on the same domain. Live since 2026.
             </p>
-            <div className="mt-6">
-              <GhostLink
-                href="https://www.steadfasttransportationinc.com/"
-                small
-                external
-              >
-                Visit the live site
-              </GhostLink>
+            <div className="mt-5">
+              <ClientBadge
+                name={steadfastCase.name}
+                logo={steadfastCase.logo}
+                url={steadfastCase.liveUrl}
+              />
             </div>
           </div>
         </div>

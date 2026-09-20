@@ -5,6 +5,9 @@
  */
 
 export const steadfastCase = {
+  name: "SteadFast Transportation Inc.",
+  shortName: "SteadFast",
+  logo: "/media/websites/steadfast-logo.png",
   domain: "steadfasttransportationinc.com",
   liveUrl: "https://www.steadfasttransportationinc.com/",
   operator: "SteadFast Transportation Inc. (Plentywood, MT)",

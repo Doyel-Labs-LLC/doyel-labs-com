@@ -3,24 +3,28 @@
  *
  * Receives a JSON payload from the site's contact form and forwards it
  * to support@doyel-labs.com via the Resend HTTP API. Requires
- * `RESEND_API_KEY` to be set in the Cloudflare Pages env vars.
+ * `RESEND_API_KEY` (secret) and `RESEND_FROM` (plaintext) to be set in
+ * the Cloudflare Pages env vars.
  *
- * The form never trusts client-side validation; every field is bounded
- * and sanity-checked here. If the endpoint is unconfigured or Resend
- * fails, the client falls back to displaying the support email and
- * phone number.
+ * Status codes:
+ *   200 { ok: true }              — sent
+ *   400 { error }                 — validation failed
+ *   429 { error }                 — rate limited (by Resend)
+ *   500 { error, ... }            — misconfigured or upstream failure
  *
- * Return shapes:
- *   200 { ok: true }
- *   400 { error: "…" }   — validation failure
- *   429 { error: "…" }   — hit a rate limit (Resend or our own)
- *   500 { error: "…" }   — misconfigured or upstream failure
- *   502 { error: "…" }   — Resend rejected the message
+ * We deliberately avoid 502/504 status codes because Cloudflare's edge
+ * replaces those with its own generic error page, discarding our JSON
+ * body. 500 with a JSON body reaches the client intact.
  */
 
 interface Env {
   RESEND_API_KEY?: string;
-  RESEND_FROM?: string; // optional override, defaults to a doyel-labs.com sender
+  RESEND_FROM?: string;
+  /** Destination inbox for contact-form messages. Defaults to
+   *  support@doyel-labs.com once the domain is verified in Resend.
+   *  Until then, this can be set to any address the Resend account
+   *  is allowed to send to (e.g. the account owner's own email). */
+  CONTACT_TO?: string;
 }
 
 interface ContactPayload {
@@ -28,7 +32,7 @@ interface ContactPayload {
   email?: unknown;
   subject?: unknown;
   message?: unknown;
-  website?: unknown; // honeypot
+  website?: unknown;
 }
 
 function j(status: number, body: Record<string, unknown>): Response {
@@ -59,8 +63,25 @@ function escapeHtml(s: string): string {
     .replace(/'/g, "&#39;");
 }
 
-export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
-  // Parse
+export const onRequestPost: PagesFunction<Env> = async (ctx) => {
+  try {
+    return await handleContact(ctx);
+  } catch (err) {
+    const detail = err instanceof Error ? err.message : String(err);
+    return j(500, {
+      error: "Internal error. Please email support@doyel-labs.com.",
+      detail,
+    });
+  }
+};
+
+async function handleContact({
+  request,
+  env,
+}: {
+  request: Request;
+  env: Env;
+}): Promise<Response> {
   let raw: ContactPayload;
   try {
     raw = (await request.json()) as ContactPayload;
@@ -85,7 +106,6 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     return j(400, { error: "Please include a message." });
   }
 
-  // Configured?
   const key = env.RESEND_API_KEY;
   if (!key) {
     return j(500, {
@@ -95,8 +115,8 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
   }
 
   const from =
-    env.RESEND_FROM ||
-    "Doyel Labs Website <noreply@doyel-labs.com>";
+    env.RESEND_FROM || "Doyel Labs Website <noreply@doyel-labs.com>";
+  const to = env.CONTACT_TO || "support@doyel-labs.com";
 
   const heading = `New message from ${name || "(no name)"} <${email}>`;
   const textBody =
@@ -120,17 +140,18 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
       },
       body: JSON.stringify({
         from,
-        to: ["support@doyel-labs.com"],
+        to: [to],
         reply_to: email,
         subject: `[Website] ${subject}`,
         text: textBody,
         html: htmlBody,
       }),
     });
-  } catch {
-    return j(502, {
+  } catch (e) {
+    return j(500, {
       error:
         "We couldn't reach the mail server. Please email support@doyel-labs.com directly.",
+      detail: e instanceof Error ? e.message : String(e),
     });
   }
 
@@ -141,20 +162,24 @@ export const onRequestPost: PagesFunction<Env> = async ({ request, env }) => {
     });
   }
   if (!resendResp.ok) {
-    return j(502, {
+    let upstream = "";
+    try {
+      upstream = (await resendResp.text()).slice(0, 500);
+    } catch {
+      /* ignore */
+    }
+    return j(500, {
       error:
         "The mail server rejected the message. Please email support@doyel-labs.com directly.",
+      status: resendResp.status,
+      upstream,
     });
   }
 
   return j(200, { ok: true });
-};
+}
 
-/** Reject anything that isn't POST. */
 export const onRequest: PagesFunction<Env> = async ({ request }) => {
-  if (request.method === "POST") {
-    return new Response(null, { status: 405 });
-  }
   return new Response("Method not allowed", {
     status: 405,
     headers: { allow: "POST", "cache-control": "no-store" },

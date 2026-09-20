@@ -12,6 +12,7 @@ import {
   Page,
   StatusChip,
 } from "@/components/chrome";
+import { ClientBadge } from "@/components/client-badge";
 import { ContactWidget } from "@/components/contact-modal";
 import { PayrollScaFrame } from "@/components/frames/payroll-sca";
 import { WebsiteSteadfastFrame } from "@/components/frames/websites-preview";
@@ -46,7 +47,7 @@ export default function Work() {
           <WebsiteSteadfastFrame />
           <div className="flex flex-col justify-center">
             <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
-              Website · SteadFast Transportation Inc.
+              Client · Website build
             </p>
             <H2>
               <span className="mt-2 block">
@@ -59,17 +60,17 @@ export default function Work() {
               forms wired to the operator's inbox. Password-gated payroll
               workspace on the same domain.
             </p>
+            <div className="mt-5">
+              <ClientBadge
+                name={steadfastCase.name}
+                logo={steadfastCase.logo}
+                url={steadfastCase.liveUrl}
+              />
+            </div>
             <p className="mt-4 flex flex-wrap gap-2">
               <AccentChip>Live at {steadfastCase.domain}</AccentChip>
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <GhostLink
-                href={steadfastCase.liveUrl}
-                small
-                external
-              >
-                Visit the live site
-              </GhostLink>
               <GhostLink href="/services/websites/" small>
                 Websites service
               </GhostLink>
@@ -84,7 +85,7 @@ export default function Work() {
           <PayrollScaFrame />
           <div className="flex flex-col justify-center">
             <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
-              Payroll · SteadFast Transportation Inc.
+              Client · Payroll workspace
             </p>
             <H2>
               <span className="mt-2 block">
@@ -98,6 +99,13 @@ export default function Work() {
               operator's own domain via Resend, 180-day audit log with CSV
               export, and passkey sign-in. Runs on Netlify Blobs.
             </p>
+            <div className="mt-5">
+              <ClientBadge
+                name={steadfastCase.name}
+                logo={steadfastCase.logo}
+                url={steadfastCase.liveUrl}
+              />
+            </div>
             <p className="mt-4 flex flex-wrap gap-2">
               <AccentChip>In operator use</AccentChip>
             </p>
