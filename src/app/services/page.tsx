@@ -17,8 +17,10 @@ import { ClientBadge } from "@/components/client-badge";
 import { ContactWidget } from "@/components/contact-modal";
 import { WebsiteSteadfastFrame } from "@/components/frames/websites-preview";
 import { PayrollScaFrame } from "@/components/frames/payroll-sca";
+import { Quote } from "@/components/quote";
 import { site } from "@/lib/site";
 import { steadfastCase } from "@/lib/demo/websites";
+import { steadfastTestimonial } from "@/lib/testimonials";
 
 export const metadata: Metadata = {
   title: "Services",
@@ -42,7 +44,7 @@ export default function Services() {
           build, we can build it.
         </Lead>
         <div className="mt-10 flex flex-wrap gap-3">
-          <ContactWidget label="Start a project" />
+          <ContactWidget label="Start a conversation" />
           <GhostLink href="#capabilities" small>
             Capabilities
           </GhostLink>
@@ -56,6 +58,18 @@ export default function Services() {
             Pricing
           </GhostLink>
         </div>
+      </section>
+
+      {/* SHORT TESTIMONIAL — one-line proof right up front */}
+      <section className="mt-24 border-t border-line pt-16">
+        <Quote
+          attribution={steadfastTestimonial.attribution}
+          company={steadfastTestimonial.company}
+          companyUrl={steadfastTestimonial.companyUrl}
+          logo={steadfastTestimonial.logo}
+        >
+          {steadfastTestimonial.short}
+        </Quote>
       </section>
 
       {/* CAPABILITIES */}

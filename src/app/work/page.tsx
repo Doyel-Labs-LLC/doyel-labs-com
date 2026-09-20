@@ -16,8 +16,10 @@ import { ClientBadge } from "@/components/client-badge";
 import { ContactWidget } from "@/components/contact-modal";
 import { PayrollScaFrame } from "@/components/frames/payroll-sca";
 import { WebsiteSteadfastFrame } from "@/components/frames/websites-preview";
+import { Quote } from "@/components/quote";
 import { programStatus, site } from "@/lib/site";
 import { steadfastCase } from "@/lib/demo/websites";
+import { steadfastTestimonial } from "@/lib/testimonials";
 
 export const metadata: Metadata = {
   title: "Work",
@@ -39,6 +41,18 @@ export default function Work() {
           in private testing. Each one names the client, the domain, and
           what shipped.
         </Lead>
+      </section>
+
+      {/* Testimonial excerpt at the top */}
+      <section className="mt-24 border-t border-line pt-16">
+        <Quote
+          attribution={steadfastTestimonial.attribution}
+          company={steadfastTestimonial.company}
+          companyUrl={steadfastTestimonial.companyUrl}
+          logo={steadfastTestimonial.logo}
+        >
+          {steadfastTestimonial.short}
+        </Quote>
       </section>
 
       {/* STEADFAST WEBSITE */}

@@ -8,6 +8,7 @@ const base = `https://${site.domain}`;
 
 const paths = [
   "/",
+  "/start/",
   "/services/",
   "/services/payroll/",
   "/services/websites/",
@@ -16,6 +17,7 @@ const paths = [
   "/programs/",
   "/programs/bai/",
   "/programs/connectionloop/",
+  "/faq/",
   "/engineering/",
   "/security/",
   "/status/",

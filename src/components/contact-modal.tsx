@@ -78,6 +78,7 @@ function Modal({ onClose }: { onClose: () => void }) {
     const payload = {
       name: (fd.get("name") as string) || "",
       email: (fd.get("email") as string) || "",
+      projectType: (fd.get("projectType") as string) || "",
       subject: (fd.get("subject") as string) || "",
       message: (fd.get("message") as string) || "",
       // Honeypot — real users leave this blank.
@@ -210,10 +211,27 @@ function Modal({ onClose }: { onClose: () => void }) {
                 />
               </Field>
             </div>
+            <Field label="What can we help with?">
+              <select
+                name="projectType"
+                defaultValue="general"
+                className={fieldClass}
+              >
+                <option value="general">General inquiry</option>
+                <option value="website">I need a marketing site</option>
+                <option value="payroll">I need a payroll workspace</option>
+                <option value="custom">I have a specific software idea</option>
+                <option value="idea">I have an idea but need help scoping it</option>
+                <option value="maintenance">I need help with existing software</option>
+                <option value="bai">Question about BAI (trading desk)</option>
+                <option value="connectionloop">Question about ConnectionLoop</option>
+                <option value="other">Something else</option>
+              </select>
+            </Field>
             <Field label="Subject">
               <input
                 name="subject"
-                placeholder="What's the operation?"
+                placeholder="A short line describing what you're after"
                 className={fieldClass}
               />
             </Field>

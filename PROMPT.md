@@ -1,7 +1,7 @@
-# doyel-labs.com — the design brief, v4
+# doyel-labs.com — the design brief, v5
 
-The reference the site is written against. If a page contradicts this
-document, the page is wrong. Change this file first, then the page.
+The reference the site is written against. Change this document first,
+then the page. If a page contradicts this brief, the page is wrong.
 
 ## Who Doyel Labs is
 
@@ -18,23 +18,33 @@ answer to "can you build X?" is almost always "yes — tell us more."
 "two-person," "solo," or any headcount language. Customers hire us for
 what we produce, not for how many chairs are in the office.
 
-**We do not narrow the products with claims of what we cannot add.**
-Any "we do not do X" language on the site describes the current build of
-that specific product (SteadFast Payroll v1 does not compute federal
-withholding), never a capability limit of the company. Company-level
-pages never limit themselves.
+## The most important thing about this site
 
-## Who we serve
+**doyel-labs.com is a place a real person lands with an idea for
+software.** Every page should feel like a welcoming place to start a
+conversation. Not a brochure. Not a portfolio. A studio door.
 
-Anyone with a real operation and a real budget. Federal service
-contractors, small operators, mid-market companies, other studios
-who need a subcontractor. We turn down work only when we cannot ship
-it well or when the request would ask us to be something we're not
-(broker-dealer, tax filer, healthcare custodian).
+Concretely, that means:
+
+- **Every page has a Contact CTA within one screen scroll.**
+- **The CTA copy is warm** — "Start a conversation," "Send us a
+  message," "Tell us the idea." Never "Buy now," never "Submit."
+- **The form itself is welcoming** — asks "What can we help with?" with
+  friendly presets like "I have an idea but need help scoping it,"
+  "I'm still figuring it out."
+- **We say we build for people who don't have specs.** Most of them
+  don't. That's fine.
+- **The testimonial is prominent** on the home page, services page,
+  work page, and case study.
+- **The `/start/` page exists** specifically for "I have an idea, I
+  don't know what to do next" visitors.
+- **The `/faq/` page anticipates** the "what if it's dumb?" / "what
+  does it cost?" / "what if I fire you?" nervous questions before the
+  visitor has to ask.
 
 ## Voice
 
-Short sentences. Concrete nouns. One idea per sentence.
+Short sentences. Concrete nouns. One idea per sentence. Warm, not cold.
 
 - Say what the software *does*. Then say who it's for.
 - If we've built it before, name the client (SteadFast Transportation
@@ -51,6 +61,8 @@ Short sentences. Concrete nouns. One idea per sentence.
   BAI program page and `/security` — it is not the company's voice.
 - Every page should be readable by someone who is not a software
   engineer.
+- "Start a conversation" is the primary CTA verb. Reserve "Start a
+  project" for people who have already scoped one out.
 
 ## Design
 
@@ -82,43 +94,70 @@ with generous tracking. Body sentence case, 16px+, line-height 1.65.
 No shadow, no background. Used as the header wordmark preface, favicon,
 and hero on `/company/`.
 
-## Navigation
+## Navigation (v5)
 
-- **SERVICES** — what we build (broad capabilities + past work).
-- **WORK** — a portfolio band: SteadFast site, SteadFast Payroll,
-  BAI (internal), ConnectionLoop (internal).
-- **COMPANY** — who we are, how we work.
-- **CONTACT** — pill button that opens a modal with a real form.
+**Top nav (desktop and mobile drawer):**
+- SERVICES — what we build
+- WORK — a portfolio band
+- COMPANY — who we are, how we work
+- CONTACT — pill button that opens a modal with a real form
+
+**Footer:** Start here · FAQ · Legal · Status · Support · plus contact info.
 
 Not in the top nav (still accessible via footer + inline references):
-Programs, Engineering, Security, Docs, Support, Changelog, Status,
-Legal.
+Programs, Engineering, Security, Docs, Support, Changelog, Legal,
+Start, FAQ.
 
 ## Page structure
 
 ### Home
-1. Hero — one line what we build, one line how.
-2. What we build — 6-9 capability cards.
-3. Selected work — real screenshot + case tile.
-4. How we work — 4 rules.
-5. Ongoing partnership — retainer band.
-6. Contact CTA.
+1. **Hero.** "The software your business runs on." + warm subhead.
+2. **Testimonial** (SteadFast full quote). Right below the hero — the
+   proof point is the second thing every visitor reads.
+3. **What we build** — 6 broad capability cards.
+4. **Selected work** — real screenshot + case tile.
+5. **How we work** — 4 rules.
+6. **What might you be here for?** — 6 path cards for common visitor
+   intents.
+7. **Get in touch** — big Contact CTA.
+
+### `/start/`
+The friendly landing for "I have an idea, I don't know what to do."
+Steps, examples of ideas, nervous-question FAQ, testimonial, CTA.
+
+### `/faq/`
+Anticipates the questions people ask before signing. Grouped into:
+Before we start / Pricing / Working together / After launch / Trust.
+Uses collapsible `<details>` elements for each Q. JSON-LD `FAQPage`
+schema for SEO.
 
 ### Services
 1. Hero.
-2. Capabilities — 9+ cards covering full range.
-3. Past work — case studies (SteadFast site, SteadFast Payroll).
-4. Ongoing partnership — retainer.
-5. How an engagement works — 4 steps.
-6. Pricing philosophy — "priced per project."
-7. Contact CTA.
+2. **Short testimonial** — one-line excerpt right after the hero.
+3. Capabilities — 9+ cards.
+4. Past work — SteadFast website + SteadFast payroll cases.
+5. Ongoing partnership — retainer.
+6. How an engagement works.
+7. Pricing philosophy — "priced per project."
+8. Contact CTA.
 
 ### Work
 1. Hero.
-2. Case: SteadFast website (with real screenshot).
-3. Case: SteadFast Payroll (with product frame).
-4. Internal programs — brief.
-5. Contact CTA.
+2. **Short testimonial** — one-line excerpt right after the hero.
+3. SteadFast website case (with real screenshot).
+4. SteadFast payroll case.
+5. Internal programs — brief.
+6. Contact CTA.
+
+### Case study
+1. Hero.
+2. **Full testimonial** — placed prominently near the top.
+3. At-a-glance grid.
+4. Marketing site details (2 screenshots).
+5. Payroll workspace details (2 product frames).
+6. Approach — 4 steps.
+7. Scope discipline.
+8. CTA.
 
 ### Company
 1. Hero — LLC, city, founded date, logo mark.
@@ -128,32 +167,35 @@ Legal.
 
 ### Contact
 1. Hero.
-2. Real form (inline) + direct contact sidebar.
-3. Related pages links.
+2. Real form (inline) with:
+   - Name (optional)
+   - Email (required)
+   - **What can we help with?** dropdown (project-type)
+   - Subject (optional)
+   - Message (required)
+3. Direct-contact sidebar (email, phone, security disclosure).
+4. Related pages links.
 
 ### Programs (BAI, ConnectionLoop)
-Program pages use the v3 voice — sentence-case body, no
-"aerospace-lab" language, no "fail-closed" without context. Explain
-what the program is, who it's for, and where it stands. Program-specific
-disclaimers stay in the page footer.
+Program pages use the v3+ voice — sentence-case body, no
+"aerospace-lab" language. Program-specific disclaimers stay in the
+page footer.
 
 ## Content principles
 
 ### Trust signals (never fake)
-- **Named clients only.** Never invent a case study, testimonial, or
-  logo. Currently only SteadFast Transportation is named.
-- **Named quotes only.** No anonymous "one client told us" copy. If
-  we can quote a person, we name the person and their title with their
+- **Named clients only.** Currently only SteadFast Transportation.
+- **Named quotes only.** The SteadFast testimonial (in
+  `src/lib/testimonials.ts`) is real, written by the SteadFast owner
+  who is also Blake Doyel, and shipped with explicit permission.
+- **Logos only from live sites** — SteadFast logo displayed with
   written permission.
-- **Logos only from live sites.** Do not show a client's logo on the
-  Doyel Labs site until they confirm they're happy with it in writing.
-- **Screenshots only from real work.** Product frames use synthetic
-  demo data, labeled `DEMO · SYNTHETIC DATA`. Real screenshots (like
-  SteadFast website home) are labeled with the live URL.
+- **Screenshots only from real work** — SteadFast home + contractors
+  page. Product frames use synthetic demo data.
 
 ### Pricing (public)
 - **No fixed rate card.** "Priced per project. Contact for quote."
-- **Founding-year discount language** stays until 2026-12-31, then is
+- **Founding-year discount language** stays until 2026-12-31, then
   removed.
 - **Retainer bracket:** "priced per month based on load," no number.
 - **Internal pricing floors and ceilings** live only in
@@ -161,25 +203,36 @@ disclaimers stay in the page footer.
 
 ### Contact form
 - Real form, `POST /api/contact` → Cloudflare Pages Function → Resend
-  → `support@doyel-labs.com`.
-- Env vars: `RESEND_API_KEY` (secret), `RESEND_FROM` (plaintext).
-- Graceful fallback to email + phone if the endpoint fails.
-- Optional Cloudflare Turnstile for CAPTCHA (needs `NEXT_PUBLIC_TURNSTILE_SITE_KEY`).
-- Optional rate limiting via Cloudflare Workers KV (not yet wired up).
+  → `support@doyel-labs.com` → Google Workspace alias to
+  `blake@doyel-labs.com`.
+- **Project-type dropdown** categorizes inquiries so blake@ can
+  prioritize. Categories: general, website, payroll, custom, idea,
+  maintenance, bai, connectionloop, other.
+- Subject line email: `[Website · <Category>] <Subject>` for easy
+  inbox filtering.
+- Env vars: `RESEND_API_KEY` (secret), `RESEND_FROM` (plaintext),
+  `CONTACT_TO` (plaintext), `TURNSTILE_SECRET_KEY` (secret),
+  `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (plaintext), `CONTACT_KV` (KV
+  binding for rate limiting).
+- Rate limit: 5 requests per 5 minutes per IP via Cloudflare KV.
+- Bot protection: Cloudflare Turnstile challenge + honeypot field.
+- Graceful fallback: if the endpoint fails, the UI shows the direct
+  email and phone.
 
 ## Security posture
 
 Kept strict:
 
-- CSP: `default-src 'self'; script-src 'self' https://plausible.io;
-  frame-ancestors 'none'; upgrade-insecure-requests` and friends.
-- HSTS with preload, `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`.
-- No third-party marketing scripts, no session replay, no ad networks,
-  no Google Analytics, no Meta Pixel.
-- Plausible-only for analytics, cookieless, no personal data.
-- Server-side: RESEND_API_KEY is a secret, never a plaintext var.
-- Every dependency in `package.json` is pinned to a caret range; a
-  `npm audit --production` should return zero highs before deploy.
+- CSP: `default-src 'self'`; scripts from `self`, `plausible.io`,
+  `challenges.cloudflare.com` only. `frame-ancestors 'none'`.
+- HSTS with preload. X-Content-Type-Options: nosniff. X-Frame-Options: DENY.
+- No third-party marketing scripts. No session replay tools ever.
+- Plausible-only for analytics. Cookieless. No PII collected.
+- DMARC `p=quarantine`, SPF, DKIM (Google + Resend), MTA-STS TXT.
+- All secrets (`RESEND_API_KEY`, `TURNSTILE_SECRET_KEY`) stored as
+  encrypted Pages secrets, not plaintext env vars.
+- MFA on GitHub, Cloudflare, Resend, Google Workspace, and Cloudflare
+  Registrar (which handles all four domains).
 
 ## Accessibility, performance, SEO
 
@@ -190,25 +243,27 @@ Kept strict:
 - Every page: unique `<title>` template `%s · Doyel Labs`, unique
   `<meta description>`.
 - `application/ld+json` Organization schema in the root layout.
-- Open Graph title + description on every page. OG image published at
-  `/opengraph-image.png` (or generated by `opengraph-image.tsx`).
-- `canonical` = `https://doyel-labs.com/<path>/`. Trailing slash matches
-  Next.js `trailingSlash: true`.
+- Breadcrumb JSON-LD on all interior pages via
+  `src/components/breadcrumbs.tsx`.
+- FAQ JSON-LD on `/faq/` for Google rich results.
+- Open Graph image at `/opengraph-image` — 1200×630 PNG rendered by
+  `next/og` at build time.
+- RSS feed at `/changelog/rss.xml`. `<link rel="alternate">` in root
+  `<head>`.
 
 ## Content refresh cadence
 
-- **Home + Services + Work + Company:** review every 90 days. Update
-  any stale claim.
-- **Legal MDX:** update the `version` field in frontmatter on any
-  material change. Get attorney sign-off before removing "under
-  review."
+- **Home + Services + Work + Company + Start + FAQ:** review every 90
+  days. Update any stale claim.
+- **Testimonials:** as new clients approve them, add to
+  `src/lib/testimonials.ts` and surface on the case study + home band.
+- **Legal MDX:** update the `version` field on any material change.
+  Get attorney sign-off before removing "under review."
 - **Changelog:** entry per commit that changed something a user could
   notice. Never marketing-flavored.
-- **Case studies:** as new clients ship, add a section under `/work/`
-  with client name (with permission), one paragraph of context, and
-  one product frame.
-- **Program pages:** review each on the program's own release cadence.
-  Keep the status chips honest (`NOT SHIPPING · 2027`, etc.).
+- **Case studies:** as new clients ship, add a section under
+  `/case-studies/<client>/` with client name (with permission), one
+  paragraph of context, and one product frame.
 
 ## Non-negotiables
 

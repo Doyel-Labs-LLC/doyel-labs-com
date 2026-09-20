@@ -17,37 +17,74 @@ import {
 import { ClientBadge } from "@/components/client-badge";
 import { ContactWidget } from "@/components/contact-modal";
 import { WebsiteSteadfastFrame } from "@/components/frames/websites-preview";
+import { Quote } from "@/components/quote";
 import { steadfastCase } from "@/lib/demo/websites";
-import { positioning, programStatus, site } from "@/lib/site";
+import { programStatus, site } from "@/lib/site";
+import { steadfastTestimonial } from "@/lib/testimonials";
 
 export const metadata: Metadata = {
   title: `${site.company} — the software your business runs on`,
-  description: positioning,
+  description:
+    "Doyel Labs builds custom software — marketing sites, payroll workspaces, internal tools, custom programs. Have an idea? Tell us what your business does; we'll tell you what we can build.",
 };
 
 export default function Home() {
   return (
     <Page>
-      {/* HERO */}
+      {/* HERO — warmer, consultative, "start a conversation" */}
       <section className="relative hero-glow pt-24 md:pt-32">
-        <Eyebrow>{site.company} · {site.city}</Eyebrow>
+        <Eyebrow>
+          {site.company} · {site.city}
+        </Eyebrow>
         <H1>
           The <span className="text-accent">software</span> your business runs on.
         </H1>
         <Lead>
-          Doyel Labs builds it — payroll, marketing sites, internal tools,
-          custom programs. We ship in weeks, we stay on to keep it running,
-          and we price the project, not the hours.
+          Have an idea? Tell us what your business does and we'll tell you
+          what we can build. Marketing sites, payroll workspaces, internal
+          tools, custom programs — priced per project, shipped in weeks,
+          and we stay on to keep it running.
         </Lead>
         <div className="mt-10 flex flex-wrap items-center gap-3">
-          <ContactWidget label="Start a project" />
+          <ContactWidget label="Start a conversation" />
           <GhostLink href="/work/" small>
             See our work
+          </GhostLink>
+          <GhostLink href="/start/" small>
+            I'm still figuring it out
           </GhostLink>
         </div>
       </section>
 
-      {/* WHAT WE BUILD — broad capabilities, not narrowed to "two things" */}
+      {/* TESTIMONIAL — big proof point right below the hero */}
+      <section className="mt-24 border-t border-line pt-16 md:pt-20">
+        <div className="max-w-3xl">
+          <Eyebrow>What a client says</Eyebrow>
+        </div>
+        <div className="mt-8">
+          <Quote
+            paragraphs={steadfastTestimonial.full}
+            attribution={steadfastTestimonial.attribution}
+            company={steadfastTestimonial.company}
+            companyUrl={steadfastTestimonial.companyUrl}
+            logo={steadfastTestimonial.logo}
+            size="large"
+          />
+        </div>
+        <p className="mt-6 max-w-prose text-[14px] text-muted">
+          The full case study, with screenshots and product frames from the
+          SteadFast site and payroll workspace, is at{" "}
+          <Link
+            href="/case-studies/steadfast/"
+            className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
+          >
+            /case-studies/steadfast
+          </Link>
+          .
+        </p>
+      </section>
+
+      {/* WHAT WE BUILD — broad capabilities */}
       <section className="mt-32 border-t border-line pt-16 md:pt-24">
         <div className="max-w-3xl">
           <Eyebrow>What we build</Eyebrow>
@@ -67,24 +104,24 @@ export default function Home() {
         <div className="mt-12">
           <Grid3>
             <Card title="Marketing sites">
-              Fast, accessible marketing sites on your own domain.
-              Mobile-first, schema.org, forms wired to your inbox.
+              Fast, accessible sites on your own domain. Mobile-first,
+              schema.org markup, forms wired to your inbox.
             </Card>
             <Card title="Payroll &amp; compliance">
               Pay-run workspaces, wage-determination checks, audit logs a
               regulator can read.
             </Card>
             <Card title="Internal tools">
-              Dashboards, CRUD portals, admin consoles. The stuff a team
-              actually opens every day.
+              Dashboards, CRUD portals, admin consoles — the stuff a team
+              opens every day.
             </Card>
             <Card title="Data pipelines">
-              Ingest a CSV, hit an API, put the result somewhere useful.
-              Cron schedules, retries, and alerts included.
+              CSV ingest, API scrapes, cron schedules, retries and alerts
+              included.
             </Card>
             <Card title="Custom programs">
               Anything that would exist as its own product if you had the
-              budget of a mid-market vendor. We build them for less.
+              budget of a mid-market vendor.
             </Card>
             <Card title="API integrations">
               Bank, payments, tax filers, e-signature, mail, SMS — plug
@@ -104,7 +141,6 @@ export default function Home() {
         </div>
 
         <div className="mt-12 grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-          {/* SteadFast Transportation website */}
           <div>
             <WebsiteSteadfastFrame />
           </div>
@@ -127,15 +163,19 @@ export default function Home() {
                 url={steadfastCase.liveUrl}
               />
             </div>
+            <div className="mt-6">
+              <GhostLink href="/case-studies/steadfast/" small>
+                Read the case study
+              </GhostLink>
+            </div>
           </div>
         </div>
 
-        {/* Three more work tiles — payroll + programs */}
         <div className="mt-12 grid gap-4 md:grid-cols-3">
           <WorkTile
             eyebrow="Payroll · SteadFast Transportation"
             title="SteadFast Payroll — SCA-first pay-run workspace"
-            body="Day-rate contractor register, SAM.gov wage-determination lookups, floor checks on every draft, and an audit log a DOL inspector can read. In production."
+            body="Day-rate contractor register, SAM.gov wage-determination lookups, floor checks on every draft, and an audit log a DOL inspector can read."
             href="/services/payroll/"
             proof="In operator use"
             proofKind="accent"
@@ -143,7 +183,7 @@ export default function Home() {
           <WorkTile
             eyebrow="Program · BAI"
             title="A trading desk that runs on your own computer"
-            body="Keys stay on the operator's machine. Every trade has a stop and a target held at the broker. Chat cannot spend. In private testing."
+            body="Keys stay on the operator's machine. Every trade has a stop and a target held at the broker. Chat cannot spend."
             href="/programs/bai/"
             proof={programStatus.bai.label}
             proofKind="care"
@@ -159,7 +199,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* HOW WE WORK — AI-as-tool, honest */}
+      {/* HOW WE WORK */}
       <section className="mt-32 border-t border-line pt-16 md:pt-24">
         <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
           <div>
@@ -169,69 +209,80 @@ export default function Home() {
             </H2>
             <p className="mt-6 max-w-prose text-[16px] leading-[1.7] text-mute">
               We use AI to write code, migrations, tests, and copy — then
-              a person reads every diff before it ships. That's why we can
+              a person reads every diff before it ships. That's how we
               quote fixed prices, hit tight deadlines, and stay on to
               maintain the software once it's live.
             </p>
           </div>
           <div className="grid gap-6">
-            <Feature step="01" title="Tight scope, then ship">
-              We write down what the software does and does not do before
-              we write code. If the scope grows, we requote — no silent
-              creep.
+            <Feature step="01" title="Start with a conversation">
+              A short call or email exchange. You describe the operation
+              or the idea — even if it's rough. We say what we can build,
+              what tools you already own that we should reuse, and how
+              much it should cost.
             </Feature>
-            <Feature step="02" title="AI-assisted, human-reviewed">
-              AI drafts. Humans decide. Every commit is authored by a
-              person and every ship is a human call.
+            <Feature step="02" title="Written scope, fixed price">
+              Within one business day, a written scope: what ships, what
+              does not, timeline, price. If the scope grows later, we
+              requote — no silent creep.
             </Feature>
             <Feature step="03" title="Weeks, not quarters">
-              Marketing sites in days. Operator workspaces in a week.
-              Bigger builds by the sprint, with a preview URL and a Loom
-              every business day.
+              Marketing sites in days. Operator workspaces in about a
+              week. Bigger builds by the sprint, with a preview URL and
+              a Loom every business day.
             </Feature>
-            <Feature step="04" title="You own it">
+            <Feature step="04" title="You own the software">
               Source lives on your Git host, your domain, your database.
               No lock-in, no proprietary format, no "call us to migrate."
+              Optional monthly retainer to keep us on for maintenance.
             </Feature>
           </div>
         </div>
       </section>
 
-      {/* ONGOING PARTNERSHIP — new band */}
+      {/* WHAT YOU MIGHT BE HERE FOR — audience */}
       <section className="mt-32 border-t border-line pt-16 md:pt-24">
-        <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
-          <div>
-            <Eyebrow>After launch</Eyebrow>
-            <H2>
-              <span className="mt-2 block">We stay on.</span>
-            </H2>
-            <p className="mt-6 max-w-prose text-[16px] leading-[1.7] text-mute">
-              The build is the beginning, not the deliverable. Every
-              engagement includes the option to keep us on a monthly
-              retainer — bug fixes, dependency updates, small features,
-              and a phone number for the next question.
-            </p>
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <Card title="What's included" accent>
-              <ul className="list-disc space-y-1 pl-4">
-                <li>Bug fixes on the software we built</li>
-                <li>Dependency and security updates</li>
-                <li>Small feature requests (one or two per month)</li>
-                <li>Direct email + phone line, one-business-day SLA</li>
-              </ul>
-            </Card>
-            <Card title="What it costs">
-              <p>
-                Priced per month, based on the size of the build and how
-                much attention it needs. Cancel any time. Founding-year
-                rate for our first customers.
-              </p>
-              <p className="mt-3 font-mono text-[10px] uppercase tracking-wide text-accent">
-                Quoted after a short call
-              </p>
-            </Card>
-          </div>
+        <div className="max-w-3xl">
+          <Eyebrow>What might you be here for?</Eyebrow>
+          <H2>
+            <span className="mt-2 block">
+              Pick the one that sounds like you.
+            </span>
+          </H2>
+        </div>
+        <div className="mt-12">
+          <Grid3>
+            <PathCard
+              title="I need a marketing site"
+              body="A fast, professional site on my own domain that actually reads well on a phone."
+              href="/services/websites/"
+            />
+            <PathCard
+              title="I need to pay contractors"
+              body="A workspace that handles day-rate contractors, wage-determination checks, and stubs that hold up to an inspection."
+              href="/services/payroll/"
+            />
+            <PathCard
+              title="I have a specific software idea"
+              body="A dashboard, a portal, an internal tool, an integration — I know what it should do."
+              href="/services/"
+            />
+            <PathCard
+              title="I have an idea but need help scoping"
+              body="I know the outcome I want but I'm not sure what to build first."
+              href="/start/"
+            />
+            <PathCard
+              title="I need help with existing software"
+              body="I have software that breaks or slows me down and I need someone to fix it."
+              href="/services/#partnership"
+            />
+            <PathCard
+              title="I'm still browsing"
+              body="I'm just seeing what's out there. Take a look at what we've built."
+              href="/work/"
+            />
+          </Grid3>
         </div>
       </section>
 
@@ -246,11 +297,13 @@ export default function Home() {
               </span>
             </H2>
             <p className="mt-6 max-w-prose text-[16px] leading-[1.7] text-mute">
-              One paragraph on the operation and what would make it
-              better. We reply within one business day.
+              One paragraph on the operation, or the idea. We reply within
+              one business day. If the idea is rough, that's fine — a
+              short conversation usually turns "somewhere between an
+              inventory tracker and a Slack bot" into a scope + price.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <ContactWidget label="Send a message" />
+              <ContactWidget label="Start a conversation" />
               <GhostLink href={site.phoneHref} small external>
                 Call {site.phone}
               </GhostLink>
@@ -270,11 +323,6 @@ export default function Home() {
   );
 }
 
-/**
- * A work tile — same visual language as the previous ProductTile, kept
- * for the "Selected work" band. Not to be confused with the case
- * frame at the top of the same section.
- */
 function WorkTile({
   eyebrow,
   title,
@@ -317,6 +365,38 @@ function WorkTile({
           →
         </span>
       </div>
+    </Link>
+  );
+}
+
+/**
+ * A conversational path card — used in the "What might you be here for?"
+ * band. Reads more like a helpful librarian pointing at the right shelf
+ * than a marketing tile.
+ */
+function PathCard({
+  title,
+  body,
+  href,
+}: {
+  title: string;
+  body: string;
+  href: string;
+}) {
+  return (
+    <Link
+      href={href}
+      className="group flex flex-col justify-between border border-line p-6 transition-all duration-200 ease-soft hover:border-accentDim hover:bg-surface/40"
+    >
+      <div>
+        <p className="text-[15px] font-semibold text-ink group-hover:text-accentHi">
+          {title}
+        </p>
+        <p className="mt-3 text-[13px] leading-[1.65] text-mute">{body}</p>
+      </div>
+      <p className="mt-6 font-mono text-[10px] uppercase tracking-wide text-accent">
+        Go here →
+      </p>
     </Link>
   );
 }

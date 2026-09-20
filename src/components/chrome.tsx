@@ -97,6 +97,12 @@ export function Footer() {
             {site.phone}
           </a>
           <span className="grow" />
+          <Link href="/start/" className="hover:text-accentHi">
+            Start here
+          </Link>
+          <Link href="/faq/" className="hover:text-accentHi">
+            FAQ
+          </Link>
           <Link href="/legal/terms/" className="hover:text-accentHi">
             Legal
           </Link>

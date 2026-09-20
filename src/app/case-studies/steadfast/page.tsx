@@ -21,8 +21,10 @@ import { ClientBadge } from "@/components/client-badge";
 import { ContactWidget } from "@/components/contact-modal";
 import { PayrollPaystubFrame } from "@/components/frames/payroll-paystub";
 import { PayrollScaFrame } from "@/components/frames/payroll-sca";
+import { Quote } from "@/components/quote";
 import { site } from "@/lib/site";
 import { steadfastCase } from "@/lib/demo/websites";
+import { steadfastTestimonial } from "@/lib/testimonials";
 
 export const metadata: Metadata = {
   title: "SteadFast Transportation Inc. — case study",
@@ -86,6 +88,23 @@ export default function SteadfastCaseStudy() {
               size={64}
             />
           </div>
+        </div>
+      </section>
+
+      {/* TESTIMONIAL — up top so anyone landing here reads the client's words first */}
+      <section className="mt-24 border-t border-line pt-16">
+        <div className="max-w-3xl">
+          <Eyebrow>In their own words</Eyebrow>
+        </div>
+        <div className="mt-8">
+          <Quote
+            paragraphs={steadfastTestimonial.full}
+            attribution={steadfastTestimonial.attribution}
+            company={steadfastTestimonial.company}
+            companyUrl={steadfastTestimonial.companyUrl}
+            logo={steadfastTestimonial.logo}
+            size="large"
+          />
         </div>
       </section>
 

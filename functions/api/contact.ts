@@ -39,11 +39,24 @@ const RATE_LIMIT_WINDOW = 300; // 5 minutes
 interface ContactPayload {
   name?: unknown;
   email?: unknown;
+  projectType?: unknown;
   subject?: unknown;
   message?: unknown;
   website?: unknown;
   turnstileToken?: unknown;
 }
+
+const PROJECT_TYPE_LABELS: Record<string, string> = {
+  general: "General inquiry",
+  website: "Marketing site",
+  payroll: "Payroll workspace",
+  custom: "Specific software idea",
+  idea: "Idea — needs scoping",
+  maintenance: "Existing software help",
+  bai: "BAI (trading desk)",
+  connectionloop: "ConnectionLoop",
+  other: "Something else",
+};
 
 function j(status: number, body: Record<string, unknown>): Response {
   return new Response(JSON.stringify(body), {
@@ -106,6 +119,9 @@ async function handleContact({
 
   const name = trim(raw.name, 100);
   const email = trim(raw.email, 100);
+  const projectTypeKey = trim(raw.projectType, 40).toLowerCase();
+  const projectTypeLabel =
+    PROJECT_TYPE_LABELS[projectTypeKey] || PROJECT_TYPE_LABELS.general;
   const subject = trim(raw.subject, 200) || "New message from doyel-labs.com";
   const message = trim(raw.message, 5000);
 
@@ -198,11 +214,13 @@ async function handleContact({
   const heading = `New message from ${name || "(no name)"} <${email}>`;
   const textBody =
     `${heading}\n` +
+    `Category: ${projectTypeLabel}\n` +
     `Subject: ${subject}\n\n` +
     `${message}\n\n` +
     `---\nReceived at doyel-labs.com/api/contact\n`;
   const htmlBody =
     `<p><strong>${escapeHtml(heading)}</strong></p>` +
+    `<p><em>Category:</em> ${escapeHtml(projectTypeLabel)}</p>` +
     `<p><em>Subject:</em> ${escapeHtml(subject)}</p>` +
     `<p style="white-space:pre-wrap">${escapeHtml(message)}</p>` +
     `<hr><p><small>Received at doyel-labs.com/api/contact</small></p>`;
@@ -219,7 +237,7 @@ async function handleContact({
         from,
         to: [to],
         reply_to: email,
-        subject: `[Website] ${subject}`,
+        subject: `[Website · ${projectTypeLabel}] ${subject}`,
         text: textBody,
         html: htmlBody,
       }),
