@@ -23,40 +23,62 @@ import { steadfastCase } from "@/lib/demo/websites";
 import { steadfastTestimonial } from "@/lib/testimonials";
 
 export const metadata: Metadata = {
-  title: "Services",
+  title: "Services — custom software, websites, payroll, internal tools",
   description:
-    "Doyel Labs builds custom software — marketing sites, payroll and compliance workspaces, internal tools, data pipelines, and one-off programs. Priced per project. Ongoing partnership available.",
+    "Doyel Labs builds custom software for any business — marketing sites, payroll workspaces, internal tools, data pipelines, portals, mobile apps, and one-off programs. Priced per project. Ongoing partnership available.",
+  alternates: { canonical: `https://${site.domain}/services/` },
+  openGraph: {
+    title: "Services — custom software for any business | Doyel Labs",
+    description:
+      "Custom software built on your infrastructure. Marketing sites, payroll workspaces, internal tools, and one-off programs.",
+    url: `https://${site.domain}/services/`,
+    type: "website",
+  },
 };
 
 export default function Services() {
   return (
     <Page>
-      {/* HERO */}
-      <section className="pt-24 md:pt-32">
-        <Eyebrow>Services</Eyebrow>
-        <H1>
-          What we <span className="text-accent">build</span>.
-        </H1>
-        <Lead>
-          Doyel Labs builds custom software. Marketing sites, payroll
-          workspaces, internal tools, data pipelines, portals, mobile apps,
-          and one-off programs. If the business needs it and it's legal to
-          build, we can build it.
-        </Lead>
-        <div className="mt-10 flex flex-wrap gap-3">
-          <ContactWidget label="Start a conversation" />
-          <GhostLink href="#capabilities" small>
-            Capabilities
-          </GhostLink>
-          <GhostLink href="#work" small>
-            Past work
-          </GhostLink>
-          <GhostLink href="#partnership" small>
-            Ongoing partnership
-          </GhostLink>
-          <GhostLink href="#pricing" small>
-            Pricing
-          </GhostLink>
+      {/* HERO — two-column with a live-work preview on the right */}
+      <section className="hero-glow pt-24 md:pt-32">
+        <div className="grid gap-12 md:grid-cols-[minmax(0,7fr)_minmax(0,6fr)] md:items-center md:gap-10 lg:gap-16">
+          <div>
+            <div className="hero-in hero-in--1">
+              <Eyebrow>Services</Eyebrow>
+            </div>
+            <div className="hero-in hero-in--2">
+              <H1>
+                What we <span className="text-accent">build</span>.
+              </H1>
+            </div>
+            <div className="hero-in hero-in--3">
+              <Lead>
+                Doyel Labs builds custom software. Marketing sites, payroll
+                workspaces, internal tools, data pipelines, portals, mobile
+                apps, and one-off programs. For any industry, at any size.
+                If the business needs it and it&apos;s legal to build, we
+                can build it.
+              </Lead>
+            </div>
+            <div className="hero-in hero-in--4 mt-10 flex flex-wrap items-center gap-3">
+              <ContactWidget label="Start a conversation" />
+              <GhostLink href="/pricing/" small>
+                Pricing bands
+              </GhostLink>
+              <GhostLink href="#capabilities" small>
+                Full capabilities
+              </GhostLink>
+            </div>
+            <div className="hero-in hero-in--5 mt-8 flex flex-wrap gap-2">
+              <AccentChip>Written scope</AccentChip>
+              <AccentChip>Fixed price</AccentChip>
+              <AccentChip>You own the source</AccentChip>
+              <AccentChip>Retainer optional</AccentChip>
+            </div>
+          </div>
+          <div className="hero-in hero-in--5">
+            <WebsiteSteadfastFrame />
+          </div>
         </div>
       </section>
 
@@ -137,21 +159,27 @@ export default function Services() {
           </H2>
         </div>
 
-        {/* SteadFast website case */}
+        <p className="mt-6 max-w-3xl text-[16px] leading-[1.7] text-mute">
+          We have one named client at this stage — <strong className="text-ink">SteadFast Transportation Inc.</strong> —
+          and we built two things for them: a full marketing site and a
+          custom payroll workspace. Both are live. Both are here as one
+          example of the range, not the outline of what we do.
+        </p>
+
+        {/* SteadFast website case — text-only summary (frame is in the hero) */}
         <div className="mt-12 grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-          <WebsiteSteadfastFrame />
           <div className="flex flex-col justify-center">
             <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
               Client · Website build
             </p>
             <h3 className="mt-3 text-[22px] font-semibold leading-tight text-ink">
-              A marketing site for a federal service contractor.
+              A ten-page marketing site on a real domain.
             </h3>
             <p className="mt-4 text-[14px] leading-[1.7] text-mute">
-              Ten pages, custom domain, hero video, schema.org markup,
-              mobile-first navigation, Formspree-backed contact and
-              contractor-inquiry forms, plus a password-gated payroll
-              workspace at the same domain. Live at{" "}
+              Custom domain on their own registrar, hero video, schema.org
+              markup, mobile-first navigation, forms wired to the operator&apos;s
+              own inbox, and a password-gated workspace on the same
+              domain. Live at{" "}
               <a
                 href={steadfastCase.liveUrl}
                 target="_blank"
@@ -171,11 +199,50 @@ export default function Services() {
             </div>
             <p className="mt-4 flex flex-wrap gap-2">
               <AccentChip>Live since 2026</AccentChip>
+              <AccentChip>10 pages</AccentChip>
+              <AccentChip>WCAG AA</AccentChip>
             </p>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <GhostLink href="/case-studies/steadfast/" small>
+                Full case study
+              </GhostLink>
+              <GhostLink href="/services/websites/" small>
+                Websites service
+              </GhostLink>
+            </div>
+          </div>
+          <div>
+            <div className="border border-line bg-surface/30 p-6">
+              <p className="font-mono text-[10px] uppercase tracking-eyebrow text-muted">
+                What shipped
+              </p>
+              <ul className="mt-4 space-y-2 text-[13px] leading-[1.55] text-mute">
+                <li className="flex gap-2">
+                  <span aria-hidden="true" className="mt-1.5 h-1 w-2.5 shrink-0 bg-accent" />
+                  <span>Home, About, Services, Routes, Contractors, FAQ, Contact, +&nbsp;3 legal / thank-you</span>
+                </li>
+                <li className="flex gap-2">
+                  <span aria-hidden="true" className="mt-1.5 h-1 w-2.5 shrink-0 bg-accent" />
+                  <span>Muted looping hero video with print-media font preload</span>
+                </li>
+                <li className="flex gap-2">
+                  <span aria-hidden="true" className="mt-1.5 h-1 w-2.5 shrink-0 bg-accent" />
+                  <span>schema.org Organization + PostalAddress JSON-LD</span>
+                </li>
+                <li className="flex gap-2">
+                  <span aria-hidden="true" className="mt-1.5 h-1 w-2.5 shrink-0 bg-accent" />
+                  <span>Formspree contact + contractor-inquiry with honeypot</span>
+                </li>
+                <li className="flex gap-2">
+                  <span aria-hidden="true" className="mt-1.5 h-1 w-2.5 shrink-0 bg-accent" />
+                  <span>OpenGraph + Twitter cards for social previews</span>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
 
-        {/* SteadFast Payroll case */}
+        {/* SteadFast Payroll case — visual anchor + broader framing */}
         <div className="mt-16 grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
           <PayrollScaFrame />
           <div className="flex flex-col justify-center">
@@ -183,14 +250,16 @@ export default function Services() {
               Client · Payroll workspace
             </p>
             <h3 className="mt-3 text-[22px] font-semibold leading-tight text-ink">
-              SteadFast Payroll — SCA-first pay-run workspace.
+              A custom payroll workspace, live for a real operator.
             </h3>
             <p className="mt-4 text-[14px] leading-[1.7] text-mute">
-              A password-gated operator workspace for pay runs on day-rate
-              independent contractors. SAM.gov wage-determination
-              auto-lookup, per-draft floor check, batch PDF stubs, stub
-              email from the operator's own domain, 180-day audit log
-              with CSV export, passkey sign-in. Runs on Netlify Blobs.
+              A password-gated workspace with a contractor register,
+              batch pay runs, PDF stubs, stub email from the operator&apos;s
+              own domain, 180-day audit log with CSV export, and passkey
+              sign-in. This particular build layers on SCA
+              wage-determination checks for the client&apos;s federal
+              award — yours would layer on whatever compliance rules
+              your business answers to.
             </p>
             <div className="mt-5">
               <ClientBadge
@@ -201,10 +270,12 @@ export default function Services() {
             </div>
             <p className="mt-4 flex flex-wrap gap-2">
               <AccentChip>In operator use</AccentChip>
+              <AccentChip>Not tax filing</AccentChip>
+              <AccentChip>Not money movement</AccentChip>
             </p>
             <div className="mt-6">
               <GhostLink href="/services/payroll/" small>
-                Payroll product page
+                Payroll service
               </GhostLink>
             </div>
           </div>

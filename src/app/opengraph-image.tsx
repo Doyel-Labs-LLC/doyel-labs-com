@@ -1,7 +1,13 @@
 import { ImageResponse } from "next/og";
 
-// Static OG image for the root and every page (unless a route overrides).
-// Rendered once at build time; Cloudflare Pages serves the resulting PNG.
+// Static OG image, matches the design mockup: pure black background,
+// four-square logo in the top-left, and a single centered tagline —
+// "Doyel Labs LLC · Custom software for any business" — with the
+// "Custom software" phrase in the cyan brand accent.
+//
+// Rendered once at build time as a static PNG; Cloudflare Pages serves
+// it under `/opengraph-image` and the header rule at `_headers` pins
+// the content-type to `image/png`.
 //
 // Satori (which powers ImageResponse) requires:
 //   - every div with multiple children to have explicit `display: flex`
@@ -12,7 +18,22 @@ export const dynamic = "force-static";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 export const alt =
-  "Doyel Labs — the software your business runs on. Casper, Wyoming.";
+  "Doyel Labs LLC — Custom software for any business. Casper, Wyoming.";
+
+/** Palette pulled from Tailwind tokens so the OG image always matches
+ * the site. Keep these in sync with `tailwind.config.ts`. */
+const palette = {
+  bg: "#000000",
+  ink: "#f0f0fa",
+  mute: "rgba(240, 240, 250, 0.60)",
+  accent: "#10c7eb",
+  square: {
+    dark: "#2a2f36",
+    mid: "#6a7078",
+    light: "#c7cad0",
+    accent: "#10c7eb",
+  },
+} as const;
 
 export default function OpengraphImage() {
   return new ImageResponse(
@@ -24,109 +45,102 @@ export default function OpengraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          padding: "64px",
-          background: "#0a0f14",
-          color: "#f0f0fa",
+          padding: "72px 96px",
+          background: palette.bg,
+          color: palette.ink,
           fontFamily: "sans-serif",
         }}
       >
-        {/* Header: logo mark + wordmark */}
-        <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+        {/* Top-left: four-square logo mark, standalone (no wordmark).
+         * Squares are 60px with a 10px gap, matching the site's LogoMark
+         * proportions. Corner radius keeps them readable at OG sizes. */}
+        <div style={{ display: "flex" }}>
           <div
             style={{
               display: "flex",
-              flexWrap: "wrap",
-              width: "84px",
-              height: "84px",
-              gap: "6px",
+              flexDirection: "column",
+              gap: "10px",
             }}
           >
-            <div style={{ width: "39px", height: "39px", borderRadius: "9px", background: "#3f444b" }} />
-            <div style={{ width: "39px", height: "39px", borderRadius: "9px", background: "#878a91" }} />
-            <div style={{ width: "39px", height: "39px", borderRadius: "9px", background: "#c7cad0" }} />
-            <div style={{ width: "39px", height: "39px", borderRadius: "9px", background: "#10c7eb" }} />
-          </div>
-          <div style={{ display: "flex", flexDirection: "column" }}>
-            <div
-              style={{
-                fontSize: "28px",
-                fontWeight: 600,
-                letterSpacing: "0.18em",
-                textTransform: "uppercase",
-                color: "#f0f0fa",
-              }}
-            >
-              Doyel Labs
+            <div style={{ display: "flex", gap: "10px" }}>
+              <div
+                style={{
+                  width: "60px",
+                  height: "60px",
+                  borderRadius: "14px",
+                  background: palette.square.dark,
+                }}
+              />
+              <div
+                style={{
+                  width: "60px",
+                  height: "60px",
+                  borderRadius: "14px",
+                  background: palette.square.mid,
+                }}
+              />
             </div>
-            <div
-              style={{
-                marginTop: "4px",
-                fontSize: "16px",
-                letterSpacing: "0.12em",
-                textTransform: "uppercase",
-                color: "rgba(240, 240, 250, 0.44)",
-              }}
-            >
-              Casper, Wyoming
+            <div style={{ display: "flex", gap: "10px" }}>
+              <div
+                style={{
+                  width: "60px",
+                  height: "60px",
+                  borderRadius: "14px",
+                  background: palette.square.light,
+                }}
+              />
+              <div
+                style={{
+                  width: "60px",
+                  height: "60px",
+                  borderRadius: "14px",
+                  background: palette.square.accent,
+                }}
+              />
             </div>
           </div>
         </div>
 
-        {/* Center: tagline (built from flex spans to satisfy Satori) */}
-        <div style={{ display: "flex", flexDirection: "column", marginTop: "80px" }}>
-          <div
-            style={{
-              display: "flex",
-              flexWrap: "wrap",
-              fontSize: "72px",
-              fontWeight: 700,
-              lineHeight: 1.05,
-              letterSpacing: "-0.01em",
-              textTransform: "uppercase",
-              maxWidth: "1050px",
-            }}
-          >
-            <span style={{ marginRight: "24px" }}>The</span>
-            <span style={{ color: "#10c7eb", marginRight: "24px" }}>software</span>
-            <span>your business runs on.</span>
-          </div>
-          <div
-            style={{
-              marginTop: "28px",
-              fontSize: "24px",
-              lineHeight: 1.4,
-              color: "rgba(240, 240, 250, 0.66)",
-              maxWidth: "950px",
-            }}
-          >
-            Payroll, marketing sites, internal tools, custom programs. Shipped in weeks.
-          </div>
-        </div>
-
-        {/* Bottom: URL + section list */}
+        {/* Center: single-line tagline, built from flex spans so Satori
+         * can render the mixed-color text without wrapping issues. */}
         <div
           style={{
             display: "flex",
             flexDirection: "column",
-            gap: "16px",
-            borderTop: "1px solid rgba(240, 240, 250, 0.14)",
-            paddingTop: "24px",
+            marginBottom: "56px",
           }}
         >
           <div
             style={{
               display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              fontFamily: "monospace",
-              fontSize: "16px",
-              letterSpacing: "0.12em",
-              textTransform: "uppercase",
-              color: "rgba(240, 240, 250, 0.66)",
+              flexWrap: "wrap",
+              alignItems: "baseline",
+              fontSize: "58px",
+              fontWeight: 700,
+              lineHeight: 1.15,
+              letterSpacing: "-0.015em",
+              color: palette.ink,
             }}
           >
-            <div style={{ display: "flex" }}>doyel-labs.com</div>
-            <div style={{ display: "flex" }}>Services · Work · Company · Contact</div>
+            <span style={{ marginRight: "18px" }}>Doyel Labs LLC</span>
+            <span
+              style={{
+                marginRight: "18px",
+                color: palette.mute,
+                fontWeight: 400,
+              }}
+            >
+              ·
+            </span>
+            <span
+              style={{
+                marginRight: "18px",
+                color: palette.accent,
+              }}
+            >
+              Custom software
+            </span>
+            <span>for any business</span>
           </div>
         </div>
       </div>

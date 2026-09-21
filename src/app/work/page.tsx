@@ -22,9 +22,17 @@ import { steadfastCase } from "@/lib/demo/websites";
 import { steadfastTestimonial } from "@/lib/testimonials";
 
 export const metadata: Metadata = {
-  title: "Work",
+  title: "Work — recent shipments from Doyel Labs",
   description:
-    "Recent Doyel Labs shipments — SteadFast Transportation Inc. marketing site, SteadFast Payroll operator workspace, plus internal programs BAI and ConnectionLoop.",
+    "Real software Doyel Labs has shipped — a live marketing site and custom payroll workspace for SteadFast Transportation Inc., plus internal programs BAI and ConnectionLoop. Every project names the client, the domain, and what shipped.",
+  alternates: { canonical: `https://${site.domain}/work/` },
+  openGraph: {
+    title: "Work — recent shipments | Doyel Labs",
+    description:
+      "Real software Doyel Labs has shipped. Live marketing sites, custom payroll workspaces, internal programs.",
+    url: `https://${site.domain}/work/`,
+    type: "website",
+  },
 };
 
 export default function Work() {
@@ -106,15 +114,17 @@ export default function Work() {
             </p>
             <H2>
               <span className="mt-2 block">
-                SteadFast Payroll — SCA-first pay runs.
+                A custom payroll workspace, live for a real operator.
               </span>
             </H2>
             <p className="mt-4 text-[15px] leading-[1.7] text-mute">
-              A pay-run workspace for day-rate independent contractors under
-              the Service Contract Act. SAM.gov wage-determination lookups,
-              per-draft floor checks, batch PDF stubs, email from the
-              operator's own domain via Resend, 180-day audit log with CSV
-              export, and passkey sign-in. Runs on Netlify Blobs.
+              A password-gated workspace with a contractor register,
+              batch pay runs, PDF stubs from the operator&apos;s own
+              domain, 180-day audit log with CSV export, and passkey
+              sign-in. This particular build layers on SCA
+              wage-determination checks for the client&apos;s federal
+              award — yours would layer on whatever compliance rules
+              your business answers to.
             </p>
             <div className="mt-5">
               <ClientBadge
@@ -125,6 +135,8 @@ export default function Work() {
             </div>
             <p className="mt-4 flex flex-wrap gap-2">
               <AccentChip>In operator use</AccentChip>
+              <AccentChip>Not tax filing</AccentChip>
+              <AccentChip>Not money movement</AccentChip>
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
               <GhostLink href="/services/payroll/" small>

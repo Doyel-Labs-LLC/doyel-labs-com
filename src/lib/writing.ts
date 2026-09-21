@@ -21,6 +21,16 @@ export type Post = {
 
 export const posts: Post[] = [
   {
+    slug: "ai-native-software-what-we-write-what-we-generate",
+    title:
+      "AI-native software: what we generate, what we still write by hand",
+    excerpt:
+      "How Doyel Labs actually uses AI in production builds. Which parts of a project AI is fastest at, which parts humans still own line-by-line, and how we keep clients safe when AI drafts real code.",
+    date: "2026-09-20",
+    readingTime: "8 min",
+    tags: ["Process", "AI-native", "How we work"],
+  },
+  {
     slug: "shipping-steadfast-payroll-in-six-weeks",
     title:
       "How we shipped a full payroll workspace in six weeks",
