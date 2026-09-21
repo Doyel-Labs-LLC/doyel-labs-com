@@ -37,9 +37,13 @@ export function LogoMark({
 }
 
 /** Sparse header with the four-square logo and a wordmark next to it. */
+// Header background: fully opaque on mobile (`bg-bg`) so sticky-header
+// content never bleeds through on iOS Safari — where `backdrop-filter`
+// can drop under certain compositing conditions. Desktop keeps the
+// tasteful light translucency + blur.
 export function Header() {
   return (
-    <header className="sticky top-0 z-30 border-b border-line bg-bg/85 backdrop-blur-md">
+    <header className="sticky top-0 z-30 border-b border-line bg-bg md:bg-bg/85 md:backdrop-blur-md">
       <div className="mx-auto flex max-w-band items-center justify-between px-6 py-4 md:px-10">
         <Link
           href="/"

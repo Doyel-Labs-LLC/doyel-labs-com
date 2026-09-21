@@ -16,6 +16,21 @@ body {
   font-feature-settings: "ss01", "tnum", "cv11";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Preventive: no page should ever cause horizontal scroll on mobile.
+   * If a specific element genuinely needs to overflow (e.g. a code
+   * block, a table), it should be `overflow-x-auto` on that element,
+   * not spill out to the body. */
+  overflow-x: hidden;
+}
+
+/* Long URLs, hashes, and other unbreakable strings should wrap
+ * gracefully on narrow screens rather than force horizontal scroll.
+ * Applied to any mono-font block so paths like
+ * `/writing/ai-native-software-what-we-write-what-we-generate/`
+ * always fit inside their container. */
+.font-mono,
+code {
+  overflow-wrap: anywhere;
 }
 
 /* Selection uses the cyan accent so highlighted text stands out. */
