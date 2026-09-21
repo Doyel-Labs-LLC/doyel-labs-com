@@ -24,6 +24,7 @@ const entries: Entry[] = [
   { path: "/services/", priority: 0.95, change: "weekly" },
   { path: "/services/websites/", priority: 0.95, change: "weekly" },
   { path: "/services/payroll/", priority: 0.95, change: "weekly" },
+  { path: "/services/custom-software/", priority: 0.95, change: "weekly" },
   { path: "/pricing/", priority: 0.9, change: "monthly" },
   { path: "/industries/", priority: 0.9, change: "monthly" },
   { path: "/industries/federal-service-contractors/", priority: 0.85, change: "monthly" },

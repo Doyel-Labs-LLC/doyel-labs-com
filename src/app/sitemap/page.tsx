@@ -106,6 +106,11 @@ const SECTIONS: Section[] = [
         blurb: "Custom pay-run software for how your business actually pays people.",
       },
       {
+        href: "/services/custom-software/",
+        label: "Custom software",
+        blurb: "Dashboards, portals, internal tools, integrations, data pipelines, one-off programs.",
+      },
+      {
         href: "/pricing/",
         label: "Pricing",
         blurb: "Typical price bands and how billing works.",

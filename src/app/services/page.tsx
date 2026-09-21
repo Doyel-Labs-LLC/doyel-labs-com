@@ -69,6 +69,20 @@ export default function Services() {
                 Pricing bands
               </GhostLink>
             </div>
+            <div className="hero-in hero-in--5 mt-8 flex flex-wrap gap-3 border-t border-line pt-6">
+              <p className="w-full font-mono text-[10px] uppercase tracking-eyebrow text-muted">
+                Deep pages
+              </p>
+              <GhostLink href="/services/websites/" small>
+                Websites →
+              </GhostLink>
+              <GhostLink href="/services/payroll/" small>
+                Payroll workspaces →
+              </GhostLink>
+              <GhostLink href="/services/custom-software/" small>
+                Custom software →
+              </GhostLink>
+            </div>
             <div className="hero-in hero-in--5 mt-8 flex flex-wrap gap-2">
               <AccentChip>Written scope</AccentChip>
               <AccentChip>Fixed price</AccentChip>

@@ -60,6 +60,42 @@ export type ChangelogEntry = {
  * after they ship; add a new entry that corrects if needed.
  */
 export const entries: ChangelogEntry[] = [
+  // ── v23 · Custom software page + changelog self-reference ─
+  {
+    id: "v23-custom-software",
+    version: "v23",
+    date: "2026-09-20",
+    section: "Company",
+    title: "Custom software service page",
+    body: "New /services/custom-software/ landing page — the third major service page, alongside websites and payroll. Covers seven categories (dashboards, portals, internal tools, integrations, data pipelines, custom web apps, one-off programs) with real-shape examples per category. Honest \"when to build custom vs. buy off-the-shelf\" band. Service JSON-LD emitted with a $10k–$80k price range for Google's rich results.",
+  },
+  {
+    id: "v23-services-subnav",
+    version: "v23",
+    date: "2026-09-20",
+    section: "Design",
+    title: "Services deep-page sub-nav",
+    body: "Added a \"Deep pages\" row under the /services/ hero linking to /services/websites/, /services/payroll/, and the new /services/custom-software/. Makes the three deep landing pages discoverable from a single click on the services overview.",
+  },
+
+  // ── v22 · Changelog rewrite ───────────────────────────────
+  {
+    id: "v22-changelog-real",
+    version: "v22",
+    date: "2026-09-20",
+    section: "Company",
+    title: "Changelog rewritten with 36 real entries + timeline layout",
+    body: "Rebuilt /changelog/ with a proper timeline layout — cyan dots at each version group, color-coded section chips (Company, Design, Performance, Accessibility, SEO, Writing, Bugfix, Payroll, BAI, ConnectionLoop), and permalink anchors on every entry. 36 real entries covering v1 through v22. Every entry names a real shipped change; nothing padded for marketing.",
+  },
+  {
+    id: "v22-changelog-source",
+    version: "v22",
+    date: "2026-09-20",
+    section: "Company",
+    title: "Single source of truth for changelog + RSS",
+    body: "The old changelog duplicated all entries between the HTML page and the RSS feed route (~120 lines of copy-paste, always going to drift). Refactored to a shared src/lib/changelog.ts module with typed ChangelogEntry / ChangelogSection. Both the page and rss.xml route now import from it. Adding a new entry is one prepended object in one file.",
+  },
+
   // ── 2026-09-20 · Founder + third writing post ────────────
   {
     id: "v21-founder-card",
