@@ -41,6 +41,7 @@ const entries: Entry[] = [
   { path: "/faq/", priority: 0.75, change: "monthly" },
   // Company info
   { path: "/company/", priority: 0.7, change: "monthly" },
+  { path: "/press/", priority: 0.7, change: "monthly" },
   { path: "/engineering/", priority: 0.7, change: "monthly" },
   { path: "/security/", priority: 0.7, change: "monthly" },
   // Support surfaces
@@ -58,6 +59,7 @@ const entries: Entry[] = [
   { path: "/status/", priority: 0.5, change: "weekly" },
   { path: "/changelog/", priority: 0.5, change: "weekly" },
   { path: "/changelog/rss.xml", priority: 0.5, change: "weekly" },
+  { path: "/sitemap/", priority: 0.5, change: "monthly" },
   // Legal — lowest priority
   { path: "/legal/terms/", priority: 0.4, change: "yearly" },
   { path: "/legal/privacy/", priority: 0.4, change: "yearly" },

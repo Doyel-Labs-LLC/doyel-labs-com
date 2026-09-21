@@ -116,6 +116,9 @@ export function Footer() {
           <Link href="/faq/" className="hover:text-accentHi">
             FAQ
           </Link>
+          <Link href="/press/" className="hover:text-accentHi">
+            Press
+          </Link>
           <Link href="/legal/terms/" className="hover:text-accentHi">
             Legal
           </Link>
@@ -124,6 +127,9 @@ export function Footer() {
           </Link>
           <Link href="/support/" className="hover:text-accentHi">
             Support
+          </Link>
+          <Link href="/sitemap/" className="hover:text-accentHi">
+            Site map
           </Link>
           <span aria-hidden="true">·</span>
           <span className="text-muted">© {year}</span>
