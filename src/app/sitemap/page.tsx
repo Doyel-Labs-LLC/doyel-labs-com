@@ -163,6 +163,12 @@ const SECTIONS: Section[] = [
         blurb: "All posts, newest first.",
       },
       {
+        href: "/writing/how-to-scope-software-when-you-dont-have-a-spec/",
+        label: "How to scope software without a spec",
+        blurb:
+          "The seven questions we use to turn \"I think we need something\" into a written scope + fixed price.",
+      },
+      {
         href: "/writing/ai-native-software-what-we-write-what-we-generate/",
         label: "AI-native software",
         blurb: "What we generate with AI, what humans still write by hand.",

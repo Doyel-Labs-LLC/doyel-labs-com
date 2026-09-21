@@ -26,13 +26,14 @@ import { site } from "@/lib/site";
  * software studio: "who's the human on the other end?" This page
  * answers it, honestly and without technical-credential inflation.
  *
- * PHOTO — when a real headshot is available, drop it at
- *   `public/media/founder/blake-doyel.jpg`
- * (aspect ratio ~4:5, at least 800×1000 px). The layout below
- * already reserves the right column for it; until the file exists,
- * we render the four-square logo mark at large size as a
- * deliberate placeholder — not a "photo coming soon" apology,
- * just the mark that stands for Doyel Labs itself.
+ * IDENTITY, NOT A PHOTO. This page deliberately does NOT show a
+ * photo of the founder. That's a considered choice — some people
+ * prefer their identity to sit in what they build and how they
+ * write, not in a portrait. The right-side card uses the
+ * four-square Doyel Labs mark, the founder's name, role, and city.
+ * It reads as the founder's signature card, the same way an
+ * initialed business card reads. Do not add a photo without an
+ * explicit ask from Blake.
  */
 
 const FOUNDER = {
@@ -40,10 +41,6 @@ const FOUNDER = {
   role: "Founder & lead engineer",
   city: site.city,
   email: site.supportEmail,
-  // FUTURE: when a headshot is available, drop it at
-  // `public/media/founder/blake-doyel.jpg` (aspect ratio 4:5, at
-  // least 800×1000 px), then swap the placeholder in
-  // `<FounderPortrait>` for an `<Image>` at that path.
 };
 
 export const metadata: Metadata = {
@@ -140,9 +137,9 @@ export default function Founder() {
             </div>
           </div>
 
-          {/* Right column: photo (when available) or LogoMark. */}
+          {/* Right column: the founder's signature card. */}
           <div className="hero-in hero-in--5">
-            <FounderPortrait />
+            <FounderCard />
           </div>
         </div>
       </section>
@@ -413,43 +410,80 @@ export default function Founder() {
 }
 
 /**
- * Founder portrait. If a real photo exists at the expected path,
- * this component renders it. Otherwise it falls back to the
- * four-square logo mark on a dark card with the founder's name and
- * role — a deliberate placeholder that reads as "the company,"
- * not a "photo missing" apology.
+ * Founder signature card.
  *
- * Because we're on `output: 'export'`, we can't do server-side
- * `fs.existsSync` at render time. Instead we always render the
- * fallback card as the reserved layout, and when a real photo
- * lands at `public/media/founder/blake-doyel.jpg`, replace this
- * body with a `<Image>` element pointing at it.
+ * Renders as a designed identity card — the Doyel Labs four-square
+ * mark, the founder's name (uppercase, spaced), role, and location.
+ * This is the intended visual, not a placeholder. The founder has
+ * chosen not to include a portrait on the site; their identity
+ * lives in the writing, the code, and the mark of the company.
+ *
+ * Layout: portrait-oriented card, ~4:5, on the right column of the
+ * founder hero on desktop; centered above the copy on mobile.
  */
-function FounderPortrait() {
+function FounderCard() {
+  const [first, last] = FOUNDER.name.split(" ");
   return (
     <div className="mx-auto w-full max-w-sm md:mx-0 md:max-w-none">
-      <div className="relative aspect-[4/5] overflow-hidden border border-line bg-surface/40">
-        {/* Placeholder: LogoMark centered on a dark card. Replace
-         * this block with an `<Image>` once a real headshot lands
-         * at `public/media/founder/blake-doyel.jpg`. */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 p-8 text-center">
-          <LogoMark size={140} />
+      <div className="relative overflow-hidden border border-line bg-surface/40">
+        {/* Card header — small mono label, cyan accent bar */}
+        <div className="flex items-center justify-between border-b border-line px-6 py-4">
+          <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
+            <span className="accent-bar" />
+            Founder card
+          </p>
+          <p className="font-mono text-[10px] uppercase tracking-wide text-muted">
+            {new Date().getFullYear()}
+          </p>
+        </div>
+
+        {/* Main card body — logo + name at large scale */}
+        <div className="flex flex-col items-center justify-center gap-8 px-6 py-12 text-center">
+          <LogoMark size={132} />
           <div>
-            <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
-              Founder
+            <p className="text-[13px] font-semibold uppercase tracking-eyebrow text-mute">
+              {first}
             </p>
-            <p className="mt-3 text-[20px] font-semibold uppercase tracking-wide text-ink">
-              {FOUNDER.name}
+            <p className="mt-1 text-[34px] font-semibold uppercase leading-none tracking-display text-ink md:text-[40px]">
+              {last}
             </p>
-            <p className="mt-1 text-[13px] text-mute">{FOUNDER.role}</p>
-            <p className="mt-4 font-mono text-[10px] uppercase tracking-wide text-muted">
+          </div>
+        </div>
+
+        {/* Card footer — role + location + email, laid out like a
+         * business-card foot rule. */}
+        <div className="grid grid-cols-2 gap-0 border-t border-line">
+          <div className="border-r border-line px-5 py-4">
+            <p className="font-mono text-[9px] uppercase tracking-eyebrow text-muted">
+              Role
+            </p>
+            <p className="mt-2 text-[12px] leading-tight text-ink">
+              {FOUNDER.role}
+            </p>
+          </div>
+          <div className="px-5 py-4">
+            <p className="font-mono text-[9px] uppercase tracking-eyebrow text-muted">
+              Based in
+            </p>
+            <p className="mt-2 text-[12px] leading-tight text-ink">
               {FOUNDER.city}
             </p>
           </div>
         </div>
+        <div className="border-t border-line px-5 py-4">
+          <p className="font-mono text-[9px] uppercase tracking-eyebrow text-muted">
+            Reach me
+          </p>
+          <a
+            href={`mailto:${FOUNDER.email}?subject=For%20Blake`}
+            className="mt-2 block text-[12px] leading-tight text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
+          >
+            {FOUNDER.email}
+          </a>
+        </div>
       </div>
       <p className="mt-3 font-mono text-[10px] uppercase tracking-eyebrow text-muted">
-        {FOUNDER.name} · {FOUNDER.role}
+        {FOUNDER.name} · Doyel Labs LLC · {FOUNDER.city}
       </p>
     </div>
   );

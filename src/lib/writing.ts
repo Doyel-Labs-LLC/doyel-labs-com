@@ -21,6 +21,16 @@ export type Post = {
 
 export const posts: Post[] = [
   {
+    slug: "how-to-scope-software-when-you-dont-have-a-spec",
+    title:
+      "How to scope software when you don't have a spec",
+    excerpt:
+      "Most software builds start without a spec. That's fine — the spec is what the orientation call is for. Here's the exact framework we use to turn \"I think we need something\" into a written scope, a fixed price, and a working build.",
+    date: "2026-09-20",
+    readingTime: "10 min",
+    tags: ["Process", "Scoping", "How we work"],
+  },
+  {
     slug: "ai-native-software-what-we-write-what-we-generate",
     title:
       "AI-native software: what we generate, what we still write by hand",

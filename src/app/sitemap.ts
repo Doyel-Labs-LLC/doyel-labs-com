@@ -32,6 +32,7 @@ const entries: Entry[] = [
   { path: "/case-studies/steadfast/", priority: 0.85, change: "monthly" },
   { path: "/reviews/", priority: 0.85, change: "monthly" },
   { path: "/writing/", priority: 0.8, change: "weekly" },
+  { path: "/writing/how-to-scope-software-when-you-dont-have-a-spec/", priority: 0.8, change: "monthly" },
   { path: "/writing/ai-native-software-what-we-write-what-we-generate/", priority: 0.8, change: "monthly" },
   { path: "/writing/shipping-steadfast-payroll-in-six-weeks/", priority: 0.8, change: "monthly" },
   // Consultative entry points

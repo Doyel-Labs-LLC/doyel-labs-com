@@ -1,4 +1,4 @@
-# doyel-labs.com — the design brief, v7
+# doyel-labs.com — the design brief, v8
 
 The reference the site is written against. Change this document first,
 then the page. If a page contradicts this brief, the page is wrong.
@@ -96,6 +96,19 @@ Sentences to avoid: "discovery call," "kickoff call," "book a demo,"
 "strategy session." Those are agency clichés. This is an
 **orientation**. It orients us to your operation and orients you to
 how we build.
+
+**No photos of the founder on the site.**
+Blake has chosen not to put a portrait of himself on doyel-labs.com.
+That is a considered choice — some people prefer their identity to
+sit in what they build and how they write, not in a photograph. The
+`/founder/` page uses a designed signature card (the four-square
+mark + name + role + city + email) instead of a headshot. This is
+the intended visual, not a placeholder.
+
+Do not add a photo of Blake to the site (founder page, company page,
+press page, blog post header, contact page, or anywhere else) unless
+Blake asks for it explicitly in a future prompt. The signature card
+is the founder's public visual identity here.
 
 ## The most important thing about this site
 
