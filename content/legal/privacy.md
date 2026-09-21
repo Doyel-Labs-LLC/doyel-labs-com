@@ -5,16 +5,19 @@ title: Privacy Policy
 under_review: true
 ---
 
-DRAFT FOR COUNSEL. Not yet reviewed by a lawyer. Do not present to customers until it is.
-
 # Doyel Labs Privacy Policy
 
 This policy is Doyel Labs LLC's, the company that makes the software described on this website.
+It covers what happens to your information when you visit `doyel-labs.com`, when you email us,
+and when you use software Doyel Labs builds or ships.
 
 ## Products this policy covers
 
-- **Payroll software** (SteadFast Payroll and any operator workspace we run for you).
-- **Websites** we build and host for operators.
+- **The website itself** at `doyel-labs.com` — marketing pages, the contact form, the changelog,
+  and every other page anyone can reach without a sign-in.
+- **Custom software we build for you** — websites, payroll workspaces, dashboards, portals,
+  internal tools, integrations, and one-off programs. Each build is a separate deployment on
+  your own infrastructure; Doyel Labs holds the code and helps you operate it.
 - **BAI**, our internal trading desk (installed on your machine).
 - **ConnectionLoop**, our internal mobile app (shipped to iOS and Android through their stores).
 

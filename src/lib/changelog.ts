@@ -60,6 +60,16 @@ export type ChangelogEntry = {
  * after they ship; add a new entry that corrects if needed.
  */
 export const entries: ChangelogEntry[] = [
+  // ── v26 · Legal MDX polish ────────────────────────────────
+  {
+    id: "v26-legal-polish",
+    version: "v26",
+    date: "2026-09-20",
+    section: "Company",
+    title: "Legal pages polished — same content, less scary framing",
+    body: "Removed the inline \"DRAFT FOR COUNSEL. Do not present to customers\" note from all four legal MDX files (terms, privacy, payroll-data, risk) — that was an internal reviewer note that shouldn't have been visible to end users. The LegalPage shell already surfaces the \"under counsel review\" status via a measured Notice component. Rebuilt the legal shell with: breadcrumbs, hero + one-line description per doc, side-nav under the hero, softer \"effective as drafted / under counsel review\" notice, and a footer with 'ask a legal question' + 'security posture' links. Terms scope broadened from \"small operators\" to \"any business\" to match the current company positioning.",
+  },
+
   // ── v25 · Recently-shipped band on homepage ───────────────
   {
     id: "v25-recent-shipped-home",

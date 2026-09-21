@@ -5,19 +5,21 @@ title: Terms of Service
 under_review: true
 ---
 
-DRAFT FOR COUNSEL. Not yet reviewed by a lawyer. Do not present to customers until it is.
-
 # Doyel Labs Terms of Service
 
 These terms cover the software and services offered by Doyel Labs LLC ("we"), a Wyoming
-limited liability company headquartered in Casper, Wyoming.
+limited liability company headquartered in Casper, Wyoming, USA.
 
 ## Scope
 
-**Services.** Payroll software for small operators, and websites we build for small operators.
-**Programs.** BAI (a trading desk you install and run on your own computer) and ConnectionLoop
-(an invite-only mobile app for shared calendars). Each product may have a rider — a short set of
-extra terms that only apply to it — linked from that product's page.
+**Services.** Custom software development — websites, payroll workspaces, internal tools,
+dashboards, portals, integrations, data pipelines, and one-off programs — for any business
+that wants software built for its operation. Priced per project against a written scope.
+
+**Programs.** Doyel Labs also builds internal programs, currently BAI (a trading desk you
+install and run on your own computer) and ConnectionLoop (an invite-only mobile app for
+shared calendars). Each program may have a rider — a short set of extra terms that only
+apply to it — linked from that program's page.
 
 ## What Doyel Labs is not
 

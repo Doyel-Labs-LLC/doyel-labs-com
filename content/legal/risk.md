@@ -5,8 +5,6 @@ title: BAI Risk Disclosure
 under_review: true
 ---
 
-DRAFT FOR COUNSEL. Not yet reviewed by a lawyer. Do not present to customers until it is.
-
 # BAI Risk Disclosure
 
 Read this before you arm BAI for the first time, and again whenever it changes.

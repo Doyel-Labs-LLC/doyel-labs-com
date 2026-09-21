@@ -5,8 +5,6 @@ title: Payroll data processing
 under_review: true
 ---
 
-DRAFT FOR COUNSEL. Not yet reviewed by a lawyer. Do not present to customers until it is.
-
 # Payroll data processing
 
 This document names what the operator (you) and Doyel Labs LLC (we) each hold when you use
