@@ -241,6 +241,11 @@ const SECTIONS: Section[] = [
         label: "Press & media kit",
         blurb: "Logos, boilerplate, and everything a journalist needs.",
       },
+      {
+        href: "/uses/",
+        label: "Uses",
+        blurb: "The tools Doyel Labs builds with. Real stack, no aspirational entries, plus a \"what we don&apos;t use\" band.",
+      },
     ],
   },
   {

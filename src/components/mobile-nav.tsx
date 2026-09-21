@@ -236,6 +236,7 @@ const SUPPORT_LINKS = [
   { href: "/support/", label: "Support" },
   { href: "/status/", label: "Status" },
   { href: "/press/", label: "Press & media kit" },
+  { href: "/uses/", label: "Uses" },
   { href: "/security/", label: "Security" },
   { href: "/engineering/", label: "Engineering" },
   { href: "/changelog/", label: "Changelog" },

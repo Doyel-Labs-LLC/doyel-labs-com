@@ -60,6 +60,16 @@ export type ChangelogEntry = {
  * after they ship; add a new entry that corrects if needed.
  */
 export const entries: ChangelogEntry[] = [
+  // ── v28 · /uses/ page ─────────────────────────────────────
+  {
+    id: "v28-uses",
+    version: "v28",
+    date: "2026-09-20",
+    section: "Company",
+    title: "/uses/ page — real tech stack, real tools",
+    body: "New /uses/ page in the classic uses.tech developer-blog format. Nine categories (editor + AI tooling, framework + language, backend + storage, deployment + CDN, comms + email, auth + payments, analytics + monitoring, design + assets, legal + ops) with 40+ specific tools we actually use. \"What we don't use\" band names six categories we've explicitly refused (Google Analytics, session-replay tools, chat widgets, newsletter pop-ups, growth hacks, gratuitous custom fonts) with the reason each. Signal to technical prospects that the stack is transparent and considered.",
+  },
+
   // ── v27 · Phone number update + README refresh ───────────
   {
     id: "v27-phone-307",
