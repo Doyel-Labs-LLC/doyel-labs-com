@@ -109,6 +109,33 @@ export default function Company() {
         </section>
       </Reveal>
 
+      {/* WHO'S BEHIND DOYEL LABS */}
+      <Reveal>
+        <section className="mt-24 border-t border-line pt-16">
+          <div className="max-w-3xl">
+            <Eyebrow>Who&apos;s behind Doyel Labs</Eyebrow>
+            <H2>
+              <span className="mt-2 block">
+                A real human, not a &quot;team&quot; page with stock
+                photos.
+              </span>
+            </H2>
+            <p className="mt-6 text-[16px] leading-[1.7] text-mute">
+              Doyel Labs is founded and run by Blake Doyel — the
+              person you email, the person on the orientation call,
+              and the person who reads every line of code we ship.
+              Non-traditional path, honest AI-native approach,
+              based in {site.city}.
+            </p>
+            <div className="mt-6">
+              <GhostLink href="/founder/" small>
+                Read the founder page
+              </GhostLink>
+            </div>
+          </div>
+        </section>
+      </Reveal>
+
       {/* HOW WE WORK */}
       <section className="mt-32 border-t border-line pt-16 md:pt-24">
         <div className="max-w-3xl">

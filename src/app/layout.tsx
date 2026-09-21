@@ -137,7 +137,9 @@ const orgSchema = {
   foundingDate: "2026-09",
   founder: {
     "@type": "Person",
+    "@id": `https://${site.domain}/founder/#person`,
     name: "Blake Doyel",
+    url: `https://${site.domain}/founder/`,
   },
   address: {
     "@type": "PostalAddress",

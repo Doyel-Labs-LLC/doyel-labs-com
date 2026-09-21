@@ -114,6 +114,9 @@ export function Footer() {
           <Link href="/reviews/" className="hover:text-accentHi">
             Reviews
           </Link>
+          <Link href="/founder/" className="hover:text-accentHi">
+            Founder
+          </Link>
           <Link href="/writing/" className="hover:text-accentHi">
             Writing
           </Link>

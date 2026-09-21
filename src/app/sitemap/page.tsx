@@ -208,6 +208,12 @@ const SECTIONS: Section[] = [
         blurb: "Who we are, where we&apos;re based, how we work.",
       },
       {
+        href: "/founder/",
+        label: "Founder",
+        blurb:
+          "Blake Doyel — the person on the orientation call, and the person who ships your build.",
+      },
+      {
         href: "/engineering/",
         label: "Engineering",
         blurb:

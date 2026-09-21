@@ -41,6 +41,7 @@ const entries: Entry[] = [
   { path: "/faq/", priority: 0.75, change: "monthly" },
   // Company info
   { path: "/company/", priority: 0.7, change: "monthly" },
+  { path: "/founder/", priority: 0.8, change: "monthly" },
   { path: "/press/", priority: 0.7, change: "monthly" },
   { path: "/engineering/", priority: 0.7, change: "monthly" },
   { path: "/security/", priority: 0.7, change: "monthly" },

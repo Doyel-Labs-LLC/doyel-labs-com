@@ -226,6 +226,7 @@ const EXPLORE_LINKS = [
   { href: "/industries/", label: "Industries" },
   { href: "/reviews/", label: "Reviews" },
   { href: "/case-studies/steadfast/", label: "Case study" },
+  { href: "/founder/", label: "Founder" },
   { href: "/writing/", label: "Writing" },
   { href: "/start/", label: "Start here" },
   { href: "/faq/", label: "FAQ" },
