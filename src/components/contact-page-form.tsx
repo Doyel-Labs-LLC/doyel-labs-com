@@ -32,6 +32,7 @@ export function ContactPageForm() {
       projectType: (fd.get("projectType") as string) || "",
       subject: (fd.get("subject") as string) || "",
       message: (fd.get("message") as string) || "",
+      preferredTimes: (fd.get("preferredTimes") as string) || "",
       website: (fd.get("website") as string) || "",
       turnstileToken,
     };
@@ -76,11 +77,12 @@ export function ContactPageForm() {
     return (
       <div className="border border-accent bg-accentSoft/40 p-6">
         <p className="font-mono text-[11px] uppercase tracking-wide text-accent">
-          Message received
+          ✓ Message received
         </p>
         <p className="mt-3 text-[15px] text-ink">
-          Thanks — we'll be in touch within one business day. For anything
-          urgent, call{" "}
+          A real person from Doyel Labs will reply within one business
+          day with a couple of times that could work for your one-hour
+          orientation. For anything urgent, call{" "}
           <a
             href={site.phoneHref}
             className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
@@ -153,6 +155,17 @@ export function ContactPageForm() {
           placeholder="What are you trying to build, and what would make it work well?"
           className={`${fieldClass} resize-y`}
         />
+      </Field>
+      <Field label="Suggested orientation times (optional)">
+        <textarea
+          name="preferredTimes"
+          rows={2}
+          placeholder="e.g. Tue Sep 23 · 2pm MT · Zoom, or Wed after 3pm my time"
+          className={`${fieldClass} resize-y`}
+        />
+        <span className="mt-1 block font-mono text-[10px] normal-case tracking-normal text-muted">
+          Skip if unsure — we&apos;ll propose a couple of times.
+        </span>
       </Field>
       {TURNSTILE_SITE_KEY ? (
         <Turnstile sitekey={TURNSTILE_SITE_KEY} onToken={setTurnstileToken} />

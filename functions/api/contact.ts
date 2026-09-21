@@ -42,6 +42,10 @@ interface ContactPayload {
   projectType?: unknown;
   subject?: unknown;
   message?: unknown;
+  /** Optional free-text field where the prospect can suggest a couple of
+   *  Zoom / phone times for the one-hour orientation call. Reduces one
+   *  round-trip of email tag. */
+  preferredTimes?: unknown;
   website?: unknown;
   turnstileToken?: unknown;
 }
@@ -124,6 +128,7 @@ async function handleContact({
     PROJECT_TYPE_LABELS[projectTypeKey] || PROJECT_TYPE_LABELS.general;
   const subject = trim(raw.subject, 200) || "New message from doyel-labs.com";
   const message = trim(raw.message, 5000);
+  const preferredTimes = trim(raw.preferredTimes, 500);
 
   if (!email || !looksLikeEmail(email)) {
     return j(400, { error: "A valid email is required." });
@@ -222,6 +227,7 @@ async function handleContact({
     projectTypeLabel,
     subject,
     message,
+    preferredTimes,
     email,
   });
   const htmlBody = renderHtmlEmail({
@@ -231,6 +237,7 @@ async function handleContact({
     projectTypeLabel,
     subject,
     message,
+    preferredTimes,
     replyMailto,
   });
 
@@ -306,9 +313,15 @@ function renderTextEmail(v: {
   projectTypeLabel: string;
   subject: string;
   message: string;
+  /** Optional. Prospect's suggested Zoom / phone times for the
+   *  one-hour orientation. Omitted from output when empty. */
+  preferredTimes: string;
   email: string;
 }): string {
   const rule = "─".repeat(64);
+  const times = v.preferredTimes
+    ? `PROPOSED ORIENTATION TIMES:\n${v.preferredTimes}\n\n${rule}\n\n`
+    : "";
   return (
     `${rule}\n` +
     `  DOYEL LABS  ·  CASPER, WYOMING\n` +
@@ -319,6 +332,7 @@ function renderTextEmail(v: {
     `${rule}\n\n` +
     `${v.message}\n\n` +
     `${rule}\n\n` +
+    times +
     `Reply directly to this email, or send a new message to:\n` +
     `  ${v.email}\n\n` +
     `${rule}\n\n` +
@@ -342,6 +356,9 @@ function renderHtmlEmail(v: {
   projectTypeLabel: string;
   subject: string;
   message: string;
+  /** Optional. Rendered as its own labelled block above the reply CTA
+   *  so it's easy to spot in the inbox when scheduling. */
+  preferredTimes: string;
   replyMailto: string;
 }): string {
   const bodyMessage = escapeHtml(v.message).replace(/\n/g, "<br>");
@@ -351,6 +368,21 @@ function renderHtmlEmail(v: {
   const replyLabel = v.name
     ? `Reply to ${escapeHtml(v.name.split(/\s+/)[0])}`
     : "Reply";
+  const preferredTimesBlock = v.preferredTimes
+    ? `
+          <tr>
+            <td style="padding:0 32px 24px;">
+              <div style="border:1px solid rgba(16,199,235,0.35);background:rgba(16,199,235,0.06);padding:16px 20px;">
+                <p style="margin:0;font-family:'JetBrains Mono',Consolas,'Courier New',monospace;font-size:10px;letter-spacing:0.10em;text-transform:uppercase;color:#10c7eb;">
+                  Suggested orientation times
+                </p>
+                <p style="margin:8px 0 0;font-size:14px;line-height:1.6;color:#f0f0fa;">
+                  ${escapeHtml(v.preferredTimes).replace(/\n/g, "<br>")}
+                </p>
+              </div>
+            </td>
+          </tr>`
+    : "";
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -426,7 +458,7 @@ function renderHtmlEmail(v: {
                 ${bodyMessage}
               </div>
             </td>
-          </tr>
+          </tr>${preferredTimesBlock}
 
           <!-- Reply CTA -->
           <tr>

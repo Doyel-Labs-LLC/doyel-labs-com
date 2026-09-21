@@ -81,6 +81,7 @@ function Modal({ onClose }: { onClose: () => void }) {
       projectType: (fd.get("projectType") as string) || "",
       subject: (fd.get("subject") as string) || "",
       message: (fd.get("message") as string) || "",
+      preferredTimes: (fd.get("preferredTimes") as string) || "",
       // Honeypot — real users leave this blank.
       website: (fd.get("website") as string) || "",
       turnstileToken,
@@ -152,18 +153,21 @@ function Modal({ onClose }: { onClose: () => void }) {
           Start a project.
         </h2>
         <p className="mt-3 text-[14px] leading-relaxed text-mute">
-          Tell us the operation and what would make it more defensible on
-          paper. We answer within one business day.
+          One paragraph on the business and what you&apos;d like to
+          build. If you&apos;re ready, suggest a couple of times for a
+          one-hour orientation call — Zoom or phone, your choice. A
+          real person from Doyel Labs replies within one business day.
         </p>
 
         {state.status === "success" ? (
           <div className="mt-6 border border-accent bg-accentSoft/40 p-4 text-[13px] text-ink">
             <p className="font-mono text-[11px] uppercase tracking-wide text-accent">
-              Message received
+              ✓ Message received
             </p>
             <p className="mt-2">
-              We'll reply within one business day at the email you provided.
-              For anything urgent, call{" "}
+              A real person from Doyel Labs will reply within one
+              business day with a couple of times that could work for
+              your one-hour orientation. For anything urgent, call{" "}
               <a
                 href={site.phoneHref}
                 className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
@@ -243,6 +247,17 @@ function Modal({ onClose }: { onClose: () => void }) {
                 placeholder="What are you trying to build, and what would make it work well?"
                 className={`${fieldClass} resize-y`}
               />
+            </Field>
+            <Field label="Suggested orientation times (optional)">
+              <textarea
+                name="preferredTimes"
+                rows={2}
+                placeholder="e.g. Tue Sep 23 · 2pm MT · Zoom, or Wed after 3pm my time"
+                className={`${fieldClass} resize-y`}
+              />
+              <span className="mt-1 block font-mono text-[10px] normal-case tracking-normal text-muted">
+                Skip if unsure — we&apos;ll propose a couple of times.
+              </span>
             </Field>
             {TURNSTILE_SITE_KEY ? (
               <Turnstile
