@@ -34,7 +34,7 @@ export const companyLegal =
   `investment adviser, bank, payroll processor, or money transmitter, and none of its software ` +
   `holds customer money or securities. Trading with the BAI program can lose money, including all of it.`;
 
-/** BAI-only disclaimer — used on /programs/bai/. */
+/** BAI-only disclaimer — used on /products/#bai and /legal/bai/*. */
 export const baiDisclaimer =
   "BAI is software you run on your own computer. It connects to your own brokerage and market-data " +
   "accounts and places orders at your broker under rules you set. Doyel Labs LLC is not a broker-dealer " +
@@ -49,8 +49,11 @@ export const payrollDisclaimer =
 
 export const programStatus = {
   bai: {
-    label: "NOT SHIPPING · 2027",
-    body: "In private testing. Public availability, if any, no earlier than 2027.",
+    label: "PRIVATE BETA · BROKER REVIEW",
+    body:
+      "In private testing with a small cohort of operators. Alpaca broker-app " +
+      "review is underway; public availability follows once the app is approved " +
+      "and the risk-control gates pass a final audit.",
   },
   connectionloop: {
     label: "STORE SUBMISSION THIS MONTH",

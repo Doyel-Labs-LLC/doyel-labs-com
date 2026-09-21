@@ -475,7 +475,7 @@ export default function Post() {
                   If you&apos;d rather see this in practice before
                   you commit to a call, our{" "}
                   <Link
-                    href="/case-studies/steadfast/"
+                    href="/work/"
                     className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
                   >
                     SteadFast case study

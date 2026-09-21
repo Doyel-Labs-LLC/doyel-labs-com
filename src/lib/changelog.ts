@@ -28,7 +28,9 @@ export type ChangelogSection =
   | "Bugfix"
   | "Payroll"
   | "BAI"
-  | "ConnectionLoop";
+  | "ConnectionLoop"
+  | "Products"
+  | "Legal";
 
 export const SECTIONS: readonly ChangelogSection[] = [
   "Company",
@@ -41,6 +43,8 @@ export const SECTIONS: readonly ChangelogSection[] = [
   "Payroll",
   "BAI",
   "ConnectionLoop",
+  "Products",
+  "Legal",
 ] as const;
 
 export type ChangelogEntry = {
@@ -60,6 +64,40 @@ export type ChangelogEntry = {
  * after they ship; add a new entry that corrects if needed.
  */
 export const entries: ChangelogEntry[] = [
+  // ── v30 · Site simplification + BAI legal for Alpaca ──────
+  {
+    id: "v30-products-page",
+    version: "v30",
+    date: "2026-09-21",
+    section: "Products",
+    title: "New /products/ page — BAI Desk + ConnectionLoop, in one place",
+    body: "Replaces the earlier three-page /programs/* tree with one focused page. Documents both products (BAI Desk — the autonomous trading desk; ConnectionLoop — the invite-only shared calendar) with hero, three-locks card, product-vs-services separation, and direct links to the BAI legal docs. Deep links: /products/#bai and /products/#connectionloop. Page-level noindex, follow (same posture as before) until at least one product ships publicly.",
+  },
+  {
+    id: "v30-bai-legal",
+    version: "v30",
+    date: "2026-09-21",
+    section: "Legal",
+    title: "BAI Desk Terms of Use + Privacy Policy published",
+    body: "Two new legal documents scoped specifically to BAI Desk, published at /legal/bai/terms/ and /legal/bai/privacy/. Both effective Sep 21 2026, published primarily so Alpaca's broker-app compliance team can review the product's terms as part of the OAuth Connect submission. Content authored by the founder; hosted under a product-scoped side-nav so the pages don't drag the company-wide legal rail with them. LegalPage component refactored to accept optional nav/breadcrumbs/lead overrides.",
+  },
+  {
+    id: "v30-simplification",
+    version: "v30",
+    date: "2026-09-21",
+    section: "Company",
+    title: "Simplified from ~41 pages to ~30 — same content, fewer routes",
+    body: "The old site had a page per program (BAI, ConnectionLoop), a page per program's docs, a case-studies subtree with one entry, a /reviews/ page with one testimonial, a /start/ funnel page duplicating /contact/, and a /programs/ index tying it together — nine routes total for what is really three surfaces (products, case studies, contact). Consolidated: /programs/* → /products/ (single page, hash anchors); /docs/bai/ and /docs/connectionloop/ → /products/#*; /case-studies/steadfast/ → /work/ (full case + testimonial); /reviews/ → /work/ (full testimonial rendered inline); /start/ → /contact/. Every deleted route is 301'd via public/_redirects, so nothing 404s. Fewer pages, same content, easier to maintain, and search engines see one strong page per product instead of three thin ones.",
+  },
+  {
+    id: "v30-bai-status",
+    version: "v30",
+    date: "2026-09-21",
+    section: "Products",
+    title: "BAI status updated — private beta, broker review",
+    body: "BAI Desk status moved from \"NOT SHIPPING · 2027\" to \"PRIVATE BETA · BROKER REVIEW\" to reflect the actual state — the product is being submitted for Alpaca's broker-app onboarding. Public release still follows the app-approval + risk-audit gates, but the framing no longer reads like vaporware.",
+  },
+
   // ── v29 · De-index unshipped programs from Google ────────
   {
     id: "v29-noindex-programs",

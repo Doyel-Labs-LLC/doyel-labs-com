@@ -93,6 +93,8 @@ const SECTION_TONE: Record<ChangelogSection, string> = {
   Payroll: "border-line2 text-mute",
   BAI: "border-line2 text-mute",
   ConnectionLoop: "border-line2 text-mute",
+  Products: "border-accentDim text-accent",
+  Legal: "border-care/50 text-care",
 };
 
 export default function Changelog() {

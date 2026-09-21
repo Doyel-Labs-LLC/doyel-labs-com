@@ -3,12 +3,12 @@
  * quoted party in writing. Never add anonymous or fabricated copy here.
  *
  * A `Testimonial` carries:
- *   - `full` — the multi-paragraph quote, rendered on case studies and
- *     the /reviews/ page.
+ *   - `full` — the multi-paragraph quote, rendered on case studies
+ *     and the /work/ page (where named client reviews now live).
  *   - `short` — a one-sentence excerpt for use in tighter surfaces
  *     (home hero band, services hero, etc.).
  *   - `scope` — a short list of what Doyel Labs actually shipped for
- *     this client. Used on /reviews/ so the reader can see what the
+ *     this client. Used on /work/ so the reader can see what the
  *     testimonial refers to.
  *   - `date` — ISO 8601, when the testimonial was written and approved
  *     for use on the site.

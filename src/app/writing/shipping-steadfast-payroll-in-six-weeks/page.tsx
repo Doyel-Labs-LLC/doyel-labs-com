@@ -404,7 +404,7 @@ export default function Post() {
               >
                 More on federal-contractor software
               </GhostLink>
-              <GhostLink href="/case-studies/steadfast/" small>
+              <GhostLink href="/work/" small>
                 Read the full case study
               </GhostLink>
             </div>

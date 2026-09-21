@@ -16,11 +16,17 @@ export const metadata: Metadata = {
   description: `Documentation index for ${site.company} products.`,
 };
 
+/**
+ * Docs are now scoped to *services* Doyel Labs delivers to clients.
+ * Product docs (BAI Desk, ConnectionLoop) live inline on the unified
+ * /products/ page — those products are in private beta and don't
+ * warrant a separate docs surface yet.
+ */
 const DOC_SECTIONS = [
   {
     href: "/docs/payroll/",
-    title: "Payroll",
-    body: "Set up an SCA-first operator workspace: contractor register, wage-determination lookup, batch pay run, stub email, audit log.",
+    title: "Payroll workspace",
+    body: "Set up an operator workspace: contractor register, wage-determination lookup (where applicable), batch pay run, stub email, audit log.",
     tag: "Service",
   },
   {
@@ -28,18 +34,6 @@ const DOC_SECTIONS = [
     title: "Websites",
     body: "Edit a Doyel Labs–built marketing site: file layout, copy edits, form providers, deploy pipeline.",
     tag: "Service",
-  },
-  {
-    href: "/docs/bai/",
-    title: "BAI",
-    body: "How BAI works in the order you meet it: install, broker keys, allow live, arm, campaigns, safety.",
-    tag: "Program",
-  },
-  {
-    href: "/docs/connectionloop/",
-    title: "ConnectionLoop",
-    body: "Get into a Space: install, create an account, join with an invite code, use the tabs.",
-    tag: "Program",
   },
 ];
 
@@ -52,10 +46,21 @@ export default function DocsIndex() {
           Per-product <span className="text-accent">documentation</span>.
         </H1>
         <Lead>
-          Short guides for each Doyel Labs product. Every claim maps to a
-          real file in the code. If a doc looks out of date, tell us — we
-          fix docs the same business day.
+          Short guides for the services Doyel Labs delivers. Every
+          claim maps to a real file in the code. If a doc looks out of
+          date, tell us — we fix docs the same business day.
         </Lead>
+        <p className="mt-6 text-[14px] leading-[1.7] text-mute">
+          Looking for product docs? BAI Desk and ConnectionLoop
+          documentation lives inline on the{" "}
+          <Link
+            href="/products/"
+            className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
+          >
+            /products/
+          </Link>{" "}
+          page while both are in private beta.
+        </p>
       </section>
 
       <section className="mt-16">

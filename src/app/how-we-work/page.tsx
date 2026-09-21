@@ -357,7 +357,7 @@ export default function HowWeWork() {
             />
           </div>
           <div className="mt-6">
-            <GhostLink href="/case-studies/steadfast/" small>
+            <GhostLink href="/work/" small>
               Read the full case study
             </GhostLink>
           </div>

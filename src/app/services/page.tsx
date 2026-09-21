@@ -217,7 +217,7 @@ export default function Services() {
               <AccentChip>WCAG AA</AccentChip>
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <GhostLink href="/case-studies/steadfast/" small>
+              <GhostLink href="/work/" small>
                 Full case study
               </GhostLink>
               <GhostLink href="/services/websites/" small>
@@ -297,14 +297,15 @@ export default function Services() {
 
         {/* Internal work — brief mentions with links */}
         <div className="mt-16 grid gap-4 md:grid-cols-2">
-          <Card title="BAI — internal">
-            A trading desk that runs on the operator's computer, at their
-            broker, under their rules. In private testing. Details on{" "}
+          <Card title="BAI Desk — internal">
+            An autonomous trading desk that runs on the operator&apos;s
+            computer, at their broker, under their rules. In private
+            beta. Details on{" "}
             <a
-              href="/programs/bai/"
+              href="/products/#bai"
               className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
             >
-              the program page
+              the products page
             </a>
             .
           </Card>
@@ -312,10 +313,10 @@ export default function Services() {
             An invite-only shared calendar for families and small groups.
             Expo + Firebase. Store submission in progress. Details on{" "}
             <a
-              href="/programs/connectionloop/"
+              href="/products/#connectionloop"
               className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
             >
-              the program page
+              the products page
             </a>
             .
           </Card>

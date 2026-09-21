@@ -102,7 +102,7 @@ export default function Company() {
             {steadfastTestimonial.short}
           </Quote>
           <div className="mt-4">
-            <GhostLink href="/case-studies/steadfast/" small>
+            <GhostLink href="/work/" small>
               Read the case study
             </GhostLink>
           </div>

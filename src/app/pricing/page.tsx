@@ -61,7 +61,7 @@ export default function Pricing() {
           </Lead>
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <ContactWidget label="Get a quote" />
-            <GhostLink href="/start/" small>
+            <GhostLink href="/contact/" small>
               I&apos;m still figuring out the scope
             </GhostLink>
           </div>

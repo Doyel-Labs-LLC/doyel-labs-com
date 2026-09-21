@@ -51,16 +51,35 @@ export default function Work() {
         </Lead>
       </section>
 
-      {/* Testimonial excerpt at the top */}
+      {/* Full multi-paragraph testimonial — /reviews/ was folded into
+       * this page, so the whole quote lives here. Short-form use of
+       * the same quote continues on the homepage. */}
       <section className="mt-24 border-t border-line pt-16">
-        <Quote
-          attribution={steadfastTestimonial.attribution}
-          company={steadfastTestimonial.company}
-          companyUrl={steadfastTestimonial.companyUrl}
-          logo={steadfastTestimonial.logo}
-        >
-          {steadfastTestimonial.short}
-        </Quote>
+        <div className="max-w-3xl">
+          <Eyebrow>What a client says</Eyebrow>
+        </div>
+        <div className="mt-8">
+          <Quote
+            paragraphs={steadfastTestimonial.full}
+            attribution={steadfastTestimonial.attribution}
+            company={steadfastTestimonial.company}
+            companyUrl={steadfastTestimonial.companyUrl}
+            logo={steadfastTestimonial.logo}
+            size="large"
+          />
+        </div>
+        <p className="mt-6 max-w-prose text-[13px] leading-[1.65] text-muted">
+          Approved and signed off by the quoted party.{" "}
+          <a
+            href={steadfastTestimonial.verify.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-mute underline decoration-line2 underline-offset-2 hover:text-accentHi"
+          >
+            {steadfastTestimonial.verify.label}
+          </a>
+          .
+        </p>
       </section>
 
       {/* STEADFAST WEBSITE */}
@@ -93,8 +112,12 @@ export default function Work() {
               <AccentChip>Live at {steadfastCase.domain}</AccentChip>
             </p>
             <div className="mt-6 flex flex-wrap gap-3">
-              <GhostLink href="/case-studies/steadfast/" small>
-                Full case study
+              <GhostLink
+                href={steadfastCase.liveUrl}
+                small
+                external
+              >
+                Visit the live site
               </GhostLink>
               <GhostLink href="/services/websites/" small>
                 Websites service
@@ -147,27 +170,37 @@ export default function Work() {
         </div>
       </section>
 
-      {/* INTERNAL PROGRAMS */}
+      {/* INTERNAL PRODUCTS */}
       <section className="mt-32 border-t border-line pt-16">
         <div className="max-w-3xl">
-          <Eyebrow>Internal programs</Eyebrow>
+          <Eyebrow>Doyel Labs products</Eyebrow>
           <H2>
-            <span className="mt-2 block">Things we're building for ourselves.</span>
+            <span className="mt-2 block">Software we ship under our own brand.</span>
           </H2>
+          <p className="mt-6 text-[15px] leading-[1.7] text-mute">
+            Two products, both in private beta today. Full details on the{" "}
+            <Link
+              href="/products/"
+              className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
+            >
+              products page
+            </Link>
+            .
+          </p>
         </div>
         <div className="mt-12 grid gap-4 md:grid-cols-2">
           <ProgramCard
-            eyebrow="Program · BAI"
-            title="A trading desk that runs on your own computer."
-            body="At your broker, under your rules. Keys stay on the operator's machine. Every trade has a stop and a target held at the broker. Chat cannot spend. In private testing."
-            href="/programs/bai/"
+            eyebrow="Product · BAI Desk"
+            title="An autonomous trading desk that runs on your own computer."
+            body="At your broker, under your rules. Keys stay on the operator's machine. Every trade has a stop and a target held at the broker. Chat cannot spend."
+            href="/products/#bai"
             status={programStatus.bai.label}
           />
           <ProgramCard
-            eyebrow="Program · ConnectionLoop"
+            eyebrow="Product · ConnectionLoop"
             title="Shared plans, lists, and chat for families."
             body="Invite-only. Free. No ads. No public feed. iOS and Android. Built by Doyel Labs, credited to The Hamilton Family."
-            href="/programs/connectionloop/"
+            href="/products/#connectionloop"
             status={programStatus.connectionloop.label}
           />
         </div>

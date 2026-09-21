@@ -102,8 +102,8 @@ export function Footer() {
             {site.phone}
           </a>
           <span className="grow" />
-          <Link href="/start/" className="hover:text-accentHi">
-            Start here
+          <Link href="/products/" className="hover:text-accentHi">
+            Products
           </Link>
           <Link href="/how-we-work/" className="hover:text-accentHi">
             How we work
@@ -111,8 +111,8 @@ export function Footer() {
           <Link href="/industries/" className="hover:text-accentHi">
             Industries
           </Link>
-          <Link href="/reviews/" className="hover:text-accentHi">
-            Reviews
+          <Link href="/work/" className="hover:text-accentHi">
+            Case studies
           </Link>
           <Link href="/founder/" className="hover:text-accentHi">
             Founder

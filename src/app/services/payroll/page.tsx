@@ -88,7 +88,7 @@ export default function Payroll() {
             </div>
             <div className="hero-in hero-in--4 mt-8 flex flex-wrap items-center gap-3">
               <ContactWidget label="Talk to us" />
-              <GhostLink href="/case-studies/steadfast/" small>
+              <GhostLink href="/work/" small>
                 Read the SteadFast case study
               </GhostLink>
               <GhostLink href="/pricing/" small>

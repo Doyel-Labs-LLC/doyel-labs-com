@@ -1,18 +1,49 @@
 # Cloudflare Pages redirect table.
 #
 # The previous site was branded as "BAI by Doyel Labs" and had /download and
-# /pricing as top-level BAI-only surfaces. Both now belong on the BAI program
-# page. `/services` alone lands on the payroll product; both `/services/*`
-# and `/programs/*` live under the App Router.
+# /pricing as top-level BAI-only surfaces. All BAI-specific routes now live
+# under /products/ (with dedicated /legal/bai/* pages for the legal docs
+# submitted to Alpaca). ConnectionLoop lives on the same products page.
+#
+# The `/start/`, `/reviews/`, and `/case-studies/steadfast/` pages were
+# consolidated into `/contact/` and `/work/` respectively — they had too
+# little distinct content to earn their own routes and were adding
+# indexation noise on a name-search where the AI Overview is finally
+# picking up "custom software studio" as the primary identity.
 
-/download            /programs/bai/                 301
-/download/*          /programs/bai/                 301
-/pricing             /programs/bai/                 301
-/pricing/*           /programs/bai/                 301
+# ── Old BAI-brand marketing routes ─────────────────────────────
+/download            /products/#bai                 301
+/download/*          /products/#bai                 301
+/pricing             /products/#bai                 301
+/pricing/*           /products/#bai                 301
 
+# ── Old programs tree → products page ───────────────────────────
+/programs            /products/                     301
+/programs/           /products/                     301
+/programs/bai        /products/#bai                 301
+/programs/bai/       /products/#bai                 301
+/programs/connectionloop        /products/#connectionloop  301
+/programs/connectionloop/       /products/#connectionloop  301
+
+# ── Old per-program docs → products page ────────────────────────
+/docs/bai            /products/#bai                 301
+/docs/bai/           /products/#bai                 301
+/docs/connectionloop /products/#connectionloop      301
+/docs/connectionloop/ /products/#connectionloop     301
+
+# ── Consolidated content ────────────────────────────────────────
+/start               /contact/                      301
+/start/              /contact/                      301
+/reviews             /work/                         301
+/reviews/            /work/                         301
+/case-studies                    /work/             301
+/case-studies/                   /work/             301
+/case-studies/steadfast          /work/             301
+/case-studies/steadfast/         /work/             301
+
+# ── Legacy support / recovery routes ────────────────────────────
 /community           /support/                      301
 /community/*         /support/                      301
-
 /early-access        /contact/                      301
 /reset               /support/                      301
 /verify              /support/                      301

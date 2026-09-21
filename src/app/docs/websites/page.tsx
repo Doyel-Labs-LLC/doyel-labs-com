@@ -180,7 +180,7 @@ export default function WebsitesDocs() {
           <GhostLink href="/services/websites/" small>
             Product page
           </GhostLink>
-          <GhostLink href="/case-studies/steadfast/" small>
+          <GhostLink href="/work/" small>
             Case study
           </GhostLink>
           <GhostLink href="/docs/" small>

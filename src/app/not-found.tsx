@@ -26,13 +26,13 @@ export default function NotFound() {
         <Eyebrow>You might have been looking for</Eyebrow>
         <div className="mt-10">
           <Grid3>
-            <Card title="BAI (the trading desk)">
+            <Card title="BAI Desk (the trading desk)">
               Formerly the homepage of doyel-labs.com. Now at{" "}
               <Link
-                href="/programs/bai/"
+                href="/products/#bai"
                 className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
               >
-                /programs/bai
+                /products/#bai
               </Link>
               . Old <code className="font-mono text-ink">/download</code>{" "}
               and <code className="font-mono text-ink">/pricing</code> URLs
@@ -41,10 +41,10 @@ export default function NotFound() {
             <Card title="ConnectionLoop">
               The invite-only shared calendar. Now at{" "}
               <Link
-                href="/programs/connectionloop/"
+                href="/products/#connectionloop"
                 className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
               >
-                /programs/connectionloop
+                /products/#connectionloop
               </Link>
               .
             </Card>
@@ -68,10 +68,10 @@ export default function NotFound() {
             </Card>
             <Card title="Case study (SteadFast)">
               <Link
-                href="/case-studies/steadfast/"
+                href="/work/"
                 className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
               >
-                /case-studies/steadfast
+                /work/
               </Link>{" "}
               — how we built the SteadFast Transportation site + payroll
               workspace.

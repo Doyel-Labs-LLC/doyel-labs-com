@@ -375,7 +375,7 @@ export default function Press() {
                 <GhostLink href="/company/" small>
                   Company page
                 </GhostLink>
-                <GhostLink href="/reviews/" small>
+                <GhostLink href="/work/" small>
                   Reviews
                 </GhostLink>
               </div>

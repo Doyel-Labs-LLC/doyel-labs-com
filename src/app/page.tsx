@@ -84,7 +84,7 @@ export default function Home() {
               <GhostLink href="/work/" small>
                 See our work
               </GhostLink>
-              <GhostLink href="/start/" small>
+              <GhostLink href="/contact/" small>
                 I&apos;m still figuring it out
               </GhostLink>
             </div>
@@ -140,17 +140,10 @@ export default function Home() {
         <p className="mt-6 max-w-prose text-[14px] text-muted">
           Full case study with screenshots and product frames at{" "}
           <Link
-            href="/case-studies/steadfast/"
+            href="/work/"
             className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
           >
-            /case-studies/steadfast
-          </Link>
-          . All named reviews on{" "}
-          <Link
-            href="/reviews/"
-            className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-          >
-            /reviews
+            /work
           </Link>
           .
         </p>
@@ -243,7 +236,7 @@ export default function Home() {
               />
             </div>
             <div className="mt-6">
-              <GhostLink href="/case-studies/steadfast/" small>
+              <GhostLink href="/work/" small>
                 Read the case study
               </GhostLink>
             </div>
@@ -260,18 +253,18 @@ export default function Home() {
             proofKind="accent"
           />
           <WorkTile
-            eyebrow="Program · BAI"
-            title="A trading desk that runs on your own computer"
+            eyebrow="Product · BAI Desk"
+            title="An autonomous trading desk that runs on your own computer"
             body="Keys stay on the operator's machine. Every trade has a stop and a target held at the broker. Chat cannot spend."
-            href="/programs/bai/"
+            href="/products/#bai"
             proof={programStatus.bai.label}
             proofKind="care"
           />
           <WorkTile
-            eyebrow="Program · ConnectionLoop"
+            eyebrow="Product · ConnectionLoop"
             title="A shared calendar for families and small groups"
             body="Invite-only. Free. No ads. No public feed. iOS and Android. Built by Doyel Labs, credited to The Hamilton Family."
-            href="/programs/connectionloop/"
+            href="/products/#connectionloop"
             proof={programStatus.connectionloop.label}
             proofKind="care"
           />
@@ -360,7 +353,7 @@ export default function Home() {
             <PathCard
               title="I have an idea but need help scoping"
               body="I know the outcome I want but I'm not sure what to build first."
-              href="/start/"
+              href="/contact/"
             />
             <PathCard
               title="I need help with existing software"

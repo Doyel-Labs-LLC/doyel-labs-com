@@ -27,7 +27,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Site map — every page on doyel-labs.com",
   description:
-    "A human-readable map of every page on doyel-labs.com. Services, case studies, industries, writing, reviews, legal, and program pages — grouped for skimming.",
+    "A human-readable map of every page on doyel-labs.com. Services, case studies, industries, writing, products, and legal pages — grouped for skimming.",
   alternates: { canonical: `https://${site.domain}/sitemap/` },
   openGraph: {
     title: "Site map — every page on doyel-labs.com",
@@ -65,12 +65,6 @@ const SECTIONS: Section[] = [
         label: "How we work",
         blurb:
           "The full engagement flow, centered on the one-hour orientation call.",
-      },
-      {
-        href: "/start/",
-        label: "Start here",
-        blurb:
-          "For visitors with a rough idea who want a friendly on-ramp.",
       },
       {
         href: "/contact/",
@@ -142,19 +136,8 @@ const SECTIONS: Section[] = [
       {
         href: "/work/",
         label: "Work",
-        blurb: "Recent shipments — client work + internal programs.",
-      },
-      {
-        href: "/case-studies/steadfast/",
-        label: "Case study — SteadFast Transportation",
         blurb:
-          "Marketing site + payroll workspace shipped in six weeks.",
-      },
-      {
-        href: "/reviews/",
-        label: "Reviews",
-        blurb:
-          "Every named client review, in full, with a public verification link.",
+          "Recent shipments — client work, the SteadFast case study, and named client reviews.",
       },
     ],
   },
@@ -187,26 +170,14 @@ const SECTIONS: Section[] = [
     ],
   },
   {
-    title: "Programs",
+    title: "Products",
     intro:
-      "Internal products Doyel Labs builds for itself and, in some cases, for other operators.",
+      "Software Doyel Labs ships under its own brand. In private beta today.",
     links: [
       {
-        href: "/programs/",
-        label: "Programs overview",
-        blurb: "BAI and ConnectionLoop.",
-      },
-      {
-        href: "/programs/bai/",
-        label: "BAI",
-        blurb:
-          "A trading desk that runs on your own computer, at your broker, under your rules.",
-      },
-      {
-        href: "/programs/connectionloop/",
-        label: "ConnectionLoop",
-        blurb:
-          "A shared calendar for families and small groups. Invite-only, free, no ads.",
+        href: "/products/",
+        label: "Products overview",
+        blurb: "BAI Desk and ConnectionLoop — description, status, and the legal docs for each.",
       },
     ],
   },
@@ -270,17 +241,15 @@ const SECTIONS: Section[] = [
   },
   {
     title: "Docs",
-    intro: "Product-specific documentation.",
+    intro: "Service-specific documentation. Product docs live on /products/.",
     links: [
       {
         href: "/docs/",
         label: "Docs overview",
-        blurb: "Websites · Payroll · BAI · ConnectionLoop.",
+        blurb: "Websites and payroll workspace docs.",
       },
       { href: "/docs/websites/", label: "Websites docs", blurb: "How Doyel Labs websites are built and maintained." },
       { href: "/docs/payroll/", label: "Payroll docs", blurb: "How the payroll workspace is operated." },
-      { href: "/docs/bai/", label: "BAI docs", blurb: "How BAI is installed and armed." },
-      { href: "/docs/connectionloop/", label: "ConnectionLoop docs", blurb: "How the ConnectionLoop app is used." },
     ],
   },
   {

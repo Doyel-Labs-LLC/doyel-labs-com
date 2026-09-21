@@ -30,15 +30,12 @@ const entries: Entry[] = [
   { path: "/industries/federal-service-contractors/", priority: 0.85, change: "monthly" },
   // Proof
   { path: "/work/", priority: 0.85, change: "weekly" },
-  { path: "/case-studies/steadfast/", priority: 0.85, change: "monthly" },
-  { path: "/reviews/", priority: 0.85, change: "monthly" },
   { path: "/writing/", priority: 0.8, change: "weekly" },
   { path: "/writing/how-to-scope-software-when-you-dont-have-a-spec/", priority: 0.8, change: "monthly" },
   { path: "/writing/ai-native-software-what-we-write-what-we-generate/", priority: 0.8, change: "monthly" },
   { path: "/writing/shipping-steadfast-payroll-in-six-weeks/", priority: 0.8, change: "monthly" },
   // Consultative entry points
   { path: "/how-we-work/", priority: 0.9, change: "monthly" },
-  { path: "/start/", priority: 0.85, change: "monthly" },
   { path: "/contact/", priority: 0.8, change: "monthly" },
   { path: "/faq/", priority: 0.75, change: "monthly" },
   // Company info
@@ -53,15 +50,15 @@ const entries: Entry[] = [
   { path: "/docs/", priority: 0.6, change: "monthly" },
   { path: "/docs/websites/", priority: 0.6, change: "monthly" },
   { path: "/docs/payroll/", priority: 0.6, change: "monthly" },
-  // NOTE: /programs/*, /docs/bai/, and /docs/connectionloop/ are
-  // intentionally omitted. Those pages are marked
-  // `robots: { index: false, follow: true }` because they document
-  // internal programs that haven't shipped publicly yet — leaving
+  // NOTE: /products/ (BAI Desk + ConnectionLoop) and /legal/bai/*
+  // are intentionally omitted. Those pages are marked
+  // `robots: { index: false, follow: true }` because they describe
+  // internal products that haven't shipped publicly yet — leaving
   // them in the sitemap invites Google to re-crawl and re-cache
   // them, which is exactly what caused "BAI trading desk" snippets
-  // to dominate the company-name search result. When BAI or
-  // ConnectionLoop ship publicly, add them back here and flip the
-  // page-level robots metadata to `index: true`.
+  // to dominate the company-name search result. When a product
+  // ships publicly, add its route back here and flip the page-level
+  // robots metadata to `index: true`.
   // Ops
   { path: "/status/", priority: 0.5, change: "weekly" },
   { path: "/changelog/", priority: 0.5, change: "weekly" },

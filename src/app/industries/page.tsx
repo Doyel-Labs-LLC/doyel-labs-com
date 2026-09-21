@@ -217,7 +217,7 @@ export default function Industries() {
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
               <ContactWidget label="Tell us your business" />
-              <GhostLink href="/start/" small>
+              <GhostLink href="/contact/" small>
                 I&apos;m still figuring it out
               </GhostLink>
             </div>

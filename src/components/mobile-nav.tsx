@@ -224,11 +224,10 @@ const EXPLORE_LINKS = [
   { href: "/how-we-work/", label: "How we work" },
   { href: "/pricing/", label: "Pricing" },
   { href: "/industries/", label: "Industries" },
-  { href: "/reviews/", label: "Reviews" },
-  { href: "/case-studies/steadfast/", label: "Case study" },
+  { href: "/work/", label: "Case studies" },
+  { href: "/products/", label: "Products" },
   { href: "/founder/", label: "Founder" },
   { href: "/writing/", label: "Writing" },
-  { href: "/start/", label: "Start here" },
   { href: "/faq/", label: "FAQ" },
 ];
 

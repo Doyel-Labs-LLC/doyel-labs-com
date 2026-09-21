@@ -247,7 +247,7 @@ export default function Contact() {
           <GhostLink href="/pricing/" small>
             Pricing bands
           </GhostLink>
-          <GhostLink href="/case-studies/steadfast/" small>
+          <GhostLink href="/work/" small>
             Case study
           </GhostLink>
           <GhostLink href="/faq/" small>

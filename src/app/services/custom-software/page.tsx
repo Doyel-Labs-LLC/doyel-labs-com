@@ -481,10 +481,10 @@ export default function CustomSoftware() {
             />
           </div>
           <div className="mt-6 flex flex-wrap gap-3">
-            <GhostLink href="/case-studies/steadfast/" small>
+            <GhostLink href="/work/" small>
               Full case study
             </GhostLink>
-            <GhostLink href="/reviews/" small>
+            <GhostLink href="/work/" small>
               All reviews
             </GhostLink>
           </div>

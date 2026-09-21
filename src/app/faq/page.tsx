@@ -429,7 +429,7 @@ export default function FAQ() {
         </div>
         <div className="mt-8 flex flex-wrap gap-3">
           <ContactWidget label="Ask a question" />
-          <GhostLink href="/start/" small>
+          <GhostLink href="/contact/" small>
             Start here
           </GhostLink>
           <GhostLink href="/services/" small>

@@ -11,15 +11,52 @@ import {
 import { site } from "@/lib/site";
 import type { LegalDoc } from "@/lib/legal";
 
-const NAV = [
-  { slug: "terms", label: "Terms" },
-  { slug: "privacy", label: "Privacy" },
-  { slug: "payroll-data", label: "Payroll data" },
-  { slug: "risk", label: "BAI risk" },
+/** Default side-nav shown across the company-wide legal docs. */
+const COMPANY_NAV: LegalNavItem[] = [
+  { slug: "terms", label: "Terms", href: "/legal/terms/" },
+  { slug: "privacy", label: "Privacy", href: "/legal/privacy/" },
+  { slug: "payroll-data", label: "Payroll data", href: "/legal/payroll-data/" },
+  { slug: "risk", label: "BAI risk", href: "/legal/risk/" },
 ];
 
+/** Default lead text keyed by the company-wide legal slugs. */
+const COMPANY_LEADS: Record<string, string> = {
+  terms:
+    "The terms under which Doyel Labs LLC provides its software and services. Read together with the privacy policy and any project-specific rider.",
+  privacy:
+    "What Doyel Labs LLC collects, why, how long we keep it, who else touches it, and how to make us delete it.",
+  "payroll-data":
+    "The specific data map for payroll workspaces we build and operate — what the operator holds, what Doyel Labs holds, and what nobody holds.",
+  risk:
+    "Trading risk disclosure for the BAI program. Read before you arm the desk; read again whenever it changes.",
+};
+
+/** One item in the side-nav rail. */
+export type LegalNavItem = { slug: string; label: string; href: string };
+
 /**
- * Shared shell for `/legal/*` pages. Reads a parsed MDX doc,
+ * A single crumb in the top breadcrumb trail.
+ * Duplicated here (not imported from `Breadcrumbs`) so callers can
+ * construct the crumbs without pulling in the crumb type.
+ */
+export type LegalCrumb = { name: string; href: string };
+
+export type LegalPageProps = {
+  doc: LegalDoc;
+  /**
+   * Optional overrides. If a caller doesn't pass them, we fall back
+   * to the company-wide legal chrome (Terms / Privacy / Payroll data
+   * / BAI risk). Product-specific legal pages (e.g. BAI Desk terms)
+   * pass their own set to keep the rail scoped and the breadcrumb
+   * accurate.
+   */
+  nav?: LegalNavItem[];
+  breadcrumbs?: LegalCrumb[];
+  lead?: string;
+};
+
+/**
+ * Shared shell for `/legal/**` pages. Reads a parsed MDX doc,
  * renders it inside the standard site chrome, and shows a
  * measured "under counsel review" notice when the doc's
  * frontmatter carries `under_review: true`.
@@ -30,30 +67,31 @@ const NAV = [
  * useful information. This copy names the review status
  * clearly and points at a route (email us) for concrete legal
  * questions.
+ *
+ * Callers can override the side-nav, the breadcrumb trail, and
+ * the intro `<Lead>` — used by product-scoped legal (e.g. the
+ * BAI Desk Terms of Use published for Alpaca's compliance
+ * review) so those pages don't drag the company-wide nav rail
+ * with them.
  */
-export function LegalPage({ doc }: { doc: LegalDoc }) {
+export function LegalPage({ doc, nav, breadcrumbs, lead }: LegalPageProps) {
+  const navItems = nav ?? COMPANY_NAV;
+  const crumbs =
+    breadcrumbs ??
+    ([
+      { name: "Legal", href: "/legal/terms/" },
+      { name: doc.title, href: `/legal/${doc.slug}/` },
+    ] as LegalCrumb[]);
+  const leadText = lead ?? COMPANY_LEADS[doc.slug] ?? "";
+
   return (
     <Page narrow>
-      <Breadcrumbs
-        items={[
-          { name: "Legal", href: "/legal/terms/" },
-          { name: doc.title, href: `/legal/${doc.slug}/` },
-        ]}
-      />
+      <Breadcrumbs items={crumbs} />
 
       <section className="hero-glow pt-4">
         <Eyebrow>Legal</Eyebrow>
         <H1>{doc.title}</H1>
-        <Lead>
-          {doc.slug === "terms" &&
-            "The terms under which Doyel Labs LLC provides its software and services. Read together with the privacy policy and any project-specific rider."}
-          {doc.slug === "privacy" &&
-            "What Doyel Labs LLC collects, why, how long we keep it, who else touches it, and how to make us delete it."}
-          {doc.slug === "payroll-data" &&
-            "The specific data map for payroll workspaces we build and operate — what the operator holds, what Doyel Labs holds, and what nobody holds."}
-          {doc.slug === "risk" &&
-            "Trading risk disclosure for the BAI program. Read before you arm the desk; read again whenever it changes."}
-        </Lead>
+        {leadText ? <Lead>{leadText}</Lead> : null}
         <p className="mt-6 font-mono text-[10px] uppercase tracking-wide text-muted">
           Version {doc.version}
           {doc.underReview ? " · under counsel review" : ""}
@@ -64,10 +102,10 @@ export function LegalPage({ doc }: { doc: LegalDoc }) {
         aria-label="Legal documents"
         className="mt-10 flex flex-wrap gap-x-6 gap-y-2 border-t border-line pt-6 font-mono text-[11px] uppercase tracking-wide"
       >
-        {NAV.map((n) => (
+        {navItems.map((n) => (
           <Link
-            key={n.slug}
-            href={`/legal/${n.slug}/`}
+            key={n.href}
+            href={n.href}
             className={
               n.slug === doc.slug
                 ? "text-accent underline decoration-accentDim underline-offset-2"

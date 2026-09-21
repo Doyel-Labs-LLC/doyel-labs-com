@@ -145,7 +145,7 @@ export default function FederalServiceContractors() {
             </div>
             <div className="hero-in hero-in--4 mt-8 flex flex-wrap items-center gap-3">
               <ContactWidget label="Talk to us" />
-              <GhostLink href="/case-studies/steadfast/" small>
+              <GhostLink href="/work/" small>
                 Read the SteadFast case study
               </GhostLink>
             </div>
@@ -387,7 +387,7 @@ export default function FederalServiceContractors() {
               </Quote>
             </div>
             <div className="mt-8">
-              <GhostLink href="/case-studies/steadfast/" small>
+              <GhostLink href="/work/" small>
                 Read the full case study
               </GhostLink>
             </div>
