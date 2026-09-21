@@ -133,17 +133,23 @@ export default function Home() {
               size="large"
             />
           </div>
-          <p className="mt-6 max-w-prose text-[14px] text-muted">
-            The full case study, with screenshots and product frames from the
-            SteadFast site and payroll workspace, is at{" "}
-            <Link
-              href="/case-studies/steadfast/"
-              className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-            >
-              /case-studies/steadfast
-            </Link>
-            .
-          </p>
+        <p className="mt-6 max-w-prose text-[14px] text-muted">
+          Full case study with screenshots and product frames at{" "}
+          <Link
+            href="/case-studies/steadfast/"
+            className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
+          >
+            /case-studies/steadfast
+          </Link>
+          . All named reviews on{" "}
+          <Link
+            href="/reviews/"
+            className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
+          >
+            /reviews
+          </Link>
+          .
+        </p>
         </section>
       </Reveal>
 

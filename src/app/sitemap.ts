@@ -30,6 +30,7 @@ const entries: Entry[] = [
   // Proof
   { path: "/work/", priority: 0.85, change: "weekly" },
   { path: "/case-studies/steadfast/", priority: 0.85, change: "monthly" },
+  { path: "/reviews/", priority: 0.85, change: "monthly" },
   { path: "/writing/", priority: 0.8, change: "weekly" },
   { path: "/writing/ai-native-software-what-we-write-what-we-generate/", priority: 0.8, change: "monthly" },
   { path: "/writing/shipping-steadfast-payroll-in-six-weeks/", priority: 0.8, change: "monthly" },

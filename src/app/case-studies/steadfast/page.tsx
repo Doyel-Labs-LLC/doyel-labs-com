@@ -462,9 +462,16 @@ export default function SteadfastCaseStudy() {
         </div>
         <div className="mt-16">
           <Notice>
-            More case studies land here as new engagements complete. If
-            you'd like a reference call with the SteadFast owner about
-            what shipping with Doyel Labs was like,{" "}
+            More case studies land here as new engagements complete.
+            See every named client review, in full, on{" "}
+            <a
+              href="/reviews/"
+              className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
+            >
+              /reviews
+            </a>
+            . If you&apos;d like a reference call with the SteadFast
+            owner about what shipping with Doyel Labs was like,{" "}
             <a
               href={`mailto:${site.supportEmail}?subject=Reference%20call%20request`}
               className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
