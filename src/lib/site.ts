@@ -11,8 +11,8 @@ export const site = {
   founded: "September 2026",
   supportEmail: "support@doyel-labs.com",
   securityEmail: "security@doyel-labs.com",
-  phone: "(813) 686-4559",
-  phoneHref: "tel:+18136864559",
+  phone: "(307) 429-0389",
+  phoneHref: "tel:+13074290389",
   apiBase: (
     process.env.NEXT_PUBLIC_API_BASE ||
     "https://bai-control-plane-staging.fly.dev"

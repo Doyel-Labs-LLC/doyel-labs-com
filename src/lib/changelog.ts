@@ -60,6 +60,24 @@ export type ChangelogEntry = {
  * after they ship; add a new entry that corrects if needed.
  */
 export const entries: ChangelogEntry[] = [
+  // ── v27 · Phone number update + README refresh ───────────
+  {
+    id: "v27-phone-307",
+    version: "v27",
+    date: "2026-09-20",
+    section: "Company",
+    title: "Phone number updated to (307) 429-0389",
+    body: "Company phone number changed from (813) 686-4559 to (307) 429-0389. The 307 area code is Wyoming, matching the Casper HQ — replaces the previous Tampa Bay (813) number for consistency. Updated in src/lib/site.ts (single source of truth), the /press/ facts table, and AUDIT.md. Every page that renders site.phone / site.phoneHref auto-updates on next deploy.",
+  },
+  {
+    id: "v27-readme",
+    version: "v27",
+    date: "2026-09-20",
+    section: "Company",
+    title: "README rewritten for v22+ architecture",
+    body: "Dev docs were stale relative to v22 — still describing the old changelog-as-array-in-page pattern. Full rewrite covering: current repo layout (all 20+ new pages, new libs, functions/, scripts/), Cloudflare Pages Functions deploy story, the shared src/lib/changelog.ts source-of-truth pattern, how to add testimonials / blog posts / legal pages / screenshots, contact form architecture, static export gotchas, and the non-negotiables from PROMPT.md v8. Useful for any future engineer opening the repo.",
+  },
+
   // ── v26 · Legal MDX polish ────────────────────────────────
   {
     id: "v26-legal-polish",

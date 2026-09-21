@@ -160,7 +160,7 @@ under **Deploying to Cloudflare Pages**.
 
 - Support email: `support@doyel-labs.com`.
 - Security disclosure email: `security@doyel-labs.com`.
-- Phone: `(813) 686-4559`. Rendered as a `tel:+18136864559` link
+- Phone: `(307) 429-0389`. Rendered as a `tel:+13074290389` link
   everywhere it appears (footer, `/contact`, `/support`, `/company`).
 
 ## Analytics decision

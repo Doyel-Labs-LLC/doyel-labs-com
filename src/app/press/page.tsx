@@ -108,7 +108,7 @@ const FACTS = [
   { label: "Primary domain", value: "doyel-labs.com" },
   { label: "Support email", value: "support@doyel-labs.com" },
   { label: "Security disclosure", value: "security@doyel-labs.com" },
-  { label: "Phone (US business hours, MT)", value: "(813) 686-4559" },
+  { label: "Phone (US business hours, MT)", value: "(307) 429-0389" },
   {
     label: "Current live clients",
     value: "SteadFast Transportation Inc. (steadfasttransportationinc.com)",
