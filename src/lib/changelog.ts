@@ -60,6 +60,16 @@ export type ChangelogEntry = {
  * after they ship; add a new entry that corrects if needed.
  */
 export const entries: ChangelogEntry[] = [
+  // ── v24 · Support page rebuild ────────────────────────────
+  {
+    id: "v24-support-rebuild",
+    version: "v24",
+    date: "2026-09-20",
+    section: "Company",
+    title: "Support page rebuilt for post-launch clients",
+    body: "New /support/ page separates prospect-focused pre-sales (/contact/) from client-focused post-launch help. Two-column hero with a direct-routes card. Three explicit response tiers: same-day for retainer SEV-1 breakage, one-business-day standard, two-business-day security disclosures. Retainer vs. standard SLA spelled out. Product-scoped FAQs for payroll, websites, BAI, and ConnectionLoop preserved and expanded. \"What to include in the first email\" band saves one round-trip of email tag.",
+  },
+
   // ── v23 · Custom software page + changelog self-reference ─
   {
     id: "v23-custom-software",
