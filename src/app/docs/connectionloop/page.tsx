@@ -11,10 +11,15 @@ import {
 import { ContactWidget } from "@/components/contact-modal";
 import { site } from "@/lib/site";
 
+/**
+ * `noindex, follow` — mirrors /programs/connectionloop/. Docs for a
+ * program that hasn't shipped shouldn't rank against the company name.
+ */
 export const metadata: Metadata = {
   title: "ConnectionLoop docs",
   description:
     "How to get into a ConnectionLoop Space — install, account, invite code, tabs.",
+  robots: { index: false, follow: true },
 };
 
 export default function ConnectionLoopDocs() {

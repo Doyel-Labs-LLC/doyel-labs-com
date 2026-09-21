@@ -1,4 +1,20 @@
+# robots.txt for doyel-labs.com
+#
+# Default: allow all crawlers to index the site.
+#
+# Explicit disallow for /programs/* and program-specific /docs/
+# subtrees. Those pages describe internal Doyel Labs programs
+# (BAI, ConnectionLoop) that haven't shipped publicly yet. Leaving
+# them crawlable caused Google to cache "BAI trading desk"
+# snippets against the company-name search — which misrepresents
+# Doyel Labs as a trading-desk shop instead of the custom software
+# studio it is. When a program ships publicly, remove its Disallow
+# entry AND flip the page's `robots` metadata back to `index: true`.
+
 User-agent: *
 Allow: /
+Disallow: /programs/
+Disallow: /docs/bai/
+Disallow: /docs/connectionloop/
 
 Sitemap: https://doyel-labs.com/sitemap.xml

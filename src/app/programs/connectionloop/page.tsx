@@ -18,10 +18,16 @@ import { ContactWidget } from "@/components/contact-modal";
 import { ConnectionLoopTodayFrame } from "@/components/frames/connectionloop-today";
 import { programStatus, site } from "@/lib/site";
 
+/**
+ * `noindex, follow` — see /programs/page.tsx for the full reasoning.
+ * ConnectionLoop is not yet in stores. When it ships publicly, flip
+ * this back to `{ index: true, follow: true }`.
+ */
 export const metadata: Metadata = {
   title: "ConnectionLoop",
   description:
     "ConnectionLoop is an invite-only shared calendar for families and small groups. Free. No ads. Built by Doyel Labs, credited to The Hamilton Family.",
+  robots: { index: false, follow: true },
 };
 
 export default function ConnectionLoopProgram() {

@@ -10,9 +10,24 @@ import {
 } from "@/components/chrome";
 import { programStatus, site } from "@/lib/site";
 
+/**
+ * `noindex, follow` on all program pages.
+ *
+ * BAI is in private testing (ships 2027) and ConnectionLoop hasn't
+ * hit stores yet. Having them indexed pulls stale "BAI trading desk"
+ * snippets into Google's index for the company name — which
+ * misrepresents Doyel Labs as a trading-desk shop instead of the
+ * custom software studio it actually is. We de-index the program
+ * surface until each program ships publicly, at which point the
+ * metadata flips back to index.
+ *
+ * `follow: true` is kept so internal links (Support, Security, Docs,
+ * Contact) still contribute to crawl signals.
+ */
 export const metadata: Metadata = {
   title: "Programs",
   description: `Internal ${site.companyShort} programs: BAI (trading desk, 2027) and ConnectionLoop (invite-only shared calendar, store submission this month).`,
+  robots: { index: false, follow: true },
 };
 
 /** Full-band program rows, SpaceX-style: one program, one band. */

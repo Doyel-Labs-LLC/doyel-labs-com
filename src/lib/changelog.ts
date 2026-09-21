@@ -60,6 +60,16 @@ export type ChangelogEntry = {
  * after they ship; add a new entry that corrects if needed.
  */
 export const entries: ChangelogEntry[] = [
+  // ── v29 · De-index unshipped programs from Google ────────
+  {
+    id: "v29-noindex-programs",
+    version: "v29",
+    date: "2026-09-21",
+    section: "Company",
+    title: "De-indexed BAI + ConnectionLoop program pages from search",
+    body: "Google was still cutting a \"BAI by Doyel Labs\" title and a \"software you run on your own computer\" description into the top result for the company-name search — misrepresenting Doyel Labs as a trading-desk shop instead of the custom software studio it is. Root cause: /programs/*, /docs/bai/, and /docs/connectionloop/ were fully indexable, so Google could mix their snippets into the root-domain result. Fix: added robots: { index: false, follow: true } to /programs/, /programs/bai/, /programs/connectionloop/, /docs/bai/, /docs/connectionloop/. Dropped those routes from sitemap.xml. Added Disallow rules to /robots.txt. Tightened the BAI hero framing so any residual crawl grabs \"Doyel Labs is a custom software studio; BAI is one of the programs it builds\" first. When BAI or ConnectionLoop ship publicly, the index flag flips back and they land in the sitemap again.",
+  },
+
   // ── v28 · /uses/ page ─────────────────────────────────────
   {
     id: "v28-uses",

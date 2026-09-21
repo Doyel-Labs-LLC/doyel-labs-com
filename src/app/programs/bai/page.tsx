@@ -20,11 +20,18 @@ import { BaiArmFrame } from "@/components/frames/bai-arm";
 import { BaiBookFrame } from "@/components/frames/bai-book";
 import { baiDisclaimer, programStatus, site } from "@/lib/site";
 
+/**
+ * `noindex, follow` — see /programs/page.tsx for the full reasoning.
+ * BAI is in private testing (ships 2027) and having this page indexed
+ * pulls stale "trading desk" snippets into Google's result for
+ * "Doyel Labs LLC", misrepresenting the company. When BAI ships
+ * publicly, flip this back to `{ index: true, follow: true }`.
+ */
 export const metadata: Metadata = {
   title: "BAI — trading-desk program",
   description:
     "BAI is one of several programs built by Doyel Labs — a local-first trading desk that runs on the operator's own computer, at their broker, under their rules. In private testing. Doyel Labs itself is a custom software studio; see doyel-labs.com for websites, payroll, and internal tools.",
-  robots: { index: true, follow: true },
+  robots: { index: false, follow: true },
 };
 
 export default function BaiProgram() {
@@ -48,9 +55,20 @@ export default function BaiProgram() {
         ]}
       />
 
-      {/* HERO */}
+      {/* HERO
+       *
+       * This page is `noindex, follow` — see the metadata block above.
+       * The framing here still leads with the company relationship in
+       * case a crawler ignores the directive: BAI is one of several
+       * programs a custom software studio builds, not the company's
+       * identity. */}
       <section className="hero-glow">
-        <Eyebrow>Programs · BAI</Eyebrow>
+        <Eyebrow>Doyel Labs Programs · BAI</Eyebrow>
+        <p className="mt-2 text-[13px] uppercase tracking-wide text-muted font-mono">
+          Doyel Labs LLC is a custom software studio in Casper, Wyoming.
+          BAI is one of the programs it builds — see doyel-labs.com for
+          websites, payroll workspaces, and custom software services.
+        </p>
         <H1>
           A trading desk that runs on <span className="text-accent">your</span> computer.
         </H1>

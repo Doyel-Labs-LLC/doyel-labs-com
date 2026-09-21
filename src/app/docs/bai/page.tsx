@@ -11,10 +11,15 @@ import {
 import { ContactWidget } from "@/components/contact-modal";
 import { site } from "@/lib/site";
 
+/**
+ * `noindex, follow` — mirrors /programs/bai/. Docs for a program
+ * that hasn't shipped shouldn't rank against the company name.
+ */
 export const metadata: Metadata = {
   title: "BAI docs",
   description:
     "How BAI works, in the order you meet it: install, broker keys, allow live, arm, campaigns, safety.",
+  robots: { index: false, follow: true },
 };
 
 export default function BaiDocs() {

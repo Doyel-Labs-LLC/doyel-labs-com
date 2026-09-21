@@ -53,12 +53,15 @@ const entries: Entry[] = [
   { path: "/docs/", priority: 0.6, change: "monthly" },
   { path: "/docs/websites/", priority: 0.6, change: "monthly" },
   { path: "/docs/payroll/", priority: 0.6, change: "monthly" },
-  { path: "/docs/bai/", priority: 0.5, change: "monthly" },
-  { path: "/docs/connectionloop/", priority: 0.5, change: "monthly" },
-  // Programs — internal products, lower priority than services
-  { path: "/programs/", priority: 0.6, change: "monthly" },
-  { path: "/programs/bai/", priority: 0.55, change: "monthly" },
-  { path: "/programs/connectionloop/", priority: 0.55, change: "monthly" },
+  // NOTE: /programs/*, /docs/bai/, and /docs/connectionloop/ are
+  // intentionally omitted. Those pages are marked
+  // `robots: { index: false, follow: true }` because they document
+  // internal programs that haven't shipped publicly yet — leaving
+  // them in the sitemap invites Google to re-crawl and re-cache
+  // them, which is exactly what caused "BAI trading desk" snippets
+  // to dominate the company-name search result. When BAI or
+  // ConnectionLoop ship publicly, add them back here and flip the
+  // page-level robots metadata to `index: true`.
   // Ops
   { path: "/status/", priority: 0.5, change: "weekly" },
   { path: "/changelog/", priority: 0.5, change: "weekly" },
