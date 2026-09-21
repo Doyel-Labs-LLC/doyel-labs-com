@@ -212,17 +212,18 @@ export default function Home() {
           </div>
           <div className="flex flex-col justify-center">
             <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
-              Payroll · Client
+              Payroll · Client build
             </p>
             <h3 className="mt-3 text-[22px] font-semibold leading-tight text-ink">
-              An SCA-first pay-run workspace for a federal contractor.
+              A custom payroll workspace, live for a real operator.
             </h3>
             <p className="mt-4 text-[14px] leading-[1.7] text-mute">
-              Day-rate contractor register, SAM.gov wage-determination
-              auto-lookups, floor checks on every draft, stubs from the
-              operator&apos;s own domain, and an audit log a DOL
-              inspector can read. Live and running pay periods since
-              2026.
+              Contractor register, batch pay runs, stubs from the
+              operator&apos;s own domain, an audit log with CSV export,
+              passkey sign-in, and full-JSON backups. This particular
+              build layers on SCA wage-determination checks for the
+              client&apos;s federal award — yours would layer on
+              whatever compliance rules your business answers to.
             </p>
             <div className="mt-5">
               <ClientBadge
@@ -241,11 +242,11 @@ export default function Home() {
 
         <div className="mt-12 grid gap-4 md:grid-cols-3">
           <WorkTile
-            eyebrow="Payroll · SteadFast Transportation"
-            title="SteadFast Payroll — SCA-first pay-run workspace"
-            body="Day-rate contractor register, SAM.gov wage-determination lookups, floor checks on every draft, and an audit log a DOL inspector can read."
+            eyebrow="Services · Payroll workspaces"
+            title="Custom pay-run software for any business"
+            body="Day-rate, hourly + overtime, salaried, tipped, per-diem, or any mix. Your bank pays the money; the software prepares the run and keeps a defensible record."
             href="/services/payroll/"
-            proof="In operator use"
+            proof="Live client build"
             proofKind="accent"
           />
           <WorkTile
@@ -330,8 +331,8 @@ export default function Home() {
               href="/services/websites/"
             />
             <PathCard
-              title="I need to pay contractors"
-              body="A workspace that handles day-rate contractors, wage-determination checks, and stubs that hold up to an inspection."
+              title="I need to run payroll"
+              body="A workspace that pays who you actually pay — day-rate, hourly, salaried, tipped, per-diem, or a mix — and keeps a defensible record."
               href="/services/payroll/"
             />
             <PathCard
