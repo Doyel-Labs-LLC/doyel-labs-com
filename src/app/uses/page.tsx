@@ -56,7 +56,7 @@ type Tool = {
   url?: string;
 };
 
-const CATEGORIES: { title: string; blurb: string; tools: Tool[] }[] = [
+const CATEGORIES: { title: string; blurb?: string; tools: Tool[] }[] = [
   {
     title: "Editor + AI tooling",
     blurb:
