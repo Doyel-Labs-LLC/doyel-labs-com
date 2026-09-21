@@ -7,6 +7,7 @@ import { MobileNav } from "@/components/mobile-nav";
 const nav = [
   { href: "/services/", label: "Services" },
   { href: "/work/", label: "Work" },
+  { href: "/pricing/", label: "Pricing" },
   { href: "/company/", label: "Company" },
 ];
 
@@ -99,6 +100,12 @@ export function Footer() {
           <span className="grow" />
           <Link href="/start/" className="hover:text-accentHi">
             Start here
+          </Link>
+          <Link href="/industries/" className="hover:text-accentHi">
+            Industries
+          </Link>
+          <Link href="/writing/" className="hover:text-accentHi">
+            Writing
           </Link>
           <Link href="/faq/" className="hover:text-accentHi">
             FAQ

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import {
+  AccentChip,
   Card,
   Eyebrow,
   GhostLink,
@@ -10,14 +11,24 @@ import {
   Page,
 } from "@/components/chrome";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { ContactWidget } from "@/components/contact-modal";
 import { WebsiteSteadfastFrame } from "@/components/frames/websites-preview";
+import { Reveal } from "@/components/reveal";
 import { site } from "@/lib/site";
 import { steadfastCase } from "@/lib/demo/websites";
 
 export const metadata: Metadata = {
-  title: "Websites",
+  title: "Websites — custom marketing sites for small businesses through enterprises",
   description:
-    "Doyel Labs builds fast, accessible websites for small operators — schema.org markup, mobile-first, forms wired to a real inbox. Live example: steadfasttransportationinc.com.",
+    "Doyel Labs builds fast, accessible marketing websites on your own domain — mobile-first, schema.org-marked, forms wired to your own inbox. From mom-and-pop operators to enterprises. Live example: steadfasttransportationinc.com.",
+  alternates: { canonical: `https://${site.domain}/services/websites/` },
+  openGraph: {
+    title: "Websites — custom marketing sites | Doyel Labs",
+    description:
+      "Fast, accessible websites on your own domain. Mobile-first. schema.org-marked. Forms wired to your own inbox.",
+    url: `https://${site.domain}/services/websites/`,
+    type: "website",
+  },
 };
 
 export default function Websites() {
@@ -30,59 +41,70 @@ export default function Websites() {
         ]}
       />
 
-      {/* HERO */}
-      <section>
-        <Eyebrow>Services · websites</Eyebrow>
-        <H1>Websites for small operators, built to open fast and stay honest.</H1>
-        <Lead>
-          Custom domain on your own registrar. Mobile-first navigation and a
-          skip-link. schema.org structured data so the search engines know who
-          you are. Forms wired to your own inbox — not ours. No dark patterns,
-          no upsell modals, no cookie banners you did not ask for.
-        </Lead>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <GhostLink href="/contact/">Start a build</GhostLink>
-          <GhostLink
-            href={steadfastCase.liveUrl}
-            small
-            external
-          >
-            View live example
-          </GhostLink>
+      {/* HERO — two-column with the live SteadFast site as the visual anchor */}
+      <section className="hero-glow pt-4">
+        <div className="grid gap-12 md:grid-cols-[minmax(0,7fr)_minmax(0,6fr)] md:items-center md:gap-10 lg:gap-16">
+          <div>
+            <div className="hero-in hero-in--1">
+              <Eyebrow>Services · Websites</Eyebrow>
+            </div>
+            <div className="hero-in hero-in--2">
+              <H1>
+                <span className="text-accent">Websites</span> that open fast and
+                stay honest.
+              </H1>
+            </div>
+            <div className="hero-in hero-in--3">
+              <Lead>
+                Custom domain on your own registrar. Mobile-first navigation
+                and a skip-link. schema.org structured data so the search
+                engines know who you are. Forms wired to your own inbox — not
+                ours. No dark patterns, no upsell modals, no cookie banners you
+                did not ask for.
+              </Lead>
+            </div>
+            <div className="hero-in hero-in--4 mt-8 flex flex-wrap items-center gap-3">
+              <ContactWidget label="Start a build" />
+              <GhostLink href="/pricing/" small>
+                How pricing works
+              </GhostLink>
+              <GhostLink href={steadfastCase.liveUrl} small external>
+                View live example
+              </GhostLink>
+            </div>
+            <div className="hero-in hero-in--5 mt-8 flex flex-wrap gap-2">
+              <AccentChip>Static on a CDN</AccentChip>
+              <AccentChip>LCP &lt; 2s</AccentChip>
+              <AccentChip>WCAG AA</AccentChip>
+              <AccentChip>You own the code</AccentChip>
+            </div>
+          </div>
+          <div className="hero-in hero-in--5">
+            <WebsiteSteadfastFrame />
+          </div>
         </div>
       </section>
 
-      {/* CASE */}
+      {/* WHO IT'S FOR */}
+      <Reveal>
       <section className="mt-24 border-t border-line pt-16">
-        <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
-          <div>
-            <Eyebrow>Live example</Eyebrow>
-            <H2>
-              <span className="mt-2 block">
-                SteadFast Transportation Inc.
-              </span>
-            </H2>
-            <p className="mt-6 max-w-prose text-[16px] leading-[1.7] text-mute">
-              {steadfastCase.what} We built the whole site, ten pages, plus a
-              password-gated payroll workspace on the same domain. The site is
-              live at{" "}
-              <a
-                href={steadfastCase.liveUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline decoration-line2 underline-offset-2 hover:text-ink"
-              >
-                {steadfastCase.domain}
-              </a>
-              .
-            </p>
-            <p className="mt-4 font-mono text-[10px] uppercase tracking-wide text-muted">
-              Operator: {steadfastCase.operator}
-            </p>
-          </div>
-          <WebsiteSteadfastFrame />
+        <div className="max-w-3xl">
+          <Eyebrow>Who this is for</Eyebrow>
+          <H2>
+            <span className="mt-2 block">
+              Businesses that need a professional site, but not a design agency.
+            </span>
+          </H2>
+          <p className="mt-6 text-[16px] leading-[1.7] text-mute">
+            Owner-operators. Family-run shops. Contractors. Consultants.
+            Regional service companies. Anyone who needs to show up on Google
+            with a clean, fast site, an inquiry form, and copy a real customer
+            can read — without paying a monthly SaaS bill or committing to a
+            page builder they can&apos;t escape from.
+          </p>
         </div>
       </section>
+      </Reveal>
 
       {/* WHAT WAS BUILT */}
       <section className="mt-24 border-t border-line pt-16">
@@ -151,20 +173,46 @@ export default function Websites() {
       </section>
 
       {/* CLOSE */}
+      <Reveal>
       <section className="mt-24 border-t border-line pt-16">
-        <Notice>
-          Email{" "}
-          <a
-            href={`mailto:${site.supportEmail}`}
-            className="underline decoration-line2 underline-offset-2 hover:text-ink"
-          >
-            {site.supportEmail}
-          </a>{" "}
-          with a domain you already own, or the domain name you want to buy,
-          and a one-paragraph description of the business. We answer within
-          one business day.
-        </Notice>
+        <div className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+          <div>
+            <Eyebrow>Start a website build</Eyebrow>
+            <H2>
+              <span className="mt-2 block">
+                Tell us the domain and one paragraph on the business.
+              </span>
+            </H2>
+            <p className="mt-6 max-w-prose text-[16px] leading-[1.7] text-mute">
+              Email{" "}
+              <a
+                href={`mailto:${site.supportEmail}`}
+                className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
+              >
+                {site.supportEmail}
+              </a>{" "}
+              with a domain you already own, or the domain name you want to
+              buy, and a one-paragraph description of what the business does.
+              We answer within one business day with a scope, timeline, and
+              price.
+            </p>
+            <div className="mt-8 flex flex-wrap gap-3">
+              <ContactWidget label="Start a build" />
+              <GhostLink href="/pricing/" small>
+                How pricing works
+              </GhostLink>
+            </div>
+          </div>
+          <div>
+            <Notice>
+              Fastest turnaround we ship: a five-page marketing site with a
+              contact form, live on a real domain, in{" "}
+              <strong className="text-ink">three business days</strong>.
+            </Notice>
+          </div>
+        </div>
       </section>
+      </Reveal>
     </Page>
   );
 }

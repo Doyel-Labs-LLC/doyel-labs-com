@@ -21,9 +21,10 @@ import { BaiBookFrame } from "@/components/frames/bai-book";
 import { baiDisclaimer, programStatus, site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "BAI",
+  title: "BAI — trading-desk program",
   description:
-    "BAI is a trading desk that runs on the operator's own computer, at their broker, under their rules. In private testing.",
+    "BAI is one of several programs built by Doyel Labs — a local-first trading desk that runs on the operator's own computer, at their broker, under their rules. In private testing. Doyel Labs itself is a custom software studio; see doyel-labs.com for websites, payroll, and internal tools.",
+  robots: { index: true, follow: true },
 };
 
 export default function BaiProgram() {

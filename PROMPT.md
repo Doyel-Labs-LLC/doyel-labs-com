@@ -1,4 +1,4 @@
-# doyel-labs.com — the design brief, v5
+# doyel-labs.com — the design brief, v6
 
 The reference the site is written against. Change this document first,
 then the page. If a page contradicts this brief, the page is wrong.
@@ -17,6 +17,50 @@ answer to "can you build X?" is almost always "yes — tell us more."
 **We are not defined by size.** The site never says "small team,"
 "two-person," "solo," or any headcount language. Customers hire us for
 what we produce, not for how many chairs are in the office.
+
+**We are not defined by any single industry, either.**
+This is the most important framing choice on the whole site. Read it
+twice before writing copy anywhere:
+
+- Our first named client (SteadFast Transportation Inc.) happens to be
+  a federal service contractor operating USPS routes. **That is
+  incidental to what Doyel Labs is.** They could have been a plumber,
+  a nonprofit, an accountant, or an e-commerce operator; we would have
+  built for them the same way.
+- Past work is a **proof of capability**, not a **definition of
+  scope**. Every client we've shipped is one example of "we build the
+  software your business runs on" — never "this is the kind of client
+  we work with."
+- SCA payroll (the specific type of pay-run workspace we built for
+  SteadFast) is **one example of a payroll workspace**, not our
+  payroll product. If a plumber, a coffee roaster, or a mid-market
+  services firm asks us for payroll, the answer is "yes — tell us
+  more," not "we do SCA."
+- Refused framings on any page:
+  - "We specialize in federal contractors."
+  - "SCA-first" as the top-level identity of the payroll page.
+  - Any hero, headline, or trust strip that names one industry, one
+    compliance regime, or one client as the *definitional* thing.
+- Allowed framings:
+  - "We currently have live client work in [industry] — [Client]."
+    (Facts about what we've shipped, presented as one example.)
+  - "One of the things we've built is [specific thing]. We build for
+    other operations too."
+  - "Tell us your business. We can build it."
+- The `/industries/` page exists to list many verticals as **starting
+  points**, not a closed list. Only industries with a live named
+  client get their own deep page; that page is one of many, not a
+  featured landing.
+- SEO-targeted niche pages (like
+  `/industries/federal-service-contractors/`) are allowed and useful
+  — but they must not appear at the top of any capability list, in
+  the primary nav, in a homepage trust strip, or in the Organization
+  JSON-LD as our headline offering. They're deep landings for people
+  already searching that niche.
+
+The company doesn't grow by pinning itself to what it's already
+shipped. New verticals are welcomed. Say yes to the industry we haven't
+served yet.
 
 ## The most important thing about this site
 

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import {
+  AccentChip,
   Card,
   Eyebrow,
   GhostLink,
@@ -11,16 +12,26 @@ import {
   Page,
 } from "@/components/chrome";
 import { Breadcrumbs } from "@/components/breadcrumbs";
+import { ContactWidget } from "@/components/contact-modal";
 import { PayrollAuditFrame } from "@/components/frames/payroll-audit";
 import { PayrollBatchFrame } from "@/components/frames/payroll-batch";
 import { PayrollPaystubFrame } from "@/components/frames/payroll-paystub";
 import { PayrollScaFrame } from "@/components/frames/payroll-sca";
+import { Reveal } from "@/components/reveal";
 import { payrollDisclaimer, site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Payroll",
+  title: "Payroll workspaces — custom pay-run software for any business",
   description:
-    "Payroll software for federal service contractors and small operators. SAM.gov wage-determination lookups, day-rate floor checks, and an audit log a DOL inspector can read.",
+    "Doyel Labs builds custom payroll workspaces for any business — day-rate contractors, hourly + overtime, salaried teams, tipped employees, per-diem, or a mix. Your bank pays the money; the software prepares the run, tracks compliance, and keeps a defensible record. Not tax filing, not money movement.",
+  alternates: { canonical: `https://${site.domain}/services/payroll/` },
+  openGraph: {
+    title: "Payroll workspaces — custom pay-run software | Doyel Labs",
+    description:
+      "Custom payroll workspaces built to how your business actually pays people. Day-rate, hourly, salaried, tipped, per-diem — or any mix.",
+    url: `https://${site.domain}/services/payroll/`,
+    type: "website",
+  },
 };
 
 /**
@@ -49,49 +60,165 @@ export default function Payroll() {
         ]}
       />
 
-      {/* HERO */}
-      <section>
-        <Eyebrow>Services · payroll</Eyebrow>
-        <H1>Pay day-rate contractors and prove SCA compliance.</H1>
-        <Lead>
-          For federal service contractors and small operators who pay
-          independent contractors by the day and have to hold up their pay
-          records to a Department of Labor inspection. The software prepares
-          the pay run. Your bank pays the money. The two are on purpose.
-        </Lead>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <GhostLink href="/contact/">Talk to us</GhostLink>
-          <GhostLink href="/security/" small>
-            Payroll data map
-          </GhostLink>
+      {/* HERO — SCA-first is what's live (SteadFast); the framing here is
+       * "we build payroll workspaces of any shape" — SCA is the strongest
+       * current example, not the whole scope. */}
+      <section className="hero-glow pt-4">
+        <div className="grid gap-12 md:grid-cols-[minmax(0,7fr)_minmax(0,6fr)] md:items-center md:gap-10 lg:gap-16">
+          <div>
+            <div className="hero-in hero-in--1">
+              <Eyebrow>Services · Payroll workspaces</Eyebrow>
+            </div>
+            <div className="hero-in hero-in--2">
+              <H1>
+                Pay who you pay, on{" "}
+                <span className="text-accent">your rules</span>.
+              </H1>
+            </div>
+            <div className="hero-in hero-in--3">
+              <Lead>
+                Custom payroll workspaces shaped to how your business
+                actually pays people — day-rate contractors, hourly and
+                overtime, salaried teams, tipped employees, per-diem, or
+                any mix. Your bank pays the money; the software prepares
+                the run, tracks the compliance you answer to, and keeps
+                a record you can defend. Tell us the operation and
+                we&apos;ll build the workspace.
+              </Lead>
+            </div>
+            <div className="hero-in hero-in--4 mt-8 flex flex-wrap items-center gap-3">
+              <ContactWidget label="Talk to us" />
+              <GhostLink href="/case-studies/steadfast/" small>
+                Read the SteadFast case study
+              </GhostLink>
+              <GhostLink href="/pricing/" small>
+                Pricing bands
+              </GhostLink>
+            </div>
+            <div className="hero-in hero-in--5 mt-8 flex flex-wrap gap-2">
+              <AccentChip>Not a payroll processor</AccentChip>
+              <AccentChip>Not a money transmitter</AccentChip>
+              <AccentChip>Not tax filing</AccentChip>
+            </div>
+          </div>
+          <div className="hero-in hero-in--5">
+            <PayrollScaFrame />
+          </div>
         </div>
-        <p className="mt-6 font-mono text-[10px] uppercase tracking-wide text-muted">
-          Not a payroll processor · Not a money transmitter · Not tax filing
-        </p>
       </section>
 
-      {/* PROOF · SCA floor */}
-      <section className="mt-24 border-t border-line pt-16">
-        <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
-          <div>
-            <Eyebrow>The SCA floor</Eyebrow>
+      {/* WHAT WE CAN BUILD — broader than SCA */}
+      <Reveal>
+        <section className="mt-24 border-t border-line pt-16">
+          <div className="max-w-3xl">
+            <Eyebrow>What we can build</Eyebrow>
             <H2>
-              <span className="mt-2 block">Every draft passes the floor before it leaves the app.</span>
+              <span className="mt-2 block">
+                A payroll workspace, shaped to your operation.
+              </span>
             </H2>
-            <p className="mt-6 max-w-prose text-[16px] leading-[1.7] text-mute">
-              Under 41 U.S.C. §§ 6701–6707 the day rate must clear
-              <code className="ml-1 font-mono text-ink"> (base wage + H&W fringe) × 8</code>.
-              The app enters the base wage and the H&W fringe from the
-              wage determination for the contractor's county, computes the
-              floor, and refuses to issue a stub below it. The whole
-              transaction is on the stub.
+            <p className="mt-6 text-[16px] leading-[1.7] text-mute">
+              Not every business needs SCA compliance. Some need overtime
+              and tip pooling. Some need weekly + bi-weekly runs on
+              different teams. Some just need a clean stub the accountant
+              can&apos;t argue with. We ship the workspace that fits, on
+              your own domain, with the compliance rules you actually
+              answer to.
             </p>
           </div>
-          <PayrollScaFrame />
+          <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <Card title="Day-rate contractors">
+              For operators paying independent contractors by the day.
+              Optional SCA floor check for federal service work; skip it
+              if your contracts aren&apos;t SCA-covered.
+            </Card>
+            <Card title="Hourly + overtime">
+              Clock-in / clock-out capture, weekly totals, overtime at
+              1.5×, state-specific rules where they matter. Stubs itemize
+              regular vs. OT hours.
+            </Card>
+            <Card title="Salaried teams">
+              Fixed-period runs with deduction lines the accountant
+              defines. Bonuses, commissions, and stipends land as
+              separate stub lines, not opaque totals.
+            </Card>
+            <Card title="Tipped employees">
+              Declared-tip capture, tip-pool split by rule, minimum-wage
+              top-up where required by state.
+            </Card>
+            <Card title="Per-diem + reimbursements">
+              Non-taxable per-diem lines, expense reimbursements, and
+              mileage entries that stay separate from taxable wages on
+              the stub.
+            </Card>
+            <Card title="Multi-entity runs">
+              One workspace, multiple pay entities (LLCs, DBAs). Each
+              entity has its own EIN, WD (if applicable), and email
+              from-address. Audit rows stay per-entity.
+            </Card>
+          </div>
+        </section>
+      </Reveal>
+
+      {/* ONE EXAMPLE — frames the following bands as illustrative of what
+       * a payroll workspace with real compliance depth looks like, not as
+       * the definition of the payroll product. */}
+      <Reveal>
+      <section className="mt-24 border-t border-line pt-16">
+        <div className="max-w-3xl">
+          <Eyebrow>One example we&apos;ve built</Eyebrow>
+          <H2>
+            <span className="mt-2 block">
+              A pay-run workspace for a federal service contractor.
+            </span>
+          </H2>
+          <p className="mt-6 text-[16px] leading-[1.7] text-mute">
+            The bands below walk through a real workspace we built for
+            SteadFast Transportation Inc., which pays independent
+            contractors on a USPS award and has to meet the Service
+            Contract Act. The specific features — SAM.gov lookups, SCA
+            floor checks, DOL-ready audit — are what <em>that</em>{" "}
+            operation needed. Yours will need different pieces. The point
+            is the same: a workspace that fits the rules you actually
+            answer to.
+          </p>
         </div>
       </section>
+      </Reveal>
+
+      {/* HOW THE FLOOR CHECK WORKS — text-only band that expands on the hero frame */}
+      <Reveal>
+      <section className="mt-16">
+        <div className="max-w-3xl">
+          <Eyebrow>How the SteadFast floor check works</Eyebrow>
+          <H2>
+            <span className="mt-2 block">
+              Every draft passes the SCA floor before it leaves the app.
+            </span>
+          </H2>
+          <p className="mt-6 text-[16px] leading-[1.7] text-mute">
+            Under 41 U.S.C. §§ 6701–6707 the day rate must clear
+            <code className="ml-1 font-mono text-ink">
+              (base wage + H&W fringe) × 8
+            </code>
+            . The app pulls the base wage and the H&W fringe from the wage
+            determination for the contractor&apos;s county on SAM.gov,
+            computes the floor, and refuses to issue a stub below it. The
+            whole transaction is on the stub. Legal citation, county-level
+            wage determination, computed floor, and cleared-or-blocked
+            state — all on every draft, every time.
+          </p>
+          <p className="mt-4 text-[14px] text-muted">
+            If your business runs under a different compliance regime —
+            state overtime, tip credits, union rate cards, whatever — we
+            build the equivalent check for your rules.
+          </p>
+        </div>
+      </section>
+      </Reveal>
 
       {/* PROOF · Batch */}
+      <Reveal>
       <section className="mt-24 border-t border-line pt-16">
         <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
           <div>
@@ -110,8 +237,10 @@ export default function Payroll() {
           <PayrollBatchFrame />
         </div>
       </section>
+      </Reveal>
 
       {/* PROOF · Paystub */}
+      <Reveal>
       <section className="mt-24 border-t border-line pt-16">
         <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
           <div>
@@ -132,8 +261,10 @@ export default function Payroll() {
           <PayrollPaystubFrame />
         </div>
       </section>
+      </Reveal>
 
       {/* PROOF · Audit */}
+      <Reveal>
       <section className="mt-24 border-t border-line pt-16">
         <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
           <div>
@@ -153,13 +284,23 @@ export default function Payroll() {
           <PayrollAuditFrame />
         </div>
       </section>
+      </Reveal>
 
       {/* Features */}
+      <Reveal>
       <section className="mt-24 border-t border-line pt-16">
-        <Eyebrow>What is in the app today</Eyebrow>
+        <Eyebrow>Features in the SteadFast workspace</Eyebrow>
         <H2>
-          <span className="mt-2 block">Features, from the actual code.</span>
+          <span className="mt-2 block">
+            From the actual code — one build, not a menu.
+          </span>
         </H2>
+        <p className="mt-6 max-w-prose text-[16px] leading-[1.7] text-mute">
+          Below is what shipped for SteadFast. Your build will share the
+          bones — server storage per operator, audit log, passkey
+          sign-in, backups — and swap the domain-specific pieces for
+          yours.
+        </p>
         <div className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <Card title="Contractor register">
             Names, SSN (encrypted at rest), state, WD, contract number, day
@@ -207,8 +348,10 @@ export default function Payroll() {
           </Card>
         </div>
       </section>
+      </Reveal>
 
       {/* Does not do */}
+      <Reveal>
       <section className="mt-24 border-t border-line pt-16">
         <Eyebrow>What the payroll app does not do</Eyebrow>
         <H2>
@@ -240,8 +383,10 @@ export default function Payroll() {
           </Card>
         </div>
       </section>
+      </Reveal>
 
       {/* Payroll data map preview */}
+      <Reveal>
       <section className="mt-24 border-t border-line pt-16">
         <Eyebrow>Payroll data</Eyebrow>
         <H2>
@@ -282,8 +427,10 @@ export default function Payroll() {
           once counsel signs.
         </p>
       </section>
+      </Reveal>
 
       {/* Close */}
+      <Reveal>
       <section className="mt-24 border-t border-line pt-16">
         <Notice>
           Payroll software from Doyel Labs is one tool inside an operator's
@@ -298,6 +445,7 @@ export default function Payroll() {
           .
         </Notice>
       </section>
+      </Reveal>
     </Page>
   );
 }

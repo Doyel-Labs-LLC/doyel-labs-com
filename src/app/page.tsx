@@ -24,10 +24,26 @@ import { steadfastCase } from "@/lib/demo/websites";
 import { programStatus, site } from "@/lib/site";
 import { steadfastTestimonial } from "@/lib/testimonials";
 
+/**
+ * Homepage metadata. This is the single most important SEO surface on
+ * the site. Google renders the `title` and `description` in search
+ * results verbatim; the AI Overview blends them with the Organization
+ * schema. Every word should push the "custom software studio for real
+ * businesses" identity — not the trading-desk framing that older
+ * cached results still show.
+ */
 export const metadata: Metadata = {
-  title: `${site.company} — the software your business runs on`,
+  title: `${site.company} — Custom software for small businesses through enterprises`,
   description:
-    "Doyel Labs builds custom software — marketing sites, payroll workspaces, internal tools, custom programs. Have an idea? Tell us what your business does; we'll tell you what we can build.",
+    "Tell us what your business needs and we'll build it — websites, payroll workspaces, internal tools, custom programs. Doyel Labs is a Casper, Wyoming software studio for mom-and-pop operators through enterprises. Priced per project, shipped in weeks, and we stay on to keep it running.",
+  alternates: { canonical: `https://${site.domain}/` },
+  openGraph: {
+    title: `${site.company} — Custom software for small businesses through enterprises`,
+    description:
+      "Tell us what your business needs and we'll build it — websites, payroll workspaces, internal tools, custom programs. Priced per project, shipped in weeks.",
+    url: `https://${site.domain}/`,
+    type: "website",
+  },
 };
 
 export default function Home() {
@@ -76,15 +92,17 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Trust strip — mono-typed proof signals under the hero */}
+        {/* Trust strip — mono-typed proof signals under the hero.
+         * Facts about the whole company, never pinned to one industry
+         * or one client's compliance regime. */}
         <div className="hero-in hero-in--5 mt-14 border-t border-line pt-6">
           <p className="trust-strip">
             <span>
               <span className="dot" aria-hidden="true" />
-              <strong>1</strong> client live
+              Live client work since <strong>2026</strong>
             </span>
             <span>
-              <strong>SCA</strong>-compliant since day 1
+              Any industry, any operation
             </span>
             <span>
               Shipping in <strong>days</strong>, not quarters
