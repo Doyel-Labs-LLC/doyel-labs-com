@@ -1,206 +1,301 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
+  AccentChip,
   Card,
   Eyebrow,
   GhostLink,
   H1,
   H2,
   Lead,
+  MetaRow,
+  Notice,
   Page,
 } from "@/components/chrome";
+import { Breadcrumbs } from "@/components/breadcrumbs";
+import { ContactWidget } from "@/components/contact-modal";
+import { Reveal } from "@/components/reveal";
+import {
+  entries,
+  formatChangelogDate,
+  SECTIONS,
+  type ChangelogEntry,
+  type ChangelogSection,
+} from "@/lib/changelog";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Changelog",
-  description: `Company and per-product changelog for ${site.company}.`,
+  title: "Changelog — what shipped, when, and why",
+  description: `Company and per-product changelog for ${site.company}. Every entry names a real change — nothing added for marketing, nothing rewritten after ship.`,
+  alternates: {
+    canonical: `https://${site.domain}/changelog/`,
+    types: {
+      "application/rss+xml": [
+        {
+          url: `https://${site.domain}/changelog/rss.xml`,
+          title: `${site.company} — Changelog`,
+        },
+      ],
+    },
+  },
+  openGraph: {
+    title: `Changelog — ${site.company}`,
+    description: `Every real change we've shipped, in reverse chronological order.`,
+    url: `https://${site.domain}/changelog/`,
+    type: "website",
+  },
 };
 
-type Entry = { date: string; text: string };
+/**
+ * Group entries by version (or by date for entries without a version).
+ * Preserves the reverse-chronological order of `entries`.
+ */
+type Group = {
+  key: string; // e.g. "v21" or "2026-09-19"
+  label: string; // display label
+  version?: string;
+  date: string;
+  entries: ChangelogEntry[];
+};
 
-const COMPANY: Entry[] = [
-  {
-    date: "2026-09-20",
-    text: "Contact form rate-limited by IP via Cloudflare KV: 5 messages per 5-minute window. Prevents a single spam source from burning through Resend send quota.",
-  },
-  {
-    date: "2026-09-20",
-    text: "Mobile navigation upgraded to a proper full-screen drawer. Tap the menu icon on mobile → animated overlay with big-target links and a Contact CTA. Escape / backdrop click / link click all close it.",
-  },
-  {
-    date: "2026-09-20",
-    text: "404 page rewritten: cyan-accented, points visitors at the pages that moved when we relaunched (BAI, ConnectionLoop, payroll, websites, case study).",
-  },
-  {
-    date: "2026-09-20",
-    text: "Cloudflare Turnstile added to the contact form. Widget bound to doyel-labs.com and www.doyel-labs.com. Client-side widget renders on the modal and inline form; server-side check rejects requests without a valid token. CSP updated.",
-  },
-  {
-    date: "2026-09-20",
-    text: "Open Graph image published at /opengraph-image. 1200x630 branded PNG rendered by next/og at build time. Any link to doyel-labs.com now previews with the four-square logo, tagline, and URL band.",
-  },
-  {
-    date: "2026-09-20",
-    text: "Case study published at /case-studies/steadfast — real screenshots of the SteadFast Transportation site (home + contractors), SCA product frames, at-a-glance grid, 4-step approach.",
-  },
-  {
-    date: "2026-09-20",
-    text: "Security page rewritten in the company voice. Cyan accent, four product data maps, controls table, disclosure block, security changelog.",
-  },
-  {
-    date: "2026-09-20",
-    text: "Programs (BAI, ConnectionLoop) and Engineering pages rewritten in the company voice.",
-  },
-  {
-    date: "2026-09-20",
-    text: "Home + services + company rewritten to lead with capabilities and clients, not team size. \"Two things we sell\" framing removed. Real SteadFast screenshot inline. ClientBadge component with the SteadFast logo where SteadFast is credited (with their explicit permission).",
-  },
-  {
-    date: "2026-09-20",
-    text: "Contact form live end-to-end. POST /api/contact -> Cloudflare Pages Function -> Resend -> support@doyel-labs.com -> forwards via Google Workspace to blake@doyel-labs.com. Sender is Doyel Labs Website <noreply@doyel-labs.com> (verified domain).",
-  },
-  {
-    date: "2026-09-20",
-    text: "Cyan accent added to the design system (#10c7eb, from the icon). Canvas softened from pure #000 to #0a0f14. Four-square logo mark in header, footer, hero, and favicons.",
-  },
-  {
-    date: "2026-09-20",
-    text: "doyel-labs.com relaunched as a Doyel Labs LLC company page. BAI moved to /programs/bai and is no longer the site brand. Services is now the primary commercial surface (payroll, websites, and custom software). Cloudflare Pages deploy replaces the previous Netlify site.",
-  },
-];
+function groupEntries(all: ChangelogEntry[]): Group[] {
+  const groups: Group[] = [];
+  for (const entry of all) {
+    const key = entry.version ?? entry.date;
+    let group = groups.find((g) => g.key === key);
+    if (!group) {
+      group = {
+        key,
+        label: entry.version ?? formatChangelogDate(entry.date),
+        version: entry.version,
+        date: entry.date,
+        entries: [],
+      };
+      groups.push(group);
+    }
+    group.entries.push(entry);
+  }
+  return groups;
+}
 
-const PAYROLL: Entry[] = [
-  {
-    date: "2026-09-19",
-    text: "SteadFast Payroll: paystub live preview added; portal status selector (paid / pending / void); YTD auto-fill from contractor history.",
-  },
-  {
-    date: "2026-09-15",
-    text: "SCA WD auto-lookup: four-step pipeline (geocode → SAM.gov find → download → parse). Recent lookups pane on the SCA tab.",
-  },
-  {
-    date: "2026-09-10",
-    text: "Passkey enrolment and admin recovery. Password reset via one-time code, 15-minute expiry.",
-  },
-];
-
-const WEBSITES: Entry[] = [
-  {
-    date: "2026-09-20",
-    text: "Doyel Labs site itself launched on Cloudflare Pages: strict CSP, no third-party marketing scripts, static export.",
-  },
-  {
-    date: "2026-08-01",
-    text: "SteadFast Transportation Inc. site refresh: mobile nav hardened, hero video, schema.org markup, Formspree contact + contractor inquiry.",
-  },
-];
-
-const BAI: Entry[] = [
-  {
-    date: "2026-09-07",
-    text: "Desk engine and watchdog now run inside a Windows job tied to the app; a stopped app leaves no process holding the installation open.",
-  },
-  {
-    date: "2026-09-06",
-    text: "Crash reports drop any field that names positions, orders, fills, money, or quantities before they are written.",
-  },
-  {
-    date: "2026-09-06",
-    text: "Admin console shipped with a per-request nonce CSP and an address allowlist that applies before a token is typed.",
-  },
-];
-
-const CL: Entry[] = [
-  {
-    date: "2026-09-20",
-    text: "0.2.106 · Privacy policy names both voice-lists and crash-notes flows explicitly.",
-  },
-  {
-    date: "2026-09-19",
-    text: "Custom sign-in emails via Resend from noreply@connectionloop.app. Email enumeration protection ON. Password policy ON, minimum 8.",
-  },
-  {
-    date: "2026-09-19",
-    text: "Cloud Functions runtime moved to Node.js 22.",
-  },
-];
+/**
+ * Small color hint per section — used for the section chip on each
+ * entry. All tokens exist in tailwind.config.ts.
+ */
+const SECTION_TONE: Record<ChangelogSection, string> = {
+  Company: "border-accentDim text-accent",
+  Design: "border-line2 text-ink",
+  Performance: "border-rise/50 text-rise",
+  Accessibility: "border-care/50 text-care",
+  SEO: "border-accentDim text-accent",
+  Writing: "border-line2 text-ink",
+  Bugfix: "border-fall/50 text-fall",
+  Payroll: "border-line2 text-mute",
+  BAI: "border-line2 text-mute",
+  ConnectionLoop: "border-line2 text-mute",
+};
 
 export default function Changelog() {
+  const groups = groupEntries(entries);
+  const totalEntries = entries.length;
+  const totalVersions = new Set(
+    entries.filter((e) => e.version).map((e) => e.version),
+  ).size;
+
   return (
-    <Page narrow>
-      <section className="pt-24">
-        <Eyebrow>Changelog</Eyebrow>
-        <H1>What changed, in the words of the people who changed it.</H1>
-        <Lead>
-          The company and per-product logs. Most recent first. Every entry
-          names a real change; nothing is added for marketing.
-        </Lead>
-        <p className="mt-6 font-mono text-[10px] uppercase tracking-wide text-muted">
+    <Page
+      bandFooter={
+        <MetaRow>
+          Every entry above is a real, shipped change. No rewrites
+          after the fact. If a claim is inaccurate,{" "}
           <a
-            href="/changelog/rss.xml"
+            href={`mailto:${site.supportEmail}?subject=Changelog%20correction`}
             className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
           >
-            Subscribe via RSS →
-          </a>
-        </p>
-      </section>
+            email us
+          </a>{" "}
+          and we&apos;ll add a correction entry.
+        </MetaRow>
+      }
+    >
+      <Breadcrumbs items={[{ name: "Changelog", href: "/changelog/" }]} />
 
-      <ChangelogBlock title="Company" entries={COMPANY} />
-      <ChangelogBlock title="Payroll" entries={PAYROLL} />
-      <ChangelogBlock title="Websites" entries={WEBSITES} />
-      <ChangelogBlock title="BAI" entries={BAI} />
-      <ChangelogBlock title="ConnectionLoop" entries={CL} />
-
-      <section className="mt-24 border-t border-line pt-16">
-        <Card title="Live health">
-          <p>
-            The status page pings the BAI control plane from your browser and
-            reports what you would actually get.{" "}
-            <Link
-              href="/status/"
-              className="underline decoration-line2 underline-offset-2 hover:text-ink"
-            >
-              Open the status page
-            </Link>
-            .
-          </p>
-        </Card>
-        <div className="mt-6">
-          <GhostLink href="/security/" small>
-            Security changes
-          </GhostLink>
+      {/* HERO */}
+      <section className="hero-glow pt-4">
+        <div className="max-w-3xl">
+          <Eyebrow>Changelog</Eyebrow>
+          <H1>
+            What we <span className="text-accent">shipped</span>. And
+            when.
+          </H1>
+          <Lead>
+            Every real change to Doyel Labs and its products, in
+            reverse chronological order. Nothing added for marketing.
+            Nothing rewritten after it ships. The git commit history
+            is the audit trail behind every entry.
+          </Lead>
+          <div className="mt-6 flex flex-wrap items-baseline gap-x-6 gap-y-2 font-mono text-[11px] uppercase tracking-eyebrow text-muted">
+            <span>
+              <strong className="text-ink">{totalEntries}</strong> entries
+            </span>
+            <span>
+              <strong className="text-ink">{totalVersions}</strong>{" "}
+              company versions
+            </span>
+            <span>
+              <a
+                href="/changelog/rss.xml"
+                className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
+              >
+                Subscribe via RSS →
+              </a>
+            </span>
+          </div>
+          <div className="mt-6 flex flex-wrap gap-2">
+            {SECTIONS.filter((s) =>
+              entries.some((e) => e.section === s),
+            ).map((section) => (
+              <AccentChip key={section}>
+                {section} ·{" "}
+                {entries.filter((e) => e.section === section).length}
+              </AccentChip>
+            ))}
+          </div>
         </div>
       </section>
+
+      {/* TIMELINE */}
+      <section className="mt-16">
+        <ol className="relative border-l border-line pl-6 md:pl-10">
+          {groups.map((group, groupIdx) => (
+            <Reveal key={group.key}>
+              <li
+                className={`relative mb-14 ${
+                  groupIdx === groups.length - 1 ? "mb-0" : ""
+                }`}
+              >
+                {/* Timeline dot */}
+                <span
+                  aria-hidden="true"
+                  className="absolute -left-[9px] top-2 h-3.5 w-3.5 rounded-full border-2 border-accent bg-bg md:-left-[13px]"
+                />
+                {/* Group header */}
+                <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+                  <p
+                    id={group.key}
+                    className="font-mono text-[13px] font-semibold uppercase tracking-eyebrow text-accent"
+                  >
+                    {group.label}
+                  </p>
+                  <time
+                    dateTime={group.date}
+                    className="font-mono text-[10px] uppercase tracking-wide text-muted"
+                  >
+                    {formatChangelogDate(group.date)}
+                  </time>
+                </div>
+                {/* Entries in this group */}
+                <ul className="mt-4 space-y-6">
+                  {group.entries.map((entry) => (
+                    <EntryCard key={entry.id} entry={entry} />
+                  ))}
+                </ul>
+              </li>
+            </Reveal>
+          ))}
+        </ol>
+      </section>
+
+      {/* CLOSE */}
+      <Reveal>
+        <section className="mt-24 border-t border-line pt-16">
+          <div className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+            <div>
+              <Eyebrow>Want to hire us next?</Eyebrow>
+              <H2>
+                <span className="mt-2 block">
+                  Everything above is what one operator gets.
+                </span>
+              </H2>
+              <p className="mt-6 max-w-prose text-[16px] leading-[1.7] text-mute">
+                Every entry above is a real ship on our own site,
+                shipped by the person who&apos;d work on your build.
+                If that&apos;s the cadence you want on your own
+                project, book an orientation.
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-3">
+                <ContactWidget label="Book an orientation" />
+                <GhostLink href="/how-we-work/" small>
+                  How we work
+                </GhostLink>
+                <GhostLink href="/status/" small>
+                  Status page
+                </GhostLink>
+              </div>
+            </div>
+            <div>
+              <Card title="Machine-readable">
+                <p className="mb-4">
+                  RSS feed at{" "}
+                  <Link
+                    href="/changelog/rss.xml"
+                    className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
+                  >
+                    /changelog/rss.xml
+                  </Link>
+                  . Plug it into any reader; when we ship, your reader
+                  picks up the entry.
+                </p>
+                <Notice>
+                  <p>
+                    Auto-discovery is set in the site&apos;s{" "}
+                    <code className="font-mono text-ink">
+                      &lt;link rel=&quot;alternate&quot;&gt;
+                    </code>{" "}
+                    tag, so most readers pick it up when you paste
+                    the site URL.
+                  </p>
+                </Notice>
+              </Card>
+            </div>
+          </div>
+        </section>
+      </Reveal>
     </Page>
   );
 }
 
-function ChangelogBlock({
-  title,
-  entries,
-}: {
-  title: string;
-  entries: Entry[];
-}) {
+/**
+ * One entry card in the timeline. Includes the section chip, title,
+ * body, and — where present — the version tag as a heading.
+ */
+function EntryCard({ entry }: { entry: ChangelogEntry }) {
+  const tone = SECTION_TONE[entry.section];
   return (
-    <section className="mt-24 border-t border-line pt-16">
-      <Eyebrow>{title}</Eyebrow>
-      <H2>
-        <span className="mt-2 block">{title} log.</span>
-      </H2>
-      <ul className="mt-8 space-y-4">
-        {entries.map((c, i) => (
-          <li
-            key={i}
-            className="flex flex-wrap gap-x-6 gap-y-1 border-t border-line pt-3 text-[14px]"
-          >
-            <span className="w-28 shrink-0 font-mono text-[11px] text-muted">
-              {c.date}
-            </span>
-            <span className="max-w-prose text-mute">{c.text}</span>
-          </li>
-        ))}
-      </ul>
-    </section>
+    <li
+      id={entry.id}
+      className="border-l border-line pl-5 transition-colors hover:border-accentDim"
+    >
+      <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+        <span
+          className={`inline-block border ${tone} px-2 py-0.5 font-mono text-[9px] uppercase tracking-eyebrow`}
+        >
+          {entry.section}
+        </span>
+        <a
+          href={`#${entry.id}`}
+          className="font-mono text-[10px] uppercase tracking-wide text-muted hover:text-accentHi"
+          aria-label={`Permalink to ${entry.title}`}
+        >
+          #
+        </a>
+      </div>
+      <h3 className="mt-3 text-[17px] font-semibold leading-tight text-ink md:text-[18px]">
+        {entry.title}
+      </h3>
+      <p className="mt-2 max-w-prose text-[14px] leading-[1.7] text-mute">
+        {entry.body}
+      </p>
+    </li>
   );
 }
