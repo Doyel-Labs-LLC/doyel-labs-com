@@ -64,6 +64,16 @@ export type ChangelogEntry = {
  * after they ship; add a new entry that corrects if needed.
  */
 export const entries: ChangelogEntry[] = [
+  // ── v31 · BAI brand imagery on site ───────────────────────
+  {
+    id: "v31-bai-imagery",
+    version: "v31",
+    date: "2026-09-21",
+    section: "Products",
+    title: "BAI Desk brand imagery — hero + mark on /products/",
+    body: "Two new brand renders live on the site. `bai-hero.jpg` (1024×576, 20.6 KB / 13.2 KB WebP) sits full-width above the BAI section on /products/#bai as the LCP element. `bai-mark.jpg` (682×1024, 22 KB / 14.3 KB WebP) stacks above the two functional product frames on the right rail. Both are also wired as OpenGraph images on /products/, /legal/bai/terms/, and /legal/bai/privacy/ — so any social share of the BAI legal docs Alpaca reviews shows a proper branded card. Bonus: `bai-hero-alpaca.jpg` (exactly 1024×500, 19.5 KB) is emitted for direct upload to Alpaca's app-tile submission form.",
+  },
+
   // ── v30 · Site simplification + BAI legal for Alpaca ──────
   {
     id: "v30-products-page",

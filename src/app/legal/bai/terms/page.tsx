@@ -24,6 +24,21 @@ export const metadata: Metadata = {
     "Terms of Use for BAI Desk, a Doyel Labs LLC product. Governing law: Wyoming. Doyel Labs is not a broker-dealer, investment adviser, or fiduciary. BAI Desk connects to your own brokerage account at Alpaca (or another supported broker); the broker holds your money and executes trades.",
   alternates: { canonical: `https://${site.domain}/legal/bai/terms/` },
   robots: { index: false, follow: true },
+  openGraph: {
+    title: "BAI Desk — Terms of Use | Doyel Labs",
+    description:
+      "Terms of Use for BAI Desk, a Doyel Labs LLC product. Wyoming governing law. Broker holds your money, not us.",
+    url: `https://${site.domain}/legal/bai/terms/`,
+    type: "article",
+    images: [
+      {
+        url: `https://${site.domain}/media/bai/bai-hero.jpg`,
+        width: 1024,
+        height: 576,
+        alt: "BAI Desk — an autonomous trading desk by Doyel Labs",
+      },
+    ],
+  },
 };
 
 /** Product-scoped side-nav — Terms + Privacy only. */

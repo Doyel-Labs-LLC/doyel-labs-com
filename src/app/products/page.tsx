@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import {
   AccentChip,
@@ -45,6 +46,21 @@ export const metadata: Metadata = {
     "The products Doyel Labs builds under its own brand: BAI Desk (an autonomous trading desk you run on your own computer) and ConnectionLoop (an invite-only shared calendar). Client custom software is not on this page — see /services/ for that.",
   alternates: { canonical: `https://${site.domain}/products/` },
   robots: { index: false, follow: true },
+  openGraph: {
+    title: "Products — BAI Desk and ConnectionLoop | Doyel Labs",
+    description:
+      "BAI Desk — an autonomous trading desk that runs on your computer. ConnectionLoop — an invite-only shared calendar. Both by Doyel Labs.",
+    url: `https://${site.domain}/products/`,
+    type: "website",
+    images: [
+      {
+        url: `https://${site.domain}/media/bai/bai-hero.jpg`,
+        width: 1024,
+        height: 576,
+        alt: "BAI Desk — an autonomous trading desk by Doyel Labs",
+      },
+    ],
+  },
 };
 
 export default function ProductsIndex() {
@@ -104,13 +120,31 @@ export default function ProductsIndex() {
 
       {/* ─────────────────────────────────────────────────────
        * BAI DESK — the autonomous trading desk
+       *
+       * Full-width hero banner (bai-hero.jpg) sits above the
+       * two-column intro. Priority is TRUE because this image is
+       * the LCP element on `/products/#bai` — a direct deep-link
+       * from search results and Alpaca reviewers.
        * ───────────────────────────────────────────────────── */}
       <Reveal>
         <section
           id="bai"
           className="scroll-mt-24 mt-24 border-t border-line pt-16"
         >
-          <div className="grid gap-10 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:items-start">
+          {/* Brand hero banner */}
+          <div className="relative overflow-hidden border border-line bg-[#0a0f14]">
+            <Image
+              src="/media/bai/bai-hero.jpg"
+              alt="BAI Desk — an autonomous trading desk built by Doyel Labs, shown as a stylized 3D mark on a dark stage with a cyan light thread running through it"
+              width={1024}
+              height={576}
+              priority
+              sizes="(min-width: 1200px) 1024px, 100vw"
+              className="h-auto w-full"
+            />
+          </div>
+
+          <div className="mt-12 grid gap-10 md:grid-cols-[minmax(0,7fr)_minmax(0,5fr)] md:items-start">
             <div>
               <Eyebrow>Doyel Labs Product · BAI Desk</Eyebrow>
               <H2>
@@ -156,6 +190,20 @@ export default function ProductsIndex() {
               </p>
             </div>
             <div className="space-y-4">
+              {/* Portrait mark — layered above the two functional
+               *  product frames. Uses `bai-mark.jpg` (682×1024) so
+               *  the mark reads well on the right rail on desktop
+               *  and stacks naturally on mobile. */}
+              <div className="relative overflow-hidden border border-line bg-[#0a0f14]">
+                <Image
+                  src="/media/bai/bai-mark.jpg"
+                  alt="BAI Desk product mark — the letters BAI rendered in polished bronze on a dark plinth, with a cyan light thread crossing them"
+                  width={682}
+                  height={1024}
+                  sizes="(min-width: 768px) 40vw, 100vw"
+                  className="h-auto w-full"
+                />
+              </div>
               <BaiArmFrame />
               <BaiBookFrame />
             </div>
