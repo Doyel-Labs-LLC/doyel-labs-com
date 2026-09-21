@@ -352,7 +352,11 @@ export function Feature({
       <p className="font-mono text-[10px] uppercase tracking-wide text-accent">
         {step}
       </p>
-      <h4 className="mt-2 text-[15px] font-semibold text-ink">{title}</h4>
+      {/* Feature steps live inside a band whose section heading is
+       * `<H2>`, so an `<h3>` here keeps the outline hierarchy tight
+       * (no H2→H4 skips). Visual size stays deliberately small — this
+       * is a step title, not a section header. */}
+      <h3 className="mt-2 text-[15px] font-semibold text-ink">{title}</h3>
       <p className="mt-2 text-[14px] leading-[1.65] text-mute">{children}</p>
     </div>
   );

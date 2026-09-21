@@ -27,10 +27,10 @@ export function WebsiteSteadfastFrame() {
         {/* Screenshot */}
         <div className="relative">
           <Image
-            src="/media/websites/steadfast-hero.jpg"
+            src="/media/websites/steadfast-hero-v2.jpg"
             alt={`Screenshot of ${steadfastCase.domain} home page — a rural transportation company site built by Doyel Labs.`}
             width={1600}
-            height={938}
+            height={900}
             className="h-auto w-full"
             priority={false}
           />

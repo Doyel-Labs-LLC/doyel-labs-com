@@ -185,10 +185,10 @@ export default function SteadfastCaseStudy() {
                 </span>
               </div>
               <Image
-                src="/media/websites/steadfast-hero.jpg"
+                src="/media/websites/steadfast-hero-v2.jpg"
                 alt="Screenshot of the SteadFast Transportation Inc. home page."
                 width={1600}
-                height={938}
+                height={900}
                 className="h-auto w-full"
               />
             </div>
@@ -210,10 +210,10 @@ export default function SteadfastCaseStudy() {
                 </span>
               </div>
               <Image
-                src="/media/websites/steadfast-contractors.jpg"
+                src="/media/websites/steadfast-contractors-v2.jpg"
                 alt="Screenshot of the SteadFast Transportation Inc. contractors page."
                 width={1600}
-                height={938}
+                height={900}
                 className="h-auto w-full"
               />
             </div>

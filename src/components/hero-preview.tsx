@@ -81,10 +81,10 @@ export function HeroPreview() {
           </div>
           <div className="relative">
             <Image
-              src="/media/websites/steadfast-contractors.jpg"
+              src="/media/websites/steadfast-contractors-v2.jpg"
               alt={`Live site we built for ${steadfastCase.name}, at ${steadfastCase.domain}.`}
               width={1600}
-              height={938}
+              height={900}
               priority
               sizes="(min-width: 1024px) 40vw, (min-width: 768px) 50vw, 100vw"
               className="h-auto w-full"
