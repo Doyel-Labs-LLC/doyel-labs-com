@@ -13,40 +13,101 @@ import {
   Page,
 } from "@/components/chrome";
 import { ContactWidget } from "@/components/contact-modal";
+import { Quote } from "@/components/quote";
+import { Reveal } from "@/components/reveal";
 import { positioning, site } from "@/lib/site";
+import { steadfastTestimonial } from "@/lib/testimonials";
 
 export const metadata: Metadata = {
-  title: "Company",
-  description: `${site.company} is a software company in ${site.city}, formed ${site.founded}.`,
+  title: "Company — a software studio in Casper, Wyoming",
+  description: `${site.company} is a custom software studio based in ${site.city}, formed ${site.founded}. We build for any business — AI-native, human-reviewed, priced per project, shipped in weeks.`,
+  alternates: { canonical: `https://${site.domain}/company/` },
+  openGraph: {
+    title: `Company — ${site.company}`,
+    description: `A custom software studio in ${site.city}. AI-native, human-reviewed, priced per project.`,
+    url: `https://${site.domain}/company/`,
+    type: "website",
+  },
 };
 
 export default function Company() {
   return (
     <Page>
-      {/* HERO */}
+      {/* HERO — logo left, company card right */}
       <section className="hero-glow pt-24 md:pt-32">
-        <div className="grid gap-10 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]">
+        <div className="grid gap-12 md:grid-cols-[minmax(0,7fr)_minmax(0,6fr)] md:items-center md:gap-10 lg:gap-16">
           <div>
-            <Eyebrow>Company</Eyebrow>
-            <H1>
-              <span className="text-accent">Doyel Labs</span>. Casper, Wyoming.
-            </H1>
-            <Lead>{positioning}</Lead>
-            <div className="mt-8">
-              <AccentChip>Founded {site.founded}</AccentChip>
+            <div className="hero-in hero-in--1">
+              <Eyebrow>Company</Eyebrow>
             </div>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <ContactWidget label="Work with us" />
+            <div className="hero-in hero-in--2">
+              <H1>
+                <span className="text-accent">Doyel Labs</span>. Casper,
+                Wyoming.
+              </H1>
+            </div>
+            <div className="hero-in hero-in--3">
+              <Lead>{positioning}</Lead>
+            </div>
+            <div className="hero-in hero-in--4 mt-8 flex flex-wrap gap-2">
+              <AccentChip>Founded {site.founded}</AccentChip>
+              <AccentChip>Wyoming LLC</AccentChip>
+              <AccentChip>AI-native, human-reviewed</AccentChip>
+              <AccentChip>Priced per project</AccentChip>
+            </div>
+            <div className="hero-in hero-in--5 mt-8 flex flex-wrap gap-3">
+              <ContactWidget label="Book an orientation" />
+              <GhostLink href="/how-we-work/" small>
+                How we work
+              </GhostLink>
               <GhostLink href="/services/" small>
-                See what we build
+                What we build
               </GhostLink>
             </div>
           </div>
-          <div className="flex items-center justify-center">
-            <LogoMark size={200} />
+          {/* Right column: logo + company card */}
+          <div className="hero-in hero-in--5 flex flex-col items-center">
+            <LogoMark size={160} />
+            <div className="mt-10 w-full max-w-md border border-line bg-surface/40 p-6">
+              <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
+                Company card
+              </p>
+              <dl className="mt-4 space-y-3 text-[13px]">
+                <FactRow label="Legal name" value={site.company} />
+                <FactRow label="Founded" value={site.founded} />
+                <FactRow label="Location" value={site.city} />
+                <FactRow label="Domain" value={site.domain} />
+                <FactRow label="Governing law" value="Wyoming, USA" />
+                <FactRow
+                  label="Support SLA"
+                  value="1 business day, human"
+                />
+                <FactRow label="What we build" value="Custom software" />
+                <FactRow label="For" value="Any business, any industry" />
+              </dl>
+            </div>
           </div>
         </div>
       </section>
+
+      {/* TESTIMONIAL — short quote near the top */}
+      <Reveal>
+        <section className="mt-24 border-t border-line pt-16">
+          <Quote
+            attribution={steadfastTestimonial.attribution}
+            company={steadfastTestimonial.company}
+            companyUrl={steadfastTestimonial.companyUrl}
+            logo={steadfastTestimonial.logo}
+          >
+            {steadfastTestimonial.short}
+          </Quote>
+          <div className="mt-4">
+            <GhostLink href="/case-studies/steadfast/" small>
+              Read the case study
+            </GhostLink>
+          </div>
+        </section>
+      </Reveal>
 
       {/* HOW WE WORK */}
       <section className="mt-32 border-t border-line pt-16 md:pt-24">
@@ -162,16 +223,17 @@ export default function Company() {
       <section className="mt-32 border-t border-line pt-16 md:pt-24">
         <div className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
           <div>
-            <Eyebrow>Get in touch</Eyebrow>
+            <Eyebrow>Book an orientation</Eyebrow>
             <H2>
-              <span className="mt-2 block">Let's talk.</span>
+              <span className="mt-2 block">Let&apos;s talk.</span>
             </H2>
             <p className="mt-6 max-w-prose text-[16px] leading-[1.7] text-mute">
-              A short description of the operation is all we need to give
-              you a scope and a quote.
+              One paragraph on the operation is all we need to schedule a
+              one-hour orientation call. A real person, over Zoom or
+              phone. Free, no obligation.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <ContactWidget label="Send a message" />
+              <ContactWidget label="Book an orientation" />
               <GhostLink href={site.phoneHref} small external>
                 Call {site.phone}
               </GhostLink>
@@ -181,5 +243,18 @@ export default function Company() {
         </div>
       </section>
     </Page>
+  );
+}
+
+/** Row in the hero company card. Mono label on the left, ink value on
+ * the right, hairline separator. */
+function FactRow({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex items-baseline justify-between gap-4 border-b border-line/70 pb-2 last:border-b-0 last:pb-0">
+      <dt className="shrink-0 font-mono text-[10px] uppercase tracking-eyebrow text-muted">
+        {label}
+      </dt>
+      <dd className="text-right text-[13px] text-ink">{value}</dd>
+    </div>
   );
 }

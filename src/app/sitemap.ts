@@ -34,6 +34,7 @@ const entries: Entry[] = [
   { path: "/writing/ai-native-software-what-we-write-what-we-generate/", priority: 0.8, change: "monthly" },
   { path: "/writing/shipping-steadfast-payroll-in-six-weeks/", priority: 0.8, change: "monthly" },
   // Consultative entry points
+  { path: "/how-we-work/", priority: 0.9, change: "monthly" },
   { path: "/start/", priority: 0.85, change: "monthly" },
   { path: "/contact/", priority: 0.8, change: "monthly" },
   { path: "/faq/", priority: 0.75, change: "monthly" },

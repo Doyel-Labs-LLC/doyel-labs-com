@@ -269,31 +269,38 @@ export default function Home() {
       </section>
       </Reveal>
 
-      {/* HOW WE WORK */}
+      {/* HOW WE WORK — leads with the orientation call, then the four beats. */}
       <Reveal>
       <section className="mt-32 border-t border-line pt-16 md:pt-24">
         <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
           <div>
             <Eyebrow>How we work</Eyebrow>
             <H2>
-              <span className="mt-2 block">AI is our tool. You get the output.</span>
+              <span className="mt-2 block">
+                A real conversation. Then a real build.
+              </span>
             </H2>
             <p className="mt-6 max-w-prose text-[16px] leading-[1.7] text-mute">
-              We use AI to write code, migrations, tests, and copy — then
-              a person reads every diff before it ships. That's how we
-              quote fixed prices, hit tight deadlines, and stay on to
-              maintain the software once it's live.
+              AI-native, not AI-only. We use AI to draft code, tests,
+              and copy — but every engagement starts with a one-hour
+              orientation over Zoom or phone. A real person, on the
+              other end, listening. You&apos;re worth our time.
             </p>
+            <div className="mt-6">
+              <GhostLink href="/how-we-work/" small>
+                The full engagement flow
+              </GhostLink>
+            </div>
           </div>
           <div className="grid gap-6">
-            <Feature step="01" title="Start with a conversation">
-              A short call or email exchange. You describe the operation
-              or the idea — even if it's rough. We say what we can build,
-              what tools you already own that we should reuse, and how
-              much it should cost.
+            <Feature step="01" title="One-hour orientation">
+              Zoom or phone. A real human from Doyel Labs — not a
+              chatbot, not a screener. We listen; you decide. No
+              pressure, no upsell, no cost.
             </Feature>
             <Feature step="02" title="Written scope, fixed price">
-              Within one business day, a written scope: what ships, what
+              If you move forward, a written scope lands in your inbox
+              by the end of the next business day: what ships, what
               does not, timeline, price. If the scope grows later, we
               requote — no silent creep.
             </Feature>
@@ -304,8 +311,8 @@ export default function Home() {
             </Feature>
             <Feature step="04" title="You own the software">
               Source lives on your Git host, your domain, your database.
-              No lock-in, no proprietary format, no "call us to migrate."
-              Optional monthly retainer to keep us on for maintenance.
+              No lock-in, no proprietary format, no &quot;call us to
+              migrate.&quot; Optional monthly retainer to keep us on.
             </Feature>
           </div>
         </div>
@@ -365,20 +372,25 @@ export default function Home() {
       <section className="mt-32 border-t border-line pt-16 md:pt-24">
         <div className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
           <div>
-            <Eyebrow>Get in touch</Eyebrow>
+            <Eyebrow>Book an orientation</Eyebrow>
             <H2>
               <span className="mt-2 block">
-                Tell us what you're trying to build.
+                Tell us what you&apos;re trying to build.
               </span>
             </H2>
             <p className="mt-6 max-w-prose text-[16px] leading-[1.7] text-mute">
-              One paragraph on the operation, or the idea. We reply within
-              one business day. If the idea is rough, that's fine — a
-              short conversation usually turns "somewhere between an
-              inventory tracker and a Slack bot" into a scope + price.
+              One paragraph on the operation, or the idea, and we reply
+              within one business day with a couple of Zoom or phone
+              times that could work. The orientation is one hour, no
+              cost, no obligation, and always with a real human being.
+              If the idea is rough, that&apos;s fine — that&apos;s what
+              the hour is for.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <ContactWidget label="Start a conversation" />
+              <ContactWidget label="Book an orientation" />
+              <GhostLink href="/how-we-work/" small>
+                How we work
+              </GhostLink>
               <GhostLink href={site.phoneHref} small external>
                 Call {site.phone}
               </GhostLink>

@@ -18,9 +18,17 @@ import { site } from "@/lib/site";
 import { steadfastTestimonial } from "@/lib/testimonials";
 
 export const metadata: Metadata = {
-  title: "Start here",
+  title: "Start here — bring your idea, we'll take it from there",
   description:
-    "Have an idea for software you want built? Start here. Doyel Labs helps you scope, price, and ship — even if the idea is still rough.",
+    "Have an idea for software you want built? Start here. Doyel Labs starts every engagement with a one-hour orientation over Zoom or phone — a real conversation with a real human being. No cost, no obligation. If you decide to move forward, we get to work.",
+  alternates: { canonical: `https://${site.domain}/start/` },
+  openGraph: {
+    title: "Start here — bring your idea | Doyel Labs",
+    description:
+      "One-hour orientation with a real human being, over Zoom or phone. No cost, no obligation.",
+    url: `https://${site.domain}/start/`,
+    type: "website",
+  },
 };
 
 export default function Start() {
@@ -39,9 +47,9 @@ export default function Start() {
           scope, a price, and working software. Here's how it starts.
         </Lead>
         <div className="mt-10 flex flex-wrap items-center gap-3">
-          <ContactWidget label="Send us a message" />
-          <GhostLink href="/services/" small>
-            See what we build
+          <ContactWidget label="Book an orientation" />
+          <GhostLink href="/how-we-work/" small>
+            How we work
           </GhostLink>
           <GhostLink href="/case-studies/steadfast/" small>
             Read a case study
@@ -60,36 +68,42 @@ export default function Start() {
           </H2>
           <p className="mt-6 text-[16px] leading-[1.7] text-mute">
             None of these steps commit you to anything. The first
-            conversation is free, the scope is free, and the price is
-            fixed before you sign.
+            hour is free, the scope is free, and the price is fixed
+            before you sign a thing.
           </p>
         </div>
         <div className="mt-12 grid gap-6 md:grid-cols-2">
           <Feature step="Day 01" title="You reach out">
             Send a paragraph — through the contact form, an email, or a
-            phone call. What does the business do? What's the problem
-            you're trying to solve? What have you tried already? Even
-            "I don't really know, I just know we need something better
-            than a spreadsheet" is a perfectly good starting point.
+            phone call. What does the business do? What&apos;s the
+            problem you&apos;re trying to solve? Even &quot;I
+            don&apos;t really know, I just know we need something
+            better than a spreadsheet&quot; is a perfectly good
+            starting point.
           </Feature>
           <Feature step="Day 01" title="We reply within one business day">
-            You get a real reply from a real person. Either a short
-            discovery-call invitation ("let's talk for 30 minutes and
-            figure this out") or, if the idea is well-scoped already, a
-            direct quote request.
+            A real person from Doyel Labs — not a chatbot, not a
+            screener — replies with a couple of Zoom or phone times
+            that could work for a one-hour orientation.
           </Feature>
-          <Feature step="Day 02" title="Discovery call (30 minutes)">
-            We talk through the operation, the constraints, the tools
-            you already own, and the outcome that would make this
-            worthwhile. We say what we can build and what we can't. If
-            we're not the right team for the job, we say so and point
-            you at who is.
+          <Feature step="Day 02–03" title="One-hour orientation">
+            An actual conversation. We listen more than we talk. You
+            describe the operation; we ask questions and take notes.
+            At the end of the hour, the decision to move forward is
+            entirely yours. No pressure, no cost, no follow-up drip.
           </Feature>
           <Feature step="Day 03–04" title="Written scope + fixed price">
-            You get a written scope: what ships, what does not, timeline,
-            price. If it looks right, you sign and we start. If it
-            doesn't, we iterate — no pressure, no billing.
+            If you move forward, a written scope lands in your inbox
+            by the end of the next business day: what ships, what does
+            not, timeline, price. If it looks right, you sign and we
+            start. If it doesn&apos;t, we iterate — no billing, no
+            hard feelings.
           </Feature>
+        </div>
+        <div className="mt-10">
+          <GhostLink href="/how-we-work/" small>
+            The full &quot;how we work&quot; page
+          </GhostLink>
         </div>
       </section>
 
@@ -225,7 +239,7 @@ export default function Start() {
             would make it work better? We'll take it from there.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <ContactWidget label="Send us a message" />
+            <ContactWidget label="Book an orientation" />
             <GhostLink href={site.phoneHref} small external>
               Call {site.phone}
             </GhostLink>

@@ -283,26 +283,45 @@ export default function Pricing() {
           <div className="max-w-3xl">
             <Eyebrow>How billing works</Eyebrow>
             <H2>
-              <span className="mt-2 block">Four steps, no surprises.</span>
+              <span className="mt-2 block">
+                Five steps, no surprises.
+              </span>
             </H2>
+            <p className="mt-6 text-[16px] leading-[1.7] text-mute">
+              Nothing costs money until you sign a scope. The one-hour
+              orientation is free. The scope + quote is free. Every
+              invoice is issued against a scope you already agreed to.
+            </p>
           </div>
-          <div className="mt-12 grid gap-6 md:grid-cols-2">
-            <Feature step="01" title="Written scope + fixed price">
-              A one-to-two-page document that names every feature, timeline,
-              and price. Nothing starts until you sign it.
+          <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-5">
+            <Feature step="01" title="One-hour orientation">
+              Zoom or phone. A real person from Doyel Labs. We listen;
+              you decide whether to move forward. Free, no obligation.
             </Feature>
-            <Feature step="02" title="50% up front">
-              An invoice for half the total. Payable by ACH, card (Stripe),
-              or wire. We start work the day payment clears.
+            <Feature step="02" title="Written scope + fixed price">
+              A one-to-two-page document that names every feature,
+              timeline, and price. Nothing else starts until you sign
+              it.
             </Feature>
-            <Feature step="03" title="Weekly preview + Loom">
-              Every business day you can look at a preview URL. Every week
-              a short Loom walks through what shipped and what&apos;s next.
+            <Feature step="03" title="50% up front">
+              An invoice for half the total. ACH, card (Stripe), or
+              wire. We start work the day payment clears.
             </Feature>
-            <Feature step="04" title="Balance at handover">
-              Final invoice at handover, when the software is live on your
-              domain / servers and the handover doc is in your inbox.
+            <Feature step="04" title="Daily preview + weekly Loom">
+              Every business day you can open a preview URL. Every week
+              a short Loom walks through what shipped and what&apos;s
+              next.
             </Feature>
+            <Feature step="05" title="Balance at handoff">
+              Final invoice at handoff, when the software is live on
+              your domain / servers and the handover doc is in your
+              inbox.
+            </Feature>
+          </div>
+          <div className="mt-10">
+            <GhostLink href="/how-we-work/" small>
+              Read the full &quot;how we work&quot; page
+            </GhostLink>
           </div>
         </section>
       </Reveal>

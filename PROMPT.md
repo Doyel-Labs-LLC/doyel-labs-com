@@ -1,4 +1,4 @@
-# doyel-labs.com — the design brief, v6
+# doyel-labs.com — the design brief, v7
 
 The reference the site is written against. Change this document first,
 then the page. If a page contradicts this brief, the page is wrong.
@@ -61,6 +61,41 @@ twice before writing copy anywhere:
 The company doesn't grow by pinning itself to what it's already
 shipped. New verticals are welcomed. Say yes to the industry we haven't
 served yet.
+
+**We are AI-native, not AI-only.**
+Being AI-native means we use AI to draft, translate, and scaffold. It
+does NOT mean the customer talks to a chatbot instead of a person. At
+every stage of the engagement a real human is on the other end.
+
+The most important human touch on the whole engagement is the
+**one-hour orientation call**. It comes after a prospect fills out the
+contact form or emails us, and before any code is written:
+
+- **One hour, over Zoom or phone.** Long enough to actually understand
+  the operation, short enough to respect the client's time.
+- **Real human being.** Not a form, not a screening AI, not a sales
+  chatbot. A person from Doyel Labs.
+- **Purpose: listening.** We ask about the business, the operation,
+  what's slow, what's broken, and what would make it defensible on
+  paper. We do not pitch a package.
+- **No obligation, no pressure.** At the end of the call the client
+  decides whether to move forward. If they say no, that's fine — we
+  send our notes anyway.
+- **If yes: written scope + fixed price back within one business day.**
+- **Then: we get to work.**
+
+The four lines that must be present on the site whenever the
+orientation is described (or paraphrased with the same posture):
+
+1. It's a real conversation with a real human being.
+2. We listen. Your operation is worth our time.
+3. No pressure — the decision to work together is yours.
+4. If you say yes, we get to work.
+
+Sentences to avoid: "discovery call," "kickoff call," "book a demo,"
+"strategy session." Those are agency clichés. This is an
+**orientation**. It orients us to your operation and orients you to
+how we build.
 
 ## The most important thing about this site
 

@@ -12,8 +12,16 @@ import { ContactWidget } from "@/components/contact-modal";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "FAQ",
-  description: `Frequently asked questions about hiring ${site.company} to build software — timeline, pricing, ownership, process.`,
+  title: "FAQ — hiring Doyel Labs to build software",
+  description: `Frequently asked questions about hiring ${site.company} — what happens after you contact us (a one-hour orientation with a real human), pricing, timelines, ownership, security, and support.`,
+  alternates: { canonical: `https://${site.domain}/faq/` },
+  openGraph: {
+    title: "FAQ | Doyel Labs",
+    description:
+      "What happens when you hire Doyel Labs. Orientation, pricing, timelines, ownership, security, support.",
+    url: `https://${site.domain}/faq/`,
+    type: "website",
+  },
 };
 
 type Q = { q: string; a: React.ReactNode };
@@ -29,16 +37,68 @@ const SECTIONS: { title: string; id: string; questions: Q[] }[] = [
     id: "before",
     questions: [
       {
+        q: "What actually happens after I contact Doyel Labs?",
+        a: (
+          <>
+            A real person replies within one business day and proposes a
+            couple of times for a <strong>one-hour orientation call</strong>{" "}
+            — over Zoom or phone, whichever you prefer. On the call, a
+            real Doyel Labs engineer listens to what your business does
+            and what you&apos;d like to build. It&apos;s a conversation,
+            not a pitch. At the end of the hour you decide whether to
+            move forward. If yes, a written scope and a fixed price land
+            in your inbox by the end of the next business day. If no, we
+            send our notes anyway. The full picture is on the{" "}
+            <Link
+              href="/how-we-work/"
+              className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
+            >
+              &quot;how we work&quot; page
+            </Link>
+            .
+          </>
+        ),
+      },
+      {
+        q: "Is the orientation call really free? What's the catch?",
+        a: (
+          <>
+            Yes, it&apos;s free, and there&apos;s no catch. The hour is a
+            real conversation, not a sales demo. No obligation to sign
+            anything, no follow-up drip email, no upsell sequence. If we
+            realize during the call that we&apos;re not the right fit —
+            wrong scope, wrong budget, wrong industry — we say so and
+            (if we can) point you at someone who is a better fit. We
+            budget the hour because your operation is worth our time.
+          </>
+        ),
+      },
+      {
+        q: "Who's actually on the orientation call?",
+        a: (
+          <>
+            A real Doyel Labs engineer. Not a chatbot, not a screening
+            AI, not an account-executive whose job is to close.
+            You&apos;re talking to the person who would build (or
+            oversee the building of) your software. Yes, we use AI
+            heavily in the actual code — but the human parts of a
+            Doyel Labs engagement are human on purpose.
+          </>
+        ),
+      },
+      {
         q: "How do I know if my idea is a fit for Doyel Labs?",
         a: (
           <>
             If your idea is a piece of software that ties an operation
             together — a marketing site, a payroll workspace, a portal,
             an integration, an internal tool, a custom program — we can
-            probably build it. If you're not sure, send us a paragraph
-            and we'll tell you either "yes, let's talk," "no, but here's
-            who could," or "you don't need software for that, here's
-            what you actually need." All three are honest answers.
+            probably build it. If you&apos;re not sure, send us a
+            paragraph and we&apos;ll tell you either &quot;yes,
+            let&apos;s book an orientation,&quot; &quot;no, but
+            here&apos;s who could,&quot; or &quot;you don&apos;t need
+            software for that, here&apos;s what you actually
+            need.&quot; All three are honest answers.
           </>
         ),
       },
@@ -47,8 +107,9 @@ const SECTIONS: { title: string; id: string; questions: Q[] }[] = [
         a: (
           <>
             No. Most of our clients arrive with an idea, not a spec. A
-            paragraph about the operation is enough to start a discovery
-            call. We'll write the spec together during the scoping phase.
+            paragraph about the operation is enough to book an
+            orientation. We write the spec together during the
+            scoping phase after the call.
           </>
         ),
       },
@@ -148,8 +209,9 @@ const SECTIONS: { title: string; id: string; questions: Q[] }[] = [
         q: "Who do I actually talk to?",
         a: (
           <>
-            The person who's building your software. No handoff to an
-            account manager, no ticket queue.
+            The person who&apos;s building your software — starting
+            from the one-hour orientation call. No handoff to an account
+            manager, no ticket queue, no automated screener.
           </>
         ),
       },

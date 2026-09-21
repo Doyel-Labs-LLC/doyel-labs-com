@@ -61,12 +61,12 @@ export default function Services() {
               </Lead>
             </div>
             <div className="hero-in hero-in--4 mt-10 flex flex-wrap items-center gap-3">
-              <ContactWidget label="Start a conversation" />
+              <ContactWidget label="Book an orientation" />
+              <GhostLink href="/how-we-work/" small>
+                How we work
+              </GhostLink>
               <GhostLink href="/pricing/" small>
                 Pricing bands
-              </GhostLink>
-              <GhostLink href="#capabilities" small>
-                Full capabilities
               </GhostLink>
             </div>
             <div className="hero-in hero-in--5 mt-8 flex flex-wrap gap-2">
@@ -354,30 +354,44 @@ export default function Services() {
         <div className="max-w-3xl">
           <Eyebrow>How an engagement works</Eyebrow>
           <H2>
-            <span className="mt-2 block">Discovery, build, handoff.</span>
+            <span className="mt-2 block">
+              A real conversation, then a real build.
+            </span>
           </H2>
+          <p className="mt-6 text-[16px] leading-[1.7] text-mute">
+            Every project starts with a one-hour orientation over Zoom or
+            phone — a real conversation with a real human being from
+            Doyel Labs. We listen. You decide. If you move forward, we
+            get to work.
+          </p>
         </div>
-        <div className="mt-12 grid gap-6 md:grid-cols-4">
-          <Feature step="Step 01" title="Discovery call">
-            30 minutes. You describe the operation and what has to be
-            provable on paper. We say what we can build and what tools
-            you already own that we should reuse.
+        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+          <Feature step="Step 01" title="One-hour orientation">
+            Zoom or phone. A real person from Doyel Labs — not a
+            chatbot, not a screener. We ask about the business and
+            listen. No pressure, no upsell. You&apos;re worth our time.
           </Feature>
-          <Feature step="Step 02" title="Scope + quote">
-            Within one business day, a written scope: what ships, what
-            does not, and a fixed price. If the scope grows later, we
-            requote — no silent creep.
+          <Feature step="Step 02" title="Scope + fixed price">
+            If you move forward, a written scope lands in your inbox by
+            the end of the next business day: what ships, what does
+            not, timeline, and a fixed price. If the scope grows later,
+            we requote — no silent creep.
           </Feature>
-          <Feature step="Step 03" title="Build">
-            Preview URL and a Loom the moment there's something to look
-            at. New progress every business day. Human review on every
-            commit before it ships.
+          <Feature step="Step 03" title="Build with weekly Loom">
+            Preview URL and a Loom the moment there&apos;s something to
+            look at. New progress every business day. A human reads
+            every commit before it ships.
           </Feature>
-          <Feature step="Step 04" title="Handoff + retainer">
+          <Feature step="Step 04" title="Handoff + optional retainer">
             Source lives on your Git host, your domain, your database.
             You get a short README, an admin credential, and the option
             to keep us on a monthly retainer.
           </Feature>
+        </div>
+        <div className="mt-10">
+          <GhostLink href="/how-we-work/" small>
+            Read the full &quot;how we work&quot; page
+          </GhostLink>
         </div>
       </section>
 
