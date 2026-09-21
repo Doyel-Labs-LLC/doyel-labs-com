@@ -211,19 +211,28 @@ async function handleContact({
     env.RESEND_FROM || "Doyel Labs Website <noreply@doyel-labs.com>";
   const to = env.CONTACT_TO || "support@doyel-labs.com";
 
-  const heading = `New message from ${name || "(no name)"} <${email}>`;
-  const textBody =
-    `${heading}\n` +
-    `Category: ${projectTypeLabel}\n` +
-    `Subject: ${subject}\n\n` +
-    `${message}\n\n` +
-    `---\nReceived at doyel-labs.com/api/contact\n`;
-  const htmlBody =
-    `<p><strong>${escapeHtml(heading)}</strong></p>` +
-    `<p><em>Category:</em> ${escapeHtml(projectTypeLabel)}</p>` +
-    `<p><em>Subject:</em> ${escapeHtml(subject)}</p>` +
-    `<p style="white-space:pre-wrap">${escapeHtml(message)}</p>` +
-    `<hr><p><small>Received at doyel-labs.com/api/contact</small></p>`;
+  const displayName = name || "New inquiry";
+  const senderLine = name ? `${name} <${email}>` : email;
+  const replyMailto = `mailto:${email}?subject=${encodeURIComponent(
+    "Re: " + subject,
+  )}`;
+  const textBody = renderTextEmail({
+    displayName,
+    senderLine,
+    projectTypeLabel,
+    subject,
+    message,
+    email,
+  });
+  const htmlBody = renderHtmlEmail({
+    displayName,
+    email,
+    name,
+    projectTypeLabel,
+    subject,
+    message,
+    replyMailto,
+  });
 
   let resendResp: Response;
   try {
@@ -280,3 +289,179 @@ export const onRequest: PagesFunction<Env> = async ({ request }) => {
     headers: { allow: "POST", "cache-control": "no-store" },
   });
 };
+
+/* ─────────────────────────────────────────────────────────────────
+ * Email templates
+ * ─────────────────────────────────────────────────────────────── */
+
+/**
+ * Plain-text email body. Renders in email clients that don't (or won't)
+ * display HTML — screen readers, terminal-based mail, and users with
+ * HTML-off preferences. Uses only ASCII box characters and horizontal
+ * rules for structure.
+ */
+function renderTextEmail(v: {
+  displayName: string;
+  senderLine: string;
+  projectTypeLabel: string;
+  subject: string;
+  message: string;
+  email: string;
+}): string {
+  const rule = "─".repeat(64);
+  return (
+    `${rule}\n` +
+    `  DOYEL LABS  ·  CASPER, WYOMING\n` +
+    `${rule}\n\n` +
+    `  [ ${v.projectTypeLabel.toUpperCase()} ]  NEW INQUIRY\n\n` +
+    `  From:     ${v.senderLine}\n` +
+    `  Subject:  ${v.subject}\n\n` +
+    `${rule}\n\n` +
+    `${v.message}\n\n` +
+    `${rule}\n\n` +
+    `Reply directly to this email, or send a new message to:\n` +
+    `  ${v.email}\n\n` +
+    `${rule}\n\n` +
+    `Received at doyel-labs.com/api/contact\n` +
+    `Doyel Labs LLC  ·  Casper, Wyoming  ·  https://doyel-labs.com\n`
+  );
+}
+
+/**
+ * HTML email body. Table-based layout with inline styles for maximum
+ * email-client compatibility (Gmail, Apple Mail, Outlook, Fastmail,
+ * Superhuman, etc.). Dark palette matches the site brand. Logo image
+ * is hosted at doyel-labs.com and cached publicly. Reply button uses
+ * a mailto: link so the recipient can hit reply with the subject
+ * pre-filled.
+ */
+function renderHtmlEmail(v: {
+  displayName: string;
+  email: string;
+  name: string;
+  projectTypeLabel: string;
+  subject: string;
+  message: string;
+  replyMailto: string;
+}): string {
+  const bodyMessage = escapeHtml(v.message).replace(/\n/g, "<br>");
+  const headingName = v.name
+    ? `New message from ${escapeHtml(v.name)}`
+    : "New inquiry";
+  const replyLabel = v.name
+    ? `Reply to ${escapeHtml(v.name.split(/\s+/)[0])}`
+    : "Reply";
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <meta name="supported-color-schemes" content="dark">
+  <title>${escapeHtml(headingName)}</title>
+</head>
+<body style="margin:0;padding:0;background:#0a0f14;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;color:#f0f0fa;-webkit-font-smoothing:antialiased;">
+  <!-- Preheader (hidden preview text) -->
+  <div style="display:none;font-size:1px;color:#0a0f14;line-height:1px;max-height:0;max-width:0;opacity:0;overflow:hidden;">
+    ${escapeHtml(v.projectTypeLabel)} · ${escapeHtml(v.subject)}
+  </div>
+
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#0a0f14;">
+    <tr>
+      <td align="center" style="padding:32px 16px;">
+        <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;background:#12181f;border:1px solid rgba(240,240,250,0.10);">
+
+          <!-- Header: logo + wordmark -->
+          <tr>
+            <td style="padding:28px 32px 20px;border-bottom:1px solid rgba(240,240,250,0.10);">
+              <table role="presentation" cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td style="vertical-align:middle;padding-right:14px;">
+                    <img src="https://doyel-labs.com/apple-touch-icon.png" width="44" height="44" alt="Doyel Labs" style="display:block;border-radius:6px;">
+                  </td>
+                  <td style="vertical-align:middle;">
+                    <div style="font-size:15px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#f0f0fa;line-height:1;">Doyel Labs</div>
+                    <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(240,240,250,0.44);margin-top:5px;line-height:1;">Casper, Wyoming</div>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Category chip -->
+          <tr>
+            <td style="padding:28px 32px 12px;">
+              <span style="display:inline-block;font-family:'JetBrains Mono',Consolas,'Courier New',monospace;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#10c7eb;border:1px solid rgba(16,199,235,0.35);padding:6px 12px;">
+                ${escapeHtml(v.projectTypeLabel)}
+              </span>
+            </td>
+          </tr>
+
+          <!-- Heading + sender line + subject -->
+          <tr>
+            <td style="padding:0 32px 24px;">
+              <h1 style="margin:0;font-size:26px;font-weight:600;line-height:1.2;color:#f0f0fa;letter-spacing:-0.01em;">
+                ${escapeHtml(headingName)}
+              </h1>
+              <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top:16px;">
+                <tr>
+                  <td style="padding:4px 0;font-family:'JetBrains Mono',Consolas,'Courier New',monospace;font-size:10px;letter-spacing:0.10em;text-transform:uppercase;color:rgba(240,240,250,0.44);width:70px;vertical-align:top;">From</td>
+                  <td style="padding:4px 0;font-size:14px;color:#f0f0fa;">
+                    <a href="mailto:${escapeHtml(v.email)}" style="color:#10c7eb;text-decoration:none;">${escapeHtml(v.email)}</a>
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:4px 0;font-family:'JetBrains Mono',Consolas,'Courier New',monospace;font-size:10px;letter-spacing:0.10em;text-transform:uppercase;color:rgba(240,240,250,0.44);width:70px;vertical-align:top;">Subject</td>
+                  <td style="padding:4px 0;font-size:14px;color:#f0f0fa;">${escapeHtml(v.subject)}</td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- Message body -->
+          <tr>
+            <td style="padding:0 32px 32px;">
+              <div style="border-left:2px solid #10c7eb;background:rgba(16,199,235,0.08);padding:18px 22px;font-size:15px;line-height:1.65;color:#f0f0fa;">
+                ${bodyMessage}
+              </div>
+            </td>
+          </tr>
+
+          <!-- Reply CTA -->
+          <tr>
+            <td style="padding:0 32px 36px;">
+              <a href="${escapeHtml(v.replyMailto)}" style="display:inline-block;background:rgba(16,199,235,0.10);border:1px solid #10c7eb;color:#10c7eb;padding:13px 26px;font-size:13px;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;text-decoration:none;">
+                ${replyLabel} →
+              </a>
+              <span style="display:inline-block;padding:13px 12px;font-size:12px;color:rgba(240,240,250,0.44);">
+                or hit Reply on this email
+              </span>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:20px 32px 28px;border-top:1px solid rgba(240,240,250,0.10);">
+              <p style="margin:0;font-family:'JetBrains Mono',Consolas,'Courier New',monospace;font-size:10px;letter-spacing:0.10em;text-transform:uppercase;color:rgba(240,240,250,0.44);">
+                Received at doyel-labs.com/api/contact
+              </p>
+              <p style="margin:10px 0 0;font-size:12px;color:rgba(240,240,250,0.66);">
+                Doyel Labs LLC · Casper, Wyoming · <a href="https://doyel-labs.com" style="color:#10c7eb;text-decoration:none;">doyel-labs.com</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+
+        <!-- Below-card meta -->
+        <p style="margin:16px 0 0;font-size:11px;color:rgba(240,240,250,0.44);font-family:'JetBrains Mono',Consolas,'Courier New',monospace;letter-spacing:0.06em;">
+          Delivered to support@doyel-labs.com
+        </p>
+
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`;
+}
