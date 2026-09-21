@@ -20,6 +20,10 @@ import { PayrollPaystubFrame } from "@/components/frames/payroll-paystub";
 import { HeroPreview } from "@/components/hero-preview";
 import { Quote } from "@/components/quote";
 import { Reveal } from "@/components/reveal";
+import {
+  entries as changelogEntries,
+  formatChangelogDate,
+} from "@/lib/changelog";
 import { steadfastCase } from "@/lib/demo/websites";
 import { programStatus, site } from "@/lib/site";
 import { steadfastTestimonial } from "@/lib/testimonials";
@@ -369,6 +373,88 @@ export default function Home() {
               href="/work/"
             />
           </Grid3>
+        </div>
+      </section>
+      </Reveal>
+
+      {/* RECENTLY SHIPPED — live signal that we're actively iterating.
+       * Pulls the 3 most recent changelog entries so a repeat visitor
+       * immediately sees new work without hunting for it. */}
+      <Reveal>
+      <section className="mt-32 border-t border-line pt-16 md:pt-24">
+        <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] md:items-start">
+          <div>
+            <Eyebrow>Recently shipped</Eyebrow>
+            <H2>
+              <span className="mt-2 block">
+                What changed this week.
+              </span>
+            </H2>
+            <p className="mt-6 max-w-prose text-[16px] leading-[1.7] text-mute">
+              Every real change to Doyel Labs itself lands on the
+              changelog. Three most recent below; the full timeline
+              plus RSS is at{" "}
+              <Link
+                href="/changelog/"
+                className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
+              >
+                /changelog
+              </Link>
+              .
+            </p>
+            <div className="mt-6 flex flex-wrap items-baseline gap-x-4 gap-y-1 font-mono text-[10px] uppercase tracking-eyebrow text-muted">
+              <span>
+                <strong className="text-ink">
+                  {changelogEntries.length}
+                </strong>{" "}
+                entries on file
+              </span>
+              <span>
+                <a
+                  href="/changelog/rss.xml"
+                  className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
+                >
+                  RSS →
+                </a>
+              </span>
+            </div>
+          </div>
+          <ul className="space-y-4">
+            {changelogEntries.slice(0, 3).map((entry) => (
+              <li key={entry.id}>
+                <Link
+                  href={`/changelog/#${entry.id}`}
+                  className="group block border border-line bg-surface/30 p-5 transition-colors hover:border-accentDim"
+                >
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <span className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
+                      {entry.version ?? entry.section}
+                    </span>
+                    <span className="font-mono text-[10px] uppercase tracking-eyebrow text-muted">
+                      · {entry.section}
+                    </span>
+                    <time
+                      dateTime={entry.date}
+                      className="font-mono text-[10px] uppercase tracking-wide text-muted"
+                    >
+                      · {formatChangelogDate(entry.date)}
+                    </time>
+                  </div>
+                  <h3 className="mt-3 text-[16px] font-semibold leading-tight text-ink group-hover:text-accentHi">
+                    {entry.title}
+                  </h3>
+                  <p className="mt-2 text-[13px] leading-[1.65] text-mute">
+                    {entry.body}
+                  </p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+        <div className="mt-8">
+          <GhostLink href="/changelog/" small>
+            See the full timeline →
+          </GhostLink>
         </div>
       </section>
       </Reveal>

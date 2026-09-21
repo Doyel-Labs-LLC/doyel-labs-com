@@ -60,6 +60,16 @@ export type ChangelogEntry = {
  * after they ship; add a new entry that corrects if needed.
  */
 export const entries: ChangelogEntry[] = [
+  // ── v25 · Recently-shipped band on homepage ───────────────
+  {
+    id: "v25-recent-shipped-home",
+    version: "v25",
+    date: "2026-09-20",
+    section: "Design",
+    title: "\"Recently shipped\" band on the homepage",
+    body: "Home page now shows the three most recent changelog entries as compact cards, right before the close CTA. Pulled directly from src/lib/changelog.ts (no duplication), so every new entry updates the homepage automatically on next deploy. Repeat visitors see active shipping without hunting; the full timeline stays at /changelog/.",
+  },
+
   // ── v24 · Support page rebuild ────────────────────────────
   {
     id: "v24-support-rebuild",
