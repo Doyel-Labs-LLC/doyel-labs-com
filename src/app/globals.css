@@ -133,6 +133,101 @@ body {
   scrollbar-color: rgba(240, 240, 250, 0.14) transparent;
 }
 
+/* ── Scroll-reveal ───────────────────────────────────────────────
+ * Elements wrapped in <Reveal> start slightly offset with 0 opacity,
+ * then transition into place when IntersectionObserver flips `.reveal--in`.
+ * A safety fallback: if JS never runs, elements still render (fallback
+ * declared as `no-js` below). */
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition:
+    opacity 700ms var(--m-ease, cubic-bezier(0.2, 0.8, 0.2, 1)),
+    transform 700ms var(--m-ease, cubic-bezier(0.2, 0.8, 0.2, 1));
+  will-change: opacity, transform;
+}
+.reveal--in {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* If JS hasn't run yet, we don't want a permanent hidden state.
+ * Any <noscript> environment or delayed hydration will still show
+ * content once this override kicks in (200ms after paint). */
+@keyframes reveal-fallback {
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.reveal {
+  animation: reveal-fallback 0ms linear 1500ms forwards;
+}
+.reveal--in {
+  animation: none;
+}
+
+/* ── Hero fade-in on load ────────────────────────────────────────
+ * The hero's headline, subhead, and CTA row lift into place on
+ * first paint. Staggered by class. Doesn't need IntersectionObserver
+ * because it's always above the fold. */
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+.hero-in {
+  animation: hero-in 720ms var(--m-ease, cubic-bezier(0.2, 0.8, 0.2, 1)) both;
+}
+.hero-in--1 {
+  animation-delay: 40ms;
+}
+.hero-in--2 {
+  animation-delay: 140ms;
+}
+.hero-in--3 {
+  animation-delay: 240ms;
+}
+.hero-in--4 {
+  animation-delay: 340ms;
+}
+.hero-in--5 {
+  animation-delay: 440ms;
+}
+
+/* Trust strip — a mono-typed line of proof signals directly under the
+ * hero. Muted, tabular, small. Every item is a real fact. */
+.trust-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px 24px;
+  font-family: "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: rgba(240, 240, 250, 0.44);
+}
+.trust-strip strong {
+  color: #f0f0fa;
+  font-weight: 600;
+}
+.trust-strip .dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #10c7eb;
+  box-shadow: 0 0 8px rgba(16, 199, 235, 0.5);
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
 /* Reduced motion. */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -142,5 +237,9 @@ body {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
   }
 }

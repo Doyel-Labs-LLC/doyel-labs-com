@@ -16,8 +16,10 @@ import {
 } from "@/components/chrome";
 import { ClientBadge } from "@/components/client-badge";
 import { ContactWidget } from "@/components/contact-modal";
-import { WebsiteSteadfastFrame } from "@/components/frames/websites-preview";
+import { PayrollPaystubFrame } from "@/components/frames/payroll-paystub";
+import { HeroPreview } from "@/components/hero-preview";
 import { Quote } from "@/components/quote";
+import { Reveal } from "@/components/reveal";
 import { steadfastCase } from "@/lib/demo/websites";
 import { programStatus, site } from "@/lib/site";
 import { steadfastTestimonial } from "@/lib/testimonials";
@@ -31,60 +33,104 @@ export const metadata: Metadata = {
 export default function Home() {
   return (
     <Page>
-      {/* HERO — warmer, consultative, "start a conversation" */}
+      {/* HERO — two-column with layered product preview on the right.
+       * The right column is only visible on md+; on mobile the preview
+       * stacks below the copy. */}
       <section className="relative hero-glow pt-24 md:pt-32">
-        <Eyebrow>
-          {site.company} · {site.city}
-        </Eyebrow>
-        <H1>
-          The <span className="text-accent">software</span> your business runs on.
-        </H1>
-        <Lead>
-          Have an idea? Tell us what your business does and we'll tell you
-          what we can build. Marketing sites, payroll workspaces, internal
-          tools, custom programs — priced per project, shipped in weeks,
-          and we stay on to keep it running.
-        </Lead>
-        <div className="mt-10 flex flex-wrap items-center gap-3">
-          <ContactWidget label="Start a conversation" />
-          <GhostLink href="/work/" small>
-            See our work
-          </GhostLink>
-          <GhostLink href="/start/" small>
-            I'm still figuring it out
-          </GhostLink>
+        <div className="grid gap-12 md:grid-cols-[minmax(0,7fr)_minmax(0,6fr)] md:items-center md:gap-10 lg:gap-16">
+          <div>
+            <div className="hero-in hero-in--1">
+              <Eyebrow>
+                {site.company} · {site.city}
+              </Eyebrow>
+            </div>
+            <div className="hero-in hero-in--2">
+              <H1>
+                The <span className="text-accent">software</span> your business
+                runs on.
+              </H1>
+            </div>
+            <div className="hero-in hero-in--3">
+              <Lead>
+                Have an idea? Tell us what your business does and we&apos;ll
+                tell you what we can build. Marketing sites, payroll
+                workspaces, internal tools, custom programs — priced per
+                project, shipped in weeks, and we stay on to keep it
+                running.
+              </Lead>
+            </div>
+            <div className="hero-in hero-in--4 mt-10 flex flex-wrap items-center gap-3">
+              <ContactWidget label="Start a conversation" />
+              <GhostLink href="/work/" small>
+                See our work
+              </GhostLink>
+              <GhostLink href="/start/" small>
+                I&apos;m still figuring it out
+              </GhostLink>
+            </div>
+          </div>
+
+          {/* Layered product preview — right column on desktop, stacks on mobile */}
+          <div className="hero-in hero-in--5 md:pl-4 lg:pl-0">
+            <HeroPreview />
+          </div>
+        </div>
+
+        {/* Trust strip — mono-typed proof signals under the hero */}
+        <div className="hero-in hero-in--5 mt-14 border-t border-line pt-6">
+          <p className="trust-strip">
+            <span>
+              <span className="dot" aria-hidden="true" />
+              <strong>1</strong> client live
+            </span>
+            <span>
+              <strong>SCA</strong>-compliant since day 1
+            </span>
+            <span>
+              Shipping in <strong>days</strong>, not quarters
+            </span>
+            <span>
+              <strong>{site.city}</strong>-based
+            </span>
+            <span>
+              Reply within <strong>1 business day</strong>
+            </span>
+          </p>
         </div>
       </section>
 
       {/* TESTIMONIAL — big proof point right below the hero */}
-      <section className="mt-24 border-t border-line pt-16 md:pt-20">
-        <div className="max-w-3xl">
-          <Eyebrow>What a client says</Eyebrow>
-        </div>
-        <div className="mt-8">
-          <Quote
-            paragraphs={steadfastTestimonial.full}
-            attribution={steadfastTestimonial.attribution}
-            company={steadfastTestimonial.company}
-            companyUrl={steadfastTestimonial.companyUrl}
-            logo={steadfastTestimonial.logo}
-            size="large"
-          />
-        </div>
-        <p className="mt-6 max-w-prose text-[14px] text-muted">
-          The full case study, with screenshots and product frames from the
-          SteadFast site and payroll workspace, is at{" "}
-          <Link
-            href="/case-studies/steadfast/"
-            className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-          >
-            /case-studies/steadfast
-          </Link>
-          .
-        </p>
-      </section>
+      <Reveal>
+        <section className="mt-24 border-t border-line pt-16 md:pt-20">
+          <div className="max-w-3xl">
+            <Eyebrow>What a client says</Eyebrow>
+          </div>
+          <div className="mt-8">
+            <Quote
+              paragraphs={steadfastTestimonial.full}
+              attribution={steadfastTestimonial.attribution}
+              company={steadfastTestimonial.company}
+              companyUrl={steadfastTestimonial.companyUrl}
+              logo={steadfastTestimonial.logo}
+              size="large"
+            />
+          </div>
+          <p className="mt-6 max-w-prose text-[14px] text-muted">
+            The full case study, with screenshots and product frames from the
+            SteadFast site and payroll workspace, is at{" "}
+            <Link
+              href="/case-studies/steadfast/"
+              className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
+            >
+              /case-studies/steadfast
+            </Link>
+            .
+          </p>
+        </section>
+      </Reveal>
 
       {/* WHAT WE BUILD — broad capabilities */}
+      <Reveal>
       <section className="mt-32 border-t border-line pt-16 md:pt-24">
         <div className="max-w-3xl">
           <Eyebrow>What we build</Eyebrow>
@@ -130,8 +176,10 @@ export default function Home() {
           </Grid3>
         </div>
       </section>
+      </Reveal>
 
       {/* SELECTED WORK — real screenshot of Steadfast + program tiles */}
+      <Reveal>
       <section className="mt-32 border-t border-line pt-16 md:pt-24">
         <div className="max-w-3xl">
           <Eyebrow>Selected work</Eyebrow>
@@ -142,19 +190,21 @@ export default function Home() {
 
         <div className="mt-12 grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
           <div>
-            <WebsiteSteadfastFrame />
+            <PayrollPaystubFrame />
           </div>
           <div className="flex flex-col justify-center">
             <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
-              Website · Client
+              Payroll · Client
             </p>
             <h3 className="mt-3 text-[22px] font-semibold leading-tight text-ink">
-              A ten-page marketing site for a federal service contractor.
+              An SCA-first pay-run workspace for a federal contractor.
             </h3>
             <p className="mt-4 text-[14px] leading-[1.7] text-mute">
-              Custom domain, mobile-first navigation, schema.org markup,
-              hero video, contractor-inquiry form, and a password-gated
-              payroll workspace on the same domain. Live since 2026.
+              Day-rate contractor register, SAM.gov wage-determination
+              auto-lookups, floor checks on every draft, stubs from the
+              operator&apos;s own domain, and an audit log a DOL
+              inspector can read. Live and running pay periods since
+              2026.
             </p>
             <div className="mt-5">
               <ClientBadge
@@ -198,8 +248,10 @@ export default function Home() {
           />
         </div>
       </section>
+      </Reveal>
 
       {/* HOW WE WORK */}
+      <Reveal>
       <section className="mt-32 border-t border-line pt-16 md:pt-24">
         <div className="grid gap-10 md:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
           <div>
@@ -239,8 +291,10 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </Reveal>
 
       {/* WHAT YOU MIGHT BE HERE FOR — audience */}
+      <Reveal>
       <section className="mt-32 border-t border-line pt-16 md:pt-24">
         <div className="max-w-3xl">
           <Eyebrow>What might you be here for?</Eyebrow>
@@ -285,8 +339,10 @@ export default function Home() {
           </Grid3>
         </div>
       </section>
+      </Reveal>
 
       {/* CLOSE — big contact CTA */}
+      <Reveal>
       <section className="mt-32 border-t border-line pt-16 md:pt-24">
         <div className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
           <div>
@@ -319,6 +375,7 @@ export default function Home() {
           </div>
         </div>
       </section>
+      </Reveal>
     </Page>
   );
 }
