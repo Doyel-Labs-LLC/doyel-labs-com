@@ -101,3 +101,55 @@ test("public-to-private Next navigation starts a new document without carrying t
   await page.waitForLoadState("networkidle");
   expect(beacons.join("")).not.toContain("/admin");
 });
+
+for (const [origin, width] of [
+  ["https://doyel-labs.com", 1440],
+  ["https://preview.website-8xx.pages.dev", 375],
+  ["https://website-8xx.pages.dev", 320],
+] as const) {
+  test(`footer owner entry from ${origin} is accessible and navigates without prefetch`, async ({ page }) => {
+    const { beacons, vendorRequests } = await mockSite(page);
+    const adminRequests: { url: string; document: boolean }[] = [];
+    page.on("request", (request) => {
+      if (new URL(request.url()).pathname.startsWith("/admin")) {
+        adminRequests.push({ url: request.url(), document: request.isNavigationRequest() && request.resourceType() === "document" });
+      }
+    });
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto(`${origin}/`);
+    if (origin === "https://doyel-labs.com" && analytics.provider !== "none") {
+      await expect(page.locator('script[src*="plausible.io"], script[src*="cloudflareinsights.com"]')).toHaveCount(1);
+      if (analytics.provider === "cloudflare") await expect.poll(() => beacons.length).toBeGreaterThan(0);
+    }
+    const footer = page.getByRole("contentinfo");
+    const owner = footer.getByRole("link", { name: "Owner login", exact: true });
+    await expect(owner).toHaveAttribute("href", "https://doyel-labs.com/admin/analytics/");
+    expect(await owner.getAttribute("target")).toBeNull();
+    expect(await owner.evaluate((element) => element.tagName)).toBe("A");
+    await owner.scrollIntoViewIfNeeded();
+    await owner.hover();
+    const links = footer.getByRole("link");
+    await links.nth((await links.count()) - 2).focus();
+    await page.keyboard.press("Tab");
+    await expect(owner).toBeFocused();
+    expect(await owner.evaluate((element) => element.matches(":focus-visible"))).toBe(true);
+    await expect(owner).toHaveCSS("outline-style", "solid");
+    await expect(owner).toHaveCSS("outline-width", "2px");
+    const box = await owner.boundingBox();
+    expect(box?.width).toBeGreaterThanOrEqual(44);
+    expect(box?.height).toBeGreaterThanOrEqual(44);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+    await page.waitForLoadState("networkidle");
+    expect(adminRequests).toEqual([]);
+    if (origin !== "https://doyel-labs.com") expect(vendorRequests).toEqual([]);
+    await page.evaluate(() => { (window as Window & { testDocument?: string }).testDocument = "public"; });
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL("https://doyel-labs.com/admin/analytics/");
+    await expect(page.getByRole("heading", { name: "Website analytics" })).toBeVisible();
+    expect(adminRequests).toEqual([{ url: "https://doyel-labs.com/admin/analytics/", document: true }]);
+    expect(await page.evaluate(() => (window as Window & { testDocument?: string }).testDocument)).toBeUndefined();
+    await expect(page.locator('script[src*="plausible.io"], script[src*="cloudflareinsights.com"]')).toHaveCount(0);
+    await page.waitForLoadState("networkidle");
+    expect(beacons.join("")).not.toContain("/admin");
+  });
+}

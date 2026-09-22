@@ -97,11 +97,15 @@ test("malformed success data is an explicit error, not a broken or zero-valued d
   await expect(page.getByRole("heading", { name: "Page views", exact: true })).toHaveCount(0);
 });
 
-test("local public pages exclude analytics and have no admin navigation", async ({ page }) => {
-  await page.goto("/");
-  await expect(page.locator('script[src*="plausible"], script[src*="cloudflareinsights"]')).toHaveCount(0);
-  await expect(page.locator('a[href^="/admin"]')).toHaveCount(0);
+test("local public pages keep the canonical owner entry in the footer only", async ({ page }) => {
+  for (const path of ["/", "/contact/", "/sitemap/"]) {
+    await page.goto(path);
+    await expect(page.locator('script[src*="plausible"], script[src*="cloudflareinsights"]')).toHaveCount(0);
+    const owner = page.getByRole("contentinfo").getByRole("link", { name: "Owner login", exact: true });
+    await expect(owner).toHaveAttribute("href", "https://doyel-labs.com/admin/analytics/");
+    await expect(page.locator('a[href*="/admin"]')).toHaveCount(1);
+    await expect(page.locator('header a[href*="/admin"], main a[href*="/admin"]')).toHaveCount(0);
+  }
   await page.goto("/contact/");
   await expect(page.getByRole("textbox", { name: /email/i }).first()).toBeVisible();
-  await expect(page.locator('a[href^="/admin"]')).toHaveCount(0);
 });

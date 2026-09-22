@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { companyLegal, site } from "@/lib/site";
+import { ANALYTICS_ORIGIN } from "@/lib/analytics-config";
 import { stageMeta, type Stage } from "@/lib/products";
 import { ContactLink } from "@/components/contact-link";
 import { MobileNav } from "@/components/mobile-nav";
@@ -127,7 +128,15 @@ export function Footer() {
           </a>{" "}
           with any question.
         </p>
-        <p className="mt-4 text-xs text-muted">© {year} {site.company}</p>
+        <div className="mt-4 flex flex-wrap items-center justify-between gap-x-6 text-xs text-muted">
+          <p>© {year} {site.company}</p>
+          <a
+            href={`${ANALYTICS_ORIGIN}/admin/analytics/`}
+            className="inline-flex min-h-11 items-center hover:text-accentHi"
+          >
+            Owner login
+          </a>
+        </div>
       </div>
     </footer>
   );

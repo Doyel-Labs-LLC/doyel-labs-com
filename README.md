@@ -11,8 +11,9 @@ deployed on Cloudflare Pages with a serverless contact-form function.
 - **Contact form:** Cloudflare Pages Function → Resend → Google Workspace
 - **Analytics:** One build-selected, cookieless aggregate provider. Plausible
   remains the legacy default until the coordinated Cloudflare switch.
-- **Private dashboard:** Staged at `/admin/analytics/`, disabled by default.
-  It does not change public collection or install Cloudflare Web Analytics.
+- **Private dashboard:** Owner-only `/admin/analytics/`, reached through the
+  discreet **Owner login** footer link. Reads remain disabled by default in
+  unconfigured environments; the link does not change authentication or collection.
 
 The source-of-truth design brief lives in `PROMPT.md`. Read it before
 you write copy. Read it *first* before you change positioning.
@@ -211,7 +212,13 @@ used to rate-limit contact submissions by IP (5 messages per 5 minutes).
 ## Owner analytics and coordinated collector rollout
 
 The private dashboard is a read-only, owner-only Pages Functions feature,
-not a new Worker application or Next server. There is no public admin link.
+not a new Worker application or Next server. A discreet **Owner login** link
+beside the footer copyright opens `https://doyel-labs.com/admin/analytics/`,
+including from previews. It is a normal HTML anchor, not a Next router link:
+no prefetch and a full document navigation. The existing owner-only Cloudflare
+Access OTP login plus independent MFA remains required; there is no site
+password form or new authentication mechanism. No main-navigation entry or
+dashboard sitemap entry is added, and private responses remain noindex.
 The default preserves existing Plausible collection when its domain is
 configured; otherwise no collector runs. Merely deploying this feature
 does not select Cloudflare, provision a site, or activate dashboard reads.
@@ -235,7 +242,8 @@ remove its installed SPA listeners, so authenticated admin RSC/text
 requests redirect to the HTML dashboard. Next then performs a full
 document navigation before entering admin. The new document has no
 collector and a separate self-only CSP. Use full navigation to enter/leave
-the private dashboard; there is deliberately no public admin link.
+the private dashboard; the footer entry follows this same isolation boundary.
+It always targets the canonical host, never a preview-local dashboard.
 
 `functions/_middleware.ts` gates the private routes with `jose` RS256
 verification against the configured Access team's JWKS, exact issuer and
@@ -413,6 +421,13 @@ npm run test:analytics
 npm run test:analytics:ui
 git -c core.whitespace=cr-at-eol diff --check
 ```
+
+After the branch's Git-connected preview succeeds, run the opt-in hosted
+footer checks with `ANALYTICS_PREVIEW_URL=https://<hash>.website-8xx.pages.dev`
+and `npx playwright test footer-hosted.spec.ts`. They block all browser
+analytics/ingestion and contact submissions, check the real signed-out
+canonical Access redirect without signing in, and verify preview/default
+private-route denials. They do not read live metrics or change Access policy.
 
 Repeat with `NEXT_PUBLIC_ANALYTICS_PROVIDER=cloudflare` and the synthetic
 `NEXT_PUBLIC_CF_WEB_ANALYTICS_TOKEN=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa`,
