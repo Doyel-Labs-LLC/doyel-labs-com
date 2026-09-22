@@ -129,6 +129,7 @@ npm run typecheck       # strict TypeScript check
 npm run lint            # ESLint + jsx-a11y
 npm run build           # static export to out/
 npm run test:analytics  # after build: synthetic signed JWT/provider/artifact tests
+npm run test:analytics:runtime # after build: native workerd regressions only
 npm run test:analytics:ui # after build: Chromium UI + real local Pages routing
 node scripts/optimize-images.mjs    # re-encode screenshots
 ```
@@ -299,6 +300,13 @@ fallbacks are used. Known provider failures are sanitized to explicit
 states; missing data/configuration is never converted to zero activity.
 Only the known-empty provider response has an empty state.
 
+Server JWKS and GraphQL requests use `redirect: "manual"` and reject every
+non-OK response, including redirects; never follow a provider `Location`
+with the bearer credential. Native workerd rejects `redirect: "error"`
+before sending a request at the Production/Preview compatibility date
+`2026-09-07` with no flags, even though the Request reference lists it.
+The browser dashboard's `redirect: "error"` remains intentional and unchanged.
+
 Paths are normalized against the published page list generated during
 build; unknown/private paths become `Other paths`. Query strings and
 fragments are removed. Referrals show validated hostnames only (not IP
@@ -425,6 +433,18 @@ keyboard controls, loading/empty/error states, no local/session storage,
 admin/preview tracker exclusion, public SPA behavior, full-document admin
 entry, selected privacy/CSP, and public navigation preservation.
 The contact runtime test sends only invalid JSON and cannot send mail.
+
+`test:analytics` also runs the native Miniflare/workerd suite, or run it
+alone with `npm run test:analytics:runtime`. Build first. It bundles the
+real server handler and `jose`, uses synthetic signed human identities and
+local KV, and intercepts all outbound requests outside the Worker without
+replacing native `fetch`. At compatibility `2026-09-07`, flags `[]`, it
+reproduces the original identity 503 before any outbound call, verifies
+successful JWKS/schema/report requests, and rejects same/cross-origin
+JWKS and provider redirects without following them or forwarding credentials.
+No provider, visitor, contact, or ingestion traffic leaves this harness.
+This local success is not verification of the stored Production token;
+hosted previews still deny all admin requests at the canonical-host gate.
 
 Official references (reviewed 2026-09-22):
 [Access JWT validation](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/),

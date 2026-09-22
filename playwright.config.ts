@@ -12,7 +12,7 @@ export default defineConfig({
       reuseExistingServer: false,
     },
     {
-      command: "npx wrangler pages dev out --ip 127.0.0.1 --port 3192 --inspector-port 9232 --compatibility-date 2026-09-22 --log-level error",
+      command: "npx wrangler pages dev out --ip 127.0.0.1 --port 3192 --inspector-port 9232 --compatibility-date 2026-09-07 --log-level error",
       url: "http://127.0.0.1:3192/",
       env: { WRANGLER_SEND_METRICS: "false" },
       reuseExistingServer: false,
