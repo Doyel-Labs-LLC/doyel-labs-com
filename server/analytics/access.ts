@@ -37,7 +37,7 @@ export async function requireOwner(request: Request, env: AnalyticsEnv): Promise
     timeoutDuration: 5000,
     [customFetch]: async (url, options) => {
       try {
-        const response = await fetch(url, { ...options, redirect: "error" });
+        const response = await fetch(url, { ...options, redirect: "manual" });
         if (!response.ok) throw new Error("JWKS unavailable");
         const body = await readBoundedJson(response, 32768);
         return new Response(JSON.stringify(body), { headers: { "Content-Type": "application/json" } });

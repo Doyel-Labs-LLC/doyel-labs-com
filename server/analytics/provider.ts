@@ -144,7 +144,7 @@ export function verifySchema(data: unknown): void {
 
 async function graphql(query: string, token: string, signal: AbortSignal): Promise<Record<string, unknown>> {
   const response = await fetch(ENDPOINT, {
-    method: "POST", redirect: "error", signal,
+    method: "POST", redirect: "manual", signal,
     headers: { "Authorization": `Bearer ${token}`, "Content-Type": "application/json" },
     body: JSON.stringify({ query }),
   });

@@ -148,7 +148,7 @@ test("provider verifies schema before data and returns sanitized failures", asyn
   t.mock.method(globalThis, "fetch", async (url: string, init: RequestInit) => {
     calls++;
     assert.equal(String(url), "https://api.cloudflare.com/client/v4/graphql");
-    assert.equal(init.redirect, "error");
+    assert.equal(init.redirect, "manual");
     assert.ok(init.signal);
     assert.match(String(init.body), /AnalyticsContract/);
     return Response.json({ data: { account: null } });
