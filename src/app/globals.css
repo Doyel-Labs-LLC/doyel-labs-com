@@ -166,7 +166,7 @@ code {
   text-decoration-color: #4edcfb;
 }
 .prose-legal code {
-  font-family: "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+  font-family: var(--font-mono), "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
   font-size: 0.9em;
   color: #f0f0fa;
   background: rgba(240, 240, 250, 0.06);
@@ -179,7 +179,7 @@ code {
 
 /* Product frame corner labels — small caps mono. */
 .frame-label {
-  font-family: "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+  font-family: var(--font-mono), "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
@@ -276,7 +276,7 @@ code {
   flex-wrap: wrap;
   align-items: center;
   gap: 20px 24px;
-  font-family: "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+  font-family: var(--font-mono), "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
   font-size: 10.5px;
   letter-spacing: 0.10em;
   text-transform: uppercase;

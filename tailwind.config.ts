@@ -42,7 +42,11 @@ const config: Config = {
         care: "#f5c15a",
       },
       fontFamily: {
+        // `--font-sans` / `--font-mono` are the self-hosted next/font faces
+        // (Inter, JetBrains Mono) set in layout.tsx; the rest are fallbacks
+        // for the pre-hydration flash and any font-load failure.
         sans: [
+          "var(--font-sans)",
           "Inter",
           "ui-sans-serif",
           "system-ui",
@@ -52,6 +56,7 @@ const config: Config = {
           "sans-serif",
         ],
         mono: [
+          "var(--font-mono)",
           "JetBrains Mono",
           "Cascadia Mono",
           "Consolas",
