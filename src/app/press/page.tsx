@@ -234,7 +234,7 @@ export default function Press() {
                   href={asset.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="group flex flex-col border border-line bg-surface/30 p-5 transition-colors hover:border-accentDim hover:bg-surface/60"
+                  className="group surface-card flex flex-col rounded-[3px] border border-line p-5 shadow-card transition-all duration-200 ease-soft hover:-translate-y-0.5 hover:border-accentDim hover:shadow-cardHover"
                 >
                   <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
                     {asset.format} · {asset.size}

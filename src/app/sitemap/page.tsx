@@ -347,7 +347,7 @@ export default function SitemapPage() {
             {section.links.map((link) => (
               <li
                 key={link.href}
-                className="border border-line bg-surface/30 p-5 transition-colors hover:border-accentDim"
+                className="surface-card rounded-[3px] border border-line p-5 shadow-card transition-all duration-200 ease-soft hover:-translate-y-0.5 hover:border-accentDim hover:shadow-cardHover"
               >
                 <Link href={link.href} className="block">
                   <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
