@@ -31,9 +31,40 @@ export const metadata: Metadata = {
   },
 };
 
+/** JSON-LD Service schema — mirrors /services/custom-software so every
+ * service deep-page is a distinct, priced offering Google can surface.
+ * Price band matches /pricing/ (websites: $2.5k–$8k). */
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": `https://${site.domain}/services/websites/#service`,
+  serviceType: "Website development",
+  name: "Website development",
+  description:
+    "Fast, accessible marketing websites on your own domain — mobile-first, schema.org-marked, with forms wired to your own inbox. For small operators through enterprises.",
+  provider: { "@id": `https://${site.domain}/#organization` },
+  areaServed: { "@type": "Country", name: "United States" },
+  offers: {
+    "@type": "Offer",
+    priceCurrency: "USD",
+    priceSpecification: {
+      "@type": "PriceSpecification",
+      minPrice: 2500,
+      maxPrice: 8000,
+      priceCurrency: "USD",
+    },
+    url: `https://${site.domain}/pricing/`,
+  },
+};
+
 export default function Websites() {
   return (
     <Page>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
+
       <Breadcrumbs
         items={[
           { name: "Services", href: "/services/" },

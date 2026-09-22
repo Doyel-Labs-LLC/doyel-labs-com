@@ -14,6 +14,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Docs",
   description: `Documentation index for ${site.company} products.`,
+  alternates: { canonical: `https://${site.domain}/docs/` },
 };
 
 /**

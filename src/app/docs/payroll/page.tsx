@@ -15,6 +15,7 @@ export const metadata: Metadata = {
   title: "Payroll docs",
   description:
     "How to set up and run an SCA-first payroll workspace built by Doyel Labs.",
+  alternates: { canonical: `https://${site.domain}/docs/payroll/` },
 };
 
 export default function PayrollDocs() {

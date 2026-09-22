@@ -34,6 +34,32 @@ export const metadata: Metadata = {
   },
 };
 
+/** JSON-LD Service schema — mirrors /services/custom-software so every
+ * service deep-page is a distinct, priced offering Google can surface.
+ * Price band matches /pricing/ (payroll: $8k–$20k). */
+const serviceSchema = {
+  "@context": "https://schema.org",
+  "@type": "Service",
+  "@id": `https://${site.domain}/services/payroll/#service`,
+  serviceType: "Payroll workspace development",
+  name: "Payroll workspace development",
+  description:
+    "Custom pay-run workspaces built to how a business actually pays people — day-rate, hourly + overtime, salaried, tipped, per-diem, or any mix. Prepares runs and keeps a defensible record; not tax filing, not money movement.",
+  provider: { "@id": `https://${site.domain}/#organization` },
+  areaServed: { "@type": "Country", name: "United States" },
+  offers: {
+    "@type": "Offer",
+    priceCurrency: "USD",
+    priceSpecification: {
+      "@type": "PriceSpecification",
+      minPrice: 8000,
+      maxPrice: 20000,
+      priceCurrency: "USD",
+    },
+    url: `https://${site.domain}/pricing/`,
+  },
+};
+
 /**
  * Everything on this page maps to a file that actually exists in
  * `C:\Users\bdoye\Desktop\index\` (kept out of git). No feature is
@@ -53,6 +79,11 @@ export default function Payroll() {
         </div>
       }
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
+
       <Breadcrumbs
         items={[
           { name: "Services", href: "/services/" },

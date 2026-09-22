@@ -18,6 +18,7 @@ export const metadata: Metadata = {
   title: "Engineering",
   description:
     "How Doyel Labs builds. AI-assisted, human-reviewed. Fail-closed defaults when the software moves money. Structured logs, signed updates, audit rows.",
+  alternates: { canonical: `https://${site.domain}/engineering/` },
 };
 
 export default function Engineering() {

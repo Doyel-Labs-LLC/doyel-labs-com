@@ -18,6 +18,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Security",
   description: `${site.company} security posture — how we build, what we hold, how to report a vulnerability.`,
+  alternates: { canonical: `https://${site.domain}/security/` },
 };
 
 /**
