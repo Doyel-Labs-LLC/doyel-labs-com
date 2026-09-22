@@ -72,11 +72,10 @@ export default function Home() {
             </div>
             <div className="hero-in hero-in--3">
               <Lead>
-                Have an idea? Tell us what your business does and we&apos;ll
-                tell you what we can build. Marketing sites, payroll
-                workspaces, internal tools, custom programs — priced per
-                project, shipped in weeks, and we stay on to keep it
-                running.
+                Tell us what your business does, and we&apos;ll tell you
+                what we can build — marketing sites, payroll workspaces,
+                internal tools, custom programs. Priced per project,
+                shipped in weeks, and we stay on to keep it running.
               </Lead>
             </div>
             <div className="hero-in hero-in--4 mt-10 flex flex-wrap items-center gap-3">
@@ -161,11 +160,11 @@ export default function Home() {
             </span>
           </H2>
           <p className="mt-6 text-[16px] leading-[1.7] text-mute">
-            Every company has a piece of software that ties the operation
-            together. Payroll one week, an inventory tool the next, a
-            portal for a partner, a marketing site on your own domain.
-            Doyel Labs builds any of it, on your infrastructure, and hands
-            it over so it is yours.
+            Every company runs on a piece of software that ties the
+            operation together — payroll one week, an inventory tool the
+            next, a partner portal, a marketing site on your own domain.
+            We build any of it on your infrastructure, then hand it over
+            so it&apos;s yours.
           </p>
         </div>
         <div className="mt-12">
@@ -210,9 +209,9 @@ export default function Home() {
             <span className="mt-2 block">Shipped and in use today.</span>
           </H2>
           <p className="mt-6 text-[16px] leading-[1.7] text-mute">
-            Custom software Doyel Labs built for a real operator, running
-            in production right now — a marketing site and a payroll
-            workspace for SteadFast Transportation Inc.
+            Software we built for a real operator, in production right
+            now — a marketing site and a payroll workspace for SteadFast
+            Transportation Inc.
           </p>
         </div>
 
@@ -270,8 +269,8 @@ export default function Home() {
             <span className="mt-2 block">What we&apos;re building next.</span>
           </H2>
           <p className="mt-6 text-[16px] leading-[1.7] text-mute">
-            Alongside client work, Doyel Labs ships two products under its
-            own brand. Both are pre-release — here is what they are and
+            Alongside client work, we build two products under our own
+            brand. Both are pre-release — here&apos;s what they are, and
             exactly how far along each one is.
           </p>
         </div>
