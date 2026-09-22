@@ -20,7 +20,10 @@ const config: Config = {
         // Type
         ink: "#f0f0fa",
         mute: "rgba(240, 240, 250, 0.66)",
-        muted: "rgba(240, 240, 250, 0.44)",
+        // 0.50 (not lower) so muted small text clears WCAG AA (4.5:1) on
+        // both the canvas (#0a0f14 → 4.84) and card surfaces (#12181f →
+        // 4.77). Still clearly quieter than `mute` (0.66) and `ink`.
+        muted: "rgba(240, 240, 250, 0.50)",
         // Hairline
         line: "rgba(240, 240, 250, 0.10)",
         line2: "rgba(240, 240, 250, 0.22)",

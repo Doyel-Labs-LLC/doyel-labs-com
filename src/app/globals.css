@@ -183,7 +183,7 @@ code {
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(240, 240, 250, 0.44);
+  color: rgba(240, 240, 250, 0.50);
 }
 
 /* Small accent bar used to introduce a band's eyebrow. Cyan, 24px wide. */
@@ -280,7 +280,7 @@ code {
   font-size: 10.5px;
   letter-spacing: 0.10em;
   text-transform: uppercase;
-  color: rgba(240, 240, 250, 0.44);
+  color: rgba(240, 240, 250, 0.50);
 }
 .trust-strip strong {
   color: #f0f0fa;

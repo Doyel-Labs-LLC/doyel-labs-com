@@ -16,7 +16,7 @@ across the site.
 | `surface2`     | `#171e26`                         | Cards on `surface`, tables                 |
 | `ink`          | `#f0f0fa`                         | Body / display type                        |
 | `mute`         | `rgba(240,240,250,0.66)`          | Body below the lead                        |
-| `muted`        | `rgba(240,240,250,0.44)`          | Captions, footnotes                        |
+| `muted`        | `rgba(240,240,250,0.50)`          | Captions, footnotes (0.50 → WCAG AA at small sizes) |
 | `line`         | `rgba(240,240,250,0.10)`          | Default hairline                           |
 | `line2`        | `rgba(240,240,250,0.22)`          | CTA border, active hairline                |
 | **`accent`**   | `#10c7eb`                         | Cyan — the one accent color               |
