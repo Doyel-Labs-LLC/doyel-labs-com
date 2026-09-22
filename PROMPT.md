@@ -38,6 +38,14 @@ anchors, and useful service anchors. Keep supporting resources reachable
 through contextual links, Support, and the human sitemap without putting
 the complete directory in the mobile menu.
 
+The footer copyright area includes a discreet, keyboard-accessible **Owner
+login** link with a mobile-sized touch target. Use a normal HTML anchor to
+`https://doyel-labs.com/admin/analytics/`, including on previews, so entering
+the dashboard starts a new document without the public collector. Do not
+add it to primary navigation or sitemap listings. Keep private pages noindex,
+preview/default-host admin access denied, and the existing owner-only Access
+OTP plus independent MFA intact; do not add a client-side password form.
+
 ## Voice and truth
 
 Use short, concrete, welcoming sentences that a business owner can read.
