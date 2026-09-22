@@ -15,6 +15,7 @@ export const metadata: Metadata = {
   title: "Websites docs",
   description:
     "How to edit and maintain a Doyel Labs–built marketing site.",
+  alternates: { canonical: `https://${site.domain}/docs/websites/` },
 };
 
 export default function WebsitesDocs() {

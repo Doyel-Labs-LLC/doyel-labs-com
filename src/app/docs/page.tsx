@@ -14,6 +14,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Docs",
   description: `Documentation index for ${site.company} products.`,
+  alternates: { canonical: `https://${site.domain}/docs/` },
 };
 
 /**
@@ -69,7 +70,7 @@ export default function DocsIndex() {
             <Link
               key={d.href}
               href={d.href}
-              className="group border border-line p-6 transition-colors hover:border-accentDim"
+              className="group surface-card rounded-[3px] border border-line p-6 shadow-card transition-all duration-200 ease-soft hover:-translate-y-0.5 hover:border-accentDim hover:shadow-cardHover"
             >
               <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
                 {d.tag}

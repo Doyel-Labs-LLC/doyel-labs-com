@@ -205,7 +205,7 @@ function Row({ name, check }: { name: string; check: Check }) {
         ? "text-fall"
         : "text-mute";
   return (
-    <div className="flex items-start gap-3 border border-line p-4">
+    <div className="surface-card flex items-start gap-3 rounded-[3px] border border-line p-4 shadow-card">
       <span className={`mt-2 h-2.5 w-2.5 shrink-0 rounded-full ${dot}`} />
       <div className="flex-1">
         <div className="flex flex-wrap items-baseline justify-between gap-2">

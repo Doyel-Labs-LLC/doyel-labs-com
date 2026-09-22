@@ -271,11 +271,11 @@ export default function Industries() {
 
 function IndustryCard({ industry }: { industry: Industry }) {
   const border = industry.featured ? "border-accentDim" : "border-line";
-  const bg = industry.featured ? "bg-accentSoft/20" : "bg-transparent";
+  const bg = industry.featured ? "bg-accentSoft/20" : "surface-card";
   return (
     <Link
       href={industry.href}
-      className={`group flex flex-col justify-between border ${border} ${bg} p-6 transition-all duration-200 ease-soft hover:border-accentDim hover:bg-surface/50`}
+      className={`group flex flex-col justify-between rounded-[3px] border ${border} ${bg} p-6 shadow-card transition-all duration-200 ease-soft hover:-translate-y-0.5 hover:border-accentDim hover:shadow-cardHover`}
     >
       <div>
         <div className="flex items-center justify-between gap-4">

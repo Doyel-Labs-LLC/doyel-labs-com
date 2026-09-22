@@ -515,7 +515,7 @@ function NervousQ({
   children: React.ReactNode;
 }) {
   return (
-    <details className="group border border-line bg-surface/30 p-5 open:border-accentDim open:bg-surface/60">
+    <details className="group surface-card rounded-[3px] border border-line p-5 shadow-card transition-colors duration-200 ease-soft hover:border-accentDim open:border-accentDim">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[15px] font-semibold text-ink hover:text-accentHi">
         <span>{q}</span>
         <span

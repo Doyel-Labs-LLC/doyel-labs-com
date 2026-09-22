@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
-  AccentChip,
   Card,
   Eyebrow,
   Feature,
@@ -12,7 +11,7 @@ import {
   Lead,
   LogoMark,
   Page,
-  StatusChip,
+  StageBadge,
 } from "@/components/chrome";
 import { ClientBadge } from "@/components/client-badge";
 import { ContactWidget } from "@/components/contact-modal";
@@ -25,7 +24,8 @@ import {
   formatChangelogDate,
 } from "@/lib/changelog";
 import { steadfastCase } from "@/lib/demo/websites";
-import { programStatus, site } from "@/lib/site";
+import { products, type Product } from "@/lib/products";
+import { site } from "@/lib/site";
 import { steadfastTestimonial } from "@/lib/testimonials";
 
 /**
@@ -72,11 +72,10 @@ export default function Home() {
             </div>
             <div className="hero-in hero-in--3">
               <Lead>
-                Have an idea? Tell us what your business does and we&apos;ll
-                tell you what we can build. Marketing sites, payroll
-                workspaces, internal tools, custom programs — priced per
-                project, shipped in weeks, and we stay on to keep it
-                running.
+                Tell us what your business does, and we&apos;ll tell you
+                what we can build — marketing sites, payroll workspaces,
+                internal tools, custom programs. Priced per project,
+                shipped in weeks, and we stay on to keep it running.
               </Lead>
             </div>
             <div className="hero-in hero-in--4 mt-10 flex flex-wrap items-center gap-3">
@@ -161,11 +160,11 @@ export default function Home() {
             </span>
           </H2>
           <p className="mt-6 text-[16px] leading-[1.7] text-mute">
-            Every company has a piece of software that ties the operation
-            together. Payroll one week, an inventory tool the next, a
-            portal for a partner, a marketing site on your own domain.
-            Doyel Labs builds any of it, on your infrastructure, and hands
-            it over so it is yours.
+            Every company runs on a piece of software that ties the
+            operation together — payroll one week, an inventory tool the
+            next, a partner portal, a marketing site on your own domain.
+            We build any of it on your infrastructure, then hand it over
+            so it&apos;s yours.
           </p>
         </div>
         <div className="mt-12">
@@ -199,14 +198,21 @@ export default function Home() {
       </section>
       </Reveal>
 
-      {/* SELECTED WORK — real screenshot of Steadfast + program tiles */}
+      {/* LIVE NOW — what a client uses in production today. Kept
+       * deliberately separate from the pre-release products band below
+       * so a visitor can tell shipped work from what's still coming. */}
       <Reveal>
-      <section className="mt-32 border-t border-line pt-16 md:pt-24">
+      <section className="mt-32 border-t border-line divider-soft pt-16 md:pt-24">
         <div className="max-w-3xl">
-          <Eyebrow>Selected work</Eyebrow>
+          <Eyebrow>Live now</Eyebrow>
           <H2>
-            <span className="mt-2 block">Recent shipments.</span>
+            <span className="mt-2 block">Shipped and in use today.</span>
           </H2>
+          <p className="mt-6 text-[16px] leading-[1.7] text-mute">
+            Software we built for a real operator, in production right
+            now — a marketing site and a payroll workspace for SteadFast
+            Transportation Inc.
+          </p>
         </div>
 
         <div className="mt-12 grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
@@ -214,9 +220,12 @@ export default function Home() {
             <PayrollPaystubFrame />
           </div>
           <div className="flex flex-col justify-center">
-            <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
-              Payroll · Client build
-            </p>
+            <div className="flex flex-wrap items-center gap-3">
+              <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
+                Payroll · Client build
+              </p>
+              <StageBadge stage="live" />
+            </div>
             <h3 className="mt-3 text-[22px] font-semibold leading-tight text-ink">
               A custom payroll workspace, live for a real operator.
             </h3>
@@ -235,39 +244,45 @@ export default function Home() {
                 url={steadfastCase.liveUrl}
               />
             </div>
-            <div className="mt-6">
+            <div className="mt-6 flex flex-wrap gap-3">
               <GhostLink href="/work/" small>
                 Read the case study
+              </GhostLink>
+              <GhostLink href="/services/" small>
+                All services
               </GhostLink>
             </div>
           </div>
         </div>
+      </section>
+      </Reveal>
 
-        <div className="mt-12 grid gap-4 md:grid-cols-3">
-          <WorkTile
-            eyebrow="Services · Payroll workspaces"
-            title="Custom pay-run software for any business"
-            body="Day-rate, hourly + overtime, salaried, tipped, per-diem, or any mix. Your bank pays the money; the software prepares the run and keeps a defensible record."
-            href="/services/payroll/"
-            proof="Live client build"
-            proofKind="accent"
-          />
-          <WorkTile
-            eyebrow="Product · BAI Desk"
-            title="An autonomous trading desk that runs on your own computer"
-            body="Keys stay on the operator's machine. Every trade has a stop and a target held at the broker. Chat cannot spend."
-            href="/products/#bai"
-            proof={programStatus.bai.label}
-            proofKind="care"
-          />
-          <WorkTile
-            eyebrow="Product · ConnectionLoop"
-            title="A shared calendar for families and small groups"
-            body="Invite-only. Free. No ads. No public feed. iOS and Android. Built by Doyel Labs, credited to The Hamilton Family."
-            href="/products/#connectionloop"
-            proof={programStatus.connectionloop.label}
-            proofKind="care"
-          />
+      {/* IN THE LAB — the own-brand products, both pre-release. This is
+       * the explicit answer to "what's working vs. what's coming": the
+       * band above is live client work; everything here is not yet
+       * public, and each card says exactly how far along it is. */}
+      <Reveal>
+      <section className="mt-32 border-t border-line divider-soft pt-16 md:pt-24">
+        <div className="max-w-3xl">
+          <Eyebrow>In the lab</Eyebrow>
+          <H2>
+            <span className="mt-2 block">What we&apos;re building next.</span>
+          </H2>
+          <p className="mt-6 text-[16px] leading-[1.7] text-mute">
+            Alongside client work, we build two products under our own
+            brand. Both are pre-release — here&apos;s what they are, and
+            exactly how far along each one is.
+          </p>
+        </div>
+        <div className="mt-12 grid gap-4 md:grid-cols-2">
+          {products.map((p) => (
+            <RoadmapCard key={p.key} product={p} />
+          ))}
+        </div>
+        <div className="mt-8">
+          <GhostLink href="/products/" small>
+            See the products page
+          </GhostLink>
         </div>
       </section>
       </Reveal>
@@ -417,7 +432,7 @@ export default function Home() {
               <li key={entry.id}>
                 <Link
                   href={`/changelog/#${entry.id}`}
-                  className="group block border border-line bg-surface/30 p-5 transition-colors hover:border-accentDim"
+                  className="group surface-card block rounded-[3px] border border-line p-5 shadow-card transition-all duration-200 ease-soft hover:-translate-y-0.5 hover:border-accentDim hover:shadow-cardHover"
                 >
                   <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                     <span className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
@@ -496,41 +511,32 @@ export default function Home() {
   );
 }
 
-function WorkTile({
-  eyebrow,
-  title,
-  body,
-  href,
-  proof,
-  proofKind,
-}: {
-  eyebrow: string;
-  title: string;
-  body: string;
-  href: string;
-  proof: string;
-  proofKind: "accent" | "care";
-}) {
+/**
+ * A pre-release product card for the "In the lab" band. Driven entirely
+ * by the `Product` registry so its status label, tagline, and platform
+ * line stay in sync with the products page and never drift.
+ */
+function RoadmapCard({ product }: { product: Product }) {
   return (
     <Link
-      href={href}
-      className="group flex flex-col justify-between border border-line bg-surface/30 p-6 transition-all duration-200 ease-soft hover:border-accentDim hover:bg-surface/60"
+      href={product.href}
+      className="group surface-card flex flex-col justify-between rounded-[3px] border border-line p-6 shadow-card transition-all duration-200 ease-soft hover:-translate-y-0.5 hover:border-accentDim hover:shadow-cardHover"
     >
       <div>
-        <p className="font-mono text-[10px] uppercase tracking-eyebrow text-mute">
-          {eyebrow}
-        </p>
+        <div className="flex items-center justify-between gap-3">
+          <p className="font-mono text-[10px] uppercase tracking-eyebrow text-mute">
+            Product · {product.name}
+          </p>
+          <StageBadge stage={product.stage} />
+        </div>
         <h3 className="mt-3 text-[17px] font-semibold leading-tight text-ink group-hover:text-accentHi">
-          {title}
+          {product.tagline}
         </h3>
-        <p className="mt-4 text-[13px] leading-[1.65] text-mute">{body}</p>
       </div>
-      <div className="mt-6 flex items-center justify-between">
-        {proofKind === "accent" ? (
-          <AccentChip>{proof}</AccentChip>
-        ) : (
-          <StatusChip>{proof}</StatusChip>
-        )}
+      <div className="mt-6 flex items-center justify-between gap-3">
+        <p className="font-mono text-[10px] uppercase tracking-wide text-muted">
+          {product.meta}
+        </p>
         <span
           className="text-accent transition-transform duration-200 ease-soft group-hover:translate-x-1"
           aria-hidden="true"
@@ -559,7 +565,7 @@ function PathCard({
   return (
     <Link
       href={href}
-      className="group flex flex-col justify-between border border-line p-6 transition-all duration-200 ease-soft hover:border-accentDim hover:bg-surface/40"
+      className="group surface-card flex flex-col justify-between rounded-[3px] border border-line p-6 shadow-card transition-all duration-200 ease-soft hover:-translate-y-0.5 hover:border-accentDim hover:shadow-cardHover"
     >
       <div>
         <p className="text-[15px] font-semibold text-ink group-hover:text-accentHi">

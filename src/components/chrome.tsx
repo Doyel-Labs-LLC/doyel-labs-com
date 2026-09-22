@@ -1,12 +1,15 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { companyLegal, site } from "@/lib/site";
+import { stageMeta, type Stage } from "@/lib/products";
 import { ContactWidget } from "@/components/contact-modal";
 import { MobileNav } from "@/components/mobile-nav";
+import { NavLinks } from "@/components/nav-links";
 
 const nav = [
   { href: "/services/", label: "Services" },
   { href: "/work/", label: "Work" },
+  { href: "/products/", label: "Products" },
   { href: "/pricing/", label: "Pricing" },
   { href: "/company/", label: "Company" },
 ];
@@ -59,15 +62,7 @@ export function Header() {
           aria-label="Primary"
           className="hidden items-center gap-8 text-[11px] uppercase tracking-wide text-mute md:flex"
         >
-          {nav.map((n) => (
-            <Link
-              key={n.href}
-              href={n.href}
-              className="transition-colors hover:text-ink"
-            >
-              {n.label}
-            </Link>
-          ))}
+          <NavLinks items={nav} />
           <ContactWidget label="Contact" variant="primary" size="small" />
         </nav>
         <MobileNav items={nav} />
@@ -236,7 +231,7 @@ export function PrimaryLink({
   small?: boolean;
   external?: boolean;
 }) {
-  const className = `inline-flex items-center gap-2 rounded-full border border-accent bg-accentSoft text-accent transition-all duration-200 ease-soft hover:border-accentHi hover:bg-accent/15 hover:text-accentHi focus-visible:border-accentHi ${
+  const className = `inline-flex items-center gap-2 rounded-full border border-accent bg-accentSoft text-accent shadow-glow transition-all duration-200 ease-soft hover:border-accentHi hover:bg-accent/15 hover:text-accentHi hover:shadow-[0_0_0_1px_rgba(78,220,251,0.5),0_10px_34px_-10px_rgba(16,199,235,0.5)] focus-visible:border-accentHi ${
     small ? "px-4 py-2 text-[12px]" : "px-6 py-3 text-[13px]"
   } uppercase tracking-wide`;
   if (external) {
@@ -296,7 +291,13 @@ export function GhostLink({
   );
 }
 
-/** A quiet card — hairline, no fill, no shadow. */
+/**
+ * An elevated card. On the near-black canvas depth reads through a faint
+ * top-lit surface + inset highlight + soft drop (the `surface-card` class
+ * and `shadow-card` token), not a grey box-shadow. Hover lifts it a hair
+ * and warms the border to cyan so the whole card feels interactive even
+ * when it isn't a link.
+ */
 export function Card({
   title,
   children,
@@ -308,10 +309,10 @@ export function Card({
 }) {
   return (
     <div
-      className={`border p-6 transition-colors duration-200 ease-soft ${
+      className={`group/card rounded-[3px] border p-6 shadow-card transition-all duration-200 ease-soft hover:-translate-y-0.5 hover:shadow-cardHover ${
         accent
           ? "border-accentDim bg-accentSoft/40"
-          : "border-line hover:border-line2"
+          : "surface-card border-line hover:border-accentDim"
       }`}
     >
       <h3
@@ -331,14 +332,14 @@ export function Card({
 /** Three-across grid on desktop, single column on mobile. */
 export function Grid3({ children }: { children: ReactNode }) {
   return (
-    <div className="grid gap-4 md:grid-cols-3">{children}</div>
+    <div className="grid gap-5 md:grid-cols-3">{children}</div>
   );
 }
 
 /** Two-across grid. */
 export function Grid2({ children }: { children: ReactNode }) {
   return (
-    <div className="grid gap-4 md:grid-cols-2">{children}</div>
+    <div className="grid gap-5 md:grid-cols-2">{children}</div>
   );
 }
 
@@ -394,6 +395,63 @@ export function AccentChip({ children }: { children: ReactNode }) {
       <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" />
       {children}
     </span>
+  );
+}
+
+/**
+ * The one status badge for Doyel Labs' own-brand products. Three stages,
+ * one visual language, used everywhere a product appears so a visitor
+ * never has to guess what "live" vs "beta" vs "coming" means. The label
+ * text comes from `stageMeta` in `@/lib/products` — single source of truth.
+ *
+ *   live → rise green   (shipped, in real use)
+ *   beta → care amber    (real software, invite-only)
+ *   soon → muted         (announced, not yet available)
+ */
+const STAGE_STYLES: Record<Stage, { border: string; text: string; dot: string }> =
+  {
+    live: { border: "border-rise/60", text: "text-rise", dot: "bg-rise" },
+    beta: { border: "border-care/60", text: "text-care", dot: "bg-care" },
+    soon: { border: "border-line2", text: "text-mute", dot: "bg-mute" },
+  };
+
+export function StageBadge({
+  stage,
+  children,
+}: {
+  stage: Stage;
+  /** Optional override; defaults to the canonical stage label. */
+  children?: ReactNode;
+}) {
+  const s = STAGE_STYLES[stage];
+  return (
+    <span
+      className={`inline-flex items-center gap-2 border px-3 py-1 font-mono text-[10px] uppercase tracking-wide ${s.border} ${s.text}`}
+    >
+      <span className={`inline-block h-1.5 w-1.5 rounded-full ${s.dot}`} />
+      {children ?? stageMeta[stage].label}
+    </span>
+  );
+}
+
+/**
+ * A one-line legend that defines the three stages up front. Used at the
+ * top of the products page so the status vocabulary is explicit before
+ * the reader meets a single badge.
+ */
+export function StageLegend() {
+  const order: Stage[] = ["live", "beta", "soon"];
+  return (
+    <dl className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-x-8 sm:gap-y-3">
+      {order.map((stage) => (
+        <div key={stage} className="flex items-center gap-3">
+          <StageBadge stage={stage} />
+          <dd className="text-[12px] leading-snug text-muted">
+            {stageMeta[stage].blurb}
+          </dd>
+        </div>
+      ))}
+    </dl>
   );
 }
 

@@ -42,3 +42,10 @@
 /opengraph-image
   Content-Type: image/png
   Cache-Control: public, max-age=86400
+
+# Per-section OG cards live at /<section>/opengraph-image (also no file
+# extension). The splat matches across path segments, so it covers both
+# /services/opengraph-image and /services/custom-software/opengraph-image.
+/*/opengraph-image
+  Content-Type: image/png
+  Cache-Control: public, max-age=86400

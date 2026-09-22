@@ -20,7 +20,10 @@ const config: Config = {
         // Type
         ink: "#f0f0fa",
         mute: "rgba(240, 240, 250, 0.66)",
-        muted: "rgba(240, 240, 250, 0.44)",
+        // 0.50 (not lower) so muted small text clears WCAG AA (4.5:1) on
+        // both the canvas (#0a0f14 → 4.84) and card surfaces (#12181f →
+        // 4.77). Still clearly quieter than `mute` (0.66) and `ink`.
+        muted: "rgba(240, 240, 250, 0.50)",
         // Hairline
         line: "rgba(240, 240, 250, 0.10)",
         line2: "rgba(240, 240, 250, 0.22)",
@@ -39,7 +42,11 @@ const config: Config = {
         care: "#f5c15a",
       },
       fontFamily: {
+        // `--font-sans` / `--font-mono` are the self-hosted next/font faces
+        // (Inter, JetBrains Mono) set in layout.tsx; the rest are fallbacks
+        // for the pre-hydration flash and any font-load failure.
         sans: [
+          "var(--font-sans)",
           "Inter",
           "ui-sans-serif",
           "system-ui",
@@ -49,6 +56,7 @@ const config: Config = {
           "sans-serif",
         ],
         mono: [
+          "var(--font-mono)",
           "JetBrains Mono",
           "Cascadia Mono",
           "Consolas",
@@ -67,6 +75,14 @@ const config: Config = {
       },
       boxShadow: {
         accent: "0 0 0 1px rgba(16, 199, 235, 0.4)",
+        // Depth on a near-black canvas comes from an inset top highlight
+        // (light-from-above) plus a soft dark drop — not a grey shadow,
+        // which is invisible here. Used by the elevated card surface.
+        card:
+          "inset 0 1px 0 rgba(255, 255, 255, 0.045), 0 12px 32px -20px rgba(0, 0, 0, 0.85)",
+        cardHover:
+          "inset 0 1px 0 rgba(16, 199, 235, 0.14), 0 22px 48px -22px rgba(0, 0, 0, 0.9)",
+        glow: "0 0 0 1px rgba(16, 199, 235, 0.35), 0 8px 30px -12px rgba(16, 199, 235, 0.35)",
       },
     },
   },

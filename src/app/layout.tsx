@@ -1,7 +1,28 @@
 import type { Metadata, Viewport } from "next";
+import { Inter, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 import { Analytics } from "@/components/analytics";
 import { site } from "@/lib/site";
+
+/**
+ * Brand typefaces, self-hosted via next/font. The fonts are fetched at
+ * build time and served from our own origin — no runtime request to
+ * Google Fonts, so there is no third-party network I/O and no CSP or
+ * privacy change (consistent with the analytics decision in AUDIT.md).
+ * DESIGN.md specifies Inter + JetBrains Mono; before this, both were in
+ * the Tailwind stack but never loaded, so every visitor fell back to a
+ * system font. The CSS variables feed `tailwind.config.ts`.
+ */
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-sans",
+});
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-mono",
+});
 
 /** Search-facing description. Read out loud on Google, in the AI Overview,
  * and in Twitter/LinkedIn cards. Must state, in plain English, what
@@ -248,7 +269,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html
+      lang="en"
+      className={`dark ${inter.variable} ${jetbrainsMono.variable}`}
+    >
       <head>
         {/* Structured data. JSON-LD is not executable so it is exempt from
          * CSP `script-src`. We emit two graphs: Organization (who we are)

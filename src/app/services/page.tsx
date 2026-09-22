@@ -12,15 +12,20 @@ import {
   Lead,
   Notice,
   Page,
+  StageBadge,
 } from "@/components/chrome";
 import { ClientBadge } from "@/components/client-badge";
 import { ContactWidget } from "@/components/contact-modal";
 import { WebsiteSteadfastFrame } from "@/components/frames/websites-preview";
 import { PayrollScaFrame } from "@/components/frames/payroll-sca";
 import { Quote } from "@/components/quote";
+import { products } from "@/lib/products";
 import { site } from "@/lib/site";
 import { steadfastCase } from "@/lib/demo/websites";
 import { steadfastTestimonial } from "@/lib/testimonials";
+
+const bai = products.find((p) => p.key === "bai")!;
+const connectionloop = products.find((p) => p.key === "connectionloop")!;
 
 export const metadata: Metadata = {
   title: "Services — custom software, websites, payroll, internal tools",
@@ -297,10 +302,12 @@ export default function Services() {
 
         {/* Internal work — brief mentions with links */}
         <div className="mt-16 grid gap-4 md:grid-cols-2">
-          <Card title="BAI Desk — internal">
+          <Card title="BAI Desk — own-brand product">
+            <span className="mb-3 flex">
+              <StageBadge stage={bai.stage} />
+            </span>
             An autonomous trading desk that runs on the operator&apos;s
-            computer, at their broker, under their rules. In private
-            beta. Details on{" "}
+            computer, at their broker, under their rules. Details on{" "}
             <a
               href="/products/#bai"
               className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
@@ -309,9 +316,12 @@ export default function Services() {
             </a>
             .
           </Card>
-          <Card title="ConnectionLoop — internal">
+          <Card title="ConnectionLoop — own-brand product">
+            <span className="mb-3 flex">
+              <StageBadge stage={connectionloop.stage} />
+            </span>
             An invite-only shared calendar for families and small groups.
-            Expo + Firebase. Store submission in progress. Details on{" "}
+            Expo + Firebase. Details on{" "}
             <a
               href="/products/#connectionloop"
               className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"

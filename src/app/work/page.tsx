@@ -10,16 +10,20 @@ import {
   Lead,
   Notice,
   Page,
-  StatusChip,
+  StageBadge,
 } from "@/components/chrome";
 import { ClientBadge } from "@/components/client-badge";
 import { ContactWidget } from "@/components/contact-modal";
 import { PayrollScaFrame } from "@/components/frames/payroll-sca";
 import { WebsiteSteadfastFrame } from "@/components/frames/websites-preview";
 import { Quote } from "@/components/quote";
-import { programStatus, site } from "@/lib/site";
+import { products, type Stage } from "@/lib/products";
+import { site } from "@/lib/site";
 import { steadfastCase } from "@/lib/demo/websites";
 import { steadfastTestimonial } from "@/lib/testimonials";
+
+const bai = products.find((p) => p.key === "bai")!;
+const connectionloop = products.find((p) => p.key === "connectionloop")!;
 
 export const metadata: Metadata = {
   title: "Work — recent shipments from Doyel Labs",
@@ -194,14 +198,14 @@ export default function Work() {
             title="An autonomous trading desk that runs on your own computer."
             body="At your broker, under your rules. Keys stay on the operator's machine. Every trade has a stop and a target held at the broker. Chat cannot spend."
             href="/products/#bai"
-            status={programStatus.bai.label}
+            stage={bai.stage}
           />
           <ProgramCard
             eyebrow="Product · ConnectionLoop"
             title="Shared plans, lists, and chat for families."
             body="Invite-only. Free. No ads. No public feed. iOS and Android. Built by Doyel Labs, credited to The Hamilton Family."
             href="/products/#connectionloop"
-            status={programStatus.connectionloop.label}
+            stage={connectionloop.stage}
           />
         </div>
       </section>
@@ -251,30 +255,32 @@ function ProgramCard({
   title,
   body,
   href,
-  status,
+  stage,
 }: {
   eyebrow: string;
   title: string;
   body: string;
   href: string;
-  status: string;
+  stage: Stage;
 }) {
   return (
     <Link
       href={href}
-      className="group flex flex-col justify-between border border-line bg-surface/30 p-6 transition-all duration-200 ease-soft hover:border-accentDim hover:bg-surface/60"
+      className="group surface-card flex flex-col justify-between rounded-[3px] border border-line p-6 shadow-card transition-all duration-200 ease-soft hover:-translate-y-0.5 hover:border-accentDim hover:shadow-cardHover"
     >
       <div>
-        <p className="font-mono text-[10px] uppercase tracking-eyebrow text-mute">
-          {eyebrow}
-        </p>
+        <div className="flex items-center justify-between gap-3">
+          <p className="font-mono text-[10px] uppercase tracking-eyebrow text-mute">
+            {eyebrow}
+          </p>
+          <StageBadge stage={stage} />
+        </div>
         <h3 className="mt-3 text-[19px] font-semibold leading-tight text-ink group-hover:text-accentHi">
           {title}
         </h3>
         <p className="mt-4 text-[14px] leading-[1.65] text-mute">{body}</p>
       </div>
-      <div className="mt-6 flex items-center justify-between">
-        <StatusChip>{status}</StatusChip>
+      <div className="mt-6 flex items-center justify-end">
         <span
           className="text-accent transition-transform duration-200 ease-soft group-hover:translate-x-1"
           aria-hidden="true"
