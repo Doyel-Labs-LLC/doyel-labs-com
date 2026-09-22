@@ -124,6 +124,12 @@ test("every admin parent, artifact and API variant authenticates; no-store appli
   assert.doesNotMatch(allowed.headers.get("content-security-policy")!, /plausible|cloudflareinsights/);
   assert.match(allowed.headers.get("cache-control")!, /no-store/);
   assert.doesNotMatch(await allowed.text(), /SYNTHETIC_TEST_SECRET|owner@example\.test/);
+  for (const artifact of ["/admin/analytics/index.txt", "/admin/analytics/__next._full.txt"]) {
+    const response = await handleAdmin(request(jwt, `https://doyel-labs.com${artifact}`), configuredEnv());
+    assert.equal(response.status, 307);
+    assert.equal(response.headers.get("Location"), "/admin/analytics/");
+    assert.match(response.headers.get("Cache-Control")!, /no-store/);
+  }
 });
 
 test("API is read-only, cross-site queries denied, and feature disabled before provider fetch", async (t) => {

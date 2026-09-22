@@ -11,7 +11,7 @@ type State =
   | { kind: "report"; report: AnalyticsReport };
 
 const messages: Record<AnalyticsFailureCode, { title: string; detail: string }> = {
-  disabled: { title: "Analytics is not activated", detail: "This dashboard is staged. Public tracking has not changed." },
+  disabled: { title: "Dashboard reads are disabled", detail: "Visitor collection is configured separately. No metrics were loaded." },
   unconfigured: { title: "Setup is incomplete", detail: "The required production configuration must be verified before analytics can load." },
   unauthorized: { title: "Sign in again", detail: "Your Access session is missing or expired." },
   forbidden: { title: "Access denied", detail: "This dashboard is restricted to its approved owner and production domain." },

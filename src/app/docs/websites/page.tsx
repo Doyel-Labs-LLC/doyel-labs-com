@@ -154,10 +154,9 @@ export default function WebsitesDocs() {
         <p>
           Every site we build ships without third-party marketing
           scripts by default. If the operator wants analytics, we
-          install <strong>Plausible</strong> (cookieless, no personal
-          data). Session replay tools like Microsoft Clarity are
-          available on request but we recommend against them for
-          operator sites that collect PII in forms.
+          agree on a cookieless, aggregate provider and document it in
+          the site's privacy notice. We do not add session replay,
+          fingerprinting, or form-value capture.
         </p>
       </article>
 

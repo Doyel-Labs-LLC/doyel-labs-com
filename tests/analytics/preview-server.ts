@@ -1,12 +1,16 @@
 // Test-only generic UI server. Never deployed or imported by production code.
 // API fixtures are injected by Playwright, not by any production feature flag.
 import { createServer } from "node:http";
+import { readFileSync } from "node:fs";
 import { readFile, stat } from "node:fs/promises";
 import path from "node:path";
 import { adminAssets } from "../../server/analytics/admin-assets.generated";
 import { privateHeaders } from "../../server/analytics/http";
 
 const root = path.resolve("out");
+const publicCsp = readFileSync(path.join(root, "_headers"), "utf8")
+  .match(/^\s+Content-Security-Policy: (.+)$/m)?.[1];
+if (!publicCsp) throw new Error("Missing generated public CSP");
 createServer(async (request, response) => {
   try {
     const url = new URL(request.url ?? "/", "http://127.0.0.1:3191");
@@ -18,6 +22,10 @@ createServer(async (request, response) => {
     const assetPath = url.pathname.endsWith("/") ? `${url.pathname}index.html` : url.pathname;
     const admin = adminAssets[assetPath];
     if (admin) {
+      if (admin.contentType.startsWith("text/plain")) {
+        response.writeHead(307, { ...Object.fromEntries(privateHeaders()), Location: "/admin/analytics/" }).end();
+        return;
+      }
       const headers = privateHeaders(admin.scriptHashes);
       headers.set("Content-Type", admin.contentType);
       response.writeHead(200, Object.fromEntries(headers));
@@ -30,7 +38,10 @@ createServer(async (request, response) => {
       return;
     }
     const types: Record<string, string> = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".woff2": "font/woff2", ".txt": "text/plain", ".svg": "image/svg+xml", ".png": "image/png", ".ico": "image/x-icon" };
-    response.writeHead(200, { "Content-Type": types[path.extname(file)] ?? "application/octet-stream" });
+    response.writeHead(200, {
+      "Content-Type": types[path.extname(file)] ?? "application/octet-stream",
+      ...(file.endsWith(".html") ? { "Content-Security-Policy": publicCsp } : {}),
+    });
     response.end(await readFile(file));
   } catch {
     response.writeHead(404).end();

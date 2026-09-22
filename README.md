@@ -9,7 +9,8 @@ deployed on Cloudflare Pages with a serverless contact-form function.
 - **Rendering:** `output: 'export'` — static HTML, no server runtime
 - **Deploy:** Cloudflare Pages, `master` branch = production
 - **Contact form:** Cloudflare Pages Function → Resend → Google Workspace
-- **Analytics:** Plausible only. Cookieless. No session replay.
+- **Analytics:** One build-selected, cookieless aggregate provider. Plausible
+  remains the legacy default until the coordinated Cloudflare switch.
 - **Private dashboard:** Staged at `/admin/analytics/`, disabled by default.
   It does not change public collection or install Cloudflare Web Analytics.
 
@@ -199,18 +200,41 @@ Set these in the Cloudflare Pages project settings (Settings → Environment var
 | `CONTACT_TO` | Plain | Destination inbox, default `support@doyel-labs.com` |
 | `TURNSTILE_SECRET_KEY` | Encrypted | Cloudflare Turnstile server-side verify secret |
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Plain | Turnstile client widget key (build-time) |
-| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | Plain | `doyel-labs.com` — enables analytics |
+| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | Plain | `doyel-labs.com` — legacy Plausible configuration |
+| `NEXT_PUBLIC_ANALYTICS_PROVIDER` | Plain | Build selector: `none`, `plausible`, or `cloudflare`; unset preserves the legacy default |
+| `NEXT_PUBLIC_CF_WEB_ANALYTICS_TOKEN` | Plain | Public beacon `site_token`, required only for Cloudflare collection |
 
 Also required: a **KV binding** named `CONTACT_KV` bound to a KV namespace,
 used to rate-limit contact submissions by IP (5 messages per 5 minutes).
 
-## Private analytics (staged, not production-ready)
+## Owner analytics and coordinated collector rollout
 
 The private dashboard is a read-only, owner-only Pages Functions feature,
 not a new Worker application or Next server. There is no public admin link.
-Public visitor collection remains Plausible-only. No Cloudflare beacon,
-auto-injection, Web Analytics site creation, subscription, or live resource
-change is included. Admin pages do not load Plausible.
+The default preserves existing Plausible collection when its domain is
+configured; otherwise no collector runs. Merely deploying this feature
+does not select Cloudflare, provision a site, or activate dashboard reads.
+No subscription change, raw-IP collection, or automatic injection is included.
+
+`src/lib/analytics-config.ts` selects exactly one collector at build time.
+It also selects the analytics section in `content/legal/privacy.md`, the
+current provider named on Uses/Security, and the generated public CSP.
+Cloudflare mode requires a valid public beacon token and fails the build
+if it is absent or malformed; it never silently falls back to Plausible.
+Unused legacy Plausible configuration does not cause dual injection.
+`none` removes both analytics CSP hosts and renders the inactive policy.
+The post-export step loads the same Next environment files as the build.
+
+Collector scripts render only after checking the actual browser origin:
+`https://doyel-labs.com`, public paths only. Local, default Pages, preview,
+`www`, alternate-port, admin and API paths are excluded. Cloudflare's
+manual module beacon handles public SPA navigation itself; no custom
+pageview calls or `spa:false` override are added. Removing a script cannot
+remove its installed SPA listeners, so authenticated admin RSC/text
+requests redirect to the HTML dashboard. Next then performs a full
+document navigation before entering admin. The new document has no
+collector and a separate self-only CSP. Use full navigation to enter/leave
+the private dashboard; there is deliberately no public admin link.
 
 `functions/_middleware.ts` gates the private routes with `jose` RS256
 verification against the configured Access team's JWKS, exact issuer and
@@ -227,7 +251,8 @@ HTML/RSC/text documents. Ordinary public pages/assets bypass this middleware.
 the generic admin documents in an ignored server-only module and removes
 `out/admin`. They are served only after authentication, with no-store,
 noindex, no-referrer, and a self-only CSP with hashes for Next's inline
-scripts. Thus no public static copy remains if Functions are bypassed.
+scripts. RSC/text artifacts redirect only after authentication. Thus no
+public static copy remains if Functions are bypassed.
 Do not replace the build command with bare `next build`, upload `.next`,
 or publish the generated server module as a static asset. Public JS/CSS
 chunks contain generic UI only. No metrics are embedded at build time.
@@ -236,8 +261,9 @@ chunks contain generic UI only. No metrics are embedded at build time.
 
 Keep these bindings in **Production only**, not Preview. The first five
 were manually prepared by the owner; their deployed operation still needs
-verification. No credentials belong in `NEXT_PUBLIC_*`, git, screenshots,
-logs, or chat.
+verification. No backend credentials belong in `NEXT_PUBLIC_*`, git,
+screenshots, logs, or chat. The public beacon token above is intentionally
+browser-visible and is not an API credential.
 
 | Binding | Value / role |
 |---|---|
@@ -287,68 +313,91 @@ are not implemented. Performance metrics are deferred.
 
 ### Schema evidence and remaining launch gates
 
-Official documentation confirms GraphQL support, the RUM dataset,
-dimensions, visits and sampling semantics, but the exact typed schema
-requires authenticated introspection. No production token was available
-locally. Tests use explicitly **synthetic candidate schema/data fixtures**,
-not a captured account response. Runtime introspection must verify the
-required field/argument/input types before the fixed data query can run.
-An unsupported contract returns `schema_unavailable`; it does not try
-another dataset or widen site filters. Account permissions, dataset
-availability, retention/query limits, and real data remain unverified.
+Authenticated, schema-only GraphQL introspection on 2026-09-22 verified
+the required RUM types, dimensions, metrics, filters and order enums.
+The root type is lowercase `account`. The corrected production contract
+query passed against that schema (196,884 response bytes, under 256 KiB).
+`tests/analytics/schema-observed.json` retains only required type metadata,
+not credentials, visitor data, or account-specific records. Fault-injection
+and report fixtures remain synthetic. This evidence does **not** prove
+the stored Production token can query this dataset or that collection works.
+
+Runtime introspection still verifies the contract before every fixed data
+query. An unsupported contract returns `schema_unavailable`; it does not
+try another dataset or widen site filters. Actual token permissions,
+dataset availability, retention/query limits, and site data need a
+controlled Production check.
 Cloudflare Web Analytics GraphQL is not categorically unavailable on Free.
 
 Before an authorized launch:
 
-1. Review this feature without pushing: this Git-connected project deploys
-   previews on branch pushes. Deployment requires separate approval.
+1. Review and validate both provider builds. Branch pushes deploy previews;
+   production requires a separately coordinated merge/deployment.
 2. Recheck Access on **both** `doyel-labs.com/admin` and
    `doyel-labs.com/api/admin`, including children/artifacts. Keep only the
    exact owner Allow policy, 30-minute sessions, OTP login and independent
    MFA on this app. The no-MFA enrollment policy belongs only to App
    Launcher. Test owner, signed-out, wrong-user, expired, forged and
    service-token cases; do not share JWTs/cookies/recovery material.
-3. For Workers Free quota behavior, inspect **Workers & Pages > website >
-   Settings > Runtime > Fail open / closed** and select **Fail closed**
-   when authorized. The setting applies when the Free daily Functions
-   allowance is exhausted. Static admin copies are already removed as
-   defense in depth, but production quota/host/Access behavior is **not
-   verified** by local tests. Do not buy Workers Standard for this feature.
-   Test direct/default Pages and preview hosts after deployment.
-4. Obtain separate approval for the visitor-provider change and revise
-   `PROMPT.md` and `content/legal/privacy.md` in that future change.
-   **Do not click Add a site or Pages Metrics Enable now.** Adding a proxied
-   Web Analytics site enables automatic injection by default; Pages
-   Metrics Enable injects on the next deployment. Plan an approved
-   public-page-only collection method, keep admin excluded, avoid
-   duplicate providers, and review CSP/retention. Free has no custom
-   injection rules; do not assume a paid exclusion feature exists.
-5. After that approval, identify this website's `site_tag` securely and set
-   the new production binding. Do not confuse `site_tag` with `site_token`.
-   The site-list REST API requires Account Settings Read, which this
-   analytics token intentionally does not have; do not broaden its scope
-   merely to discover configuration. Verify its expiry/rotation separately.
-6. Under an authorized controlled check, validate the actual account
-   schema, all three presets, hostname/site isolation, empty/sampled data,
-   and compare aggregates with Cloudflare's Web Analytics dashboard.
-   Provider reads require `ANALYTICS_ENABLED=true`; that flag alone never
-   starts collection. Do not represent this staged connector as ready
-   until these checks and the approved collection change succeed.
+3. Keep Pages quota behavior **Fail closed** in both Production and Preview.
+   On 2026-09-22 the coordinating operator set and read back `fail_open:false`
+   for both environments while preserving other environment/build settings
+   and the canonical deployment. Do not buy Workers Standard for this feature.
+   Still test default/preview hosts and signed-out production paths after
+   deployment; configuration evidence is not a quota-exhaustion test.
+4. Inspect existing injection settings first. **Do not use dashboard Add a
+   site or Pages Metrics Enable**: a proxied site's dashboard setup enables
+   injection immediately by default, and Pages Metrics Enable injects on
+   the next deployment. Register the exact site's verified zone through
+   `POST /accounts/{account_id}/rum/site_info` with `zone_tag` and explicit
+   `auto_install:false`, then read back that disabled state. Site creation
+   requires Account Settings Write; site listing requires Account Settings
+   Read. Use a separate, short-lived setup credential securely, never the
+   Production analytics secret or a token pasted into chat. Do not broaden
+   the Account Analytics Read token. Verify expiry/rotation separately.
+5. Keep Pages/zone/Observatory automatic injection off. Record `site_tag`
+   for the backend and the distinct public `site_token` for the manual
+   collector. Set `CF_WEB_ANALYTICS_SITE_TAG` in Production. Publish the
+   prepared code initially with Plausible preserved. Under an authorized
+   check set `ANALYTICS_ENABLED=true` for reads only; the owner signs in
+   normally with Access/MFA and uses `/admin/analytics/`. No copying JWTs,
+   cookies, or API secrets is needed. Verify all three date presets against
+   the stored Production secret. An empty response proves only a working
+   query, not ingestion. Do not add a public diagnostic/proxy endpoint.
+6. Once those gates pass, set Production build variables
+   `NEXT_PUBLIC_ANALYTICS_PROVIDER=cloudflare` and
+   `NEXT_PUBLIC_CF_WEB_ANALYTICS_TOKEN=<this-site-public-beacon-token>`.
+   Rebuild/deploy through the coordinated Git-connected workflow. The
+   collector, CSP and rendered policy switch together; retain the legacy
+   domain only for rollback or remove it later. Existing open tabs retain
+   their original document until reloaded, but no document installs both
+   providers. Preview hosts must remain collector-free regardless of build
+   settings. Recheck public pages, Contact, private routes and CSP.
+7. Make a small controlled public visit after activation, then compare
+   the same UTC period/site/host with Cloudflare Web Analytics. Allow for
+   ingestion delay and sampling; page views/visits are not exact people.
+   Check empty/sampled results and hostname/site isolation. Do not claim
+   production readiness until the actual site/token/data checks succeed.
 
 Rollback: disable provider reads by setting `ANALYTICS_ENABLED=false`
 through the approved deployment process; keep Access and the private-route
 guards. If collection was later enabled, disabling this read flag does
-**not** disable collection: roll back the separately approved beacon or
-injection setting too. Do not remove Access to troubleshoot the dashboard.
+**not** disable collection. Select `NEXT_PUBLIC_ANALYTICS_PROVIDER=none`
+and rebuild to stop this manual collector, or select `plausible` with its
+legacy domain to restore that provider and matching privacy/CSP in one
+deployment. Keep all automatic injection disabled. Do not remove Access
+to troubleshoot the dashboard.
 
 ### Local verification
 
 Use Node 22+ (Node 24 used during development). Run `npm ci`, then build
 before Functions typechecking/tests; the server-only admin document module
-is generated by the build. To exercise the existing tracker exclusion:
+is generated by the build. Keep the same provider environment for each
+build/test pair. To exercise legacy mode:
 
 ```powershell
 $env:NEXT_PUBLIC_PLAUSIBLE_DOMAIN='doyel-labs.com'
+$env:NEXT_PUBLIC_ANALYTICS_PROVIDER='plausible'
 npm run build
 npm run typecheck
 npm run lint
@@ -357,14 +406,24 @@ npm run test:analytics:ui
 git -c core.whitespace=cr-at-eol diff --check
 ```
 
+Repeat with `NEXT_PUBLIC_ANALYTICS_PROVIDER=cloudflare` and the synthetic
+`NEXT_PUBLIC_CF_WEB_ANALYTICS_TOKEN=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa`,
+then with provider `none`. Never use actual account credentials in tests.
+The Cloudflare browser test downloads the current public beacon JavaScript,
+executes it against locally intercepted pages with a synthetic token, and
+intercepts **all** browser traffic, including every ingestion request.
+It observes the actual vendor's SPA behavior without recording test visits.
+Plausible loading uses a synthetic script; no provider receives test events.
+
 Playwright uses local ports 3191 (generic UI harness with intercepted
 synthetic API responses) and 3192 (real Wrangler Pages routing).
 Install Chromium with `npx playwright install chromium` only if missing.
 The test harness is not deployed and is not an authentication bypass in
 production code. The normal Pages runtime rejects localhost by design.
-Browser tests block external requests and exercise desktop/mobile reflow,
+Browser tests block external browser requests and exercise desktop/mobile reflow,
 keyboard controls, loading/empty/error states, no local/session storage,
-admin tracker exclusion, public tracking and navigation preservation.
+admin/preview tracker exclusion, public SPA behavior, full-document admin
+entry, selected privacy/CSP, and public navigation preservation.
 The contact runtime test sends only invalid JSON and cannot send mail.
 
 Official references (reviewed 2026-09-22):
@@ -378,6 +437,10 @@ Official references (reviewed 2026-09-22):
 [schema discovery](https://developers.cloudflare.com/analytics/graphql-api/features/discovery/introspection/),
 [RUM dataset](https://developers.cloudflare.com/data-localization/metadata-boundary/graphql-datasets/),
 [site identifiers and permissions](https://developers.cloudflare.com/api/resources/rum/subresources/site_info/methods/list/),
+[disabled-injection site creation](https://developers.cloudflare.com/api/resources/rum/subresources/site_info/methods/create/),
+[automatic SPA handling](https://developers.cloudflare.com/web-analytics/get-started/web-analytics-spa/),
+[manual beacon CSP](https://developers.cloudflare.com/web-analytics/faq/#how-can-i-use-web-analytics-with-a-content-security-policy-csp),
+[RUM privacy](https://developers.cloudflare.com/speed/observatory/rum-beacon/#privacy-information),
 [KV consistency](https://developers.cloudflare.com/kv/api/write-key-value-pairs/#concurrent-writes-to-the-same-key).
 
 ## Adding a changelog entry (post-v22 pattern)
@@ -566,7 +629,7 @@ in `tailwind.config.ts`. Highlights:
 Do not change without an explicit ask:
 
 - No founder profile, photos, signature card, or personal engineer title
-- No third-party marketing scripts (Plausible only)
+- No advertising scripts or session replay; one explicitly selected aggregate analytics provider
 - No fake testimonials, fake logos, fake case studies
 - No public service price ranges, retainer amounts, or sample quotes,
   including structured data and RSS. Labeled demo payroll amounts remain.

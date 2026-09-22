@@ -13,7 +13,7 @@ test.beforeEach(async ({ page }) => {
 
 test("disabled, unconfigured, session, rate-limit and provider errors show no metrics", async ({ page }) => {
   for (const [status, title] of [
-    ["disabled", "Analytics is not activated"], ["unconfigured", "Setup is incomplete"],
+    ["disabled", "Dashboard reads are disabled"], ["unconfigured", "Setup is incomplete"],
     ["unauthorized", "Sign in again"], ["forbidden", "Access denied"],
     ["rate_limited", "Refresh limit reached"], ["unavailable", "Analytics is unavailable"],
     ["schema_unavailable", "Provider setup needs review"],
@@ -97,9 +97,9 @@ test("malformed success data is an explicit error, not a broken or zero-valued d
   await expect(page.getByRole("heading", { name: "Page views", exact: true })).toHaveCount(0);
 });
 
-test("public pages retain Plausible and have no admin navigation", async ({ page }) => {
+test("local public pages exclude analytics and have no admin navigation", async ({ page }) => {
   await page.goto("/");
-  await expect(page.locator('script[src="https://plausible.io/js/script.outbound-links.js"]')).toHaveCount(1);
+  await expect(page.locator('script[src*="plausible"], script[src*="cloudflareinsights"]')).toHaveCount(0);
   await expect(page.locator('a[href^="/admin"]')).toHaveCount(0);
   await page.goto("/contact/");
   await expect(page.getByRole("textbox", { name: /email/i }).first()).toBeVisible();

@@ -1,10 +1,18 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { adaptReport, dataQuery, dateWindow, loadReport, normalizePath, parsePreset, providerConfig, rateLimit, verifySchema } from "../../server/analytics/provider";
+import { readFileSync } from "node:fs";
+import path from "node:path";
+import { adaptReport, dataQuery, dateWindow, loadReport, normalizePath, parsePreset, providerConfig, rateLimit, SCHEMA_QUERY, verifySchema } from "../../server/analytics/provider";
 import { readBoundedJson } from "../../server/analytics/http";
 import { configuredEnv, groupFixture, MemoryLimitStore, reportFixture, schemaFixture } from "./fixtures";
 
 const window = dateWindow("7d", new Date("2026-09-22T14:02:00Z"));
+
+test("contract matches required types observed through authenticated introspection on 2026-09-22", () => {
+  const observed = JSON.parse(readFileSync(path.join("tests", "analytics", "schema-observed.json"), "utf8"));
+  verifySchema(observed);
+  assert.match(SCHEMA_QUERY, /account: __type\(name: "account"\)/);
+});
 
 test("preset-only date windows bound cost to 30 days / 24 hourly buckets", () => {
   for (const period of ["24h", "7d", "30d"] as const) {

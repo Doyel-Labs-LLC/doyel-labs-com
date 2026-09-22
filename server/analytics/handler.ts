@@ -32,6 +32,13 @@ export async function handleAdmin(request: Request, env: AnalyticsEnv): Promise<
     const path = url.pathname.endsWith("/") ? `${url.pathname}index.html` : url.pathname;
     const asset = Object.hasOwn(adminAssets, path) ? adminAssets[path] : undefined;
     if (!asset) throw new AnalyticsError("not_found", 404, "Not found.");
+    // An HTML redirect makes Next perform a full document navigation rather
+    // than carrying a public page's already-running SPA collector into admin.
+    if (asset.contentType.startsWith("text/plain")) {
+      const headers = privateHeaders();
+      headers.set("Location", "/admin/analytics/");
+      return new Response(null, { status: 307, headers });
+    }
     const headers = privateHeaders(asset.scriptHashes);
     headers.set("Content-Type", asset.contentType);
     return new Response(request.method === "HEAD" ? null : asset.content, { headers });

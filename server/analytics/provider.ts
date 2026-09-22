@@ -37,7 +37,7 @@ export function parsePreset(url: URL): AnalyticsPreset {
 
 export function providerConfig(env: AnalyticsEnv) {
   if (env.ANALYTICS_ENABLED !== "true") {
-    throw new AnalyticsError("disabled", 503, "Analytics is not activated. Public tracking has not changed.");
+    throw new AnalyticsError("disabled", 503, "Dashboard reads are disabled. Visitor collection is configured separately.");
   }
   if (
     !env.CF_ACCOUNT_ID || !/^[a-f0-9]{32}$/.test(env.CF_ACCOUNT_ID) ||
@@ -68,7 +68,7 @@ export async function rateLimit(kv: QueryLimitStore, now = Date.now()): Promise<
 // This narrow contract check is deliberately not a schema explorer. The
 // live authenticated schema must confirm every field/type before any data query.
 export const SCHEMA_QUERY = `query AnalyticsContract {
-  account: __type(name: "Account") { fields { name args { name type { ...Ref } } type { ...Ref } } }
+  account: __type(name: "account") { fields { name args { name type { ...Ref } } type { ...Ref } } }
   accountFilter: __type(name: "AccountFilter_InputObject") { inputFields { name type { ...Ref } } }
   group: __type(name: "${GROUP}") { fields { name type { ...Ref } } }
   dimensions: __type(name: "${GROUP}Dimensions") { fields { name type { ...Ref } } }

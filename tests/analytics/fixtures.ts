@@ -23,7 +23,8 @@ export function configuredEnv(): AnalyticsEnv {
   };
 }
 
-// Synthetic candidate contract, NOT a captured/verified account schema.
+// Synthetic schema for fault injection. schema-observed.json separately
+// captures the required types from authenticated introspection, not metrics.
 export function schemaFixture() {
   const group = "AccountRumPageloadEventsAdaptiveGroups";
   const scalar = (name: string) => ({ kind: "SCALAR", name });
