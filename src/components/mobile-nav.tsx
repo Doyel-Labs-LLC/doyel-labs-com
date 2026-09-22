@@ -220,12 +220,13 @@ export function MobileNav({
  * the mobile drawer owns its own IA independently of the desktop
  * footer.
  */
+// Products, Work, and Pricing now live in the Primary nav (passed via
+// `items`), so they are intentionally absent here to avoid duplicate rows
+// in the drawer. Case studies still points at /work/ under its own label.
 const EXPLORE_LINKS = [
   { href: "/how-we-work/", label: "How we work" },
-  { href: "/pricing/", label: "Pricing" },
   { href: "/industries/", label: "Industries" },
   { href: "/work/", label: "Case studies" },
-  { href: "/products/", label: "Products" },
   { href: "/founder/", label: "Founder" },
   { href: "/writing/", label: "Writing" },
   { href: "/faq/", label: "FAQ" },

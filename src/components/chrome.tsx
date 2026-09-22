@@ -1,12 +1,14 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { companyLegal, site } from "@/lib/site";
+import { stageMeta, type Stage } from "@/lib/products";
 import { ContactWidget } from "@/components/contact-modal";
 import { MobileNav } from "@/components/mobile-nav";
 
 const nav = [
   { href: "/services/", label: "Services" },
   { href: "/work/", label: "Work" },
+  { href: "/products/", label: "Products" },
   { href: "/pricing/", label: "Pricing" },
   { href: "/company/", label: "Company" },
 ];
@@ -394,6 +396,63 @@ export function AccentChip({ children }: { children: ReactNode }) {
       <span className="inline-block h-1.5 w-1.5 rounded-full bg-accent" />
       {children}
     </span>
+  );
+}
+
+/**
+ * The one status badge for Doyel Labs' own-brand products. Three stages,
+ * one visual language, used everywhere a product appears so a visitor
+ * never has to guess what "live" vs "beta" vs "coming" means. The label
+ * text comes from `stageMeta` in `@/lib/products` — single source of truth.
+ *
+ *   live → rise green   (shipped, in real use)
+ *   beta → care amber    (real software, invite-only)
+ *   soon → muted         (announced, not yet available)
+ */
+const STAGE_STYLES: Record<Stage, { border: string; text: string; dot: string }> =
+  {
+    live: { border: "border-rise/60", text: "text-rise", dot: "bg-rise" },
+    beta: { border: "border-care/60", text: "text-care", dot: "bg-care" },
+    soon: { border: "border-line2", text: "text-mute", dot: "bg-mute" },
+  };
+
+export function StageBadge({
+  stage,
+  children,
+}: {
+  stage: Stage;
+  /** Optional override; defaults to the canonical stage label. */
+  children?: ReactNode;
+}) {
+  const s = STAGE_STYLES[stage];
+  return (
+    <span
+      className={`inline-flex items-center gap-2 border px-3 py-1 font-mono text-[10px] uppercase tracking-wide ${s.border} ${s.text}`}
+    >
+      <span className={`inline-block h-1.5 w-1.5 rounded-full ${s.dot}`} />
+      {children ?? stageMeta[stage].label}
+    </span>
+  );
+}
+
+/**
+ * A one-line legend that defines the three stages up front. Used at the
+ * top of the products page so the status vocabulary is explicit before
+ * the reader meets a single badge.
+ */
+export function StageLegend() {
+  const order: Stage[] = ["live", "beta", "soon"];
+  return (
+    <dl className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-x-8 sm:gap-y-3">
+      {order.map((stage) => (
+        <div key={stage} className="flex items-center gap-3">
+          <StageBadge stage={stage} />
+          <dd className="text-[12px] leading-snug text-muted">
+            {stageMeta[stage].blurb}
+          </dd>
+        </div>
+      ))}
+    </dl>
   );
 }
 

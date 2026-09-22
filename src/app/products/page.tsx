@@ -14,7 +14,8 @@ import {
   MetaRow,
   Notice,
   Page,
-  StatusChip,
+  StageBadge,
+  StageLegend,
 } from "@/components/chrome";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ContactWidget } from "@/components/contact-modal";
@@ -22,7 +23,11 @@ import { BaiArmFrame } from "@/components/frames/bai-arm";
 import { BaiBookFrame } from "@/components/frames/bai-book";
 import { ConnectionLoopTodayFrame } from "@/components/frames/connectionloop-today";
 import { Reveal } from "@/components/reveal";
-import { baiDisclaimer, programStatus, site } from "@/lib/site";
+import { products } from "@/lib/products";
+import { baiDisclaimer, site } from "@/lib/site";
+
+const bai = products.find((p) => p.key === "bai")!;
+const connectionloop = products.find((p) => p.key === "connectionloop")!;
 
 /**
  * `/products/` — the unified products index.
@@ -116,6 +121,18 @@ export default function ProductsIndex() {
             <AccentChip>Fail-closed by default</AccentChip>
           </div>
         </div>
+
+        {/* Status legend — defines the vocabulary before the reader
+         * meets a single badge, so "beta" and "coming soon" are never
+         * ambiguous. */}
+        <div className="mt-10 border-t border-line pt-6">
+          <p className="font-mono text-[10px] uppercase tracking-eyebrow text-muted">
+            Where each product stands
+          </p>
+          <div className="mt-4">
+            <StageLegend />
+          </div>
+        </div>
       </section>
 
       {/* ─────────────────────────────────────────────────────
@@ -154,7 +171,7 @@ export default function ProductsIndex() {
                 </span>
               </H2>
               <div className="mt-6">
-                <StatusChip>{programStatus.bai.label}</StatusChip>
+                <StageBadge stage={bai.stage} />
               </div>
               <p className="mt-6 max-w-prose text-[16px] leading-[1.7] text-mute">
                 BAI Desk is installed software, not a service that
@@ -188,6 +205,14 @@ export default function ProductsIndex() {
               <p className="mt-6 font-mono text-[10px] uppercase tracking-wide text-muted">
                 Windows 10 and 11 · macOS later · US-only at launch
               </p>
+              <div className="mt-6 border-l-2 border-care/50 pl-4">
+                <p className="font-mono text-[10px] uppercase tracking-eyebrow text-care">
+                  Path to public
+                </p>
+                <p className="mt-2 max-w-prose text-[13px] leading-[1.65] text-muted">
+                  {bai.pathToPublic}
+                </p>
+              </div>
             </div>
             <div className="space-y-4">
               {/* Portrait mark — layered above the two functional
@@ -304,7 +329,7 @@ export default function ProductsIndex() {
                 </span>
               </H2>
               <div className="mt-6">
-                <StatusChip>{programStatus.connectionloop.label}</StatusChip>
+                <StageBadge stage={connectionloop.stage} />
               </div>
               <p className="mt-6 max-w-prose text-[16px] leading-[1.7] text-mute">
                 ConnectionLoop is a mobile app for a small group of
@@ -319,6 +344,14 @@ export default function ProductsIndex() {
                 Currently in private testing; store submission is in
                 progress this month.
               </p>
+              <div className="mt-6 border-l-2 border-care/50 pl-4">
+                <p className="font-mono text-[10px] uppercase tracking-eyebrow text-care">
+                  Path to public
+                </p>
+                <p className="mt-2 max-w-prose text-[13px] leading-[1.65] text-muted">
+                  {connectionloop.pathToPublic}
+                </p>
+              </div>
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <ContactWidget label="Join the waitlist" />
                 <GhostLink href="/security/" small>
