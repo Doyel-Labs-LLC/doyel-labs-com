@@ -138,21 +138,55 @@ node scripts/optimize-images.mjs    # re-encode screenshots
 · default branch `master` · project name `website` on the Cloudflare side.
 
 The site is a **classic Cloudflare Pages** project (not Workers with Static
-Assets). There is intentionally **no `wrangler.toml`** in the repo — its
-presence would enroll the project in the Workers-with-Assets flow and
+Assets), **connected to this GitHub repo** — Cloudflare builds and deploys
+on every push. There is intentionally **no `wrangler.toml`** in the repo —
+its presence would enroll the project in the Workers-with-Assets flow and
 override the automatic upload of the `out/` directory.
 
-### Deploy from a local terminal
+### How deploys happen (Git-connected)
+
+- **Push to `master` → production** at `doyel-labs.com`. Merging a PR is a
+  push to `master`, so merging *is* deploying.
+- **Push to any other branch → a preview deploy** at
+  `https://<hash>.website-8xx.pages.dev`. Open a PR and use its preview URL
+  to check a change before it goes live.
+
+Watch a build from the terminal:
+
+```bash
+npx wrangler pages deployment list --project-name=website
+```
+
+### Build configuration (must match — do not drift)
+
+Set under **Cloudflare → Pages → website → Settings → Builds & deployments**.
+These exact values are what make the build work:
+
+| Setting | Value | Notes |
+|---|---|---|
+| Production branch | `master` | |
+| Build command | `npm ci && npm run build` | |
+| Build output directory | `out` | matches `output: 'export'` |
+| **Root directory** | **_(empty)_** | the app is at the **repo root**, not a subfolder |
+
+> ⚠️ **Root directory must be blank.** It was once set to `website` (a
+> leftover from the old `BAI-Desk/website` layout). This repo has no
+> `website/` folder, so every build died at `Cannot find cwd:
+> /opt/buildhome/repo/website` — silently, which left production stuck on an
+> old commit while pushes appeared to "succeed" in Git. If builds start
+> failing at the clone stage with a `Cannot find cwd` error, check this
+> field first.
+
+### Manual upload (discouraged fallback only)
+
+Because the project is Git-connected, prefer the push/merge flow above.
+A direct upload creates a deployment outside the Git history and Cloudflare
+warns against mixing the two on one project. Only if Git builds are down:
 
 ```bash
 npm run build
 npx wrangler pages deploy out --project-name=website --branch=master
 ```
-
-### Auto-deploy from Git
-
-Pushing to `master` triggers a Cloudflare Pages build. If auto-deploys are
-disabled or a build fails, fall back to the manual command above.
 
 ### Required Pages secrets
 
