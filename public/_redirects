@@ -1,9 +1,13 @@
 # Cloudflare Pages redirect table.
 #
-# The previous site was branded as "BAI by Doyel Labs" and had /download and
-# /pricing as top-level BAI-only surfaces. All BAI-specific routes now live
-# under /products/ (with dedicated /legal/bai/* pages for the legal docs
-# submitted to Alpaca). ConnectionLoop lives on the same products page.
+# The previous site was branded as "BAI by Doyel Labs" and had /download as a
+# top-level BAI-only surface. All BAI-specific routes now live under
+# /products/ (with dedicated /legal/bai/* pages for the legal docs submitted
+# to Alpaca). ConnectionLoop lives on the same products page.
+#
+# NOTE: there is deliberately NO /pricing redirect. /pricing/ is now a real
+# page (top nav, sitemap). A legacy `/pricing/* -> /products/#bai` rule used
+# to shadow it and 301 every visitor to the products page — do not re-add it.
 #
 # The `/start/`, `/reviews/`, and `/case-studies/steadfast/` pages were
 # consolidated into `/contact/` and `/work/` respectively — they had too
@@ -14,8 +18,6 @@
 # ── Old BAI-brand marketing routes ─────────────────────────────
 /download            /products/#bai                 301
 /download/*          /products/#bai                 301
-/pricing             /products/#bai                 301
-/pricing/*           /products/#bai                 301
 
 # ── Old programs tree → products page ───────────────────────────
 /programs            /products/                     301
