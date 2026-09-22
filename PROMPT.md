@@ -133,8 +133,15 @@ Keep Next.js static export, React, TypeScript, Tailwind, and Cloudflare
 Pages. No framework/hosting migration, CMS, new product functionality,
 booking integration, or marketing tracker.
 
-Preserve legal wording, review notices, strict CSP, and Plausible-only
-analytics. Payroll prepares records; it does not file taxes or move money.
+Preserve legal wording, review notices, and strict CSP. The approved analytics
+target is Cloudflare Web Analytics for aggregate reporting, with Plausible
+retained until the coordinated switch passes account/schema/data checks.
+Exactly one build-selected provider may run on public doyel-labs.com pages;
+none may run on admin, preview, or local pages. Collector, CSP, and privacy
+copy must use the same selection. Never enable automatic injection or dual
+tracking. No raw-IP collection, replay, fingerprinting, form capture, or
+contact/browsing linkage. Backend read enablement is not collection enablement.
+Payroll prepares records; it does not file taxes or move money.
 BAI can lose money; never promise returns. Existing product-specific
 limitations remain visible on relevant surfaces.
 

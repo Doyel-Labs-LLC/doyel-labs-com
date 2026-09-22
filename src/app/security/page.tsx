@@ -14,6 +14,7 @@ import {
 } from "@/components/chrome";
 import { ContactLink } from "@/components/contact-link";
 import { site } from "@/lib/site";
+import { analyticsLabel } from "@/lib/analytics-config";
 
 export const metadata: Metadata = {
   title: "Security",
@@ -72,7 +73,7 @@ const CONTROLS = [
   {
     area: "Updates",
     control:
-      "BAI updates are signed and refused mid-trade. The website ships as static assets on Cloudflare Pages with no server runtime.",
+      "BAI updates are signed and refused mid-trade. The website ships as static assets on Cloudflare Pages, with scoped Functions for contact delivery and owner-only analytics.",
     means:
       "No unsigned code runs on your machine. Nothing lands mid-trade.",
   },
@@ -85,7 +86,7 @@ const CONTROLS = [
   {
     area: "Web pages",
     control:
-      "Strict content-security policy on every page. HSTS with preload. Frame-ancestors 'none'. Only Plausible and Cloudflare Turnstile are allowed as third-party hosts. No session replay, no marketing pixels.",
+      `Content-security policy on every page. HSTS with preload. Frame-ancestors 'none'. Public visitor analytics: ${analyticsLabel}. Turnstile protects the contact form; the status page can reach our control-plane hosts. No session replay or marketing pixels.`,
     means:
       "An injected string on any of our pages renders as text and cannot run. Analytics is coarse and cookieless.",
   },
@@ -159,14 +160,14 @@ const CONNECTIONLOOP_MAP = {
 const WEBSITES_MAP = {
   yes: [
     "Static HTML, CSS, JavaScript on Cloudflare Pages",
-    "Plausible Analytics — cookieless, no personal data — when the operator enables it",
+    `This website's visitor analytics: ${analyticsLabel}; any enabled reporting is aggregate and cookieless`,
     "Cloudflare Turnstile for form CAPTCHA on doyel-labs.com",
     "Forms wired to the operator's own inbox (Formspree, Resend, or similar), if the site takes forms",
   ],
   no: [
     "Session-replay tools (Clarity, FullStory, Hotjar, LogRocket) — refused across the board",
     "Google Analytics, Meta Pixel, or any advertising cookie",
-    "Server-side runtime that Doyel Labs can push mutations to",
+    "Visitor-event databases or contact-to-browsing profiles maintained by Doyel Labs",
     "Personal data on Doyel Labs servers — visitor data goes to the operator's chosen tools",
   ],
 };

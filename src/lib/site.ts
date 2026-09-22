@@ -59,12 +59,3 @@ export const programStatus = {
     body: "In private testing with the Hamilton Family. Not publicly available yet.",
   },
 } as const;
-
-/**
- * Analytics. Plausible only. Injected from `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`
- * at build time; if unset, no script renders and no third-party network
- * I/O occurs on marketing pages.
- */
-export const analytics = {
-  plausibleDomain: process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || "",
-};

@@ -1,0 +1,304 @@
+{
+  "account": {
+    "fields": [
+      {
+        "args": [
+          {
+            "name": "filter",
+            "type": {
+              "kind": "NON_NULL",
+              "name": "",
+              "ofType": {
+                "kind": "INPUT_OBJECT",
+                "name": "AccountRumPageloadEventsAdaptiveGroupsFilter_InputObject",
+                "ofType": null
+              }
+            }
+          },
+          {
+            "name": "limit",
+            "type": {
+              "kind": "NON_NULL",
+              "name": "",
+              "ofType": {
+                "kind": "SCALAR",
+                "name": "uint64",
+                "ofType": null
+              }
+            }
+          },
+          {
+            "name": "orderBy",
+            "type": {
+              "kind": "LIST",
+              "name": "",
+              "ofType": {
+                "kind": "NON_NULL",
+                "name": "",
+                "ofType": {
+                  "kind": "ENUM",
+                  "name": "AccountRumPageloadEventsAdaptiveGroupsOrderBy",
+                  "ofType": null
+                }
+              }
+            }
+          }
+        ],
+        "name": "rumPageloadEventsAdaptiveGroups",
+        "type": {
+          "kind": "NON_NULL",
+          "name": "",
+          "ofType": {
+            "kind": "LIST",
+            "name": "",
+            "ofType": {
+              "kind": "NON_NULL",
+              "name": "",
+              "ofType": {
+                "kind": "OBJECT",
+                "name": "AccountRumPageloadEventsAdaptiveGroups"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "accountFilter": {
+    "inputFields": [
+      {
+        "name": "accountTag",
+        "type": {
+          "kind": "NON_NULL",
+          "name": "",
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "string",
+            "ofType": null
+          }
+        }
+      }
+    ]
+  },
+  "avg": {
+    "fields": [
+      {
+        "name": "sampleInterval",
+        "type": {
+          "kind": "NON_NULL",
+          "name": "",
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "float64",
+            "ofType": null
+          }
+        }
+      }
+    ]
+  },
+  "dimensions": {
+    "fields": [
+      {
+        "name": "countryName",
+        "type": {
+          "kind": "NON_NULL",
+          "name": "",
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "string",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "date",
+        "type": {
+          "kind": "NON_NULL",
+          "name": "",
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Date",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "datetimeHour",
+        "type": {
+          "kind": "NON_NULL",
+          "name": "",
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "Time",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "deviceType",
+        "type": {
+          "kind": "NON_NULL",
+          "name": "",
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "string",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "refererHost",
+        "type": {
+          "kind": "NON_NULL",
+          "name": "",
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "string",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "requestPath",
+        "type": {
+          "kind": "NON_NULL",
+          "name": "",
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "string",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "userAgentBrowser",
+        "type": {
+          "kind": "NON_NULL",
+          "name": "",
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "string",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "userAgentOS",
+        "type": {
+          "kind": "NON_NULL",
+          "name": "",
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "string",
+            "ofType": null
+          }
+        }
+      }
+    ]
+  },
+  "filter": {
+    "inputFields": [
+      {
+        "name": "datetime_geq",
+        "type": {
+          "kind": "SCALAR",
+          "name": "Time",
+          "ofType": null
+        }
+      },
+      {
+        "name": "datetime_lt",
+        "type": {
+          "kind": "SCALAR",
+          "name": "Time",
+          "ofType": null
+        }
+      },
+      {
+        "name": "requestHost",
+        "type": {
+          "kind": "SCALAR",
+          "name": "string",
+          "ofType": null
+        }
+      },
+      {
+        "name": "siteTag",
+        "type": {
+          "kind": "SCALAR",
+          "name": "string",
+          "ofType": null
+        }
+      }
+    ]
+  },
+  "group": {
+    "fields": [
+      {
+        "name": "avg",
+        "type": {
+          "kind": "OBJECT",
+          "name": "AccountRumPageloadEventsAdaptiveGroupsAvg",
+          "ofType": null
+        }
+      },
+      {
+        "name": "count",
+        "type": {
+          "kind": "NON_NULL",
+          "name": "",
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "uint64",
+            "ofType": null
+          }
+        }
+      },
+      {
+        "name": "dimensions",
+        "type": {
+          "kind": "OBJECT",
+          "name": "AccountRumPageloadEventsAdaptiveGroupsDimensions",
+          "ofType": null
+        }
+      },
+      {
+        "name": "sum",
+        "type": {
+          "kind": "OBJECT",
+          "name": "AccountRumPageloadEventsAdaptiveGroupsSum",
+          "ofType": null
+        }
+      }
+    ]
+  },
+  "order": {
+    "enumValues": [
+      {
+        "name": "count_DESC"
+      },
+      {
+        "name": "date_ASC"
+      },
+      {
+        "name": "datetimeHour_ASC"
+      }
+    ]
+  },
+  "sum": {
+    "fields": [
+      {
+        "name": "visits",
+        "type": {
+          "kind": "NON_NULL",
+          "name": "",
+          "ofType": {
+            "kind": "SCALAR",
+            "name": "uint64",
+            "ofType": null
+          }
+        }
+      }
+    ]
+  }
+}

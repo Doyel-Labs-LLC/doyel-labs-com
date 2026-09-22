@@ -18,6 +18,7 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ContactLink } from "@/components/contact-link";
 import { Reveal } from "@/components/reveal";
 import { site } from "@/lib/site";
+import { analytics, analyticsLabel } from "@/lib/analytics-config";
 
 /**
  * `/uses/`
@@ -251,18 +252,15 @@ const CATEGORIES: { title: string; blurb?: string; tools: Tool[] }[] = [
   {
     title: "Analytics + monitoring",
     blurb:
-      "Every marketing site we ship uses Plausible only, or no analytics at all if the client prefers.",
+      "We use aggregate, cookieless reporting where it is useful, or no visitor analytics if the operator prefers.",
     tools: [
       {
-        name: "Plausible Analytics",
-        role: "Cookieless analytics for doyel-labs.com and client marketing sites",
+        name: analyticsLabel,
+        role: "Visitor analytics on doyel-labs.com",
         why:
-          "No cookies, no cross-site profile, no PII collected. GDPR-friendly by default.",
-        url: "https://plausible.io",
-      },
-      {
-        name: "Cloudflare Web Analytics",
-        role: "Secondary check on edge traffic for our own site",
+          "No session replay, cross-site profiles, or linking inquiries to browsing. Admin and preview pages are excluded.",
+        url: analytics.provider === "cloudflare" ? "https://www.cloudflare.com/web-analytics/" :
+          analytics.provider === "plausible" ? "https://plausible.io" : undefined,
       },
       {
         name: "Sentry",
@@ -335,7 +333,7 @@ const REFUSED = [
   {
     name: "Google Analytics / Meta Pixel",
     why:
-      "Cross-site trackers. Every client site ships without them by default. Plausible covers what a small operator actually needs to know.",
+      "Cross-site trackers. Every client site ships without them by default. Aggregate reporting covers what a small operator actually needs to know.",
   },
   {
     name: "Session-replay tools (Hotjar, FullStory, LogRocket, Microsoft Clarity)",
