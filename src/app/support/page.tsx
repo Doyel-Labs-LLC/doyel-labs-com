@@ -14,7 +14,7 @@ import {
   Page,
 } from "@/components/chrome";
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { ContactWidget } from "@/components/contact-modal";
+import { ContactLink } from "@/components/contact-link";
 import { Reveal } from "@/components/reveal";
 import { site } from "@/lib/site";
 

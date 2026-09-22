@@ -26,7 +26,7 @@ export const site = {
  * not for how many chairs are in the office.
  */
 export const positioning =
-  "Doyel Labs builds the software your business runs on. We use AI to ship fast, and we stay on to keep it running.";
+  "Doyel Labs builds websites, business tools, and custom software for small businesses.";
 
 /** Company-scale legal line — footer only, small. */
 export const companyLegal =
@@ -51,13 +51,12 @@ export const programStatus = {
   bai: {
     label: "PRIVATE BETA · BROKER REVIEW",
     body:
-      "In private testing with a small cohort of operators. Alpaca broker-app " +
-      "review is underway; public availability follows once the app is approved " +
-      "and the risk-control gates pass a final audit.",
+      "In private testing. Public availability depends on Alpaca broker-app approval " +
+      "and a final risk-control audit.",
   },
   connectionloop: {
-    label: "STORE SUBMISSION THIS MONTH",
-    body: "In private testing with the Hamilton Family. Store review pending; App Check enforcement and attorney sign-off still open.",
+    label: "COMING SOON",
+    body: "In private testing with the Hamilton Family. Not publicly available yet.",
   },
 } as const;
 

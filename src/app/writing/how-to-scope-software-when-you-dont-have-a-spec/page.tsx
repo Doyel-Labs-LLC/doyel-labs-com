@@ -14,7 +14,7 @@ import {
   Page,
 } from "@/components/chrome";
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { ContactWidget } from "@/components/contact-modal";
+import { ContactLink } from "@/components/contact-link";
 import { Reveal } from "@/components/reveal";
 import { formatDate, posts } from "@/lib/writing";
 import { site } from "@/lib/site";
@@ -221,7 +221,7 @@ export default function Post() {
                     title:
                       "What's the honest budget shape?",
                     body:
-                      "A range is fine. \"Under $10k.\" \"Not more than a mid-market SaaS annual bill.\" \"Whatever it takes.\" Knowing the shape lets us scope tighter to fit, instead of underbidding and cutting corners.",
+                      "A budget range is fine. Knowing your constraints lets us shape the scope realistically instead of underbidding and cutting corners. The project is quoted after we understand the work.",
                   },
                 ]}
               />
@@ -328,8 +328,8 @@ export default function Post() {
               <Mistake title="Solving the wrong layer">
                 &quot;We need a new CRM.&quot; Do you? Or do you
                 need one specific report your current CRM
-                doesn&apos;t produce? A $500 report often replaces a
-                $50,000 CRM migration. We&apos;ll ask before
+                doesn&apos;t produce? A focused report may avoid an
+                unnecessary CRM migration. We&apos;ll ask before
                 scoping.
               </Mistake>
               <Mistake title="Compliance by rumor">
@@ -406,7 +406,8 @@ export default function Post() {
                 </li>
                 <li>
                   <strong className="text-ink">Price:</strong>{" "}
-                  fixed, in the $6k–$8k band. 50% at signing.
+                  quoted per project, with scope and payment terms
+                  agreed in writing before work begins.
                 </li>
                 <li>
                   <strong className="text-ink">
@@ -461,12 +462,12 @@ export default function Post() {
               ]}
             />
             <div className="mt-10 flex flex-wrap items-center gap-3">
-              <ContactWidget label="Book an orientation" />
-              <GhostLink href="/how-we-work/" small>
+              <ContactLink />
+              <GhostLink href="/services/#process" small>
                 How we work
               </GhostLink>
-              <GhostLink href="/pricing/" small>
-                Pricing bands
+              <GhostLink href="/services/#pricing" small>
+                How pricing works
               </GhostLink>
             </div>
             <div className="mt-10">

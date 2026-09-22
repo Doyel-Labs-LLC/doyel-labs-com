@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
+import { steadfastTestimonial } from "@/lib/testimonials";
 
 /**
  * A named client quote block. Every quote MUST have a real, named
@@ -40,7 +41,7 @@ export function Quote({
       ? "text-[20px] leading-[1.55] md:text-[24px]"
       : "text-[18px] leading-[1.55] md:text-[22px]";
   return (
-    <figure className="rounded-[3px] border-l-2 border-accent bg-accentSoft/40 p-6 shadow-card md:p-8">
+    <figure className="rounded-xl border-l-2 border-accent bg-surface p-6 md:p-8">
       {paragraphs ? (
         <blockquote className={`max-w-prose text-ink ${quoteSize}`}>
           {paragraphs.map((p, i) => (
@@ -83,7 +84,7 @@ export function Quote({
         <div>
           <p className="text-[14px] font-semibold text-ink">{attribution}</p>
           {role || company ? (
-            <p className="mt-0.5 font-mono text-[10px] uppercase tracking-wide text-muted">
+            <p className="mt-1 text-sm text-muted">
               {role}
               {role && company ? " · " : ""}
               {company && companyUrl ? (
@@ -102,6 +103,11 @@ export function Quote({
           ) : null}
         </div>
       </figcaption>
+      {company === steadfastTestimonial.company || attribution === steadfastTestimonial.attribution ? (
+        <p className="mt-4 text-sm leading-relaxed text-muted">
+          Doyel Labs and SteadFast share an owner. This is not an independent endorsement.
+        </p>
+      ) : null}
     </figure>
   );
 }

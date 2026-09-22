@@ -1,389 +1,83 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import {
-  Eyebrow,
-  GhostLink,
-  H1,
-  H2,
-  Lead,
-  MetaRow,
-  Page,
-} from "@/components/chrome";
+import { Eyebrow, H1, H2, Lead, Page } from "@/components/chrome";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { site } from "@/lib/site";
 
-/**
- * Human-readable site map at `/sitemap/`.
- *
- * Coexists with the machine-readable `/sitemap.xml` (generated from
- * `src/app/sitemap.ts`) — the XML sitemap is a special Next.js file
- * route and doesn't collide with the `/sitemap/` folder route.
- *
- * When you add a new page anywhere on the site, add it here too. This
- * is a curated index, not an auto-generated one: the ordering, grouping,
- * and blurbs are intentional and support skimming.
- */
-
 export const metadata: Metadata = {
-  title: "Site map — every page on doyel-labs.com",
-  description:
-    "A human-readable map of every page on doyel-labs.com. Services, case studies, industries, writing, products, and legal pages — grouped for skimming.",
+  title: "All pages",
+  description: "Find services, projects, products, company information, support, and legal resources from Doyel Labs.",
   alternates: { canonical: `https://${site.domain}/sitemap/` },
-  openGraph: {
-    title: "Site map — every page on doyel-labs.com",
-    description:
-      "A human-readable map of every page on doyel-labs.com.",
-    url: `https://${site.domain}/sitemap/`,
-    type: "website",
-  },
 };
 
-type SitemapLink = {
-  href: string;
-  label: string;
-  blurb: string;
-};
-
-type Section = {
-  title: string;
-  intro?: string;
-  links: SitemapLink[];
-};
-
-const SECTIONS: Section[] = [
-  {
-    title: "Front door",
-    links: [
-      {
-        href: "/",
-        label: "Home",
-        blurb:
-          "The company hero, testimonial band, capability grid, selected work, engagement flow, and audience path cards.",
-      },
-      {
-        href: "/how-we-work/",
-        label: "How we work",
-        blurb:
-          "The full engagement flow, centered on the one-hour orientation call.",
-      },
-      {
-        href: "/contact/",
-        label: "Contact",
-        blurb:
-          "Real contact form + direct email + phone. Book an orientation.",
-      },
-      {
-        href: "/faq/",
-        label: "FAQ",
-        blurb:
-          "Questions people actually ask before hiring us. JSON-LD FAQPage schema.",
-      },
-    ],
-  },
-  {
-    title: "Services",
-    intro: "What Doyel Labs builds, priced per project.",
-    links: [
-      {
-        href: "/services/",
-        label: "Services overview",
-        blurb: "Capabilities, past work, partnership, engagement flow, pricing.",
-      },
-      {
-        href: "/services/websites/",
-        label: "Websites",
-        blurb: "Custom marketing sites on your own domain.",
-      },
-      {
-        href: "/services/payroll/",
-        label: "Payroll workspaces",
-        blurb: "Custom pay-run software for how your business actually pays people.",
-      },
-      {
-        href: "/services/custom-software/",
-        label: "Custom software",
-        blurb: "Dashboards, portals, internal tools, integrations, data pipelines, one-off programs.",
-      },
-      {
-        href: "/pricing/",
-        label: "Pricing",
-        blurb: "Typical price bands and how billing works.",
-      },
-    ],
-  },
-  {
-    title: "Industries",
-    intro:
-      "Verticals we&apos;ve shipped for or would gladly ship for. Not a closed list.",
-    links: [
-      {
-        href: "/industries/",
-        label: "Industries overview",
-        blurb: "Twelve starting-point verticals, alphabetized.",
-      },
-      {
-        href: "/industries/federal-service-contractors/",
-        label: "Federal service contractors",
-        blurb:
-          "SCA payroll, SAM.gov wage-determination compliance, DOL-ready audit trails.",
-      },
-    ],
-  },
-  {
-    title: "Proof",
-    intro: "Named clients, real reviews, real case studies.",
-    links: [
-      {
-        href: "/work/",
-        label: "Work",
-        blurb:
-          "Recent shipments — client work, the SteadFast case study, and named client reviews.",
-      },
-    ],
-  },
-  {
-    title: "Writing",
-    intro: "Engineering notes and process posts.",
-    links: [
-      {
-        href: "/writing/",
-        label: "Writing overview",
-        blurb: "All posts, newest first.",
-      },
-      {
-        href: "/writing/how-to-scope-software-when-you-dont-have-a-spec/",
-        label: "How to scope software without a spec",
-        blurb:
-          "The seven questions we use to turn \"I think we need something\" into a written scope + fixed price.",
-      },
-      {
-        href: "/writing/ai-native-software-what-we-write-what-we-generate/",
-        label: "AI-native software",
-        blurb: "What we generate with AI, what humans still write by hand.",
-      },
-      {
-        href: "/writing/shipping-steadfast-payroll-in-six-weeks/",
-        label: "Shipping SteadFast Payroll in six weeks",
-        blurb:
-          "The playbook for a custom pay-run workspace, from zero code to a live pay run.",
-      },
-    ],
-  },
-  {
-    title: "Products",
-    intro:
-      "Software Doyel Labs ships under its own brand. In private beta today.",
-    links: [
-      {
-        href: "/products/",
-        label: "Products overview",
-        blurb: "BAI Desk and ConnectionLoop — description, status, and the legal docs for each.",
-      },
-    ],
-  },
-  {
-    title: "Company",
-    links: [
-      {
-        href: "/company/",
-        label: "Company",
-        blurb: "Who we are, where we&apos;re based, how we work.",
-      },
-      {
-        href: "/founder/",
-        label: "Founder",
-        blurb:
-          "Blake Doyel — the person on the orientation call, and the person who ships your build.",
-      },
-      {
-        href: "/engineering/",
-        label: "Engineering",
-        blurb:
-          "How Doyel Labs builds — fail-closed defaults, human-reviewed AI, audit rows.",
-      },
-      {
-        href: "/security/",
-        label: "Security",
-        blurb:
-          "Data maps for each product, controls table, vulnerability reports.",
-      },
-      {
-        href: "/press/",
-        label: "Press & media kit",
-        blurb: "Logos, boilerplate, and everything a journalist needs.",
-      },
-      {
-        href: "/uses/",
-        label: "Uses",
-        blurb: "The tools Doyel Labs builds with. Real stack, no aspirational entries, plus a \"what we don&apos;t use\" band.",
-      },
-    ],
-  },
-  {
-    title: "Support & ops",
-    links: [
-      {
-        href: "/support/",
-        label: "Support",
-        blurb: "Contact info, one-business-day SLA, common questions.",
-      },
-      {
-        href: "/status/",
-        label: "Status",
-        blurb: "Live checks against every Doyel Labs service, from your browser.",
-      },
-      {
-        href: "/changelog/",
-        label: "Changelog",
-        blurb: "What changed, when, and why.",
-      },
-    ],
-  },
-  {
-    title: "Docs",
-    intro: "Service-specific documentation. Product docs live on /products/.",
-    links: [
-      {
-        href: "/docs/",
-        label: "Docs overview",
-        blurb: "Websites and payroll workspace docs.",
-      },
-      { href: "/docs/websites/", label: "Websites docs", blurb: "How Doyel Labs websites are built and maintained." },
-      { href: "/docs/payroll/", label: "Payroll docs", blurb: "How the payroll workspace is operated." },
-    ],
-  },
-  {
-    title: "Legal",
-    intro: "Under counsel review — every version has a date.",
-    links: [
-      { href: "/legal/terms/", label: "Terms", blurb: "Terms of service." },
-      { href: "/legal/privacy/", label: "Privacy", blurb: "What we collect and why." },
-      { href: "/legal/payroll-data/", label: "Payroll data", blurb: "How payroll data is handled." },
-      { href: "/legal/risk/", label: "Risk (BAI)", blurb: "Trading risk disclosure for the BAI program." },
-    ],
-  },
-  {
-    title: "Machine-readable",
-    intro:
-      "For crawlers, feed readers, and other machines. Not typically browsed by humans.",
-    links: [
-      {
-        href: "/sitemap.xml",
-        label: "sitemap.xml",
-        blurb: "The XML sitemap for search engines.",
-      },
-      {
-        href: "/changelog/rss.xml",
-        label: "changelog.rss",
-        blurb: "RSS feed of every changelog entry.",
-      },
-      {
-        href: "/opengraph-image",
-        label: "opengraph-image.png",
-        blurb: "The default OpenGraph card for social previews.",
-      },
-      {
-        href: "/manifest.webmanifest",
-        label: "manifest.webmanifest",
-        blurb: "PWA manifest with the four-square icon set.",
-      },
-    ],
-  },
+const groups = [
+  { name: "Start here", links: [
+    ["/", "Home", "A quick introduction to what we build."],
+    ["/services/", "Services", "Websites, business tools, and custom software."],
+    ["/work/", "Work", "Our SteadFast website and payroll project."],
+    ["/products/", "Products", "BAI and ConnectionLoop, both in development."],
+    ["/company/", "About", "Our company and how we work."],
+    ["/contact/", "Contact", "Start a conversation or ask a question."],
+  ] },
+  { name: "Services and getting started", links: [
+    ["/services/websites/", "Websites", "Professional websites on your own domain."],
+    ["/services/payroll/", "Payroll workspaces", "Software for preparing pay runs and records."],
+    ["/services/custom-software/", "Custom software", "Applications, internal tools, and integrations."],
+    ["/services/#process", "Our process", "What working together looks like."],
+    ["/services/#pricing", "How pricing works", "Quoted per project, with scope agreed first."],
+    ["/faq/", "Frequently asked questions", "Practical answers before and after a build."],
+    ["/industries/federal-service-contractors/", "Federal service contractors", "One example of industry-specific software."],
+  ] },
+  { name: "Support and documentation", links: [
+    ["/support/", "Support", "Help with an existing service or product."],
+    ["/docs/", "Documentation", "Guides to using and maintaining your software."],
+    ["/docs/websites/", "Website documentation", "Maintaining a Doyel Labs website."],
+    ["/docs/payroll/", "Payroll documentation", "Working with the payroll workspace."],
+    ["/status/", "Service status", "Current connectivity checks."],
+    ["/security/", "Security", "Controls and vulnerability reporting."],
+  ] },
+  { name: "Company resources", links: [
+    ["/engineering/", "Engineering", "How we build and review software."],
+    ["/press/", "Press and media", "Company information and brand assets."],
+    ["/uses/", "Tools we use", "The tools behind the work."],
+    ["/changelog/", "Changelog", "A record of website and product changes."],
+    ["/changelog/rss.xml", "Changelog RSS", "Follow changes in your feed reader."],
+  ] },
+  { name: "Writing", links: [
+    ["/writing/", "All writing", "Notes on building useful software."],
+    ["/writing/how-to-scope-software-when-you-dont-have-a-spec/", "Scoping software without a specification", "Turning an idea into a plan."],
+    ["/writing/ai-native-software-what-we-write-what-we-generate/", "AI and the work we do", "What is generated and what people decide."],
+    ["/writing/shipping-steadfast-payroll-in-six-weeks/", "Building the SteadFast payroll workspace", "An account of a specific build."],
+  ] },
+  { name: "Legal", links: [
+    ["/legal/terms/", "Terms of service", "Company terms."],
+    ["/legal/privacy/", "Privacy policy", "How information is handled."],
+    ["/legal/payroll-data/", "Payroll data", "Payroll-specific information handling."],
+    ["/legal/risk/", "Trading risk", "Risk disclosures for BAI."],
+    ["/legal/bai/terms/", "BAI terms", "Product terms of use."],
+    ["/legal/bai/privacy/", "BAI privacy", "Product privacy policy."],
+  ] },
 ];
 
 export default function SitemapPage() {
   return (
-    <Page
-      bandFooter={
-        <MetaRow>
-          Missing a page? Email {site.supportEmail} — this list is curated
-          by hand and occasionally lags a fresh route by a deploy or two.
-        </MetaRow>
-      }
-    >
-      <Breadcrumbs items={[{ name: "Site map", href: "/sitemap/" }]} />
-
-      {/* HERO */}
-      <section className="hero-glow pt-4">
-        <div className="max-w-3xl">
-          <Eyebrow>Site map</Eyebrow>
-          <H1>
-            Every page on{" "}
-            <span className="text-accent">doyel-labs.com</span>.
-          </H1>
-          <Lead>
-            One curated list, grouped by section. If you&apos;re trying
-            to orient yourself, or if a link on another page didn&apos;t
-            get you where you expected, this is the map. Machines want{" "}
-            <a
-              href="/sitemap.xml"
-              className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-            >
-              /sitemap.xml
-            </a>{" "}
-            instead.
-          </Lead>
-        </div>
-      </section>
-
-      {/* SECTIONS */}
-      {SECTIONS.map((section) => (
-        <section
-          key={section.title}
-          className="mt-16 border-t border-line pt-10"
-        >
-          <div className="max-w-3xl">
-            <H2>
-              <span className="mt-2 block">{section.title}</span>
-            </H2>
-            {section.intro ? (
-              <p
-                className="mt-4 text-[15px] leading-[1.7] text-mute"
-                dangerouslySetInnerHTML={{ __html: section.intro }}
-              />
-            ) : null}
-          </div>
-          <ul className="mt-8 grid gap-3 md:grid-cols-2">
-            {section.links.map((link) => (
-              <li
-                key={link.href}
-                className="surface-card rounded-[3px] border border-line p-5 shadow-card transition-all duration-200 ease-soft hover:-translate-y-0.5 hover:border-accentDim hover:shadow-cardHover"
-              >
-                <Link href={link.href} className="block">
-                  <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
-                    {link.href}
-                  </p>
-                  <p className="mt-2 text-[15px] font-semibold text-ink">
-                    {link.label}
-                  </p>
-                  <p
-                    className="mt-2 text-[13px] leading-[1.6] text-mute"
-                    dangerouslySetInnerHTML={{ __html: link.blurb }}
-                  />
-                </Link>
-              </li>
+    <Page>
+      <Breadcrumbs items={[{ name: "All pages", href: "/sitemap/" }]} />
+      <section className="pt-6"><Eyebrow>All pages</Eyebrow><H1>Find what you need.</H1><Lead>Services, products, and useful resources.</Lead></section>
+      {groups.map((group) => (
+        <section key={group.name} className="section-band">
+          <H2>{group.name}</H2>
+          <ul className="mt-6 grid gap-3 md:grid-cols-2">
+            {group.links.map(([href, label, description]) => (
+              <li key={href}><Link href={href} className="block rounded-lg border border-line p-5 transition-colors hover:border-accentDim">
+                <h3 className="text-base font-medium text-ink">{label} <span aria-hidden="true" className="text-accent">→</span></h3>
+                <p className="mt-2 text-sm leading-relaxed text-mute">{description}</p>
+              </Link></li>
             ))}
           </ul>
         </section>
       ))}
-
-      {/* CLOSE */}
-      <section className="mt-16 border-t border-line pt-10">
-        <div className="flex flex-wrap gap-3">
-          <GhostLink href="/" small>
-            Home
-          </GhostLink>
-          <GhostLink href="/contact/" small>
-            Contact
-          </GhostLink>
-          <GhostLink href="/support/" small>
-            Support
-          </GhostLink>
-          <GhostLink href="/legal/terms/" small>
-            Legal
-          </GhostLink>
-        </div>
-      </section>
+      <p className="mt-10 text-sm text-muted">For search engines: <a className="text-link" href="/sitemap.xml">XML sitemap</a>.</p>
     </Page>
   );
 }

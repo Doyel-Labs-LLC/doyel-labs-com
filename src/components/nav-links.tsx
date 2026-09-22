@@ -30,7 +30,7 @@ export function NavLinks({
             key={n.href}
             href={n.href}
             aria-current={active ? "page" : undefined}
-            className={`transition-colors ${
+            className={`inline-flex min-h-11 items-center transition-colors ${
               active ? "text-accent" : "hover:text-ink"
             }`}
           >

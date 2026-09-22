@@ -1,111 +1,103 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useImperativeHandle, useRef, useState, type Ref } from "react";
 
-/**
- * Cloudflare Turnstile widget wrapper.
- *
- * Renders as an invisible / minimal-friction CAPTCHA. On successful
- * challenge, the widget posts a token to a hidden `cf-turnstile-response`
- * form field that the server then verifies with Turnstile's siteverify
- * endpoint.
- *
- * If `NEXT_PUBLIC_TURNSTILE_SITE_KEY` is unset (e.g. local development),
- * the component renders nothing and the form still works — the server
- * simply skips token verification when neither the client nor the
- * secret are configured.
- */
 declare global {
   interface Window {
     turnstile?: {
-      render: (
-        container: string | HTMLElement,
-        options: {
-          sitekey: string;
-          theme?: "light" | "dark" | "auto";
-          size?: "normal" | "compact" | "flexible";
-          appearance?: "always" | "execute" | "interaction-only";
-          "callback"?: (token: string) => void;
-          "expired-callback"?: () => void;
-          "error-callback"?: (err: string) => void;
-        },
-      ) => string;
-      reset: (widgetId?: string) => void;
-      remove: (widgetId?: string) => void;
+      render: (container: HTMLElement, options: {
+        sitekey: string;
+        theme: "dark";
+        size: "compact";
+        appearance: "interaction-only";
+        callback: (token: string) => void;
+        "expired-callback": () => void;
+        "error-callback": () => void;
+      }) => string;
+      reset: (widgetId: string) => void;
+      remove: (widgetId: string) => void;
     };
   }
 }
 
-const SCRIPT_ID = "cf-turnstile-script";
-const SCRIPT_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+export type TurnstileHandle = { reset: () => void };
 
-export function Turnstile({
-  sitekey,
-  onToken,
-}: {
+let scriptLoad: Promise<void> | undefined;
+
+function loadScript() {
+  if (window.turnstile) return Promise.resolve();
+  if (scriptLoad) return scriptLoad;
+  scriptLoad = new Promise<void>((resolve, reject) => {
+    const script = document.createElement("script");
+    script.src = "https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit";
+    script.async = true;
+    const timeout = window.setTimeout(fail, 15000);
+    function fail() {
+      clearTimeout(timeout);
+      script.remove();
+      scriptLoad = undefined;
+      reject(new Error("Verification could not load."));
+    }
+    script.onload = () => {
+      clearTimeout(timeout);
+      if (window.turnstile) resolve();
+      else fail();
+    };
+    script.onerror = fail;
+    document.head.appendChild(script);
+  });
+  return scriptLoad;
+}
+
+export function Turnstile({ sitekey, onToken, ref }: {
   sitekey: string;
   onToken: (token: string) => void;
+  ref?: Ref<TurnstileHandle>;
 }) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const widgetIdRef = useRef<string | null>(null);
-  const onTokenRef = useRef(onToken);
-  onTokenRef.current = onToken;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const widgetRef = useRef<string | null>(null);
+  const tokenCallback = useRef(onToken);
+  const [error, setError] = useState(false);
+
+  useEffect(() => { tokenCallback.current = onToken; }, [onToken]);
+
+  // Tokens are single-use, even when the email request fails after verification.
+  useImperativeHandle(ref, () => ({
+    reset() {
+      tokenCallback.current("");
+      if (widgetRef.current !== null) window.turnstile?.reset(widgetRef.current);
+    },
+  }), []);
 
   useEffect(() => {
-    if (!sitekey || typeof window === "undefined") return;
-
     let cancelled = false;
-
-    function render() {
+    loadScript().then(() => {
       if (cancelled || !containerRef.current || !window.turnstile) return;
-      widgetIdRef.current = window.turnstile.render(containerRef.current, {
+      widgetRef.current = window.turnstile.render(containerRef.current, {
         sitekey,
         theme: "dark",
+        size: "compact",
         appearance: "interaction-only",
-        callback: (token: string) => {
-          onTokenRef.current(token);
-        },
-        "expired-callback": () => {
-          onTokenRef.current("");
-        },
-        "error-callback": () => {
-          onTokenRef.current("");
-        },
+        callback: (token) => { setError(false); tokenCallback.current(token); },
+        "expired-callback": () => tokenCallback.current(""),
+        "error-callback": () => { tokenCallback.current(""); setError(true); },
       });
-    }
-
-    if (window.turnstile) {
-      render();
-    } else if (!document.getElementById(SCRIPT_ID)) {
-      const s = document.createElement("script");
-      s.id = SCRIPT_ID;
-      s.src = SCRIPT_SRC;
-      s.async = true;
-      s.defer = true;
-      s.onload = render;
-      document.head.appendChild(s);
-    } else {
-      // Script is loading — wait for it.
-      const t = setInterval(() => {
-        if (window.turnstile) {
-          clearInterval(t);
-          render();
-        }
-      }, 100);
-      return () => {
-        cancelled = true;
-        clearInterval(t);
-      };
-    }
-
+    }).catch(() => {
+      if (!cancelled) { tokenCallback.current(""); setError(true); }
+    });
     return () => {
       cancelled = true;
-      if (widgetIdRef.current && window.turnstile) {
-        window.turnstile.remove(widgetIdRef.current);
-        widgetIdRef.current = null;
+      if (widgetRef.current !== null) {
+        window.turnstile?.remove(widgetRef.current);
+        widgetRef.current = null;
       }
     };
   }, [sitekey]);
 
-  return <div ref={containerRef} className="mt-2" aria-hidden="false" />;
+  return (
+    <div>
+      <div ref={containerRef} />
+      {error && <p role="alert" className="mt-2 text-sm text-fall">Verification could not complete. Refresh this page or use the direct email or phone option.</p>}
+    </div>
+  );
 }

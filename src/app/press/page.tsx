@@ -16,7 +16,7 @@ import {
   Page,
 } from "@/components/chrome";
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { ContactWidget } from "@/components/contact-modal";
+import { ContactLink } from "@/components/contact-link";
 import { Reveal } from "@/components/reveal";
 import { site } from "@/lib/site";
 
@@ -25,7 +25,7 @@ import { site } from "@/lib/site";
  *
  * Everything a journalist, podcast host, investor, or partner needs
  * to reference Doyel Labs without having to email us first: company
- * boilerplate, logo assets, canonical descriptions, founder facts,
+ * boilerplate, logo assets, canonical descriptions, company facts,
  * usage rules.
  *
  * Keep this page short and factual. If it feels like a marketing
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
  * next closest one; do not mix. */
 const BOILERPLATE = {
   oneLine:
-    "Doyel Labs LLC is a custom software studio in Casper, Wyoming that builds websites, payroll workspaces, internal tools, and bespoke programs for any business — AI-native, human-reviewed, priced per project.",
+    "Doyel Labs LLC is a custom software studio in Casper, Wyoming that builds websites, payroll workspaces, internal tools, and bespoke programs for any business — AI-native, human-reviewed, quoted per project.",
   oneParagraph:
     "Doyel Labs LLC is a custom software studio in Casper, Wyoming, formed September 2026. We build custom software for any business — mom-and-pop operators through enterprises. Every engagement starts with a one-hour orientation call with a real human being; if the client decides to move forward, a written scope and fixed price land within one business day. We use AI to draft code, tests, and copy; every diff is reviewed by a person before it ships. Current live client work includes SteadFast Transportation Inc. (a USPS route contractor in Plentywood, MT), for whom we built both a marketing site and an SCA-first payroll workspace.",
   short:
@@ -111,11 +111,11 @@ const FACTS = [
   { label: "Phone (US business hours, MT)", value: "(307) 429-0389" },
   {
     label: "Current live clients",
-    value: "SteadFast Transportation Inc. (steadfasttransportationinc.com)",
+    value: "SteadFast Transportation Inc. (steadfasttransportationinc.com), a business with shared ownership.",
   },
   {
     label: "Public products",
-    value: "None yet. Internal programs: BAI (2027), ConnectionLoop (2026).",
+    value: "None yet. BAI is in private beta; ConnectionLoop is coming soon and in private testing.",
   },
 ];
 
@@ -371,7 +371,7 @@ export default function Press() {
                 with a real person on the other end.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <ContactWidget label="Send a press inquiry" />
+                <ContactLink label="Send a press inquiry" />
                 <GhostLink href="/company/" small>
                   Company page
                 </GhostLink>

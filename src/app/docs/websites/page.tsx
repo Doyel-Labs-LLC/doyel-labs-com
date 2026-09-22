@@ -8,7 +8,7 @@ import {
   Notice,
   Page,
 } from "@/components/chrome";
-import { ContactWidget } from "@/components/contact-modal";
+import { ContactLink } from "@/components/contact-link";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -177,7 +177,7 @@ export default function WebsitesDocs() {
 
       <section className="mt-12">
         <div className="flex flex-wrap gap-3">
-          <ContactWidget label="Ask a question" size="small" />
+          <ContactLink label="Ask a question" size="small" />
           <GhostLink href="/services/websites/" small>
             Product page
           </GhostLink>

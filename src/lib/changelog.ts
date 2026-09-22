@@ -61,9 +61,17 @@ export type ChangelogEntry = {
  *
  * Each version tag corresponds to a Git commit on `master`; the
  * commit history is the audit trail. Never rewrite these entries
- * after they ship; add a new entry that corrects if needed.
+ * after they ship except to withdraw public pricing at the owner's
+ * request; retain the historical event and note the current policy.
  */
 export const entries: ChangelogEntry[] = [
+  {
+    id: "services-first-redesign",
+    date: "2026-09-22",
+    section: "Design",
+    title: "A simpler, services-first website",
+    body: "Four primary navigation links, a four-section homepage, and one Contact page. Shorter service and product pages keep walkthroughs optional and limitations visible. About presents the company without a personal profile. Redundant pages redirect to Services and About. Pricing is quoted per project; old public ranges are withdrawn. Product artwork and development labels are consistent, and related-business work is disclosed.",
+  },
   // ── v31 · BAI brand imagery on site ───────────────────────
   {
     id: "v31-bai-imagery",
@@ -183,7 +191,7 @@ export const entries: ChangelogEntry[] = [
     date: "2026-09-20",
     section: "Company",
     title: "Custom software service page",
-    body: "New /services/custom-software/ landing page — the third major service page, alongside websites and payroll. Covers seven categories (dashboards, portals, internal tools, integrations, data pipelines, custom web apps, one-off programs) with real-shape examples per category. Honest \"when to build custom vs. buy off-the-shelf\" band. Service JSON-LD emitted with a $10k–$80k price range for Google's rich results.",
+    body: "New /services/custom-software/ landing page — the third major service page, alongside websites and payroll. Covers seven categories (dashboards, portals, internal tools, integrations, data pipelines, custom web apps, one-off programs) with real-shape examples per category, a build-versus-buy explanation, and Service JSON-LD. Historical pricing ranges have since been withdrawn; work is quoted per project.",
   },
   {
     id: "v23-services-subnav",
@@ -357,7 +365,7 @@ export const entries: ChangelogEntry[] = [
     date: "2026-09-20",
     section: "Company",
     title: "Pricing page",
-    body: "New /pricing/ page with typical price bands (marketing sites $2.5k–$8k · payroll workspaces $8k–$20k · custom software $10k–$80k), a retainer band, six factors that move a quote, and a four-step billing flow. No hard prices, no menus.",
+    body: "Introduced a pricing guidance page with scope factors and a billing explanation. Historical service and retainer ranges have since been withdrawn. Pricing guidance now lives on Services and work is quoted per project.",
   },
   {
     id: "v12-industries",

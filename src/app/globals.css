@@ -16,12 +16,21 @@ body {
   font-feature-settings: "ss01", "tnum", "cv11";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Preventive: no page should ever cause horizontal scroll on mobile.
-   * If a specific element genuinely needs to overflow (e.g. a code
-   * block, a table), it should be `overflow-x-auto` on that element,
-   * not spill out to the body. */
-  overflow-x: hidden;
+  overflow-wrap: break-word;
 }
+
+[id] { scroll-margin-top: 7rem; }
+
+.section-band { margin-top: 3.5rem; border-top: 1px solid rgba(240,240,250,0.10); padding-top: 2.5rem; }
+@media (min-width: 768px) {
+  .section-band { margin-top: 4rem; padding-top: 3rem; }
+}
+.section-intro { max-width: 42rem; }
+.section-intro > h2:not(:first-child) { margin-top: 0.75rem; }
+.section-intro > p:not(:first-child) { margin-top: 1rem; color: rgba(240,240,250,0.72); font-size: 1rem; line-height: 1.7; }
+.text-link { color: #10c7eb; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(16,199,235,0.4); }
+.text-link:hover { color: #4edcfb; text-decoration-color: currentColor; }
+summary { cursor: pointer; }
 
 /* Long URLs, hashes, and other unbreakable strings should wrap
  * gracefully on narrow screens rather than force horizontal scroll.
@@ -54,49 +63,10 @@ code {
   text-transform: uppercase;
 }
 
-/* A subtle textured background used behind the hero. A quiet cyan mesh:
- * a bright top-left glow, a soft bottom-right echo, and a faint cool
- * wash through the middle so the near-black canvas has depth instead of
- * reading flat. Still restrained — this is the only "gradient" on the
- * site. A hairline grid overlay adds engineered texture without noise. */
+/* A restrained wash, without a grid or animated layers. */
 .hero-glow {
   position: relative;
-  background:
-    radial-gradient(
-      ellipse 900px 520px at 10% -12%,
-      rgba(16, 199, 235, 0.13),
-      transparent 62%
-    ),
-    radial-gradient(
-      ellipse 680px 460px at 88% 108%,
-      rgba(16, 199, 235, 0.06),
-      transparent 60%
-    ),
-    radial-gradient(
-      ellipse 700px 700px at 62% 30%,
-      rgba(78, 220, 251, 0.035),
-      transparent 70%
-    );
-}
-/* Hairline engineering grid, faded top-to-bottom, sitting *behind* the
- * hero content. Kept extremely low-contrast so it registers as texture,
- * not decoration. */
-.hero-glow::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background-image:
-    linear-gradient(to right, rgba(240, 240, 250, 0.028) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(240, 240, 250, 0.028) 1px, transparent 1px);
-  background-size: 56px 56px;
-  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
-  mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
-}
-.hero-glow > * {
-  position: relative;
-  z-index: 1;
+  background: radial-gradient(ellipse at 90% 15%, rgba(16,199,235,0.055), transparent 65%);
 }
 
 /* Elevated surface for cards and product frames. Depth on near-black
@@ -202,73 +172,6 @@ code {
   scrollbar-color: rgba(240, 240, 250, 0.14) transparent;
 }
 
-/* ── Scroll-reveal ───────────────────────────────────────────────
- * Elements wrapped in <Reveal> start slightly offset with 0 opacity,
- * then transition into place when IntersectionObserver flips `.reveal--in`.
- * A safety fallback: if JS never runs, elements still render (fallback
- * declared as `no-js` below). */
-.reveal {
-  opacity: 0;
-  transform: translate3d(0, 14px, 0);
-  transition:
-    opacity 700ms var(--m-ease, cubic-bezier(0.2, 0.8, 0.2, 1)),
-    transform 700ms var(--m-ease, cubic-bezier(0.2, 0.8, 0.2, 1));
-  will-change: opacity, transform;
-}
-.reveal--in {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-}
-
-/* If JS hasn't run yet, we don't want a permanent hidden state.
- * Any <noscript> environment or delayed hydration will still show
- * content once this override kicks in (200ms after paint). */
-@keyframes reveal-fallback {
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-.reveal {
-  animation: reveal-fallback 0ms linear 1500ms forwards;
-}
-.reveal--in {
-  animation: none;
-}
-
-/* ── Hero fade-in on load ────────────────────────────────────────
- * The hero's headline, subhead, and CTA row lift into place on
- * first paint. Staggered by class. Doesn't need IntersectionObserver
- * because it's always above the fold. */
-@keyframes hero-in {
-  from {
-    opacity: 0;
-    transform: translate3d(0, 12px, 0);
-  }
-  to {
-    opacity: 1;
-    transform: translate3d(0, 0, 0);
-  }
-}
-.hero-in {
-  animation: hero-in 720ms var(--m-ease, cubic-bezier(0.2, 0.8, 0.2, 1)) both;
-}
-.hero-in--1 {
-  animation-delay: 40ms;
-}
-.hero-in--2 {
-  animation-delay: 140ms;
-}
-.hero-in--3 {
-  animation-delay: 240ms;
-}
-.hero-in--4 {
-  animation-delay: 340ms;
-}
-.hero-in--5 {
-  animation-delay: 440ms;
-}
-
 /* Trust strip — a mono-typed line of proof signals directly under the
  * hero. Muted, tabular, small. Every item is a real fact. */
 .trust-strip {
@@ -306,9 +209,5 @@ code {
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
-  }
-  .reveal {
-    opacity: 1;
-    transform: none;
   }
 }

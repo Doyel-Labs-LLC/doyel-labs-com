@@ -27,8 +27,8 @@ public/
   media/
     payroll/             (empty; product frames use synthetic data)
     websites/            Real SteadFast screenshots + logo (v2 = optimized)
-    bai/                 (empty)
-    connectionloop/      (empty)
+    bai/                 Optimized BAI product artwork
+    connectionloop/      Optimized ConnectionLoop icon
 
 content/
   legal/                 Legal MDX drafts (under counsel review)
@@ -49,14 +49,16 @@ src/
     chrome.tsx           Header, Footer, Page, Eyebrow, H1, H2, Lead, Card,
                          GhostLink, LogoMark, AccentChip, MetaRow, Feature,
                          Notice, Grid2/3, StatusChip
-    mobile-nav.tsx       Full-screen mobile drawer (createPortal-rendered)
-    hero-preview.tsx     Layered SteadFast site + SCA card for home hero
-    contact-modal.tsx    Modal contact form (ContactWidget)
-    contact-page-form.tsx Inline contact form on /contact/
+    mobile-nav.tsx       Portal-based native dialog with focus containment
+    contact-link.tsx     Canonical inquiry links with optional topic selection
+    contact-page-form.tsx The single inquiry form on /contact/
+    service-cards.tsx    Three capability groups shared by Home and Services
+    process-steps.tsx    Shared four-step engagement summary
+    product-cards.tsx    Registry-driven product previews
     turnstile.tsx        Cloudflare Turnstile widget
     quote.tsx            Named client quote block
     client-badge.tsx     Client logo + name + link
-    reveal.tsx           IntersectionObserver-based scroll-reveal
+    reveal.tsx           Static compatibility wrapper; content is always visible
     breadcrumbs.tsx      Breadcrumb nav + JSON-LD schema
     product-frame.tsx    Dark hairline box that holds a product screen
     frames/              One file per synthetic product screen
@@ -67,25 +69,19 @@ src/
     page.tsx             /
     services/            /services and children (websites, payroll, custom-software)
     industries/          /industries and /industries/federal-service-contractors
-    pricing/
     work/
-    case-studies/steadfast/
-    reviews/
-    how-we-work/
-    start/
     faq/
     contact/
-    company/
-    founder/
+    company/             Company-focused About page
     engineering/
     security/
     press/
     support/
     status/              (client component, live health checks from browser)
     changelog/           HTML changelog + rss.xml route
-    docs/                and children (websites, payroll, bai, connectionloop)
+    docs/                and children (websites, payroll)
     writing/             Blog index + posts
-    programs/            /programs and children (bai, connectionloop)
+    products/            BAI and ConnectionLoop, with preserved product anchors
     legal/               /legal/{terms,privacy,payroll-data,risk}
     sitemap.ts           XML sitemap generator (static export)
     sitemap/             Human-readable sitemap page (grouped index)
@@ -103,7 +99,7 @@ scripts/
   optimize-images.mjs    Re-runnable: resizes + re-encodes screenshots
                          with mozjpeg + emits WebP variants
 
-PROMPT.md                Design brief (v8). Source of truth for positioning.
+PROMPT.md                Design brief (v9). Source of truth for positioning.
 AUDIT.md                 Rebuild audit trail (what was on the machine).
 DESIGN.md                Design system tokens and rationale.
 ```
@@ -228,7 +224,7 @@ Prepend a new object to the `entries` array in `src/lib/changelog.ts`:
 On next build:
 - The `/changelog/` page renders it in the timeline
 - The RSS feed at `/changelog/rss.xml` includes it
-- The homepage "Recently shipped" band shows it (auto-picks the top 3)
+- The feed stays available from All pages; it is not a homepage section
 
 ## Adding a testimonial
 
@@ -239,9 +235,10 @@ Edit `src/lib/testimonials.ts` — add a `Testimonial` object to the
 `testimonials` array, newest first. Fields: `id`, `attribution`, `role`,
 `company`, `companyUrl`, `logo`, `short`, `full`, `scope`, `date`, `verify`.
 
-On next build, the new testimonial appears on `/reviews/` (with its own
-`schema.org/Review` JSON-LD entity) and — if you swap the home-page
-`<Quote>` component to use it — on the home page.
+Render an approved testimonial explicitly where it supports a real case
+study. The current statement appears on Work. SteadFast and Doyel Labs
+share an owner; the shared Quote component discloses that relationship.
+Do not present a related-business endorsement as independent validation.
 
 ## Adding a blog post
 
@@ -321,17 +318,43 @@ add a real screen capture:
 `functions/api/contact.ts` is a Cloudflare Pages Function that runs at the
 edge on every `POST /api/contact` request. Flow:
 
-1. Client (either `<ContactWidget>` modal or the inline `<ContactPageForm>`)
+1. The single `<ContactPageForm>` on `/contact/`
    POSTs JSON with `name`, `email`, `projectType`, `subject`, `message`,
-   optional `preferredTimes`, and a Cloudflare Turnstile token.
+   optional `preferredTimes`, and a Cloudflare Turnstile token. Only email
+   and message are required in the UI; subject is sent empty. Optional
+   `projectType` query values preselect an allowlisted topic. Turnstile is
+   reset after each request because tokens are single-use.
 2. Function validates the payload, silently 200s on honeypot, verifies
    Turnstile server-side, and checks a per-IP rate limit against
    `CONTACT_KV` (5 msgs / 5 min).
 3. Composes an HTML + plain-text email via Resend, from
    `noreply@doyel-labs.com`, to `support@doyel-labs.com` (routes via
-   Google Workspace to Blake's inbox).
-4. Returns `{ ok: true }` on success or a JSON error the client renders
-   with a fallback mailto.
+   Google Workspace to the company inbox).
+4. Returns `{ ok: true }` on success or a JSON error. The form preserves
+   input on failure and provides email/phone alternatives. Product
+   inquiries are not waitlist subscriptions or automatic call bookings.
+
+## Navigation and route consolidation
+
+The primary navigation is Services, Work, Products, About, and a
+Start a conversation action. About keeps `/company/`. Home has four
+sections, with project evidence in its hero; deeper resources are reachable through contextual links and
+All pages (`/sitemap/`).
+
+Exact permanent redirects consolidate `/pricing/` into
+`/services/#pricing`, `/how-we-work/` into `/services/#process`,
+`/founder/` into `/company/`, and `/industries/` into
+`/services/#industries`. Both slash forms are covered. The federal
+service contractors page is retained; never add an industry wildcard
+that captures it. Cloudflare applies these rules; `next dev` does not.
+
+Pricing is **Quoted per project**, including metadata and public feeds.
+Historical public ranges are withdrawn, not moved to another page.
+
+Keep public copy concise: one short hero sentence, no duplicate project
+or product introductions, and optional walkthroughs on detail pages.
+About and structured data represent the company, not a personal profile.
+The legacy `/company/#founder` anchor still reaches the company introduction.
 
 The email template is designed — full HTML with the four-square logo,
 category chip, From/Subject grid, cyan-bordered "Suggested orientation
@@ -362,10 +385,11 @@ in `tailwind.config.ts`. Highlights:
 
 Do not change without an explicit ask:
 
-- No photos of the founder anywhere on the site
+- No founder profile, photos, signature card, or personal engineer title
 - No third-party marketing scripts (Plausible only)
 - No fake testimonials, fake logos, fake case studies
-- No pricing figures on service pages (bands only on `/pricing/`)
+- No public service price ranges, retainer amounts, or sample quotes,
+  including structured data and RSS. Labeled demo payroll amounts remain.
 - No "small team" / "two-person" / any headcount language
 - No "we specialize in X" — always broad, always any industry
 

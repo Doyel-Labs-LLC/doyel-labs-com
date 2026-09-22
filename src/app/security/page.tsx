@@ -12,7 +12,7 @@ import {
   MetaRow,
   Page,
 } from "@/components/chrome";
-import { ContactWidget } from "@/components/contact-modal";
+import { ContactLink } from "@/components/contact-link";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -472,7 +472,7 @@ export default function Security() {
             on paper. We reply within one business day.
           </p>
           <div className="mt-8">
-            <ContactWidget label="Start a project" />
+            <ContactLink />
           </div>
         </div>
       </section>

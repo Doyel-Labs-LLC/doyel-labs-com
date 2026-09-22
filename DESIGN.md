@@ -1,4 +1,4 @@
-# Design — Doyel Labs (v2)
+# Design — Doyel Labs (v3)
 
 The full brief lives in [`PROMPT.md`](./PROMPT.md). This file is the
 short reference for the design system tokens and rules.
@@ -15,8 +15,8 @@ across the site.
 | `surface`      | `#12181f`                         | Inset panels, product frames, hover        |
 | `surface2`     | `#171e26`                         | Cards on `surface`, tables                 |
 | `ink`          | `#f0f0fa`                         | Body / display type                        |
-| `mute`         | `rgba(240,240,250,0.66)`          | Body below the lead                        |
-| `muted`        | `rgba(240,240,250,0.50)`          | Captions, footnotes (0.50 → WCAG AA at small sizes) |
+| `mute`         | `rgba(240,240,250,0.72)`          | Body below the lead                        |
+| `muted`        | `rgba(240,240,250,0.60)`          | Readable captions and secondary text        |
 | `line`         | `rgba(240,240,250,0.10)`          | Default hairline                           |
 | `line2`        | `rgba(240,240,250,0.22)`          | CTA border, active hairline                |
 | **`accent`**   | `#10c7eb`                         | Cyan — the one accent color               |
@@ -37,7 +37,7 @@ Cyan is used for:
 - The bottom-right square of the four-square logo.
 - Focus rings on every interactive element.
 - The active nav item and hover on nav links.
-- The primary CTA on any page (cyan pill with a cyan hairline).
+- The primary CTA on any page (solid cyan with dark text and rounded corners).
 - The `AccentChip` used for "Live at …" and "In use at …" proof lines.
 - The eyebrow accent bar (a 24px cyan bar before every eyebrow label).
 - The `Notice` component's left border.
@@ -62,20 +62,25 @@ tokens (`tailwind.config.ts`):
 - A faint top-lit surface gradient (white at ~2%, fading by 42%).
 - An inset 1px top highlight (light-from-above).
 - A soft, very dark drop for lift — never a grey box-shadow.
-- Hover warms the border to `accentDim`, lifts 2px, and deepens the drop.
+- Only interactive cards change their border on hover. Static cards do not
+  lift or suggest they can be clicked.
 
-Applied through the shared `Card` component and the interactive link-cards
-(home / work / products), so every page inherits it. The hero uses a quiet
-cyan **mesh** (three radials) plus a hairline grid overlay (`.hero-glow`),
-and flagship band dividers use `.divider-soft` (a cyan-tinted hairline that
-fades in from the left, rhyming with the eyebrow accent bar). Elevation is
-still restrained: subtle is the point.
+The shared `Card` is a quiet static surface. The hero uses a restrained
+cyan wash rather than a technical grid. Avoid repeated ornamental frames
+and large empty bands. Content is visible immediately, without waiting
+for scroll-reveal effects.
+
+Keep overview pages compact: four sections on Home, one introduction per
+product, and no repeated sales pitch. Use native disclosures for optional
+walkthroughs, never for essential risk or product limitations.
 
 ## Typography
 
 - Inter with system fallbacks.
-- Display + nav: uppercase, tracked `-0.01em` on H1/H2, `0.06em` on nav.
+- Display + nav: sentence case. Reserve tracked uppercase for short eyebrows.
 - Body: sentence case, 16px+, `line-height: 1.65`.
+- Navigation: 14px+; form inputs: 16px+ to avoid mobile input zoom.
+- Principal interactive targets: at least 44px high.
 - Legal / docs prose: never uppercase, ever.
 
 ## Icon
@@ -86,8 +91,18 @@ SVG (`/logo.svg`, `/favicon.svg`, `/icon-192.svg`). Used in:
 
 - The header, next to the "DOYEL LABS" wordmark.
 - The footer, small, before the same wordmark.
-- The home page hero and the `/company` page hero.
-- The `/programs` cards on the home page.
+- Company brand assets, never a personal signature card.
+- Product summaries retain their own artwork. ConnectionLoop's purple and
+  blue icon and BAI's gold artwork are brand images, not new UI accents.
+
+## Navigation and conversion
+
+Four primary links: Services, Work, Products, About. The logo links Home.
+One primary action: Start a conversation, linking to `/contact/`.
+Mobile uses the same structure, not a directory of every resource.
+
+The footer groups essential destinations and provides All pages for the
+complete directory. Do not reintroduce popup contact forms.
 
 ## The rest
 

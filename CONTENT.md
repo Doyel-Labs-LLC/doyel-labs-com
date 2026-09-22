@@ -13,30 +13,46 @@ page. Do not add a claim to a page whose source file does not support it.
 
 | Page                                       | Source of truth                                                                     |
 | ------------------------------------------ | ----------------------------------------------------------------------------------- |
-| `/`                                         | `src/lib/site.ts`, plus one paragraph each per band                                 |
+| `/`                                         | `src/lib/site.ts`; four concise sections, with project evidence in the hero          |
 | `/services/`                                | This file. No product-specific claims.                                             |
 | `/services/payroll/`                        | `C:\Users\bdoye\Desktop\index\steadfast-payroll-app.html`, `index/netlify/functions/payroll.js` |
 | `/services/websites/`                       | `C:\Users\bdoye\Desktop\index\` marketing HTML pages; `src/lib/demo/websites.ts`   |
-| `/programs/`                                | `src/lib/site.ts` `programStatus`                                                   |
-| `/programs/bai/`                            | `BAI-Desk/website/src/app/page.tsx`, `BAI-Desk/website/src/app/security/page.tsx`   |
-| `/programs/connectionloop/`                 | `ConnectionLoop/docs/PRODUCT_BRIEF_V5.md`, `ConnectionLoop/docs/SECURITY.md`        |
+| `/products/`                               | `src/lib/products.ts`, with release context from `src/lib/site.ts`                   |
 | `/engineering/`                             | All product security docs                                                           |
 | `/security/`                                | The three product security docs plus `index/netlify/functions/payroll.js`           |
 | `/docs/`                                    | Product help docs; short-form only                                                  |
-| `/changelog/`                               | Manually entered per product; commits are the record                                 |
+| `/changelog/`                               | `src/lib/changelog.ts`, also used by the public RSS feed                              |
 | `/status/`                                  | Live health of `NEXT_PUBLIC_API_BASE` from the viewer's browser                     |
 | `/legal/*/`                                 | `content/legal/*.md` — attorney-review pending                                       |
 
 ## Voice
 
 - Short sentences. Concrete nouns.
+- One short hero sentence; no repeated pitch across sections. Put walkthroughs
+  in optional disclosures and keep important limitations visible.
+- Company-led identity, not a founder profile. No personal engineer title,
+  signature card, founder navigation, or Person schema.
+- Product counts are inventory, not a headline or limit on the company.
 - No: "revolutionize", "next-gen", "AI-powered", "world-class", "unlock",
   "transform", "seamless", "cutting-edge".
 - No performance promises. No tax-savings promises. No labor outcome
   promises. No trading-return promises.
 - If a fact is not in a source file, omit it.
-- Match the existing BAI cadence. Example of allowed voice:
-  "When the desk does not know, it does nothing."
+- Lead company copy with business outcomes. Keep BAI-specific technical
+  language on the product and security surfaces.
+
+## Pricing, attribution, and routes
+
+- Use "Quoted per project". Do not publish service price ranges, retainer
+  amounts, or quote examples in marketing copy, JSON-LD, metadata, or RSS.
+  Labeled synthetic payroll/trading amounts are not service prices.
+- SteadFast and Doyel Labs share an owner. Disclose this without naming a person when
+  using the SteadFast endorsement; do not present it as independent proof.
+- Keep availability in `src/lib/products.ts` consistent across every page.
+  Do not add release dates or relative promises such as "this month".
+- About uses `/company/` and describes the company, not its founder.
+  Pricing and process live on Services; industry examples are contextual links.
+  See `public/_redirects` for the retired URLs.
 
 ## Refusals
 
