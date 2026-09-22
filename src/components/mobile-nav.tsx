@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { LogoMark } from "@/components/chrome";
@@ -41,6 +42,7 @@ export function MobileNav({
 }) {
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const pathname = usePathname();
 
   // Track mount so we don't try to `createPortal` during SSR (document
   // doesn't exist during static export prerender).
@@ -106,23 +108,31 @@ export function MobileNav({
                 Primary
               </p>
               <ul className="mt-4 space-y-1">
-                {items.map((n) => (
-                  <li key={n.href}>
-                    <Link
-                      href={n.href}
-                      onClick={() => setOpen(false)}
-                      className="flex items-center justify-between border-b border-line py-4 text-[20px] font-semibold uppercase tracking-wide text-ink hover:text-accentHi"
-                    >
-                      <span>{n.label}</span>
-                      <span
-                        aria-hidden="true"
-                        className="font-mono text-[12px] text-mute"
+                {items.map((n) => {
+                  const active =
+                    pathname === n.href ||
+                    (n.href !== "/" && pathname.startsWith(n.href));
+                  return (
+                    <li key={n.href}>
+                      <Link
+                        href={n.href}
+                        onClick={() => setOpen(false)}
+                        aria-current={active ? "page" : undefined}
+                        className={`flex items-center justify-between border-b border-line py-4 text-[20px] font-semibold uppercase tracking-wide hover:text-accentHi ${
+                          active ? "text-accent" : "text-ink"
+                        }`}
                       >
-                        →
-                      </span>
-                    </Link>
-                  </li>
-                ))}
+                        <span>{n.label}</span>
+                        <span
+                          aria-hidden="true"
+                          className="font-mono text-[12px] text-mute"
+                        >
+                          {active ? "●" : "→"}
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
               </ul>
             </nav>
 

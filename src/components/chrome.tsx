@@ -4,6 +4,7 @@ import { companyLegal, site } from "@/lib/site";
 import { stageMeta, type Stage } from "@/lib/products";
 import { ContactWidget } from "@/components/contact-modal";
 import { MobileNav } from "@/components/mobile-nav";
+import { NavLinks } from "@/components/nav-links";
 
 const nav = [
   { href: "/services/", label: "Services" },
@@ -61,15 +62,7 @@ export function Header() {
           aria-label="Primary"
           className="hidden items-center gap-8 text-[11px] uppercase tracking-wide text-mute md:flex"
         >
-          {nav.map((n) => (
-            <Link
-              key={n.href}
-              href={n.href}
-              className="transition-colors hover:text-ink"
-            >
-              {n.label}
-            </Link>
-          ))}
+          <NavLinks items={nav} />
           <ContactWidget label="Contact" variant="primary" size="small" />
         </nav>
         <MobileNav items={nav} />
