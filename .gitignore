@@ -24,3 +24,10 @@ desktop.ini
 
 # Local logs
 *.log
+
+# Local Pages tooling and generated private UI (never static assets)
+.wrangler/
+.dev.vars*
+server/analytics/admin-assets.generated.ts
+test-results/
+playwright-report/

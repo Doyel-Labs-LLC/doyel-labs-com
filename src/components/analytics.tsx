@@ -1,4 +1,7 @@
+"use client";
+
 import Script from "next/script";
+import { usePathname } from "next/navigation";
 import { analytics } from "@/lib/site";
 
 /**
@@ -13,7 +16,8 @@ import { analytics } from "@/lib/site";
  * here. See `src/lib/site.ts` for the reasoning.
  */
 export function Analytics() {
-  if (!analytics.plausibleDomain) {
+  const pathname = usePathname();
+  if (pathname.startsWith("/admin") || !analytics.plausibleDomain) {
     return null;
   }
   return (

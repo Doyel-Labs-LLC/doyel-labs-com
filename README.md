@@ -10,6 +10,8 @@ deployed on Cloudflare Pages with a serverless contact-form function.
 - **Deploy:** Cloudflare Pages, `master` branch = production
 - **Contact form:** Cloudflare Pages Function → Resend → Google Workspace
 - **Analytics:** Plausible only. Cookieless. No session replay.
+- **Private dashboard:** Staged at `/admin/analytics/`, disabled by default.
+  It does not change public collection or install Cloudflare Web Analytics.
 
 The source-of-truth design brief lives in `PROMPT.md`. Read it before
 you write copy. Read it *first* before you change positioning.
@@ -125,6 +127,8 @@ Other useful commands:
 npm run typecheck       # strict TypeScript check
 npm run lint            # ESLint + jsx-a11y
 npm run build           # static export to out/
+npm run test:analytics  # after build: synthetic signed JWT/provider/artifact tests
+npm run test:analytics:ui # after build: Chromium UI + real local Pages routing
 node scripts/optimize-images.mjs    # re-encode screenshots
 ```
 
@@ -199,6 +203,182 @@ Set these in the Cloudflare Pages project settings (Settings → Environment var
 
 Also required: a **KV binding** named `CONTACT_KV` bound to a KV namespace,
 used to rate-limit contact submissions by IP (5 messages per 5 minutes).
+
+## Private analytics (staged, not production-ready)
+
+The private dashboard is a read-only, owner-only Pages Functions feature,
+not a new Worker application or Next server. There is no public admin link.
+Public visitor collection remains Plausible-only. No Cloudflare beacon,
+auto-injection, Web Analytics site creation, subscription, or live resource
+change is included. Admin pages do not load Plausible.
+
+`functions/_middleware.ts` gates the private routes with `jose` RS256
+verification against the configured Access team's JWKS, exact issuer and
+audience, expiry/not-before/issued-at, a maximum token age of 30 minutes,
+and the exact approved human email. Service tokens are rejected. Only
+`https://doyel-labs.com` is accepted; default Pages, preview, `www`, HTTP,
+and alternate-port hosts are denied even for a valid owner token.
+Authentication still runs while analytics is disabled.
+
+`public/_routes.json` invokes Functions only for `/admin*`, `/api/admin*`,
+and `/api/contact*`, including bare parents, slash variants, and admin
+HTML/RSC/text documents. Ordinary public pages/assets bypass this middleware.
+`npm run build` first exports Next, then `scripts/package-admin.mjs` embeds
+the generic admin documents in an ignored server-only module and removes
+`out/admin`. They are served only after authentication, with no-store,
+noindex, no-referrer, and a self-only CSP with hashes for Next's inline
+scripts. Thus no public static copy remains if Functions are bypassed.
+Do not replace the build command with bare `next build`, upload `.next`,
+or publish the generated server module as a static asset. Public JS/CSS
+chunks contain generic UI only. No metrics are embedded at build time.
+
+### Runtime configuration
+
+Keep these bindings in **Production only**, not Preview. The first five
+were manually prepared by the owner; their deployed operation still needs
+verification. No credentials belong in `NEXT_PUBLIC_*`, git, screenshots,
+logs, or chat.
+
+| Binding | Value / role |
+|---|---|
+| `CF_ACCESS_TEAM_DOMAIN` | `aged-frog-7595.cloudflareaccess.com` (no scheme/path) |
+| `CF_ACCESS_AUD` | `0f4387aa5fe2fe1f66878253225d6432a5d98bc79616f0c4dc136d4bf0c7517c` |
+| `ANALYTICS_ALLOWED_EMAIL` | `blake@doyel-labs.com`, exact human identity |
+| `CF_ACCOUNT_ID` | `82601db094101e2165e5a4bb07cbb436`, server-pinned account |
+| `CF_ANALYTICS_API_TOKEN` | Encrypted secret; Account Analytics Read only |
+| `CF_WEB_ANALYTICS_SITE_TAG` | **Not configured yet.** This website's `site_tag`, not its beacon `site_token`, zone ID, or account ID |
+| `ANALYTICS_ENABLED` | Absent or `false` by default. Only exact `true` enables provider reads; it does not enable visitor collection |
+| `CONTACT_KV` | Reuse the existing binding; required for enabled queries |
+
+The API accepts only `GET /api/admin/analytics/?period=24h|7d|30d`.
+Account, site and canonical request hostname are server-pinned; callers
+cannot supply GraphQL, identifiers, arbitrary dates, or dimensions.
+UTC presets include the current partial hour/day. `24h` uses the current
+hour and previous 23 hours; longer presets use 7 or 30 calendar days.
+
+Enabled requests first apply a best-effort owner throttle (6/minute)
+using the existing KV binding, then a small fixed schema-contract
+introspection and one bounded RUM aggregate query. KV stores only an
+`analytics:owner:<minute>` counter with a 120-second TTL: no IPs, emails,
+metrics, request logs, or visitor records. KV is eventually consistent;
+this is **not a strict global/concurrent quota**. Read/write failure denies
+the query. UI refreshes are manual with a 10-second cooldown.
+
+The connector has an 8-second total provider deadline, a 256 KiB maximum
+per upstream response, eight aggregate groups, at most 32 trend buckets
+and 21 source rows per breakdown, and 10 displayed rows per breakdown.
+JWKS fetching is separately bounded to 5 seconds and 32 KiB. No metric
+cache, browser persistence, raw logs, retries, or alternate-dataset
+fallbacks are used. Known provider failures are sanitized to explicit
+states; missing data/configuration is never converted to zero activity.
+Only the known-empty provider response has an empty state.
+
+Paths are normalized against the published page list generated during
+build; unknown/private paths become `Other paths`. Query strings and
+fragments are removed. Referrals show validated hostnames only (not IP
+addresses or paths); browsers/OS/devices use broad allowlists. All labels
+are React text, never HTML or clickable upstream URLs. Top normalized
+groups can be partial. Sampled counts remain the provider's scaled
+estimates; they are not multiplied again. Missing trend buckets are not
+filled with zeros. Visits are arrivals from a different site or a direct
+link, **not unique people**. Reading time, session duration, raw IPs,
+session replay, fingerprints, form capture, and contact/browsing linkage
+are not implemented. Performance metrics are deferred.
+
+### Schema evidence and remaining launch gates
+
+Official documentation confirms GraphQL support, the RUM dataset,
+dimensions, visits and sampling semantics, but the exact typed schema
+requires authenticated introspection. No production token was available
+locally. Tests use explicitly **synthetic candidate schema/data fixtures**,
+not a captured account response. Runtime introspection must verify the
+required field/argument/input types before the fixed data query can run.
+An unsupported contract returns `schema_unavailable`; it does not try
+another dataset or widen site filters. Account permissions, dataset
+availability, retention/query limits, and real data remain unverified.
+Cloudflare Web Analytics GraphQL is not categorically unavailable on Free.
+
+Before an authorized launch:
+
+1. Review this feature without pushing: this Git-connected project deploys
+   previews on branch pushes. Deployment requires separate approval.
+2. Recheck Access on **both** `doyel-labs.com/admin` and
+   `doyel-labs.com/api/admin`, including children/artifacts. Keep only the
+   exact owner Allow policy, 30-minute sessions, OTP login and independent
+   MFA on this app. The no-MFA enrollment policy belongs only to App
+   Launcher. Test owner, signed-out, wrong-user, expired, forged and
+   service-token cases; do not share JWTs/cookies/recovery material.
+3. For Workers Free quota behavior, inspect **Workers & Pages > website >
+   Settings > Runtime > Fail open / closed** and select **Fail closed**
+   when authorized. The setting applies when the Free daily Functions
+   allowance is exhausted. Static admin copies are already removed as
+   defense in depth, but production quota/host/Access behavior is **not
+   verified** by local tests. Do not buy Workers Standard for this feature.
+   Test direct/default Pages and preview hosts after deployment.
+4. Obtain separate approval for the visitor-provider change and revise
+   `PROMPT.md` and `content/legal/privacy.md` in that future change.
+   **Do not click Add a site or Pages Metrics Enable now.** Adding a proxied
+   Web Analytics site enables automatic injection by default; Pages
+   Metrics Enable injects on the next deployment. Plan an approved
+   public-page-only collection method, keep admin excluded, avoid
+   duplicate providers, and review CSP/retention. Free has no custom
+   injection rules; do not assume a paid exclusion feature exists.
+5. After that approval, identify this website's `site_tag` securely and set
+   the new production binding. Do not confuse `site_tag` with `site_token`.
+   The site-list REST API requires Account Settings Read, which this
+   analytics token intentionally does not have; do not broaden its scope
+   merely to discover configuration. Verify its expiry/rotation separately.
+6. Under an authorized controlled check, validate the actual account
+   schema, all three presets, hostname/site isolation, empty/sampled data,
+   and compare aggregates with Cloudflare's Web Analytics dashboard.
+   Provider reads require `ANALYTICS_ENABLED=true`; that flag alone never
+   starts collection. Do not represent this staged connector as ready
+   until these checks and the approved collection change succeed.
+
+Rollback: disable provider reads by setting `ANALYTICS_ENABLED=false`
+through the approved deployment process; keep Access and the private-route
+guards. If collection was later enabled, disabling this read flag does
+**not** disable collection: roll back the separately approved beacon or
+injection setting too. Do not remove Access to troubleshoot the dashboard.
+
+### Local verification
+
+Use Node 22+ (Node 24 used during development). Run `npm ci`, then build
+before Functions typechecking/tests; the server-only admin document module
+is generated by the build. To exercise the existing tracker exclusion:
+
+```powershell
+$env:NEXT_PUBLIC_PLAUSIBLE_DOMAIN='doyel-labs.com'
+npm run build
+npm run typecheck
+npm run lint
+npm run test:analytics
+npm run test:analytics:ui
+git -c core.whitespace=cr-at-eol diff --check
+```
+
+Playwright uses local ports 3191 (generic UI harness with intercepted
+synthetic API responses) and 3192 (real Wrangler Pages routing).
+Install Chromium with `npx playwright install chromium` only if missing.
+The test harness is not deployed and is not an authentication bypass in
+production code. The normal Pages runtime rejects localhost by design.
+Browser tests block external requests and exercise desktop/mobile reflow,
+keyboard controls, loading/empty/error states, no local/session storage,
+admin tracker exclusion, public tracking and navigation preservation.
+The contact runtime test sends only invalid JSON and cannot send mail.
+
+Official references (reviewed 2026-09-22):
+[Access JWT validation](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/),
+[human versus service tokens](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/application-token/),
+[Pages routes and quota fail-closed](https://developers.cloudflare.com/pages/functions/routing/),
+[Web Analytics setup/injection](https://developers.cloudflare.com/web-analytics/get-started/),
+[metrics](https://developers.cloudflare.com/web-analytics/data-metrics/high-level-metrics/),
+[dimensions](https://developers.cloudflare.com/web-analytics/data-metrics/dimensions/),
+[sampling](https://developers.cloudflare.com/web-analytics/faq/#is-the-data-sampled),
+[schema discovery](https://developers.cloudflare.com/analytics/graphql-api/features/discovery/introspection/),
+[RUM dataset](https://developers.cloudflare.com/data-localization/metadata-boundary/graphql-datasets/),
+[site identifiers and permissions](https://developers.cloudflare.com/api/resources/rum/subresources/site_info/methods/list/),
+[KV consistency](https://developers.cloudflare.com/kv/api/write-key-value-pairs/#concurrent-writes-to-the-same-key).
 
 ## Adding a changelog entry (post-v22 pattern)
 
@@ -363,8 +543,8 @@ times" block (if the field was populated), and a Reply CTA button.
 ## Static export gotchas
 
 - **No API routes.** We're on `output: 'export'`. All server-side
-  behaviour lives in `functions/api/contact.ts` (Cloudflare Pages
-  Functions, separate from Next.js).
+  behaviour lives in Cloudflare Pages Functions, separate from Next.js
+  (`functions/api/contact.ts` and the private admin middleware).
 - **No dynamic image optimization.** `next/image` serves the source
   file. Optimize offline via `scripts/optimize-images.mjs`.
 - **No `<Link>` prefetching over the network** — Next.js still prefetches
