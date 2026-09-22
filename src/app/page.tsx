@@ -203,7 +203,7 @@ export default function Home() {
        * deliberately separate from the pre-release products band below
        * so a visitor can tell shipped work from what's still coming. */}
       <Reveal>
-      <section className="mt-32 border-t border-line pt-16 md:pt-24">
+      <section className="mt-32 border-t border-line divider-soft pt-16 md:pt-24">
         <div className="max-w-3xl">
           <Eyebrow>Live now</Eyebrow>
           <H2>
@@ -263,7 +263,7 @@ export default function Home() {
        * band above is live client work; everything here is not yet
        * public, and each card says exactly how far along it is. */}
       <Reveal>
-      <section className="mt-32 border-t border-line pt-16 md:pt-24">
+      <section className="mt-32 border-t border-line divider-soft pt-16 md:pt-24">
         <div className="max-w-3xl">
           <Eyebrow>In the lab</Eyebrow>
           <H2>
@@ -433,7 +433,7 @@ export default function Home() {
               <li key={entry.id}>
                 <Link
                   href={`/changelog/#${entry.id}`}
-                  className="group block border border-line bg-surface/30 p-5 transition-colors hover:border-accentDim"
+                  className="group surface-card block rounded-[3px] border border-line p-5 shadow-card transition-all duration-200 ease-soft hover:-translate-y-0.5 hover:border-accentDim hover:shadow-cardHover"
                 >
                   <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                     <span className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
@@ -521,7 +521,7 @@ function RoadmapCard({ product }: { product: Product }) {
   return (
     <Link
       href={product.href}
-      className="group flex flex-col justify-between border border-line bg-surface/30 p-6 transition-all duration-200 ease-soft hover:border-accentDim hover:bg-surface/60"
+      className="group surface-card flex flex-col justify-between rounded-[3px] border border-line p-6 shadow-card transition-all duration-200 ease-soft hover:-translate-y-0.5 hover:border-accentDim hover:shadow-cardHover"
     >
       <div>
         <div className="flex items-center justify-between gap-3">
@@ -566,7 +566,7 @@ function PathCard({
   return (
     <Link
       href={href}
-      className="group flex flex-col justify-between border border-line p-6 transition-all duration-200 ease-soft hover:border-accentDim hover:bg-surface/40"
+      className="group surface-card flex flex-col justify-between rounded-[3px] border border-line p-6 shadow-card transition-all duration-200 ease-soft hover:-translate-y-0.5 hover:border-accentDim hover:shadow-cardHover"
     >
       <div>
         <p className="text-[15px] font-semibold text-ink group-hover:text-accentHi">

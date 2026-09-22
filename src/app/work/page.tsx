@@ -266,7 +266,7 @@ function ProgramCard({
   return (
     <Link
       href={href}
-      className="group flex flex-col justify-between border border-line bg-surface/30 p-6 transition-all duration-200 ease-soft hover:border-accentDim hover:bg-surface/60"
+      className="group surface-card flex flex-col justify-between rounded-[3px] border border-line p-6 shadow-card transition-all duration-200 ease-soft hover:-translate-y-0.5 hover:border-accentDim hover:shadow-cardHover"
     >
       <div>
         <div className="flex items-center justify-between gap-3">

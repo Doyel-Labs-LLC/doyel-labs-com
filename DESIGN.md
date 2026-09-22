@@ -52,6 +52,25 @@ Cyan is **not** used for:
 - The BAI or ConnectionLoop program pages beyond the site's chrome —
   those pages keep their own visual identity.
 
+## Depth & elevation
+
+The canvas is near-black, so depth is built from **light, not grey shadow**
+(a grey drop-shadow is invisible here). The recipe, encoded in the
+`surface-card` utility (`globals.css`) and the `card` / `cardHover` shadow
+tokens (`tailwind.config.ts`):
+
+- A faint top-lit surface gradient (white at ~2%, fading by 42%).
+- An inset 1px top highlight (light-from-above).
+- A soft, very dark drop for lift — never a grey box-shadow.
+- Hover warms the border to `accentDim`, lifts 2px, and deepens the drop.
+
+Applied through the shared `Card` component and the interactive link-cards
+(home / work / products), so every page inherits it. The hero uses a quiet
+cyan **mesh** (three radials) plus a hairline grid overlay (`.hero-glow`),
+and flagship band dividers use `.divider-soft` (a cyan-tinted hairline that
+fades in from the left, rhyming with the eyebrow accent bar). Elevation is
+still restrained: subtle is the point.
+
 ## Typography
 
 - Inter with system fallbacks.

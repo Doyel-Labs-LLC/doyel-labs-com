@@ -40,7 +40,7 @@ export function Quote({
       ? "text-[20px] leading-[1.55] md:text-[24px]"
       : "text-[18px] leading-[1.55] md:text-[22px]";
   return (
-    <figure className="border-l-2 border-accent bg-accentSoft/40 p-6 md:p-8">
+    <figure className="rounded-[3px] border-l-2 border-accent bg-accentSoft/40 p-6 shadow-card md:p-8">
       {paragraphs ? (
         <blockquote className={`max-w-prose text-ink ${quoteSize}`}>
           {paragraphs.map((p, i) => (

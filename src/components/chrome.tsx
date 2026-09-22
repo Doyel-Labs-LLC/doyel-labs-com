@@ -238,7 +238,7 @@ export function PrimaryLink({
   small?: boolean;
   external?: boolean;
 }) {
-  const className = `inline-flex items-center gap-2 rounded-full border border-accent bg-accentSoft text-accent transition-all duration-200 ease-soft hover:border-accentHi hover:bg-accent/15 hover:text-accentHi focus-visible:border-accentHi ${
+  const className = `inline-flex items-center gap-2 rounded-full border border-accent bg-accentSoft text-accent shadow-glow transition-all duration-200 ease-soft hover:border-accentHi hover:bg-accent/15 hover:text-accentHi hover:shadow-[0_0_0_1px_rgba(78,220,251,0.5),0_10px_34px_-10px_rgba(16,199,235,0.5)] focus-visible:border-accentHi ${
     small ? "px-4 py-2 text-[12px]" : "px-6 py-3 text-[13px]"
   } uppercase tracking-wide`;
   if (external) {
@@ -298,7 +298,13 @@ export function GhostLink({
   );
 }
 
-/** A quiet card — hairline, no fill, no shadow. */
+/**
+ * An elevated card. On the near-black canvas depth reads through a faint
+ * top-lit surface + inset highlight + soft drop (the `surface-card` class
+ * and `shadow-card` token), not a grey box-shadow. Hover lifts it a hair
+ * and warms the border to cyan so the whole card feels interactive even
+ * when it isn't a link.
+ */
 export function Card({
   title,
   children,
@@ -310,10 +316,10 @@ export function Card({
 }) {
   return (
     <div
-      className={`border p-6 transition-colors duration-200 ease-soft ${
+      className={`group/card rounded-[3px] border p-6 shadow-card transition-all duration-200 ease-soft hover:-translate-y-0.5 hover:shadow-cardHover ${
         accent
           ? "border-accentDim bg-accentSoft/40"
-          : "border-line hover:border-line2"
+          : "surface-card border-line hover:border-accentDim"
       }`}
     >
       <h3
@@ -333,14 +339,14 @@ export function Card({
 /** Three-across grid on desktop, single column on mobile. */
 export function Grid3({ children }: { children: ReactNode }) {
   return (
-    <div className="grid gap-4 md:grid-cols-3">{children}</div>
+    <div className="grid gap-5 md:grid-cols-3">{children}</div>
   );
 }
 
 /** Two-across grid. */
 export function Grid2({ children }: { children: ReactNode }) {
   return (
-    <div className="grid gap-4 md:grid-cols-2">{children}</div>
+    <div className="grid gap-5 md:grid-cols-2">{children}</div>
   );
 }
 

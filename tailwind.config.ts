@@ -67,6 +67,14 @@ const config: Config = {
       },
       boxShadow: {
         accent: "0 0 0 1px rgba(16, 199, 235, 0.4)",
+        // Depth on a near-black canvas comes from an inset top highlight
+        // (light-from-above) plus a soft dark drop — not a grey shadow,
+        // which is invisible here. Used by the elevated card surface.
+        card:
+          "inset 0 1px 0 rgba(255, 255, 255, 0.045), 0 12px 32px -20px rgba(0, 0, 0, 0.85)",
+        cardHover:
+          "inset 0 1px 0 rgba(16, 199, 235, 0.14), 0 22px 48px -22px rgba(0, 0, 0, 0.9)",
+        glow: "0 0 0 1px rgba(16, 199, 235, 0.35), 0 8px 30px -12px rgba(16, 199, 235, 0.35)",
       },
     },
   },

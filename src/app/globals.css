@@ -54,21 +54,75 @@ code {
   text-transform: uppercase;
 }
 
-/* A subtle textured background used behind the hero. Radial cyan glow at
- * top-left, decaying to nothing. Very quiet — this is the only "gradient"
- * on the site. */
+/* A subtle textured background used behind the hero. A quiet cyan mesh:
+ * a bright top-left glow, a soft bottom-right echo, and a faint cool
+ * wash through the middle so the near-black canvas has depth instead of
+ * reading flat. Still restrained — this is the only "gradient" on the
+ * site. A hairline grid overlay adds engineered texture without noise. */
 .hero-glow {
+  position: relative;
   background:
     radial-gradient(
-      ellipse 900px 500px at 12% -10%,
-      rgba(16, 199, 235, 0.10),
+      ellipse 900px 520px at 10% -12%,
+      rgba(16, 199, 235, 0.13),
+      transparent 62%
+    ),
+    radial-gradient(
+      ellipse 680px 460px at 88% 108%,
+      rgba(16, 199, 235, 0.06),
       transparent 60%
     ),
     radial-gradient(
-      ellipse 600px 400px at 85% 105%,
-      rgba(16, 199, 235, 0.05),
-      transparent 60%
+      ellipse 700px 700px at 62% 30%,
+      rgba(78, 220, 251, 0.035),
+      transparent 70%
     );
+}
+/* Hairline engineering grid, faded top-to-bottom, sitting *behind* the
+ * hero content. Kept extremely low-contrast so it registers as texture,
+ * not decoration. */
+.hero-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(to right, rgba(240, 240, 250, 0.028) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(240, 240, 250, 0.028) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+}
+.hero-glow > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Elevated surface for cards and product frames. Depth on near-black
+ * comes from a faint top-lit gradient + an inset highlight + a soft dark
+ * drop (see the `card` shadow token), never a grey box-shadow. */
+.surface-card {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.022),
+      rgba(255, 255, 255, 0) 42%
+    ),
+    #12181f;
+}
+
+/* A section divider that fades a cyan-tinted hairline in from the left,
+ * so band transitions feel intentional rather than ruled-off. Opt-in via
+ * the `.divider-soft` class on a top border element. */
+.divider-soft {
+  border-image: linear-gradient(
+      to right,
+      rgba(16, 199, 235, 0.28),
+      rgba(240, 240, 250, 0.10) 22%,
+      transparent 80%
+    )
+    1;
 }
 
 /* Legal / docs prose. */
