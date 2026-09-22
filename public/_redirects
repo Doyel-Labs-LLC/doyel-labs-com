@@ -5,9 +5,9 @@
 # /products/ (with dedicated /legal/bai/* pages for the legal docs submitted
 # to Alpaca). ConnectionLoop lives on the same products page.
 #
-# NOTE: there is deliberately NO /pricing redirect. /pricing/ is now a real
-# page (top nav, sitemap). A legacy `/pricing/* -> /products/#bai` rule used
-# to shadow it and 301 every visitor to the products page — do not re-add it.
+# Pricing is now a quote-based section of Services. Redirect only the
+# overview, never a wildcard to BAI. The old pricing-to-products bug must
+# not return.
 #
 # The `/start/`, `/reviews/`, and `/case-studies/steadfast/` pages were
 # consolidated into `/contact/` and `/work/` respectively — they had too
@@ -34,6 +34,14 @@
 /docs/connectionloop/ /products/#connectionloop     301
 
 # ── Consolidated content ────────────────────────────────────────
+/pricing             /services/#pricing             301
+/pricing/            /services/#pricing             301
+/how-we-work         /services/#process             301
+/how-we-work/        /services/#process             301
+/founder             /company/                      301
+/founder/            /company/                      301
+/industries          /services/#industries          301
+/industries/         /services/#industries          301
 /start               /contact/                      301
 /start/              /contact/                      301
 /reviews             /work/                         301

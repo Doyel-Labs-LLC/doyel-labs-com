@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { Eyebrow, GhostLink, H1, Lead, Page } from "@/components/chrome";
-import { ContactWidget } from "@/components/contact-modal";
+import { ContactLink } from "@/components/contact-link";
 import { site } from "@/lib/site";
 
 type Check = {
@@ -172,7 +172,7 @@ export default function Status() {
         </div>
 
         <div className="mt-16 flex flex-wrap gap-3">
-          <ContactWidget label="Report an outage" size="small" />
+          <ContactLink label="Report an outage" size="small" />
           <GhostLink href="/security/" small>
             Security posture
           </GhostLink>

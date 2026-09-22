@@ -8,7 +8,7 @@ import {
   Lead,
   Page,
 } from "@/components/chrome";
-import { ContactWidget } from "@/components/contact-modal";
+import { ContactLink } from "@/components/contact-link";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 /**
  * Docs are now scoped to *services* Doyel Labs delivers to clients.
  * Product docs (BAI Desk, ConnectionLoop) live inline on the unified
- * /products/ page — those products are in private beta and don't
+ * /products/ page — those products are in development and don't
  * warrant a separate docs surface yet.
  */
 const DOC_SECTIONS = [
@@ -60,7 +60,7 @@ export default function DocsIndex() {
           >
             /products/
           </Link>{" "}
-          page while both are in private beta.
+          page while both are in development.
         </p>
       </section>
 
@@ -101,7 +101,7 @@ export default function DocsIndex() {
           {" "}or open the contact form.
         </p>
         <div className="mt-6 flex flex-wrap gap-3">
-          <ContactWidget label="Ask a question" size="small" />
+          <ContactLink label="Ask a question" size="small" />
           <GhostLink href="/support/" small>
             Support FAQs
           </GhostLink>

@@ -11,7 +11,7 @@ import {
   MetaRow,
   Page,
 } from "@/components/chrome";
-import { ContactWidget } from "@/components/contact-modal";
+import { ContactLink } from "@/components/contact-link";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -184,7 +184,7 @@ export default function Engineering() {
               any engineer can pick it up.
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <ContactWidget label="Start a project" />
+              <ContactLink />
               <GhostLink href="/security/" small>
                 Security posture
               </GhostLink>

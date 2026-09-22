@@ -1,213 +1,146 @@
 "use client";
 
-import { useState } from "react";
-import { Turnstile } from "@/components/turnstile";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import { Turnstile, type TurnstileHandle } from "@/components/turnstile";
+import { contactTopics, isProjectType, type ProjectType } from "@/lib/contact";
 import { site } from "@/lib/site";
 
 const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
+type SubmitState = { status: "idle" | "sending" | "success" } | { status: "error"; message: string };
+type FieldErrors = { email?: string; message?: string };
 
-type SubmitState =
-  | { status: "idle" }
-  | { status: "sending" }
-  | { status: "success" }
-  | { status: "error"; message: string };
-
-/**
- * The full contact form used inline on /contact/. Same payload as the
- * modal version, same endpoint (/api/contact), same graceful fallback
- * to the direct email + phone if the endpoint fails.
- */
 export function ContactPageForm() {
-  const [state, setState] = useState<SubmitState>({ status: "idle" });
-  const [turnstileToken, setTurnstileToken] = useState("");
+  const query = useSearchParams().get("projectType");
+  const topic = isProjectType(query) ? query : "general";
+  return <InquiryForm key={topic} initialTopic={topic} />;
+}
 
-  async function submit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
+function InquiryForm({ initialTopic }: { initialTopic: ProjectType }) {
+  const [state, setState] = useState<SubmitState>({ status: "idle" });
+  const [errors, setErrors] = useState<FieldErrors>({});
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRef = useRef<TurnstileHandle>(null);
+  const emailRef = useRef<HTMLInputElement>(null);
+  const messageRef = useRef<HTMLTextAreaElement>(null);
+  const successRef = useRef<HTMLDivElement>(null);
+  const sendingRef = useRef(false);
+
+  useEffect(() => {
+    if (state.status === "success") successRef.current?.focus();
+  }, [state.status]);
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (sendingRef.current) return;
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const value = (name: string) => String(data.get(name) || "").trim();
+    const email = value("email");
+    const message = value("message");
+    const nextErrors: FieldErrors = {};
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 100) nextErrors.email = "Enter a valid email address (up to 100 characters).";
+    if (message.length < 5 || message.length > 5000) nextErrors.message = "Write a message between 5 and 5,000 characters.";
+    setErrors(nextErrors);
+    if (nextErrors.email || nextErrors.message) {
+      setState({ status: "idle" });
+      if (nextErrors.email) emailRef.current?.focus();
+      else messageRef.current?.focus();
+      return;
+    }
+    if (TURNSTILE_SITE_KEY && !turnstileToken) {
+      setState({ status: "error", message: "Please complete the verification before sending. If it cannot load, email or call us directly." });
+      return;
+    }
+    sendingRef.current = true;
     setState({ status: "sending" });
-    const form = e.currentTarget;
-    const fd = new FormData(form);
-    const payload = {
-      name: (fd.get("name") as string) || "",
-      email: (fd.get("email") as string) || "",
-      projectType: (fd.get("projectType") as string) || "",
-      subject: (fd.get("subject") as string) || "",
-      message: (fd.get("message") as string) || "",
-      preferredTimes: (fd.get("preferredTimes") as string) || "",
-      website: (fd.get("website") as string) || "",
-      turnstileToken,
-    };
-    if (payload.website) {
-      setState({ status: "success" });
-      return;
-    }
-    if (!payload.email || !payload.message) {
-      setState({
-        status: "error",
-        message: "An email and a message are required.",
-      });
-      return;
-    }
     try {
-      const r = await fetch("/api/contact", {
+      const response = await fetch("/api/contact", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify(payload),
+        signal: AbortSignal.timeout(20000),
+        body: JSON.stringify({
+          name: value("name"),
+          email,
+          projectType: value("projectType"),
+          subject: "",
+          message,
+          preferredTimes: value("preferredTimes"),
+          website: value("website"),
+          turnstileToken,
+        }),
       });
-      if (r.ok) {
-        setState({ status: "success" });
+      const body: unknown = await response.json();
+      if (response.ok && typeof body === "object" && body !== null && "ok" in body && body.ok === true) {
         form.reset();
-        return;
+        setState({ status: "success" });
+      } else {
+        const message = typeof body === "object" && body !== null && "error" in body && typeof body.error === "string"
+          ? body.error
+          : "We could not confirm delivery. Your message is still here. Please try again or contact us directly.";
+        setState({ status: "error", message });
       }
-      const body = (await r.json().catch(() => ({}))) as { error?: string };
-      setState({
-        status: "error",
-        message:
-          body.error ||
-          `Something went wrong. Email ${site.supportEmail} or call ${site.phone}.`,
-      });
     } catch {
-      setState({
-        status: "error",
-        message: `We couldn't reach the server. Email ${site.supportEmail} or call ${site.phone}.`,
-      });
+      setState({ status: "error", message: "We could not confirm delivery. Your message is still here. Check your connection, try again, or contact us directly." });
+    } finally {
+      setTurnstileToken("");
+      turnstileRef.current?.reset();
+      sendingRef.current = false;
     }
   }
 
   if (state.status === "success") {
     return (
-      <div className="border border-accent bg-accentSoft/40 p-6">
-        <p className="font-mono text-[11px] uppercase tracking-wide text-accent">
-          ✓ Message received
-        </p>
-        <p className="mt-3 text-[15px] text-ink">
-          A real person from Doyel Labs will reply within one business
-          day with a couple of times that could work for your one-hour
-          orientation. For anything urgent, call{" "}
-          <a
-            href={site.phoneHref}
-            className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-          >
-            {site.phone}
-          </a>
-          .
-        </p>
-        <button
-          type="button"
-          onClick={() => setState({ status: "idle" })}
-          className="mt-6 border border-line2 px-4 py-2 text-[11px] uppercase tracking-wide text-ink hover:border-ink"
-        >
-          Send another
-        </button>
+      <div ref={successRef} tabIndex={-1} className="rounded-lg border border-accentDim p-6">
+        <h2 className="text-xl font-semibold">Thanks. Your message is on its way to us.</h2>
+        <p role="status" className="mt-4 text-base leading-relaxed text-mute">A person from Doyel Labs will reply within one business day. We will respond to your question or help you work out the next step.</p>
+        <button type="button" className="mt-6 min-h-11 rounded-lg border border-line2 px-4 text-base" onClick={() => { setState({ status: "idle" }); setErrors({}); }}>Send another message</button>
       </div>
     );
   }
 
   return (
-    <form onSubmit={submit} noValidate className="space-y-3">
-      {/* Honeypot */}
-      <label className="hidden">
-        Website (bots only)
-        <input type="text" name="website" autoComplete="off" tabIndex={-1} />
-      </label>
-      <div className="grid gap-3 md:grid-cols-2">
-        <Field label="Name">
-          <input name="name" autoComplete="name" className={fieldClass} />
-        </Field>
-        <Field label="Email" required>
-          <input
-            type="email"
-            name="email"
-            autoComplete="email"
-            required
-            className={fieldClass}
-          />
-        </Field>
+    <form onSubmit={submit} noValidate aria-busy={state.status === "sending"} className="space-y-5">
+      <p className="text-sm text-muted">Only email and message are required.</p>
+      <div className="hidden" aria-hidden="true"><label>Leave this empty<input name="website" autoComplete="off" tabIndex={-1} /></label></div>
+      <div className="grid gap-5 sm:grid-cols-2">
+        <div><label htmlFor="contact-name" className={labelClass}>Name <span className="font-normal text-muted">(optional)</span></label><input id="contact-name" name="name" autoComplete="name" maxLength={100} className={fieldClass} /></div>
+        <div>
+          <label htmlFor="contact-email" className={labelClass}>Email <span className="font-normal text-muted">(required)</span></label>
+          <input ref={emailRef} id="contact-email" name="email" type="email" autoComplete="email" required maxLength={100} aria-invalid={Boolean(errors.email)} aria-describedby={errors.email ? "email-error" : undefined} className={fieldClass} />
+          {errors.email && <p id="email-error" className="mt-2 text-sm text-fall">{errors.email}</p>}
+        </div>
       </div>
-      <Field label="What can we help with?">
-        <select
-          name="projectType"
-          defaultValue="general"
-          className={fieldClass}
-        >
-          <option value="general">General inquiry</option>
-          <option value="website">I need a marketing site</option>
-          <option value="payroll">I need a payroll workspace</option>
-          <option value="custom">I have a specific software idea</option>
-          <option value="idea">I have an idea but need help scoping it</option>
-          <option value="maintenance">I need help with existing software</option>
-          <option value="bai">Question about BAI (trading desk)</option>
-          <option value="connectionloop">Question about ConnectionLoop</option>
-          <option value="other">Something else</option>
-        </select>
-      </Field>
-      <Field label="Subject">
-        <input
-          name="subject"
-          placeholder="A short line describing what you're after"
-          className={fieldClass}
-        />
-      </Field>
-      <Field label="Message" required>
-        <textarea
-          name="message"
-          rows={7}
-          required
-          placeholder="What are you trying to build, and what would make it work well?"
-          className={`${fieldClass} resize-y`}
-        />
-      </Field>
-      <Field label="Suggested orientation times (optional)">
-        <textarea
-          name="preferredTimes"
-          rows={2}
-          placeholder="e.g. Tue Sep 23 · 2pm MT · Zoom, or Wed after 3pm my time"
-          className={`${fieldClass} resize-y`}
-        />
-        <span className="mt-1 block font-mono text-[10px] normal-case tracking-normal text-muted">
-          Skip if unsure — we&apos;ll propose a couple of times.
-        </span>
-      </Field>
-      {TURNSTILE_SITE_KEY ? (
-        <Turnstile sitekey={TURNSTILE_SITE_KEY} onToken={setTurnstileToken} />
-      ) : null}
-      {state.status === "error" ? (
-        <p className="border-l-2 border-fall bg-fall/10 px-3 py-2 text-[12px] text-ink">
-          {state.message}
-        </p>
-      ) : null}
-      <div className="pt-2">
-        <button
-          type="submit"
-          disabled={state.status === "sending"}
-          className="inline-flex items-center gap-2 rounded-full border border-accent bg-accentSoft px-6 py-3 text-[13px] uppercase tracking-wide text-accent transition-all duration-200 ease-soft hover:border-accentHi hover:bg-accent/15 hover:text-accentHi disabled:opacity-60"
-        >
-          {state.status === "sending" ? "Sending…" : "Send message"}
-          {state.status !== "sending" ? <span aria-hidden="true">→</span> : null}
-        </button>
+      <div>
+        <label htmlFor="contact-topic" className={labelClass}>What can we help with? <span className="font-normal text-muted">(optional)</span></label>
+        <select id="contact-topic" name="projectType" defaultValue={initialTopic} className={fieldClass}>{contactTopics.map((topic) => <option key={topic.value} value={topic.value}>{topic.label}</option>)}</select>
       </div>
+      <div>
+        <label htmlFor="contact-message" className={labelClass}>Your message <span className="font-normal text-muted">(required)</span></label>
+        <textarea ref={messageRef} id="contact-message" name="message" required rows={5} minLength={5} maxLength={5000} placeholder="What would you like to build, improve, or ask us about?" aria-invalid={Boolean(errors.message)} aria-describedby={errors.message ? "message-error" : undefined} className={`${fieldClass} resize-y`} />
+        {errors.message && <p id="message-error" className="mt-2 text-sm text-fall">{errors.message}</p>}
+      </div>
+      <details className="border-y border-line py-2">
+        <summary className="min-h-11 py-3 text-sm text-mute">Want to suggest a time to talk? (optional)</summary>
+        <label htmlFor="contact-times" className={`${labelClass} mt-2`}>Preferred times and time zone</label>
+        <textarea id="contact-times" name="preferredTimes" maxLength={500} rows={2} placeholder="For example: weekday afternoons, Mountain Time, by phone." className={`${fieldClass} mb-3 resize-y`} />
+      </details>
+      {TURNSTILE_SITE_KEY && <Turnstile ref={turnstileRef} sitekey={TURNSTILE_SITE_KEY} onToken={setTurnstileToken} />}
+      {state.status === "error" && (
+        <div role="alert" className="rounded-lg border border-fall/40 bg-fall/10 p-4 text-sm leading-relaxed">
+          <p>{state.message}</p>
+          <p className="mt-2"><a className="text-link" href={`mailto:${site.supportEmail}`}>Email us</a> or <a className="text-link" href={site.phoneHref}>call {site.phone}</a>.</p>
+        </div>
+      )}
+      <p className="text-sm leading-relaxed text-muted">Your details are used only to respond. <Link href="/legal/privacy/" className="text-link">Privacy policy</Link></p>
+      <button type="submit" disabled={state.status === "sending"} className="inline-flex min-h-11 items-center justify-center gap-3 rounded-lg bg-accent px-6 py-3 text-base font-medium text-bg hover:bg-accentHi disabled:cursor-wait disabled:opacity-60">
+        {state.status === "sending" ? "Sending..." : "Send message"} <span aria-hidden="true">→</span>
+      </button>
+      <span role="status" className="sr-only">{state.status === "sending" ? "Sending your message." : ""}</span>
     </form>
   );
 }
 
-const fieldClass =
-  "block w-full border border-line bg-surface px-3 py-2 text-[14px] text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accentDim";
-
-function Field({
-  label,
-  required,
-  children,
-}: {
-  label: string;
-  required?: boolean;
-  children: React.ReactNode;
-}) {
-  return (
-    <label className="block">
-      <span className="mb-1 block font-mono text-[10px] uppercase tracking-wide text-mute">
-        {label}
-        {required ? <span className="text-accent"> *</span> : null}
-      </span>
-      {children}
-    </label>
-  );
-}
+const labelClass = "mb-2 block text-sm font-medium text-ink";
+const fieldClass = "block min-h-11 w-full rounded-lg border border-line2 bg-bg px-3 py-3 text-base text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accentDim";

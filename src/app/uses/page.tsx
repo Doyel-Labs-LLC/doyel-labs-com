@@ -15,7 +15,7 @@ import {
   Page,
 } from "@/components/chrome";
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { ContactWidget } from "@/components/contact-modal";
+import { ContactLink } from "@/components/contact-link";
 import { Reveal } from "@/components/reveal";
 import { site } from "@/lib/site";
 
@@ -519,8 +519,8 @@ export default function Uses() {
                 call — it&apos;s a good use of the hour.
               </p>
               <div className="mt-8 flex flex-wrap items-center gap-3">
-                <ContactWidget label="Book an orientation" />
-                <GhostLink href="/how-we-work/" small>
+                <ContactLink />
+                <GhostLink href="/services/#process" small>
                   How we work
                 </GhostLink>
                 <GhostLink

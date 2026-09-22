@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Card, Eyebrow, GhostLink, Grid3, H1, Lead, Page } from "@/components/chrome";
-import { ContactWidget } from "@/components/contact-modal";
+import { ContactLink } from "@/components/contact-link";
 
 export default function NotFound() {
   return (
@@ -15,7 +15,7 @@ export default function NotFound() {
           layout to a Doyel Labs company page. Here's where things live now.
         </Lead>
         <div className="mt-8 flex flex-wrap gap-3">
-          <ContactWidget label="Tell us what you were looking for" />
+          <ContactLink label="Tell us what you were looking for" />
           <GhostLink href="/" small>
             Company home
           </GhostLink>

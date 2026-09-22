@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { companyLegal, site } from "@/lib/site";
 import { stageMeta, type Stage } from "@/lib/products";
-import { ContactWidget } from "@/components/contact-modal";
+import { ContactLink } from "@/components/contact-link";
 import { MobileNav } from "@/components/mobile-nav";
 import { NavLinks } from "@/components/nav-links";
 
@@ -10,8 +10,7 @@ const nav = [
   { href: "/services/", label: "Services" },
   { href: "/work/", label: "Work" },
   { href: "/products/", label: "Products" },
-  { href: "/pricing/", label: "Pricing" },
-  { href: "/company/", label: "Company" },
+  { href: "/company/", label: "About" },
 ];
 
 /** Four-square logo mark, matching the physical icon. */
@@ -47,23 +46,23 @@ export function LogoMark({
 export function Header() {
   return (
     <header className="sticky top-0 z-30 border-b border-line bg-bg md:bg-bg/85 md:backdrop-blur-md">
-      <div className="mx-auto flex max-w-band items-center justify-between px-6 py-4 md:px-10">
+      <div className="mx-auto flex max-w-band items-center justify-between gap-3 px-5 py-4 md:px-10">
         <Link
           href="/"
-          className="group flex items-center gap-3"
+          className="group flex min-h-11 shrink-0 items-center gap-3"
           aria-label="Doyel Labs — home"
         >
-          <LogoMark />
-          <span className="wordmark text-[13px] text-ink transition-colors group-hover:text-accentHi">
+          <LogoMark size={28} />
+          <span className="text-lg font-semibold tracking-tight text-ink transition-colors group-hover:text-accentHi">
             Doyel Labs
           </span>
         </Link>
         <nav
           aria-label="Primary"
-          className="hidden items-center gap-8 text-[11px] uppercase tracking-wide text-mute md:flex"
+          className="hidden items-center gap-7 text-sm font-medium text-mute lg:flex"
         >
           <NavLinks items={nav} />
-          <ContactWidget label="Contact" variant="primary" size="small" />
+          <ContactLink size="small" />
         </nav>
         <MobileNav items={nav} />
       </div>
@@ -73,73 +72,51 @@ export function Header() {
 
 export function Footer() {
   const year = new Date().getFullYear();
+  const groups = [
+    { label: "Explore", links: nav.slice(0, 3) },
+    { label: "Doyel Labs", links: [
+      { href: "/company/", label: "About" },
+      { href: "/contact/", label: "Contact" },
+      { href: "/sitemap/", label: "All pages" },
+    ] },
+    { label: "Help & legal", links: [
+      { href: "/support/", label: "Support" },
+      { href: "/legal/privacy/", label: "Privacy" },
+      { href: "/legal/terms/", label: "Terms" },
+    ] },
+  ];
   return (
-    <footer className="mt-32 border-t border-line">
-      <div className="mx-auto max-w-band px-6 py-12 md:px-10">
-        <div className="flex items-center gap-3">
-          <LogoMark size={18} />
-          <span className="wordmark text-[11px] text-ink">Doyel Labs</span>
+    <footer className="mt-24 border-t border-line bg-surface/30">
+      <div className="mx-auto max-w-band px-5 py-12 md:px-10">
+        <div className="grid gap-10 lg:grid-cols-[1.3fr_2fr]">
+          <div>
+            <Link href="/" className="inline-flex min-h-11 items-center gap-3 text-lg font-semibold">
+              <LogoMark size={24} /> Doyel Labs
+            </Link>
+            <p className="mt-3 text-sm text-mute">Software built around your business.</p>
+            <p className="mt-2 text-sm text-muted">{site.city}</p>
+            <a href={`mailto:${site.supportEmail}`} className="mt-4 block py-2 text-sm text-mute hover:text-accentHi">
+              {site.supportEmail}
+            </a>
+            <a href={site.phoneHref} className="inline-block py-2 text-sm text-mute hover:text-accentHi">{site.phone}</a>
+          </div>
+          <div className="grid grid-cols-2 gap-6 sm:grid-cols-3">
+            {groups.map((group) => (
+              <nav key={group.label} aria-label={group.label}>
+                <h2 className="text-sm font-semibold text-ink">{group.label}</h2>
+                <ul className="mt-3">
+                  {group.links.map((link) => (
+                    <li key={link.href}>
+                      <Link href={link.href} className="inline-flex min-h-11 items-center text-sm text-mute hover:text-accentHi">{link.label}</Link>
+                    </li>
+                  ))}
+                </ul>
+              </nav>
+            ))}
+          </div>
         </div>
-        <p className="mt-6 max-w-prose text-[12px] leading-relaxed text-muted">
-          {companyLegal}
-        </p>
-        <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] uppercase tracking-wide text-mute">
-          <span className="text-ink">
-            {site.company} · {site.city}
-          </span>
-          <a
-            href={`mailto:${site.supportEmail}`}
-            className="hover:text-accentHi"
-          >
-            {site.supportEmail}
-          </a>
-          <a href={site.phoneHref} className="hover:text-accentHi">
-            {site.phone}
-          </a>
-          <span className="grow" />
-          <Link href="/products/" className="hover:text-accentHi">
-            Products
-          </Link>
-          <Link href="/how-we-work/" className="hover:text-accentHi">
-            How we work
-          </Link>
-          <Link href="/industries/" className="hover:text-accentHi">
-            Industries
-          </Link>
-          <Link href="/work/" className="hover:text-accentHi">
-            Case studies
-          </Link>
-          <Link href="/founder/" className="hover:text-accentHi">
-            Founder
-          </Link>
-          <Link href="/writing/" className="hover:text-accentHi">
-            Writing
-          </Link>
-          <Link href="/faq/" className="hover:text-accentHi">
-            FAQ
-          </Link>
-          <Link href="/press/" className="hover:text-accentHi">
-            Press
-          </Link>
-          <Link href="/uses/" className="hover:text-accentHi">
-            Uses
-          </Link>
-          <Link href="/legal/terms/" className="hover:text-accentHi">
-            Legal
-          </Link>
-          <Link href="/status/" className="hover:text-accentHi">
-            Status
-          </Link>
-          <Link href="/support/" className="hover:text-accentHi">
-            Support
-          </Link>
-          <Link href="/sitemap/" className="hover:text-accentHi">
-            Site map
-          </Link>
-          <span aria-hidden="true">·</span>
-          <span className="text-muted">© {year}</span>
-        </div>
-        <p className="mt-6 max-w-prose text-[11px] text-muted">
+        <p className="mt-10 border-t border-line pt-6 text-xs leading-relaxed text-muted">{companyLegal}</p>
+        <p className="mt-3 text-xs leading-relaxed text-muted">
           Terms, privacy, and program-specific risk disclosures are under
           review by counsel. Contact{" "}
           <a
@@ -150,6 +127,7 @@ export function Footer() {
           </a>{" "}
           with any question.
         </p>
+        <p className="mt-4 text-xs text-muted">© {year} {site.company}</p>
       </div>
     </footer>
   );
@@ -170,7 +148,7 @@ export function Page({
       <Header />
       <main
         id="main"
-        className={`mx-auto px-6 md:px-10 ${narrow ? "max-w-3xl" : "max-w-band"}`}
+        className={`mx-auto px-5 md:px-10 ${narrow ? "max-w-3xl" : "max-w-band"}`}
       >
         {children}
         {bandFooter ? (
@@ -194,7 +172,7 @@ export function Eyebrow({ children }: { children: ReactNode }) {
 
 export function H1({ children }: { children: ReactNode }) {
   return (
-    <h1 className="mt-4 max-w-4xl text-3xl font-semibold uppercase leading-[1.05] tracking-display text-ink md:text-[54px]">
+    <h1 className="mt-4 max-w-4xl text-4xl font-semibold leading-[1.1] tracking-[-0.035em] text-ink md:text-[56px]">
       {children}
     </h1>
   );
@@ -202,7 +180,7 @@ export function H1({ children }: { children: ReactNode }) {
 
 export function H2({ children }: { children: ReactNode }) {
   return (
-    <h2 className="text-2xl font-semibold uppercase tracking-display text-ink md:text-[32px]">
+    <h2 className="text-3xl font-semibold leading-tight tracking-[-0.025em] text-ink md:text-4xl">
       {children}
     </h2>
   );
@@ -216,10 +194,7 @@ export function Lead({ children }: { children: ReactNode }) {
   );
 }
 
-/**
- * Primary CTA. Cyan pill with a hairline. This is the ONE bright button
- * on any page — every other action is a ghost secondary.
- */
+/** Primary link for actions outside the inquiry flow. */
 export function PrimaryLink({
   href,
   children,
@@ -231,9 +206,9 @@ export function PrimaryLink({
   small?: boolean;
   external?: boolean;
 }) {
-  const className = `inline-flex items-center gap-2 rounded-full border border-accent bg-accentSoft text-accent shadow-glow transition-all duration-200 ease-soft hover:border-accentHi hover:bg-accent/15 hover:text-accentHi hover:shadow-[0_0_0_1px_rgba(78,220,251,0.5),0_10px_34px_-10px_rgba(16,199,235,0.5)] focus-visible:border-accentHi ${
-    small ? "px-4 py-2 text-[12px]" : "px-6 py-3 text-[13px]"
-  } uppercase tracking-wide`;
+  const className = `inline-flex min-h-11 max-w-full items-center justify-center gap-3 rounded-lg border border-accent bg-accent font-medium text-bg transition-colors hover:bg-accentHi ${
+    small ? "px-4 py-2 text-sm" : "px-5 py-3 text-base"
+  }`;
   if (external) {
     return (
       <a
@@ -267,9 +242,9 @@ export function GhostLink({
   small?: boolean;
   external?: boolean;
 }) {
-  const className = `inline-flex items-center gap-2 rounded-full border border-line2 text-ink transition-colors duration-200 ease-soft hover:border-ink hover:bg-ink/[0.04] focus-visible:border-ink ${
-    small ? "px-4 py-2 text-[12px]" : "px-6 py-3 text-[13px]"
-  } uppercase tracking-wide`;
+  const className = `inline-flex min-h-11 max-w-full items-center justify-center gap-3 rounded-lg border border-line2 font-medium text-ink transition-colors hover:border-ink hover:bg-ink/[0.04] ${
+    small ? "px-4 py-2 text-sm" : "px-5 py-3 text-base"
+  }`;
   if (external) {
     return (
       <a
@@ -291,13 +266,6 @@ export function GhostLink({
   );
 }
 
-/**
- * An elevated card. On the near-black canvas depth reads through a faint
- * top-lit surface + inset highlight + soft drop (the `surface-card` class
- * and `shadow-card` token), not a grey box-shadow. Hover lifts it a hair
- * and warms the border to cyan so the whole card feels interactive even
- * when it isn't a link.
- */
 export function Card({
   title,
   children,
@@ -309,20 +277,20 @@ export function Card({
 }) {
   return (
     <div
-      className={`group/card rounded-[3px] border p-6 shadow-card transition-all duration-200 ease-soft hover:-translate-y-0.5 hover:shadow-cardHover ${
+      className={`rounded-xl border p-6 ${
         accent
-          ? "border-accentDim bg-accentSoft/40"
-          : "surface-card border-line hover:border-accentDim"
+          ? "border-accentDim bg-accent/5"
+          : "surface-card border-line"
       }`}
     >
       <h3
-        className={`text-[13px] font-semibold uppercase tracking-wide ${
+        className={`text-lg font-semibold ${
           accent ? "text-accent" : "text-ink"
         }`}
       >
         {title}
       </h3>
-      <div className="mt-3 text-[14px] leading-[1.65] text-mute">
+      <div className="mt-3 text-base leading-[1.65] text-mute">
         {children}
       </div>
     </div>
@@ -364,7 +332,7 @@ export function Feature({
        * (no H2→H4 skips). Visual size stays deliberately small — this
        * is a step title, not a section header. */}
       <h3 className="mt-2 text-[15px] font-semibold text-ink">{title}</h3>
-      <p className="mt-2 text-[14px] leading-[1.65] text-mute">{children}</p>
+      <p className="mt-2 text-base leading-[1.65] text-mute">{children}</p>
     </div>
   );
 }
@@ -372,13 +340,13 @@ export function Feature({
 /** A boxed callout. */
 export function Notice({ children }: { children: ReactNode }) {
   return (
-    <div className="border-l-2 border-accent bg-accentSoft/40 px-5 py-4 text-[13px] leading-[1.7] text-ink">
+    <div className="border-l-2 border-accent bg-accent/5 px-5 py-4 text-[13px] leading-[1.7] text-ink">
       {children}
     </div>
   );
 }
 
-/** Status chip for programs (2027, coming this month, etc.). */
+/** Informational status chip. Product availability uses StageBadge. */
 export function StatusChip({ children }: { children: ReactNode }) {
   return (
     <span className="inline-flex items-center gap-2 border border-care/60 px-3 py-1 font-mono text-[10px] uppercase tracking-wide text-care">

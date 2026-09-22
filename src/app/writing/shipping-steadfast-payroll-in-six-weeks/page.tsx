@@ -12,7 +12,7 @@ import {
   Page,
 } from "@/components/chrome";
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { ContactWidget } from "@/components/contact-modal";
+import { ContactLink } from "@/components/contact-link";
 import { PayrollScaFrame } from "@/components/frames/payroll-sca";
 import { PayrollAuditFrame } from "@/components/frames/payroll-audit";
 import { Quote } from "@/components/quote";
@@ -397,7 +397,7 @@ export default function Post() {
               price back to you within one business day.
             </P>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <ContactWidget label="Start a project" />
+              <ContactLink />
               <GhostLink
                 href="/industries/federal-service-contractors/"
                 small

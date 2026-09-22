@@ -14,7 +14,7 @@ import {
   Page,
 } from "@/components/chrome";
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { ContactWidget } from "@/components/contact-modal";
+import { ContactLink } from "@/components/contact-link";
 import { Reveal } from "@/components/reveal";
 import { formatDate, posts } from "@/lib/writing";
 import { site } from "@/lib/site";
@@ -378,9 +378,9 @@ export default function Post() {
               business day.
             </P>
             <div className="mt-8 flex flex-wrap items-center gap-3">
-              <ContactWidget label="Start a project" />
-              <GhostLink href="/pricing/" small>
-                Pricing bands
+              <ContactLink />
+              <GhostLink href="/services/#pricing" small>
+                How pricing works
               </GhostLink>
               <GhostLink href="/services/" small>
                 What we build

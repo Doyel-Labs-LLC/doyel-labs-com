@@ -55,6 +55,7 @@ export type Product = {
   href: string;
   /** Where it runs / who it's for — one short mono line. */
   meta: string;
+  image: { src: string; width: number; height: number };
   /** The remaining steps to public. Sourced from programStatus.*.body. */
   pathToPublic: string;
 };
@@ -65,9 +66,10 @@ export const products: Product[] = [
     name: "BAI Desk",
     stage: "beta",
     tagline:
-      "An autonomous trading desk that runs on your own computer — at your broker, under your rules.",
+      "An automated trading desk. Your computer, your broker, your rules.",
     href: "/products/#bai",
     meta: "Windows · macOS later · US-only at launch",
+    image: { src: "/media/bai/bai-hero.webp", width: 1024, height: 576 },
     pathToPublic: programStatus.bai.body,
   },
   {
@@ -75,9 +77,10 @@ export const products: Product[] = [
     name: "ConnectionLoop",
     stage: "soon",
     tagline:
-      "An invite-only shared calendar for families and small groups. Free. No ads. No public feed.",
+      "A private, shared calendar for families and groups.",
     href: "/products/#connectionloop",
     meta: "iOS · Android · invite-only",
+    image: { src: "/media/connectionloop/connectionloop-icon.webp", width: 640, height: 640 },
     pathToPublic: programStatus.connectionloop.body,
   },
 ];

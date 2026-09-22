@@ -8,7 +8,7 @@ import {
   Lead,
   Page,
 } from "@/components/chrome";
-import { ContactWidget } from "@/components/contact-modal";
+import { ContactLink } from "@/components/contact-link";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -50,7 +50,7 @@ const SECTIONS: { title: string; id: string; questions: Q[] }[] = [
             in your inbox by the end of the next business day. If no, we
             send our notes anyway. The full picture is on the{" "}
             <Link
-              href="/how-we-work/"
+              href="/services/#process"
               className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
             >
               &quot;how we work&quot; page
@@ -146,8 +146,8 @@ const SECTIONS: { title: string; id: string; questions: Q[] }[] = [
         q: "How is a project priced?",
         a: (
           <>
-            Fixed price, quoted after a short discovery call. We never
-            bill hourly. If the scope grows, we requote. Every quote
+            Quoted per project after we understand the scope. We agree
+            on the price before starting. If the scope grows, we requote. Every quote
             covers labor, cloud infrastructure we set up for you, and
             the AI tooling we use during the build.
           </>
@@ -181,10 +181,9 @@ const SECTIONS: { title: string; id: string; questions: Q[] }[] = [
         q: "Do you take a deposit?",
         a: (
           <>
-            Yes — 50% before we start on projects over $1,500, with the
-            balance due at delivery (or against milestones for larger
-            projects). Retainers are billed monthly, first month at
-            signing.
+            Your written quote sets out the deposit, payment schedule,
+            and any milestones before you agree to the work. Ongoing
+            support is scoped and quoted separately.
           </>
         ),
       },
@@ -428,7 +427,7 @@ export default function FAQ() {
           </p>
         </div>
         <div className="mt-8 flex flex-wrap gap-3">
-          <ContactWidget label="Ask a question" />
+          <ContactLink label="Ask a question" />
           <GhostLink href="/contact/" small>
             Start here
           </GhostLink>

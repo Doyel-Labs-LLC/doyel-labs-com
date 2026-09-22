@@ -30,10 +30,9 @@ const jetbrainsMono = JetBrains_Mono({
  * sentence. This is the single source of truth for how we appear in
  * search; every page should defer to this framing. */
 const searchDescription =
-  "Doyel Labs LLC is a custom software studio in Casper, Wyoming. We build " +
-  "websites, payroll workspaces, internal tools, and bespoke programs for " +
-  "small operators through enterprise clients. Tell us what your business " +
-  "needs; we'll build it, ship it in weeks, and stay on to keep it running.";
+  "Doyel Labs LLC builds websites, payroll workspaces, business tools, and " +
+  "custom software for small businesses. Based in Casper, Wyoming. " +
+  "Quoted per project, with software built around the way you work.";
 
 export const metadata: Metadata = {
   title: {
@@ -75,7 +74,7 @@ export const metadata: Metadata = {
     },
   },
   openGraph: {
-    title: `${site.company} — Custom software for small operators through enterprises`,
+    title: `${site.company} — Software built around your business`,
     description: searchDescription,
     type: "website",
     url: `https://${site.domain}/`,
@@ -156,12 +155,6 @@ const orgSchema = {
   email: site.supportEmail,
   telephone: site.phoneHref.replace("tel:", ""),
   foundingDate: "2026-09",
-  founder: {
-    "@type": "Person",
-    "@id": `https://${site.domain}/founder/#person`,
-    name: "Blake Doyel",
-    url: `https://${site.domain}/founder/`,
-  },
   address: {
     "@type": "PostalAddress",
     addressLocality: "Casper",
@@ -208,7 +201,7 @@ const orgSchema = {
           "@type": "Service",
           name: "Custom software development",
           description:
-            "Bespoke web applications, dashboards, portals, integrations, and internal tools for any industry — from mom-and-pop operators through enterprises. Priced per project, delivered under a written scope.",
+            "Bespoke web applications, dashboards, portals, integrations, and internal tools for any industry — from mom-and-pop operators through enterprises. Quoted per project, delivered under a written scope.",
           url: `https://${site.domain}/services/`,
         },
       },

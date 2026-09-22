@@ -25,8 +25,6 @@ const entries: Entry[] = [
   { path: "/services/websites/", priority: 0.95, change: "weekly" },
   { path: "/services/payroll/", priority: 0.95, change: "weekly" },
   { path: "/services/custom-software/", priority: 0.95, change: "weekly" },
-  { path: "/pricing/", priority: 0.9, change: "monthly" },
-  { path: "/industries/", priority: 0.9, change: "monthly" },
   { path: "/industries/federal-service-contractors/", priority: 0.85, change: "monthly" },
   // Proof
   { path: "/work/", priority: 0.85, change: "weekly" },
@@ -35,12 +33,10 @@ const entries: Entry[] = [
   { path: "/writing/ai-native-software-what-we-write-what-we-generate/", priority: 0.8, change: "monthly" },
   { path: "/writing/shipping-steadfast-payroll-in-six-weeks/", priority: 0.8, change: "monthly" },
   // Consultative entry points
-  { path: "/how-we-work/", priority: 0.9, change: "monthly" },
   { path: "/contact/", priority: 0.8, change: "monthly" },
   { path: "/faq/", priority: 0.75, change: "monthly" },
   // Company info
   { path: "/company/", priority: 0.7, change: "monthly" },
-  { path: "/founder/", priority: 0.8, change: "monthly" },
   { path: "/press/", priority: 0.7, change: "monthly" },
   { path: "/uses/", priority: 0.7, change: "monthly" },
   { path: "/engineering/", priority: 0.7, change: "monthly" },
