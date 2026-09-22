@@ -581,7 +581,7 @@ function ToolCard({ tool }: { tool: Tool }) {
     tool.name
   );
   return (
-    <div className="border border-line bg-surface/30 p-5">
+    <div className="surface-card rounded-[3px] border border-line p-5 shadow-card">
       <p className="text-[15px] font-semibold text-ink">{nameNode}</p>
       <p className="mt-2 text-[13.5px] leading-[1.6] text-mute">
         {tool.role}
