@@ -485,9 +485,13 @@ Verify schema, scheduled cleanup and the default-off Git-connected preview, then
 merge through the normal Pages Git deployment. Coordinated production activation
 sets both flags true and rebuilds privacy/collector together. Preserve the Pages
 compatibility date `2026-09-07` and empty flags. Never bind the production DB or
-enable either new flag in Preview. To pause immediately, set the runtime gate false;
-the build flag and disabled privacy copy take effect at the next Git-connected
-deployment. Keep cleanup running while retained aggregates exist. Do not weaken Access,
+enable either new flag in Preview. To pause collection, set the runtime gate false
+and redeploy approved source through the Git-connected workflow; Pages bindings and
+variables are deployment snapshots, so changing project settings alone does not
+alter the running deployment. Prefer setting both new flags false in the same rebuild
+to coordinate ingest, the browser collector and privacy copy. Verify the canonical
+deployment's flag snapshot and disabled response after rollout. Keep cleanup running
+while retained aggregates exist. Do not weaken Access,
 copy owner cookies/JWTs, write synthetic production pageviews, or claim that a local
 test verifies the owner's current live session.
 

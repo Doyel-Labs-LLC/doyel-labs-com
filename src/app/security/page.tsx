@@ -162,7 +162,7 @@ const WEBSITES_MAP = {
   yes: [
     "Static HTML, CSS, JavaScript on Cloudflare Pages",
     `This website's visitor analytics: ${analyticsLabel}; any enabled reporting is aggregate and cookieless`,
-    ...(locationAnalyticsEnabled ? ["First-party approximate city/region counts: hourly aggregates, no raw visitor events; 31-day active retention with hourly cleanup and up to 30 additional days in provider backups"] : []),
+    ...(locationAnalyticsEnabled ? ["First-party approximate city/region counts: hourly aggregates, no raw visitor events; about 31-day active retention with hourly cleanup and up to 30 additional days in provider backups"] : []),
     "Cloudflare Turnstile for form CAPTCHA on doyel-labs.com",
     "Forms wired to the operator's own inbox (Formspree, Resend, or similar), if the site takes forms",
   ],
