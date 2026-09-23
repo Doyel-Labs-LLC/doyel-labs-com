@@ -4,12 +4,14 @@
   "private": true,
   "description": "doyel-labs.com — the company site for Doyel Labs LLC (Casper, Wyoming). Services (payroll software, websites for small operators) and internal programs (BAI, ConnectionLoop).",
   "scripts": {
-    "dev": "next dev -p 3100",
-    "build": "next build && tsx scripts/package-admin.mjs",
+    "dev": "node scripts/generate-public-paths.mjs && next dev -p 3100",
+    "build": "node scripts/generate-public-paths.mjs && next build && tsx scripts/package-admin.mjs",
     "start": "next start",
-    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p functions/tsconfig.json",
+    "typecheck": "tsc --noEmit -p tsconfig.json && tsc --noEmit -p functions/tsconfig.json && tsc --noEmit -p workers/location-retention/tsconfig.json",
+    "types:retention": "wrangler types workers/location-retention/worker-configuration.d.ts --config workers/location-retention/wrangler.jsonc --include-runtime false",
     "test:analytics": "tsx --test tests/analytics/*.test.ts",
     "test:analytics:runtime": "tsx --test tests/analytics/runtime.test.ts",
+    "test:locations": "tsx --test tests/analytics/location*.test.ts",
     "test:analytics:ui": "playwright test",
     "lint": "eslint ."
   },

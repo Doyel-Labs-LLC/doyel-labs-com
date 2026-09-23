@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import type { AnalyticsFailureCode, AnalyticsPreset, AnalyticsReport, BreakdownKey } from "@/lib/analytics-contract";
 import { isAnalyticsReport } from "@/lib/analytics-contract";
+import { LocationDashboard } from "./location-dashboard";
 
 type State =
   | { kind: "loading" }
@@ -189,6 +190,7 @@ export function AnalyticsDashboard() {
           </div>
         </>
       )}
+      <LocationDashboard />
       <footer className="mt-8 max-w-prose border-t border-line pt-6 text-sm leading-relaxed text-mute">
         <p>Visits are arrivals from another website or a direct link, not unique people. No names, IP addresses, reading time, or individual browsing history are shown.</p>
         <p className="mt-3">When activated, this dashboard reads Cloudflare Web Analytics. Paths are limited to published pages; query strings, fragments, and unknown paths are not displayed. Countries are approximate. No automatic refresh.</p>

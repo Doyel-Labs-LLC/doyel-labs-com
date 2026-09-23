@@ -29,5 +29,6 @@ desktop.ini
 .wrangler/
 .dev.vars*
 server/analytics/admin-assets.generated.ts
+src/lib/public-paths.generated.ts
 test-results/
 playwright-report/

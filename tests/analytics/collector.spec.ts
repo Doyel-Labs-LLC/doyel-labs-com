@@ -1,5 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { analytics } from "../../src/lib/analytics-config";
+import { locationAnalyticsEnabled } from "../../src/lib/location-config";
 
 const beaconScript = "https://static.cloudflareinsights.com/beacon.min.js";
 let cloudflareScript = "";
@@ -12,16 +13,26 @@ test.beforeAll(async ({ request }) => {
   cloudflareScript = await response.text();
   expect(cloudflareScript.length).toBeLessThan(262144);
 });
-test.afterEach(async ({ page }) => {
-  await page.waitForLoadState("networkidle");
-});
+async function settleCollectors(page: Page) {
+  // Intercepted keepalive fetches receive 202 but Chromium does not emit
+  // requestfinished until document teardown. Use bounded observation, not
+  // networkidle; individual assertions below verify actual requests/navigation.
+  await page.waitForLoadState("load");
+  await page.waitForTimeout(600);
+}
+test.afterEach(async ({ page }) => { await settleCollectors(page); });
 
 async function mockSite(page: Page) {
   const beacons: string[] = [];
   const vendorRequests: string[] = [];
+  const locations: { body: string; headers: Record<string, string> }[] = [];
   await page.route("**/*", async (route) => {
     const request = route.request();
     const url = new URL(request.url());
+    if (url.pathname === "/api/analytics/location/") {
+      locations.push({ body: request.postData() ?? "", headers: request.headers() });
+      return route.fulfill({ status: 202, json: { status: "accepted" }, headers: { "Cache-Control": "no-store" } });
+    }
     if (["doyel-labs.com", "www.doyel-labs.com", "website-8xx.pages.dev", "preview.website-8xx.pages.dev"].includes(url.hostname)) {
       const response = await route.fetch({
         url: `http://127.0.0.1:3191${url.pathname}${url.search}`,
@@ -42,7 +53,7 @@ async function mockSite(page: Page) {
     }
     return route.abort();
   });
-  return { beacons, vendorRequests };
+  return { beacons, vendorRequests, locations };
 }
 
 test("only one selected collector loads on canonical public pages and survives public SPA navigation", async ({ page }) => {
@@ -70,7 +81,7 @@ test("only one selected collector loads on canonical public pages and survives p
 });
 
 test("preview/default/www hosts and direct private entry never load a collector", async ({ page }) => {
-  const { vendorRequests } = await mockSite(page);
+  const { vendorRequests, locations } = await mockSite(page);
   for (const url of [
     "https://preview.website-8xx.pages.dev/", "https://website-8xx.pages.dev/",
     "https://www.doyel-labs.com/", "https://doyel-labs.com/admin/analytics/",
@@ -80,6 +91,7 @@ test("preview/default/www hosts and direct private entry never load a collector"
     await expect(page.locator('script[src*="plausible.io"], script[src*="cloudflareinsights.com"]')).toHaveCount(0);
   }
   expect(vendorRequests).toEqual([]);
+  expect(locations).toEqual([]);
 });
 
 test("public-to-private Next navigation starts a new document without carrying the collector", async ({ page }) => {
@@ -98,7 +110,7 @@ test("public-to-private Next navigation starts a new document without carrying t
   await expect(page.getByRole("heading", { name: "Website analytics" })).toBeVisible();
   expect(await page.evaluate(() => (window as Window & { testDocument?: string }).testDocument)).toBeUndefined();
   await expect(page.locator('script[src*="plausible.io"], script[src*="cloudflareinsights.com"]')).toHaveCount(0);
-  await page.waitForLoadState("networkidle");
+  await settleCollectors(page);
   expect(beacons.join("")).not.toContain("/admin");
 });
 
@@ -108,7 +120,7 @@ for (const [origin, width] of [
   ["https://website-8xx.pages.dev", 320],
 ] as const) {
   test(`footer owner entry from ${origin} is accessible and navigates without prefetch`, async ({ page }) => {
-    const { beacons, vendorRequests } = await mockSite(page);
+    const { beacons, vendorRequests, locations } = await mockSite(page);
     const adminRequests: { url: string; document: boolean }[] = [];
     page.on("request", (request) => {
       if (new URL(request.url()).pathname.startsWith("/admin")) {
@@ -139,7 +151,7 @@ for (const [origin, width] of [
     expect(box?.width).toBeGreaterThanOrEqual(44);
     expect(box?.height).toBeGreaterThanOrEqual(44);
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-    await page.waitForLoadState("networkidle");
+    await settleCollectors(page);
     expect(adminRequests).toEqual([]);
     if (origin !== "https://doyel-labs.com") expect(vendorRequests).toEqual([]);
     await page.evaluate(() => { (window as Window & { testDocument?: string }).testDocument = "public"; });
@@ -149,7 +161,73 @@ for (const [origin, width] of [
     expect(adminRequests).toEqual([{ url: "https://doyel-labs.com/admin/analytics/", document: true }]);
     expect(await page.evaluate(() => (window as Window & { testDocument?: string }).testDocument)).toBeUndefined();
     await expect(page.locator('script[src*="plausible.io"], script[src*="cloudflareinsights.com"]')).toHaveCount(0);
-    await page.waitForLoadState("networkidle");
+    await settleCollectors(page);
     expect(beacons.join("")).not.toContain("/admin");
+    expect(locations.some((event) => event.body.includes("/admin"))).toBe(false);
   });
 }
+
+test("location beacon counts published SPA path changes only, with no cookies, referrers, queries or duplicate effects", async ({ page, context }) => {
+  const { locations } = await mockSite(page);
+  await context.addCookies([{ name: "synthetic-private-cookie", value: "never-send", domain: "doyel-labs.com", path: "/", secure: true }]);
+  await page.goto("https://doyel-labs.com/?email=not-collected#private");
+  if (locationAnalyticsEnabled) await expect.poll(() => locations.length).toBe(1);
+  await settleCollectors(page);
+  expect(locations.map((event) => JSON.parse(event.body))).toEqual(locationAnalyticsEnabled ? [{ path: "/" }] : []);
+  await page.locator('header a[href="/services/"]').first().hover();
+  await settleCollectors(page);
+  expect(locations.length).toBe(locationAnalyticsEnabled ? 1 : 0);
+  await page.evaluate(() => { history.pushState(null, "", "/?changed=query#another"); });
+  await settleCollectors(page);
+  expect(locations.length).toBe(locationAnalyticsEnabled ? 1 : 0);
+  await page.locator('header a[href="/services/"]').first().click();
+  await expect(page).toHaveURL("https://doyel-labs.com/services/");
+  if (locationAnalyticsEnabled) await expect.poll(() => locations.length).toBe(2);
+  await settleCollectors(page);
+  expect(locations.map((event) => JSON.parse(event.body))).toEqual(locationAnalyticsEnabled ? [{ path: "/" }, { path: "/services/" }] : []);
+  for (const event of locations) {
+    expect(event.headers.cookie).toBeUndefined();
+    expect(event.headers.referer).toBeUndefined();
+    expect(event.headers["content-type"]).toBe("application/json");
+    expect(event.body).not.toMatch(/email|query|private|changed|never-send/);
+  }
+  await page.getByRole("contentinfo").getByRole("link", { name: "Owner login" }).click();
+  await expect(page.getByRole("heading", { name: "Website analytics" })).toBeVisible();
+  await settleCollectors(page);
+  expect(locations.length).toBe(locationAnalyticsEnabled ? 2 : 0);
+  expect(await page.evaluate(() => ({ local: localStorage.length, session: sessionStorage.length }))).toEqual({ local: 0, session: 0 });
+});
+
+for (const signal of ["globalPrivacyControl", "doNotTrack"]) {
+  test(`location collector honors ${signal} while leaving native CF configuration unchanged`, async ({ page }) => {
+    await page.addInitScript((property) => {
+      Object.defineProperty(navigator, property, { configurable: true, value: property === "globalPrivacyControl" ? true : "1" });
+    }, signal);
+    const { locations } = await mockSite(page);
+    await page.goto("https://doyel-labs.com/");
+    await page.locator('header a[href="/services/"]').first().click();
+    await expect(page).toHaveURL("https://doyel-labs.com/services/");
+    await settleCollectors(page);
+    expect(locations).toEqual([]);
+    if (analytics.provider === "cloudflare") await expect(page.locator(`script[src="${beaconScript}"]`)).toHaveCount(1);
+  });
+}
+
+test("failed location delivery never retries or blocks public navigation", async ({ page }) => {
+  const dialogs: string[] = [];
+  page.on("dialog", async (dialog) => { dialogs.push(dialog.message()); await dialog.dismiss(); });
+  await mockSite(page);
+  let attempts = 0;
+  await page.route("**/api/analytics/location/", (route) => { attempts++; return route.abort(); });
+  await page.goto("https://doyel-labs.com/");
+  if (locationAnalyticsEnabled) await expect.poll(() => attempts).toBe(1);
+  await settleCollectors(page);
+  await page.locator('header a[href="/services/"]').first().click();
+  await expect(page).toHaveURL("https://doyel-labs.com/services/");
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+  if (locationAnalyticsEnabled) await expect.poll(() => attempts).toBe(2);
+  await settleCollectors(page);
+  expect(attempts).toBe(locationAnalyticsEnabled ? 2 : 0);
+  expect(dialogs).toEqual([]);
+  await expect(page.getByText("location_analytics_unavailable", { exact: true })).toHaveCount(0);
+});

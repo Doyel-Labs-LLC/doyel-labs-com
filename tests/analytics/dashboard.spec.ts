@@ -51,7 +51,7 @@ test("responsive aggregate display, sampling, keyboard controls and no private s
   }));
   await page.goto("/admin/analytics/");
   await expect(page.getByRole("heading", { name: "Page views", exact: true })).toBeVisible();
-  await expect(page.getByText("Sampled estimates.", { exact: false })).toBeVisible();
+  await expect(page.getByText(/^Sampled estimates\. Counts are/)).toBeVisible();
   await expect(page.getByRole("rowheader", { name: "/services/", exact: true })).toBeVisible();
   for (const width of [1440, 768, 375, 320]) {
     await page.setViewportSize({ width, height: 900 });
@@ -61,7 +61,7 @@ test("responsive aggregate display, sampling, keyboard controls and no private s
   await page.getByText("View trend values", { exact: true }).focus();
   await page.keyboard.press("Enter");
   await expect(page.getByRole("table", { name: /Reported time buckets/ })).toBeVisible();
-  const select = page.getByRole("combobox", { name: "Date range (UTC)" });
+  const select = page.getByRole("combobox", { name: "Date range (UTC)", exact: true });
   await select.focus();
   await page.keyboard.press("ArrowDown");
   await page.keyboard.press("Enter");
@@ -85,7 +85,7 @@ test("network/HTML errors clear old metrics, and hiding the page clears the repo
   await expect(page.getByRole("heading", { name: "Page views", exact: true })).toHaveCount(0);
   await expect(page.getByRole("status")).toContainText("Metrics cleared");
   fail = true;
-  await page.getByRole("combobox").selectOption("30d");
+  await page.getByRole("combobox", { name: "Date range (UTC)", exact: true }).selectOption("30d");
   await expect(page.getByRole("heading", { name: "Analytics is unavailable", exact: true })).toBeVisible();
   await expect(page.getByRole("heading", { name: "Page views", exact: true })).toHaveCount(0);
 });

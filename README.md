@@ -9,8 +9,8 @@ deployed on Cloudflare Pages with a serverless contact-form function.
 - **Rendering:** `output: 'export'` — static HTML, no server runtime
 - **Deploy:** Cloudflare Pages, `master` branch = production
 - **Contact form:** Cloudflare Pages Function → Resend → Google Workspace
-- **Analytics:** One build-selected, cookieless aggregate provider. Plausible
-  remains the legacy default until the coordinated Cloudflare switch.
+- **Analytics:** One build-selected, cookieless aggregate provider (Cloudflare
+  in production), plus an independently gated first-party location-count layer.
 - **Private dashboard:** Owner-only `/admin/analytics/`, reached through the
   discreet **Owner login** footer link. Reads remain disabled by default in
   unconfigured environments; the link does not change authentication or collection.
@@ -254,9 +254,10 @@ and alternate-port hosts are denied even for a valid owner token.
 Authentication still runs while analytics is disabled.
 
 `public/_routes.json` invokes Functions only for `/admin*`, `/api/admin*`,
-and `/api/contact*`, including bare parents, slash variants, and admin
+`/api/contact*`, and `/api/analytics/location*`, including bare parents, slash variants, and admin
 HTML/RSC/text documents. Ordinary public pages/assets bypass this middleware.
-`npm run build` first exports Next, then `scripts/package-admin.mjs` embeds
+`npm run build` first generates a public static-page allowlist, exports Next,
+then `scripts/package-admin.mjs` verifies that allowlist against the export and embeds
 the generic admin documents in an ignored server-only module and removes
 `out/admin`. They are served only after authentication, with no-store,
 noindex, no-referrer, and a self-only CSP with hashes for Next's inline
@@ -401,8 +402,94 @@ guards. If collection was later enabled, disabling this read flag does
 **not** disable collection. Select `NEXT_PUBLIC_ANALYTICS_PROVIDER=none`
 and rebuild to stop this manual collector, or select `plausible` with its
 legacy domain to restore that provider and matching privacy/CSP in one
-deployment. Keep all automatic injection disabled. Do not remove Access
+deployment. Also set both location flags to `false` when stopping or changing
+the Cloudflare collector; the build rejects location enablement without
+Cloudflare mode. Keep all automatic injection disabled. Do not remove Access
 to troubleshoot the dashboard.
+
+### Approximate city and region counts
+
+This prospective layer does not change the native Cloudflare beacon, its sampled
+RUM dataset, or existing date-window semantics. The owner dashboard has an independent
+locations panel and `/api/admin/analytics/locations/?period=24h|7d|30d` read endpoint
+(GET/HEAD only, the same Access human-owner verification and canonical-host gate).
+Each source can load or fail independently. The new report shows accepted location
+pageviews, not unique visitors or Cloudflare visits: top 20 city/region/country
+groups, explicit unknowns, first accepted hour, hours with data, and capped dates.
+Current periods are partial; blocked requests, outages, privacy signals and disabled
+periods can undercount. The existing empty 30-day RUM result is a separate known
+provider caveat, not repaired or replaced by these new counts. No backfill is made.
+
+| Production-only setting | Behavior |
+|---|---|
+| `NEXT_PUBLIC_LOCATION_ANALYTICS_ENABLED` | Build-time; absent/`false` by default. Only exact `true`/`false` accepted when supplied; `true` requires Cloudflare mode. Chooses both collector and privacy copy |
+| `LOCATION_ANALYTICS_ENABLED` | Runtime; only exact `true` admits new counts, otherwise explicitly disabled |
+| `LOCATION_DB` | Dedicated D1 binding `website-location-analytics`, UUID `485b1276-7230-4928-b7b4-5448e59ddc22` |
+| `ANALYTICS_ENABLED` | Existing global private-read gate; also applies to location reads, not collection |
+
+The client sends one minimal same-origin POST per actual published pathname view to
+`/api/analytics/location/`, without cookies, referrer, query string, fragment or IDs.
+It never retries, counts prefetches, or counts hash/query-only changes. Canonical HTTPS
+and the generated published-route allowlist are checked in browser and server.
+Only the server's trusted `request.cf.country/region/city` supplies geography; caller
+geography and IP headers are never used. GPC/DNT suppress this additional collection.
+The endpoint requires same-origin Origin, JSON, POST, and a body no larger than 512
+bytes containing exactly one published `path`; the validated path is discarded.
+No CORS, public reads, raw-event logs, GPS/postal/coordinates, visitor IDs, user agents,
+IP storage, session profiles or CONTACT_KV public-event writes are added.
+Approximation can be wrong for VPN/mobile traffic. Owner entry remains full-document
+navigation so no public collector follows into private content.
+
+`migrations/location/0001_location_analytics.sql` creates only:
+`location_hourly(bucket_hour,country,region,city,page_views)` with that four-column
+primary key; `location_daily_budget(day_start,accepted)`; and the singleton
+`location_metadata(singleton,first_hour)`. Times are UTC hour/day boundaries.
+A BEFORE INSERT trigger applies to every atomic UPSERT, including existing buckets.
+It increments the global daily admission count only below 5,000; otherwise
+`RAISE(IGNORE)` prevents the aggregate write with zero additional rows written.
+Failures roll back the admission and aggregate together. At the cap, the API returns
+`429 limited` and the panel labels the date's counts potentially partial rather than
+inventing excluded totals. The cap bounds stored cardinality/writes, **not** total
+HTTP requests, shared Pages/D1 quotas or account billing. No paid upgrade is required.
+Private reads reuse the existing best-effort six/minute limiter with separate
+`analytics:locations:<minute>` keys, leaving RUM's budget unchanged.
+
+The scheduled-only `website-location-retention` Worker is configured solely in
+`workers/location-retention/wrangler.jsonc`: cron `7 * * * *`, no workers.dev,
+preview URLs, fetch handler or public routes; compatibility `2026-09-22`, flags `[]`.
+It deletes expired aggregates using the bucket-leading primary key, at most eight
+batches of 1,000 rows plus 32 expired budget rows per invocation. A remaining backlog
+is a visible failed cron requiring operator attention, not a silent success.
+The target active retention is about 31 days; UTC bucket boundaries, hourly scheduling
+and job delays can extend it. Monitor scheduled failures and restore timely cleanup.
+The feature-level first accepted hour is retained. Logs/traces are enabled and code
+logs only safe operation status and deleted-row totals, never visitor payloads.
+Cloudflare D1 Time Travel is always on: currently 7 days on Free, 30 on Paid. Deleted
+aggregates can remain in provider backups up to 30 additional days; do not promise
+immediate unrecoverable deletion.
+
+Operator-controlled rollout (do not add a root Pages Wrangler config):
+
+```powershell
+# Local migration validation first; no production writes.
+npx wrangler d1 migrations apply website-location-analytics --local --config workers\location-retention\wrangler.jsonc
+npm run types:retention
+npx wrangler deploy --dry-run --config workers\location-retention\wrangler.jsonc
+# Approved operator only, after schema/runtime review:
+npx wrangler d1 migrations apply website-location-analytics --remote --config workers\location-retention\wrangler.jsonc
+npx wrangler deploy --config workers\location-retention\wrangler.jsonc
+```
+
+Bind only Production to that dedicated DB, initially with both new flags false.
+Verify schema, scheduled cleanup and the default-off Git-connected preview, then
+merge through the normal Pages Git deployment. Coordinated production activation
+sets both flags true and rebuilds privacy/collector together. Preserve the Pages
+compatibility date `2026-09-07` and empty flags. Never bind the production DB or
+enable either new flag in Preview. To pause immediately, set the runtime gate false;
+the build flag and disabled privacy copy take effect at the next Git-connected
+deployment. Keep cleanup running while retained aggregates exist. Do not weaken Access,
+copy owner cookies/JWTs, write synthetic production pageviews, or claim that a local
+test verifies the owner's current live session.
 
 ### Local verification
 
@@ -414,6 +501,7 @@ build/test pair. To exercise legacy mode:
 ```powershell
 $env:NEXT_PUBLIC_PLAUSIBLE_DOMAIN='doyel-labs.com'
 $env:NEXT_PUBLIC_ANALYTICS_PROVIDER='plausible'
+$env:NEXT_PUBLIC_LOCATION_ANALYTICS_ENABLED='false'
 npm run build
 npm run typecheck
 npm run lint
@@ -431,7 +519,8 @@ private-route denials. They do not read live metrics or change Access policy.
 
 Repeat with `NEXT_PUBLIC_ANALYTICS_PROVIDER=cloudflare` and the synthetic
 `NEXT_PUBLIC_CF_WEB_ANALYTICS_TOKEN=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa`,
-then with provider `none`. Never use actual account credentials in tests.
+and `NEXT_PUBLIC_LOCATION_ANALYTICS_ENABLED=true`, then with provider `none`
+and the location flag `false`. Never use actual account credentials in tests.
 The Cloudflare browser test downloads the current public beacon JavaScript,
 executes it against locally intercepted pages with a synthetic token, and
 intercepts **all** browser traffic, including every ingestion request.
@@ -461,6 +550,17 @@ No provider, visitor, contact, or ingestion traffic leaves this harness.
 This local success is not verification of the stored Production token;
 hosted previews still deny all admin requests at the canonical-host gate.
 
+`npm run test:locations` runs the dedicated unit and native D1 tests after build
+(also included in `test:analytics`). All databases are local; all egress is intercepted.
+Coverage includes authenticated real-schema reads, concurrent existing/new buckets,
+exact cap boundaries, zero-write cap rejection, statement/batch rollback, all UTC
+presets, top-20 limits, unknown/bounded/injection-shaped labels, privacy signals,
+invalid/oversized paths and bodies, service failures, independent throttles, indexed
+retention, bounded cleanup/backlog recovery and no forbidden persisted columns.
+Chromium tests exercise the enabled collector with intercepted requests, flag-off
+builds, cookie/referrer omission, SPA/prefetch/hash/query behavior, owner isolation,
+independent panel failures and responsive unknown/cap/coverage states.
+
 Official references (reviewed 2026-09-22):
 [Access JWT validation](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/validating-json/),
 [human versus service tokens](https://developers.cloudflare.com/cloudflare-one/access-controls/applications/http-apps/authorization-cookie/application-token/),
@@ -477,6 +577,10 @@ Official references (reviewed 2026-09-22):
 [manual beacon CSP](https://developers.cloudflare.com/web-analytics/faq/#how-can-i-use-web-analytics-with-a-content-security-policy-csp),
 [RUM privacy](https://developers.cloudflare.com/speed/observatory/rum-beacon/#privacy-information),
 [KV consistency](https://developers.cloudflare.com/kv/api/write-key-value-pairs/#concurrent-writes-to-the-same-key).
+Location references:
+[D1 atomic batches](https://developers.cloudflare.com/d1/worker-api/d1-database/),
+[D1 limits and Time Travel windows](https://developers.cloudflare.com/d1/platform/limits/),
+[always-on Time Travel backups](https://developers.cloudflare.com/d1/reference/time-travel/).
 
 ## Adding a changelog entry (post-v22 pattern)
 

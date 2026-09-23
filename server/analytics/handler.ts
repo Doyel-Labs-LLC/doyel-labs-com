@@ -1,9 +1,10 @@
-import { requireOwner, type AnalyticsEnv } from "./access";
+import { requireOwner } from "./access";
 import { adminAssets } from "./admin-assets.generated";
 import { AnalyticsError, errorResponse, jsonResponse, privateHeaders } from "./http";
 import { loadReport, parsePreset, providerConfig } from "./provider";
+import { loadLocationReport, locationReadConfig, type LocationEnv } from "./location";
 
-export async function handleAdmin(request: Request, env: AnalyticsEnv): Promise<Response> {
+export async function handleAdmin(request: Request, env: LocationEnv): Promise<Response> {
   try {
     await requireOwner(request, env);
     if (request.method !== "GET" && request.method !== "HEAD") {
@@ -12,17 +13,19 @@ export async function handleAdmin(request: Request, env: AnalyticsEnv): Promise<
       return response;
     }
     const url = new URL(request.url);
-    if (url.pathname === "/api/admin/analytics" || url.pathname === "/api/admin/analytics/") {
+    const locations = ["/api/admin/analytics/locations", "/api/admin/analytics/locations/"].includes(url.pathname);
+    if (locations || url.pathname === "/api/admin/analytics" || url.pathname === "/api/admin/analytics/") {
       const origin = request.headers.get("Origin");
       if ((origin && origin !== url.origin) || request.headers.get("Sec-Fetch-Site") === "cross-site") {
         throw new AnalyticsError("forbidden", 403, "Cross-site analytics requests are not allowed.");
       }
       const preset = parsePreset(url);
       if (request.method === "HEAD") {
-        providerConfig(env);
+        if (locations) locationReadConfig(env);
+        else providerConfig(env);
         return new Response(null, { headers: privateHeaders() });
       }
-      return jsonResponse(await loadReport(env, preset));
+      return jsonResponse(locations ? await loadLocationReport(env, preset) : await loadReport(env, preset));
     }
     if (["/admin", "/admin/", "/admin/analytics"].includes(url.pathname)) {
       const headers = privateHeaders();

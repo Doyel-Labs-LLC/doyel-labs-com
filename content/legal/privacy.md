@@ -106,9 +106,39 @@ describes its processing.
 No visitor analytics provider is enabled for this website build.
 <!-- /analytics -->
 
+<!-- location:enabled -->
+### Approximate city and region counts
+
+We also collect **first-party approximate location counts** on published public pages.
+One same-origin request sends only the published page path, without its query string,
+fragment, referrer, or cookies. The server validates and discards that path. Cloudflare
+supplies approximate country, region, and city from its request metadata; we do not
+request GPS, postal addresses, or latitude/longitude. VPNs and mobile networks can
+mislocate activity, and missing locations are grouped as unknown.
+
+Our dedicated Cloudflare D1 database stores only hourly country/region/city counters,
+daily admission totals, and the hour when collection first received data. It never
+stores raw events, IP addresses, paths, queries, referrers, user agents, visitor IDs,
+cookies, fingerprints, or per-person profiles. These are accepted pageviews, not
+unique visitors, and are separate from Cloudflare Web Analytics estimates.
+Collection starts at launch without historical backfill, stops after 5,000 accepted
+pageviews per UTC day, and honors available Global Privacy Control and Do Not Track
+signals. Blocked requests, disabled collection, and the cap can make counts incomplete.
+
+Active hourly aggregates and daily budgets are retained for about 31 days, with hourly
+cleanup; bucket boundaries and delayed cleanup can extend this slightly. The coarse feature-start
+hour is retained while this feature exists. Cloudflare D1's always-on Time Travel
+backups may retain deleted aggregates for up to 30 additional days (currently 7 days
+on Free and 30 days on Paid); deletion is not immediately unrecoverable.
+<!-- /location -->
+
+<!-- location:disabled -->
+First-party city and region collection is not enabled for this website build.
+<!-- /location -->
+
 Visitor analytics is excluded from the private owner dashboard, local development,
 and preview hostnames. We do not record form values, keystrokes, or session replay.
-There are no additional advertising or visitor-tracking scripts. We do not use
+There are no advertising or cross-site visitor-tracking scripts. We do not use
 Google Analytics, Meta Pixel, Microsoft Clarity, Hotjar, FullStory, LogRocket, or any
 session-replay tool.
 

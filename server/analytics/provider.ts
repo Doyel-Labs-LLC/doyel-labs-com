@@ -49,10 +49,10 @@ export function providerConfig(env: AnalyticsEnv) {
   return { account: env.CF_ACCOUNT_ID, site: env.CF_WEB_ANALYTICS_SITE_TAG, token: env.CF_ANALYTICS_API_TOKEN, kv: env.CONTACT_KV };
 }
 
-export async function rateLimit(kv: QueryLimitStore, now = Date.now()): Promise<void> {
+export async function rateLimit(kv: QueryLimitStore, now = Date.now(), scope: "owner" | "locations" = "owner"): Promise<void> {
   // Existing Pages KV: no visitor data or identifiers. Best-effort across
   // locations because KV is eventually consistent, not an atomic limiter.
-  const key = `analytics:owner:${Math.floor(now / 60000)}`;
+  const key = `analytics:${scope}:${Math.floor(now / 60000)}`;
   try {
     const value = await kv.get(key);
     if (value !== null && !/^[0-6]$/.test(value)) throw new Error("Invalid limiter state");

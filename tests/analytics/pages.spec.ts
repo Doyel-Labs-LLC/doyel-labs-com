@@ -4,7 +4,7 @@ import { adminAssets } from "../../server/analytics/admin-assets.generated";
 const base = "http://127.0.0.1:3192";
 test("real Pages runtime applies shipped private routes and denies alternate hosts", async ({ request }) => {
   for (const host of ["127.0.0.1:3192", "website-8xx.pages.dev", "preview.website-8xx.pages.dev"]) {
-    for (const path of ["/admin", "/admin/", "/admin/analytics", "/admin/analytics/", "/api/admin", "/api/admin/", "/api/admin/analytics", "/api/admin/analytics/", ...Object.keys(adminAssets)]) {
+    for (const path of ["/admin", "/admin/", "/admin/analytics", "/admin/analytics/", "/api/admin", "/api/admin/", "/api/admin/analytics", "/api/admin/analytics/", "/api/admin/analytics/locations/", "/api/analytics/location/", ...Object.keys(adminAssets)]) {
       const response = await request.get(`${base}${path}`, { headers: { Host: host }, maxRedirects: 0 });
       expect(response.status(), `${host}${path}`).toBe(403);
       expect(response.headers()["cache-control"]).toContain("no-store");
@@ -13,6 +13,18 @@ test("real Pages runtime applies shipped private routes and denies alternate hos
       expect(response.headers()["access-control-allow-origin"]).toBeUndefined();
       expect(await response.text()).not.toContain("<html");
     }
+  }
+});
+
+test("real Pages runtime denies noncanonical location writes before any storage or configuration", async ({ request }) => {
+  for (const host of ["127.0.0.1:3192", "website-8xx.pages.dev", "preview.website-8xx.pages.dev"]) {
+    const response = await request.post(`${base}/api/analytics/location/`, {
+      headers: { Host: host, Origin: "https://doyel-labs.com", "Content-Type": "application/json" }, data: { path: "/" },
+    });
+    expect(response.status()).toBe(403);
+    expect(response.headers()["cache-control"]).toContain("no-store");
+    expect(response.headers()["access-control-allow-origin"]).toBeUndefined();
+    expect(await response.text()).not.toContain("accepted");
   }
 });
 
