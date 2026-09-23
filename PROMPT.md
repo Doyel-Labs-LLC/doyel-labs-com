@@ -149,6 +149,18 @@ none may run on admin, preview, or local pages. Collector, CSP, and privacy
 copy must use the same selection. Never enable automatic injection or dual
 tracking. No raw-IP collection, replay, fingerprinting, form capture, or
 contact/browsing linkage. Backend read enablement is not collection enablement.
+The separately approved, default-off first-party location layer is allowed only
+with Cloudflare mode and `NEXT_PUBLIC_LOCATION_ANALYTICS_ENABLED=true`.
+`LOCATION_ANALYTICS_ENABLED` independently gates canonical same-origin ingest.
+Store only hourly country/region/city counts in dedicated `LOCATION_DB`, capped
+atomically at 5,000 accepted pageviews per UTC day. Never store paths, raw events,
+IP addresses, GPS/postal/coordinates, user agents, referrers, cookies or visitor IDs.
+Honor GPC/DNT; no retries, profiles, public KV writes, or custom CF beacon events.
+The owner-only locations panel is independent of RUM; counts are not unique people
+or CF visits. Surface unknowns, partial coverage, caps and no historical backfill.
+Retain about 31 days with the separate scheduled-only retention Worker; disclose
+provider backups up to 30 additional days. No production D1 bindings or flags in
+Preview, no root Pages Wrangler config, no billing or authentication changes.
 Payroll prepares records; it does not file taxes or move money.
 BAI can lose money; never promise returns. Existing product-specific
 limitations remain visible on relevant surfaces.

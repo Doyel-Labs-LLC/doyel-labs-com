@@ -54,7 +54,7 @@ test.describe("hosted owner entry", () => {
 
   test("preview and default private routes remain denied and excluded from the XML sitemap", async ({ request }) => {
     for (const origin of [new URL(preview!).origin, "https://website-8xx.pages.dev"]) {
-      for (const path of ["/admin", "/admin/analytics/", "/admin/analytics/index.html", "/admin/analytics/index.txt", "/api/admin", "/api/admin/analytics/"]) {
+      for (const path of ["/admin", "/admin/analytics/", "/admin/analytics/index.html", "/admin/analytics/index.txt", "/api/admin", "/api/admin/analytics/", "/api/admin/analytics/locations/"]) {
         const response = await request.get(`${origin}${path}`, { maxRedirects: 0 });
         expect(response.status()).toBe(403);
         expect(response.headers()["cache-control"]).toContain("no-store");
@@ -65,5 +65,26 @@ test.describe("hosted owner entry", () => {
     const sitemap = await request.get(`${new URL(preview!).origin}/sitemap.xml`);
     expect(sitemap.ok()).toBe(true);
     expect(await sitemap.text()).not.toContain("/admin");
+  });
+
+  test("new preview collection is inactive, disclosed honestly, and host-gated", async ({ page, request }) => {
+    const collection: string[] = [];
+    await page.route("**/*", async (route) => {
+      const url = new URL(route.request().url());
+      if (url.pathname === "/api/analytics/location/") collection.push(url.pathname);
+      if (route.request().method() !== "GET" || url.origin !== new URL(preview!).origin ||
+          url.pathname.startsWith("/api/")) return route.abort();
+      return route.continue();
+    });
+    await page.goto(`${new URL(preview!).origin}/legal/privacy/`);
+    await expect(page.getByText("First-party city and region collection is not enabled for this website build.")).toBeVisible();
+    await page.waitForLoadState("networkidle");
+    expect(collection).toEqual([]);
+    // Signed-out, alternate-host denial only; never emit a synthetic production pageview.
+    const response = await request.post(`${new URL(preview!).origin}/api/analytics/location/`, {
+      headers: { Origin: new URL(preview!).origin }, data: { path: "/" }, maxRedirects: 0,
+    });
+    expect(response.status()).toBe(403);
+    expect(response.headers()["cache-control"]).toContain("no-store");
   });
 });

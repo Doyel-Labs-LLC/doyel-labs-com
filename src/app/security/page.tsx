@@ -15,6 +15,7 @@ import {
 import { ContactLink } from "@/components/contact-link";
 import { site } from "@/lib/site";
 import { analyticsLabel } from "@/lib/analytics-config";
+import { locationAnalyticsEnabled } from "@/lib/location-config";
 
 export const metadata: Metadata = {
   title: "Security",
@@ -161,6 +162,7 @@ const WEBSITES_MAP = {
   yes: [
     "Static HTML, CSS, JavaScript on Cloudflare Pages",
     `This website's visitor analytics: ${analyticsLabel}; any enabled reporting is aggregate and cookieless`,
+    ...(locationAnalyticsEnabled ? ["First-party approximate city/region counts: hourly aggregates, no raw visitor events; about 31-day active retention with hourly cleanup and up to 30 additional days in provider backups"] : []),
     "Cloudflare Turnstile for form CAPTCHA on doyel-labs.com",
     "Forms wired to the operator's own inbox (Formspree, Resend, or similar), if the site takes forms",
   ],
@@ -168,7 +170,7 @@ const WEBSITES_MAP = {
     "Session-replay tools (Clarity, FullStory, Hotjar, LogRocket) — refused across the board",
     "Google Analytics, Meta Pixel, or any advertising cookie",
     "Visitor-event databases or contact-to-browsing profiles maintained by Doyel Labs",
-    "Personal data on Doyel Labs servers — visitor data goes to the operator's chosen tools",
+    "Raw visitor IPs, GPS coordinates, postal addresses, persistent IDs, or per-visitor profiles in our analytics database",
   ],
 };
 

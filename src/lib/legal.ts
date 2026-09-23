@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { marked } from "marked";
 import { analytics, selectAnalyticsPolicy } from "./analytics-config";
+import { locationAnalyticsEnabled, selectLocationPolicy } from "./location-config";
 
 /**
  * A minimal frontmatter+markdown loader. We keep legal drafts as plain
@@ -37,7 +38,8 @@ export function loadLegal(slug: string): LegalDoc {
   const path = join(process.cwd(), "content", "legal", `${slug}.md`);
   const raw = readFileSync(path, "utf-8");
   const { data, body } = parseFrontmatter(raw);
-  const html = marked.parse(slug === "privacy" ? selectAnalyticsPolicy(body, analytics.provider) : body) as string;
+  const html = marked.parse(slug === "privacy"
+    ? selectLocationPolicy(selectAnalyticsPolicy(body, analytics.provider), locationAnalyticsEnabled) : body) as string;
   return {
     slug,
     title: String(data.title || slug),

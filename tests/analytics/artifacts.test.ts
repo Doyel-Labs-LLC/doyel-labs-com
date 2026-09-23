@@ -30,6 +30,7 @@ test("shipped routes protect parent/slash/artifacts while preserving public and 
     "/admin", "/admin/", "/admin/analytics", "/admin/analytics/",
     "/api/admin", "/api/admin/", "/api/admin/analytics", "/api/admin/analytics/",
     ...Object.keys(adminAssets), "/api/contact", "/api/contact/",
+    "/api/analytics/location", "/api/analytics/location/", "/api/admin/analytics/locations/",
   ]) assert.equal(invokes(url), true, url);
   for (const url of ["/", "/contact/", "/services/", "/_next/static/chunks/example.js", "/media/logo.svg", "/sitemap.xml"]) {
     assert.equal(invokes(url), false, url);

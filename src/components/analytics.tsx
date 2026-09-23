@@ -4,6 +4,7 @@ import Script from "next/script";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { analytics, canCollectAnalytics } from "@/lib/analytics-config";
+import { LocationAnalytics } from "./location-analytics";
 
 /**
  * One build-selected provider. Check the actual browser origin before
@@ -18,13 +19,16 @@ export function Analytics() {
   }
   if (analytics.provider === "cloudflare") {
     return (
-      <Script
-        id="cloudflare-web-analytics"
-        type="module"
-        strategy="afterInteractive"
-        src="https://static.cloudflareinsights.com/beacon.min.js"
-        data-cf-beacon={JSON.stringify({ token: analytics.token })}
-      />
+      <>
+        <LocationAnalytics />
+        <Script
+          id="cloudflare-web-analytics"
+          type="module"
+          strategy="afterInteractive"
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({ token: analytics.token })}
+        />
+      </>
     );
   }
   return (
