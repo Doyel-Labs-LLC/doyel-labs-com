@@ -13,22 +13,22 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // v10: warm light canvas. Cream, not white, so the page feels like
-        // paper rather than a form. Ink is a warm near-black.
-        bg: "#faf7f2",
-        surface: "#ffffff",
-        surface2: "#f3efe8",
+        // v13: warm linen canvas with ivory cards and a sand band. No pure
+        // white anywhere, so the page feels like paper in afternoon light.
+        bg: "#f6eee2",
+        surface: "#fffaf2",
+        surface2: "#f1e7d8",
         // Type
         ink: "#1b1f26",
         mute: "rgba(27, 31, 38, 0.80)",
         // 0.68 alpha clears WCAG AA (4.5:1) for small text on the cream
-        // canvas and on white cards (≈ #626366 on #faf7f2 ≈ 5.3:1).
+        // canvas and on white cards (≈ #626366 on #f6eee2 ≈ 5.3:1).
         muted: "rgba(27, 31, 38, 0.68)",
         // Hairlines
         line: "rgba(27, 31, 38, 0.10)",
         line2: "rgba(27, 31, 38, 0.22)",
         // Teal accent — the logo's cyan, deepened so it passes AA as text
-        // on cream (#087187 on #faf7f2 ≈ 4.9:1).
+        // on cream (#087187 on #f6eee2 ≈ 4.9:1).
         accent: "#087187",
         accentHi: "#0b8aa3",
         // Solid-button hover / pressed: darker, so hover raises contrast.

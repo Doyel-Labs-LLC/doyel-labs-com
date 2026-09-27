@@ -84,9 +84,10 @@ const notFound = files.find((f) => relative(OUT, f) === "404.html");
 const rules = [];
 let longest = 0;
 
-// Catch-all: other headers stay in public/_headers; here we add the 404 CSP.
+// Catch-all CSP (used by the 404 page) goes INSIDE the existing `/*` block
+// of public/_headers. A second `/*` rule makes Cloudflare Pages drop the
+// first block's headers (HSTS, X-Frame-Options, Permissions-Policy, COOP).
 const catchAll = csp(notFound ? hashesFor(notFound) : []);
-rules.push(`/*\n  Content-Security-Policy: ${catchAll}`);
 longest = Math.max(longest, catchAll.length);
 
 for (const f of files) {
@@ -97,7 +98,16 @@ for (const f of files) {
   rules.push(`${url}\n  ! Content-Security-Policy\n  Content-Security-Policy: ${policy}`);
 }
 
-const existing = readFileSync(HEADERS, "utf8").trimEnd();
+const source = readFileSync(HEADERS, "utf8").trimEnd();
+if (!/^\/\*$/m.test(source)) {
+  console.error("csp-hashes: public/_headers has no `/*` block to add the catch-all CSP to");
+  process.exit(1);
+}
+if ((source.match(/^\/\*$/gm) || []).length > 1) {
+  console.error("csp-hashes: _headers already has more than one `/*` block (was the script run twice?)");
+  process.exit(1);
+}
+const existing = source.replace(/^\/\*$/m, `/*\n  Content-Security-Policy: ${catchAll}`);
 const existingRules = (existing.match(/^\/[^\n]*$/gm) || []).length;
 const total = existingRules + rules.length;
 if (total > 100) {

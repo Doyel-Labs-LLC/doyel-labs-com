@@ -316,14 +316,16 @@ edge on every `POST /api/contact` request. Flow:
    Google Workspace to the support inbox).
 4. Sends the visitor one best-effort automatic receipt (reply-to
    `support@`). It never repeats their message and only uses a first
-   name that is plain letters. A failure here is logged, not surfaced.
+   name that is plain letters. Receipts to the same address are capped
+   (one per day when `CONTACT_KV` is bound, otherwise the rate limiter).
+   A failure here is logged, not surfaced.
 5. Returns `{ ok: true, receipt }` on success or a JSON error the client
    renders with a fallback mailto. The success card mentions the
    receipt only when `receipt` is `true`.
 
 Both templates live in `src/lib/contact-email.ts` (tested in
-`tests/contact-email.test.ts`) and match the site: cream canvas, one
-white rounded card, Georgia headings, amber bar, solid teal pill button.
+`tests/contact-email.test.ts`) and match the site: linen canvas, one
+ivory rounded card, Georgia headings, amber bar, solid teal pill button.
 That file runs in the Worker, so it must not import `site.ts` (which
 reads `process.env`).
 

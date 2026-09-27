@@ -239,13 +239,13 @@ at home in the first second — and a buyer comparing agencies should see
 the finish of a company that sweats details: generous space, one clear
 action per band, nothing that wiggles for attention.
 
-**Palette (v10, light; `accentInk` added in v12).** Tokens live in
+**Palette (v10, light; `accentInk` added in v12; linen/ivory/sand in v13).** Tokens live in
 `tailwind.config.ts`.
 
 | Token | Value | Use |
 |---|---|---|
-| `bg` | `#faf7f2` | Cream canvas |
-| `surface` / `surface2` | `#ffffff` / `#f3efe8` | Cards, frames / warm band |
+| `bg` | `#f6eee2` | Warm linen canvas (never pure white) |
+| `surface` / `surface2` | `#fffaf2` / `#f1e7d8` | Ivory cards, frames / sand band |
 | `ink` | `#1b1f26` | Text |
 | `mute` / `muted` | 0.80 / 0.68 alpha ink | Body / captions (AA) |
 | `accent` / `accentInk` | `#087187` / `#06596a` | Teal: links, solid buttons / hover (hover always darkens) |
@@ -253,7 +253,7 @@ action per band, nothing that wiggles for attention.
 | `rise` / `fall` / `care` | green / red / amber | Status only |
 
 The logo mark keeps its own cyan (`#10c7eb`); the accent used for text
-and buttons is the deeper teal so it passes AA on cream.
+and buttons is the deeper teal so it passes AA on linen and sand.
 
 **Type.** Fraunces (variable, soft axis) for H1–H3, prices, and
 quotes; teal words inside a heading render in Fraunces italic.
@@ -264,7 +264,7 @@ system monospace for figures. Named scale: `display` 64 · `h2` 44 ·
 case** except the short eyebrow label above a heading.
 
 **Buttons.** One shared style (`src/components/button-styles.ts`):
-solid teal pill with white text for the primary action, white pill
+solid teal pill with white text for the primary action, ivory pill
 with a hairline for the secondary. Sentence case, arrow icon, 48px tall
 (40px small). One primary per band.
 
@@ -283,13 +283,13 @@ most one warm-washed panel per page besides the closing band.
 2. **Real screenshots** of shipped work (SteadFast), framed in a
    browser mock, labeled with the ownership disclosure.
 3. **Line illustrations** (`src/components/illus.tsx`): ink linework,
-   a teal wash, an amber fill, white paper shapes. Used as fallbacks
+   a teal wash, an amber fill, ivory paper shapes. Used as fallbacks
    and for small spots (footer, close band).
 
 No stock photography. No photos of anyone who works at Doyel Labs.
 
 **Email.** The contact notification and the visitor receipt share the
-site's look (`src/lib/contact-email.ts`): cream background, one white
+site's look (`src/lib/contact-email.ts`): linen background, one ivory
 rounded card, Georgia headings (the email-safe cousin of Fraunces), an
 amber bar, a solid teal pill button, and a plain-text twin. Light only.
 
@@ -305,14 +305,18 @@ class removed by a hashed inline script. Reduced motion disables all.
 
 - CSP with **no `'unsafe-inline'` in `script-src`**. Inline Next
   bootstrap scripts are hashed at build time by
-  `scripts/csp-hashes.mjs` into `public/_headers`. `style-src` keeps
+  `scripts/csp-hashes.mjs` into `out/_headers`. The catch-all CSP is merged
+  into the single existing `/*` block; a second `/*` block silently drops
+  the site-wide headers on Cloudflare Pages (the build fails if one exists). `style-src` keeps
   `'unsafe-inline'` (Next critical CSS). `connect-src` is `'self'`,
   the analytics host selected at build time, and Turnstile only.
   `report-uri` set.
 - HSTS with preload, `X-Content-Type-Options: nosniff`,
   `X-Frame-Options: DENY`, `frame-ancestors 'none'`,
   `Referrer-Policy: strict-origin-when-cross-origin`,
-  Permissions-Policy without `interest-cohort`.
+  Permissions-Policy without `interest-cohort`. Verify on the live site
+  with `curl -I`, not only in the file. `_headers` never applies to
+  Pages Functions, so `/api/contact` sets the same headers itself.
 - Analytics, disclosed in full: **Cloudflare Web Analytics** (cookieless
   beacon, no persistent identifier) plus **first-party approximate
   location counts** (hourly country/region/city counters in D1; no IP,
@@ -326,7 +330,8 @@ class removed by a hashed inline script. Reduced motion disables all.
   sits behind Cloudflare Access and is never indexed.
 - Contact form (`functions/api/contact.ts`): same-origin `Origin`
   required; `Content-Type: application/json` required; body capped at
-  16 KB; Turnstile verified with hostname check; rate limit counted
+  16 KB while streaming (never fully buffered); Turnstile verified with a strict hostname check (production accepts
+  only doyel-labs.com hosts); rate limit counted
   after Turnstile passes; **fails closed in production** if the
   Turnstile secret or the rate-limit binding is missing; 5-second
   timeouts on Turnstile and Resend; errors return a generic message
@@ -334,7 +339,8 @@ class removed by a hashed inline script. Reduced motion disables all.
   URL-encoded in the reply link; subject stripped of line breaks.
   After delivery, one best-effort receipt goes to the visitor: it
   never repeats their message, greets by first name only when the
-  name is plain letters, and its failure never fails the request.
+  name is plain letters, is capped per address (one per day with KV),
+  and its failure never fails the request.
   Processors disclosed in privacy: Cloudflare (Pages, Turnstile),
   Resend (email delivery), Google Workspace (mailbox).
 - `/.well-known/security.txt` published; `security@doyel-labs.com` is

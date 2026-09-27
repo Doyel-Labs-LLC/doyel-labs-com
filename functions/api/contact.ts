@@ -75,15 +75,47 @@ const GENERIC = {
   notConfigured: "The contact form isn't available right now. Please email support@doyel-labs.com.",
 } as const;
 
+// `_headers` rules don't apply to Pages Functions responses, so the API
+// sets its own. JSON only: nothing here may render, frame, or run script.
+const API_HEADERS = {
+  "cache-control": "no-store",
+  "x-content-type-options": "nosniff",
+  "x-frame-options": "DENY",
+  "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
+  "content-security-policy": "default-src 'none'; frame-ancestors 'none'",
+  "referrer-policy": "no-referrer",
+} as const;
+
 function j(status: number, body: Record<string, unknown>): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: {
-      "content-type": "application/json; charset=utf-8",
-      "cache-control": "no-store",
-      "x-content-type-options": "nosniff",
-    },
+    headers: { ...API_HEADERS, "content-type": "application/json; charset=utf-8" },
   });
+}
+
+/** Reads at most `max` bytes of the body; returns null if it is larger. */
+async function readBounded(request: Request, max: number): Promise<string | null> {
+  if (!request.body) return "";
+  const reader = request.body.getReader();
+  const chunks: Uint8Array[] = [];
+  let size = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    size += value.byteLength;
+    if (size > max) {
+      await reader.cancel();
+      return null;
+    }
+    chunks.push(value);
+  }
+  const all = new Uint8Array(size);
+  let at = 0;
+  for (const c of chunks) {
+    all.set(c, at);
+    at += c.byteLength;
+  }
+  return new TextDecoder().decode(all);
 }
 
 function isProduction(env: Env): boolean {
@@ -111,7 +143,7 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
 export const onRequest: PagesFunction<Env> = async () =>
   new Response("Method not allowed", {
     status: 405,
-    headers: { allow: "POST", "cache-control": "no-store" },
+    headers: { ...API_HEADERS, allow: "POST", "content-type": "text/plain; charset=utf-8" },
   });
 
 async function handleContact(request: Request, env: Env): Promise<Response> {
@@ -126,13 +158,13 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
   const len = Number(request.headers.get("content-length") || "0");
   if (len > LIMITS.body) return j(413, { error: "Message too large." });
 
-  let text: string;
+  let text: string | null;
   try {
-    text = await request.text();
+    text = await readBounded(request, LIMITS.body);
   } catch {
     return j(400, { error: "Could not read the request." });
   }
-  if (text.length > LIMITS.body) return j(413, { error: "Message too large." });
+  if (text === null) return j(413, { error: "Message too large." });
 
   let raw: ContactInput;
   try {
@@ -160,7 +192,7 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
     }
   } else {
     if (!c.turnstileToken) return j(403, { error: GENERIC.captcha });
-    const ok = await verifyTurnstile(env.TURNSTILE_SECRET_KEY, c.turnstileToken, clientIp);
+    const ok = await verifyTurnstile(env.TURNSTILE_SECRET_KEY, c.turnstileToken, clientIp, isProduction(env));
     if (!ok) return j(403, { error: GENERIC.captcha });
   }
 
@@ -223,8 +255,32 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
 
   // 7. Receipt to the visitor. Best effort: the message is already
   //    delivered, so a failure here is logged and never shown as an error.
-  const receipt = await sendReceipt(key, from, to, c.email, c.name);
+  //    Receipts to the same address are capped (one per day when KV is
+  //    bound), so the form can't be used to mail someone repeatedly.
+  const receipt = (await receiptAllowed(env, c.email)) && (await sendReceipt(key, from, to, c.email, c.name));
   return j(200, { ok: true, receipt });
+}
+
+const RECEIPT_WINDOW = 86400; // seconds
+
+async function receiptAllowed(env: Env, email: string): Promise<boolean> {
+  try {
+    const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(email.trim().toLowerCase()));
+    const id = "rcpt:" + [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+    if (env.CONTACT_KV) {
+      if (await env.CONTACT_KV.get(id)) return false;
+      await env.CONTACT_KV.put(id, "1", { expirationTtl: RECEIPT_WINDOW });
+      return true;
+    }
+    if (env.RATE_LIMITER) {
+      const { success } = await env.RATE_LIMITER.limit({ key: id });
+      return success;
+    }
+    return !isProduction(env);
+  } catch (e) {
+    console.error("contact: receipt limit error", e instanceof Error ? e.message : String(e));
+    return false;
+  }
 }
 
 async function sendReceipt(key: string, from: string, replyTo: string, email: string, name: string): Promise<boolean> {
@@ -250,7 +306,7 @@ async function sendReceipt(key: string, from: string, replyTo: string, email: st
   }
 }
 
-async function verifyTurnstile(secret: string, token: string, ip: string): Promise<boolean> {
+async function verifyTurnstile(secret: string, token: string, ip: string, production: boolean): Promise<boolean> {
   try {
     const form = new URLSearchParams();
     form.set("secret", secret);
@@ -268,8 +324,13 @@ async function verifyTurnstile(secret: string, token: string, ip: string): Promi
       console.warn("contact: turnstile failed", (body["error-codes"] || []).join(","));
       return false;
     }
-    // Token must have been issued for our site, not a lookalike.
-    if (body.hostname && !ALLOWED_HOSTS.has(body.hostname) && !/\.website\.pages\.dev$/.test(body.hostname) && body.hostname !== "localhost") {
+    // Token must have been issued for our site, not a lookalike. Production
+    // accepts only the real hostnames; previews also accept pages.dev/localhost.
+    const hostOk =
+      !!body.hostname &&
+      (ALLOWED_HOSTS.has(body.hostname) ||
+        (!production && (/^[a-z0-9-]+\.website\.pages\.dev$/.test(body.hostname) || body.hostname === "localhost")));
+    if (!hostOk) {
       console.warn("contact: turnstile hostname mismatch", body.hostname);
       return false;
     }

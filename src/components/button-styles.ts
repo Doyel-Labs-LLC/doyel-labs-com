@@ -3,7 +3,7 @@
  * the form submit, and every link CTA look and behave the same.
  *
  * Primary: solid teal, white text (5.6:1 on teal). Hover darkens, so the
- * hover state always raises contrast. Secondary: white with a hairline.
+ * hover state always raises contrast. Secondary: ivory with a hairline.
  */
 const base =
   "inline-flex cursor-pointer select-none items-center justify-center gap-2 rounded-full font-semibold leading-none transition-[background-color,border-color,color,box-shadow,transform] duration-200 ease-soft active:translate-y-px disabled:cursor-not-allowed disabled:opacity-60";

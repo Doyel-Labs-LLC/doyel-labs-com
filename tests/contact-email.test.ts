@@ -37,7 +37,7 @@ describe("notification email", () => {
     expect(html).toContain("&lt;b&gt;please&lt;/b&gt;");
     expect(html).toContain("Second line");
     expect(html).toContain("Reply to Jordan");
-    expect(html).toContain("#faf7f2");
+    expect(html).toContain("#f6eee2");
   });
   it("has a plain-text version with the message", () => {
     const text = renderNotificationText(visitor);

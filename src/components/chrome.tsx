@@ -264,7 +264,7 @@ export function GhostLink({ href, children, small = false, external = false }: {
   );
 }
 
-/** White card with a soft warm shadow. `accent` marks the recommended option. */
+/** Ivory card with a soft warm shadow. `accent` marks the recommended option. */
 export function Card({ title, children, accent = false }: { title: string; children: ReactNode; accent?: boolean }) {
   return (
     <div

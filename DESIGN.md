@@ -7,8 +7,8 @@ reference for tokens and rules.
 
 | Token | Value | Where |
 |---|---|---|
-| `bg` | `#faf7f2` | Cream canvas |
-| `surface` / `surface2` | `#ffffff` / `#f3efe8` | Cards, frames / warm band |
+| `bg` | `#f6eee2` | Warm linen canvas (never pure white) |
+| `surface` / `surface2` | `#fffaf2` / `#f1e7d8` | Ivory cards, frames / sand band |
 | `ink` | `#1b1f26` | Body and display type |
 | `mute` / `muted` | 0.80 / 0.68 alpha ink | Body below the lead / captions (AA) |
 | `line` / `line2` | 0.10 / 0.22 alpha ink | Hairlines |
@@ -34,13 +34,13 @@ sentence case** except the short eyebrow label.
 
 `buttonClass(variant, size)` in `src/components/button-styles.ts` is the
 only button style. Primary: solid teal pill, white text, hover darkens to
-`accentInk`. Secondary: white pill, hairline border. `textLink` is the
+`accentInk`. Secondary: ivory pill, hairline border. `textLink` is the
 inline link style.
 
 ## Email
 
 `src/lib/contact-email.ts` renders the internal notification and the
-visitor receipt: cream canvas, one white rounded card, Georgia headings,
+visitor receipt: linen canvas, one ivory rounded card, Georgia headings,
 amber bar, teal pill button, plain-text twin. Preview both by rendering
 them to HTML files before changing them.
 
@@ -58,7 +58,7 @@ grids in a row.
 
 Photos first, in slots (`<Photo>`; see `IMAGES.md`), then real SteadFast
 screenshots in a browser mock, then line illustrations
-(`src/components/illus.tsx`: ink linework, teal wash, amber fill, white
+(`src/components/illus.tsx`: ink linework, teal wash, amber fill, ivory
 paper shapes) as fallbacks. Names: `call`, `answer`, `three-days`, `keys`,
 `care`, `scope`, `flow`, `casper`, `lock`, `lost`.
 

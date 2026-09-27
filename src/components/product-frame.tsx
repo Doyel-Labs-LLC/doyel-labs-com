@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 /**
  * ProductFrame — the only surface that carries product UI on this site.
  *
- * A rounded white card with a hairline and corner labels. The
+ * A rounded ivory card with a hairline and corner labels. The
  * body renders a real reproduction of the underlying app screen so the
  * shapes stay honest. No live values ever go inside a frame; the data
  * comes from `src/lib/demo/*.ts` and every corner reads
