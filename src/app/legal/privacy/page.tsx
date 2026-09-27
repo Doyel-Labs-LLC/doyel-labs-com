@@ -1,0 +1,13 @@
+import type { Metadata } from "next";
+import { LegalPage } from "@/components/legal-page";
+import { loadLegal } from "@/lib/legal";
+
+export const metadata: Metadata = {
+  title: "Privacy Policy",
+  alternates: { canonical: "/legal/privacy/" },
+};
+
+export default function PrivacyPage() {
+  const doc = loadLegal("privacy");
+  return <LegalPage doc={doc} />;
+}

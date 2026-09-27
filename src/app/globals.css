@@ -1,0 +1,329 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --m-fast: 160ms;
+  --m-base: 240ms;
+  --m-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+html,
+body {
+  background: #faf7f2;
+  color: #1b1f26;
+  font-feature-settings: "ss01", "tnum", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Preventive: no page should ever cause horizontal scroll on mobile.
+   * If a specific element genuinely needs to overflow (e.g. a code
+   * block, a table), it should be `overflow-x-auto` on that element,
+   * not spill out to the body. */
+  overflow-x: hidden;
+}
+
+/* Long URLs, hashes, and other unbreakable strings should wrap
+ * gracefully on narrow screens rather than force horizontal scroll.
+ * Applied to any mono-font block so paths like
+ * `/writing/ai-native-software-what-we-write-what-we-generate/`
+ * always fit inside their container. */
+.font-mono,
+code {
+  overflow-wrap: anywhere;
+}
+
+/* Selection uses the cyan accent so highlighted text stands out. */
+::selection {
+  background: rgba(242, 180, 85, 0.45);
+  color: #1b1f26;
+}
+
+/* Focus ring uses the cyan accent — visible on the dark canvas without
+ * looking like a browser default. */
+:focus-visible {
+  outline: 2px solid #087187;
+  outline-offset: 2px;
+  border-radius: 2px;
+}
+
+/* Wordmark: spaced small caps. Sits next to the four-square logo. */
+.wordmark {
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+/* A subtle textured background used behind the hero. A quiet cyan mesh:
+ * a bright top-left glow, a soft bottom-right echo, and a faint cool
+ * wash through the middle so the near-black canvas has depth instead of
+ * reading flat. Still restrained — this is the only "gradient" on the
+ * site. A hairline grid overlay adds engineered texture without noise. */
+.hero-glow {
+  position: relative;
+  background:
+    radial-gradient(ellipse 900px 520px at 8% -10%, rgba(242, 180, 85, 0.22), transparent 62%),
+    radial-gradient(ellipse 720px 480px at 92% 110%, rgba(8, 113, 135, 0.10), transparent 60%),
+    radial-gradient(ellipse 700px 700px at 60% 30%, rgba(255, 255, 255, 0.6), transparent 70%);
+}
+/* A faint paper grid behind the hero, fading downward. */
+.hero-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    linear-gradient(to right, rgba(27, 31, 38, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(27, 31, 38, 0.045) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+}
+.hero-glow > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Elevated surface for cards and product frames. Depth on near-black
+ * comes from a faint top-lit gradient + an inset highlight + a soft dark
+ * drop (see the `card` shadow token), never a grey box-shadow. */
+.surface-card {
+  background: #ffffff;
+}
+/* Warm band: a soft cream-to-amber wash for one section per page. */
+.band-warm {
+  background:
+    radial-gradient(ellipse 800px 400px at 100% 0%, rgba(242, 180, 85, 0.18), transparent 60%),
+    #f3efe8;
+}
+
+/* A section divider that fades a cyan-tinted hairline in from the left,
+ * so band transitions feel intentional rather than ruled-off. Opt-in via
+ * the `.divider-soft` class on a top border element. */
+.divider-soft {
+  border-image: linear-gradient(to right, rgba(8, 113, 135, 0.35), rgba(27, 31, 38, 0.10) 22%, transparent 80%) 1;
+}
+
+/* Legal / docs prose. */
+.prose-legal {
+  color: rgba(27, 31, 38, 0.8);
+}
+.prose-legal h1 {
+  color: #1b1f26;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0 0 1rem;
+}
+.prose-legal h2 {
+  color: #1b1f26;
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 2rem 0 0.5rem;
+}
+.prose-legal p,
+.prose-legal li {
+  line-height: 1.7;
+  margin: 0.7rem 0;
+  font-size: 15px;
+}
+.prose-legal ol {
+  padding-left: 1.4rem;
+  list-style: decimal;
+}
+.prose-legal ul {
+  padding-left: 1.4rem;
+  list-style: disc;
+}
+.prose-legal a {
+  color: #087187;
+  text-decoration: underline;
+  text-decoration-color: rgba(8, 113, 135, 0.45);
+  text-underline-offset: 3px;
+}
+.prose-legal a:hover {
+  color: #0b8aa3;
+  text-decoration-color: #0b8aa3;
+}
+.prose-legal code {
+  font-family: var(--font-mono), "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+  font-size: 0.9em;
+  color: #1b1f26;
+  background: rgba(27, 31, 38, 0.06);
+  padding: 0.1rem 0.35rem;
+  border-radius: 3px;
+}
+.prose-legal strong {
+  color: #1b1f26;
+}
+
+/* Product frame corner labels — small caps mono. */
+.frame-label {
+  font-family: var(--font-mono), "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(27, 31, 38, 0.68);
+}
+
+/* Small accent bar used to introduce a band's eyebrow. Cyan, 24px wide. */
+.accent-bar {
+  display: inline-block;
+  width: 24px;
+  height: 2px;
+  background: #087187;
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
+/* Thin scrollbars everywhere */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(27, 31, 38, 0.18) transparent;
+}
+
+/* ── Scroll-reveal ───────────────────────────────────────────────
+ * Elements wrapped in <Reveal> start slightly offset with 0 opacity,
+ * then transition into place when IntersectionObserver flips `.reveal--in`.
+ * A safety fallback: if JS never runs, elements still render (fallback
+ * declared as `no-js` below). */
+.reveal {
+  opacity: 0;
+  transform: translate3d(0, 14px, 0);
+  transition:
+    opacity 700ms var(--m-ease, cubic-bezier(0.2, 0.8, 0.2, 1)),
+    transform 700ms var(--m-ease, cubic-bezier(0.2, 0.8, 0.2, 1));
+  will-change: opacity, transform;
+}
+.reveal--in {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+/* No-JS fallback: the <html> element starts with `no-js`; a tiny inline
+ * script in layout.tsx removes it before paint. If JS never runs, every
+ * reveal element is simply visible. No timers. */
+html.no-js .reveal {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+/* ── Hero fade-in on load ────────────────────────────────────────
+ * The hero's headline, subhead, and CTA row lift into place on
+ * first paint. Staggered by class. Doesn't need IntersectionObserver
+ * because it's always above the fold. */
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
+  }
+}
+.hero-in {
+  animation: hero-in 720ms var(--m-ease, cubic-bezier(0.2, 0.8, 0.2, 1)) both;
+}
+.hero-in--1 {
+  animation-delay: 40ms;
+}
+.hero-in--2 {
+  animation-delay: 140ms;
+}
+.hero-in--3 {
+  animation-delay: 240ms;
+}
+.hero-in--4 {
+  animation-delay: 340ms;
+}
+.hero-in--5 {
+  animation-delay: 440ms;
+}
+
+/* Trust strip — a mono-typed line of proof signals directly under the
+ * hero. Muted, tabular, small. Every item is a real fact. */
+/* Illustration wrapper: inline SVG inherits `currentColor` for lines and
+ * uses the cyan token for its single fill. */
+.illus {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: #1b1f26;
+}
+.illus .fill {
+  fill: #087187;
+  fill-opacity: 0.14;
+}
+.illus .warm {
+  fill: #f2b455;
+  fill-opacity: 0.55;
+}
+.illus .paper {
+  fill: #ffffff;
+}
+.illus .line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.illus .accent {
+  stroke: #087187;
+}
+.illus .dot {
+  fill: #087187;
+}
+
+/* Who-answers block in the footer. */
+.who-answers {
+  border: 1px solid rgba(8, 113, 135, 0.28);
+  background:
+    radial-gradient(ellipse 600px 300px at 100% 0%, rgba(242, 180, 85, 0.2), transparent 60%),
+    #ffffff;
+}
+
+.trust-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px 24px;
+  font-family: var(--font-mono), "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: rgba(27, 31, 38, 0.68);
+}
+.trust-strip strong {
+  color: #1b1f26;
+  font-weight: 600;
+}
+.trust-strip .dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #087187;
+  box-shadow: 0 0 8px rgba(8, 113, 135, 0.4);
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+/* Reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
