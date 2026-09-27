@@ -1,481 +1,198 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import {
+  Body,
   Card,
+  Close,
   Eyebrow,
-  GhostLink,
-  Grid2,
+  Feature,
   Grid3,
   H1,
   H2,
   Lead,
+  Notice,
   MetaRow,
   Page,
+  Section,
 } from "@/components/chrome";
-import { ContactWidget } from "@/components/contact-modal";
+import { Breadcrumbs } from "@/components/breadcrumbs";
+import { Illus } from "@/components/illus";
+import { Reveal } from "@/components/reveal";
 import { site } from "@/lib/site";
+import { analyticsLabel } from "@/lib/analytics-config";
+import { locationAnalyticsEnabled } from "@/lib/location-config";
 
 export const metadata: Metadata = {
-  title: "Security",
-  description: `${site.company} security posture — how we build, what we hold, how to report a vulnerability.`,
+  title: "Security — what this website does with your information",
+  description: `How ${site.domain} handles your information, in plain English: no cookies, no tracking, and a contact form that emails a person. Every line is backed by the site's code.`,
   alternates: { canonical: `https://${site.domain}/security/` },
 };
 
+const REPO_URL = "https://github.com/Doyel-Labs-LLC/doyel-labs-com";
+
+const link = "text-accent underline decoration-accentDim underline-offset-4 hover:text-accentHi";
+
 /**
- * Four product data maps + a controls table + a security changelog.
- * Written in the v4 voice: sentence-case body, cyan accent, no
- * "aerospace-lab" language.
+ * /security/ — describes doyel-labs.com itself and nothing else. Every
+ * claim here is backed by public/_headers, src/components/analytics.tsx,
+ * and functions/api/contact.ts. If those change, this page changes the
+ * same day (PROMPT.md §8).
  */
-const CONTROLS = [
-  {
-    area: "Passwords",
-    control:
-      "PBKDF2-SHA256 hashing on the payroll workspace, Argon2id on BAI account services. Minimum 12 characters. Rate-limited attempts.",
-    means:
-      "A stolen database does not give up passwords, and a leaked password from elsewhere is refused.",
-  },
-  {
-    area: "Passkeys",
-    control:
-      "Optional WebAuthn passkey enrolment on payroll and BAI accounts.",
-    means:
-      "A password alone is not the only path in. A hardware-bound key is available.",
-  },
-  {
-    area: "Sessions",
-    control:
-      "Short-lived signed access tokens; rotating refresh tokens bound to one device. ConnectionLoop stores its session in the OS keychain.",
-    means:
-      "A copied token dies in minutes. A replayed refresh token kills the whole family and emails you.",
-  },
-  {
-    area: "Broker credentials (BAI)",
-    control:
-      "Kept only on the operator's computer in Windows Credential Manager. Never sent to Doyel Labs.",
-    means:
-      "Our servers cannot place an order at your broker. A breach on our side cannot reach your brokerage account.",
-  },
-  {
-    area: "Bank details (Payroll)",
-    control:
-      "Bank routing and account numbers are not stored on Doyel Labs servers at all. The operator pays through their own bank.",
-    means:
-      "There is nothing on our side that can move a wage, and nothing to steal that would.",
-  },
-  {
-    area: "Contact form (this site)",
-    control:
-      "POSTs to /api/contact, a Cloudflare Pages Function that verifies a Turnstile challenge, then relays via Resend to support@doyel-labs.com.",
-    means:
-      "Bots are filtered before they reach our mail server. The visitor never talks to our inbox directly.",
-  },
-  {
-    area: "Updates",
-    control:
-      "BAI updates are signed and refused mid-trade. The website ships as static assets on Cloudflare Pages with no server runtime.",
-    means:
-      "No unsigned code runs on your machine. Nothing lands mid-trade.",
-  },
-  {
-    area: "Payments",
-    control:
-      "Card details go to Stripe's pages when a paid program subscribes. We hold a customer id and a status.",
-    means: "We never see or store a card number.",
-  },
-  {
-    area: "Web pages",
-    control:
-      "Strict content-security policy on every page. HSTS with preload. Frame-ancestors 'none'. Only Plausible and Cloudflare Turnstile are allowed as third-party hosts. No session replay, no marketing pixels.",
-    means:
-      "An injected string on any of our pages renders as text and cannot run. Analytics is coarse and cookieless.",
-  },
-  {
-    area: "Logs",
-    control:
-      "Structured logs with a redaction pass tested in CI. Payroll audit retention 180 days. Crash reports opt-in and scrubbed twice.",
-    means:
-      "Secrets, addresses, and account numbers do not end up in a log line.",
-  },
-  {
-    area: "Audit",
-    control:
-      "Every sign-in, device change, billing event, rate change, armed session, and staff action leaves an audit row.",
-    means: "Anything done to your account can be traced.",
-  },
-] as const;
-
-const PAYROLL_MAP = {
-  yes: [
-    "Contractor register (name, title, state, WD, contract, day rate)",
-    "SSN stored encrypted at rest",
-    "Pay-run drafts and generated stubs",
-    "Audit log rows (paystub generated, emailed, blocked)",
-    "Password hash (PBKDF2), passkey metadata, session tokens",
-    "Netlify Blobs storage scoped to the operator; 180-day audit retention",
-  ],
-  no: [
-    "Bank routing or account numbers",
-    "Contractor wages as a movable balance",
-    "Federal, state, or local tax returns",
-    "Card numbers",
-    "Any SSN in plaintext logs, emails, or exports",
-  ],
-};
-
-const BAI_MAP = {
-  yes: [
-    "Your email address and password hash",
-    "Devices that signed in and when",
-    "Subscription status and Stripe customer id",
-    "Which legal documents you accepted and when",
-    "Crash reports (only if you turned them on, identifying details removed)",
-  ],
-  no: [
-    "Broker usernames, passwords, tokens, or API keys",
-    "Positions, orders, fills, or account values",
-    "Market-data keys",
-    "Card numbers",
-    "The contents of the research chat",
-  ],
-};
-
-const CONNECTIONLOOP_MAP = {
-  yes: [
-    "Auth email, display name, avatar reference",
-    "Space membership rows and invite codes (hashed, not the family name)",
-    "Events, comments, photos, messages, lists, notes — inside a Space",
-    "Push notifications by kind and id (no content)",
-    "Crash notes, scrubbed twice, only when the person turned that on",
-  ],
-  no: [
-    "Other people's emails, ever rendered in the UI",
-    "Voice-list transcript bodies (beyond the single Google STT call)",
-    "Any content in a log line",
-    "A public feed or friends-of-friends graph",
-    "Cross-Space discovery",
-  ],
-};
-
-const WEBSITES_MAP = {
-  yes: [
-    "Static HTML, CSS, JavaScript on Cloudflare Pages",
-    "Plausible Analytics — cookieless, no personal data — when the operator enables it",
-    "Cloudflare Turnstile for form CAPTCHA on doyel-labs.com",
-    "Forms wired to the operator's own inbox (Formspree, Resend, or similar), if the site takes forms",
-  ],
-  no: [
-    "Session-replay tools (Clarity, FullStory, Hotjar, LogRocket) — refused across the board",
-    "Google Analytics, Meta Pixel, or any advertising cookie",
-    "Server-side runtime that Doyel Labs can push mutations to",
-    "Personal data on Doyel Labs servers — visitor data goes to the operator's chosen tools",
-  ],
-};
-
-const CHANGES = [
-  {
-    date: "2026-09-20",
-    text: "Cloudflare Turnstile added to the contact form. Third-party script host allowlist in the CSP updated to include challenges.cloudflare.com.",
-  },
-  {
-    date: "2026-09-20",
-    text: "Contact form live end-to-end. Sends from noreply@doyel-labs.com (verified in Resend) to support@doyel-labs.com. RESEND_API_KEY stored as an encrypted Pages secret.",
-  },
-  {
-    date: "2026-09-20",
-    text: "doyel-labs.com relaunched. Strict CSP, HSTS with preload, no third-party marketing scripts. Plausible-only for analytics.",
-  },
-  {
-    date: "2026-09-19",
-    text: "ConnectionLoop 0.2.106: privacy policy names voice-lists and crash-notes flows explicitly. Password policy on. Email enumeration protection on.",
-  },
-  {
-    date: "2026-09-07",
-    text: "BAI desk engine and watchdog now run inside a Windows job tied to the app. A stopped app leaves no process holding the installation open.",
-  },
-  {
-    date: "2026-09-06",
-    text: "BAI crash reports drop any field that names positions, orders, fills, money, or quantities before they are written.",
-  },
-];
-
 export default function Security() {
   return (
-    <Page
-      bandFooter={
-        <MetaRow>
-          If a claim here is unclear, write to{" "}
-          <a
-            href={`mailto:${site.securityEmail}`}
-            className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-          >
-            {site.securityEmail}
-          </a>
-          .
-        </MetaRow>
-      }
-    >
-      {/* HERO */}
-      <section className="hero-glow pt-24 md:pt-32">
-        <Eyebrow>Security</Eyebrow>
-        <H1>
-          What stays on <span className="text-accent">your</span> machine, and what we hold.
-        </H1>
-        <Lead>
-          The design starts from one rule: the thing that can spend money
-          lives on your machine, and the thing we run in the cloud cannot
-          spend it. Everything below follows from that.
-        </Lead>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <GhostLink href="#controls" small>
-            Controls table
-          </GhostLink>
-          <GhostLink
-            href={`mailto:${site.securityEmail}`}
-            small
-            external
-          >
-            Report a vulnerability
-          </GhostLink>
-        </div>
-      </section>
+    <Page>
+      <Breadcrumbs items={[{ name: "Security", href: "/security/" }]} />
 
-      {/* Data maps — Payroll */}
-      <section className="mt-24 border-t border-line pt-16">
-        <div className="max-w-3xl">
-          <Eyebrow>Payroll data map</Eyebrow>
-          <H2>
-            <span className="mt-2 block">Held and never held — payroll.</span>
-          </H2>
-        </div>
-        <div className="mt-10">
-          <Grid2>
-            <Card title="What we hold" accent>
-              <ul className="list-disc space-y-1 pl-4">
-                {PAYROLL_MAP.yes.map((t) => (
-                  <li key={t}>{t}</li>
-                ))}
-              </ul>
-            </Card>
-            <Card title="What we never hold">
-              <ul className="list-disc space-y-1 pl-4">
-                {PAYROLL_MAP.no.map((t) => (
-                  <li key={t}>{t}</li>
-                ))}
-              </ul>
-            </Card>
-          </Grid2>
-        </div>
-      </section>
-
-      {/* Data maps — BAI */}
-      <section className="mt-24 border-t border-line pt-16">
-        <div className="max-w-3xl">
-          <Eyebrow>BAI data map</Eyebrow>
-          <H2>
-            <span className="mt-2 block">Held and never held — BAI.</span>
-          </H2>
-        </div>
-        <div className="mt-10">
-          <Grid2>
-            <Card title="What we hold" accent>
-              <ul className="list-disc space-y-1 pl-4">
-                {BAI_MAP.yes.map((t) => (
-                  <li key={t}>{t}</li>
-                ))}
-              </ul>
-            </Card>
-            <Card title="What we never hold">
-              <ul className="list-disc space-y-1 pl-4">
-                {BAI_MAP.no.map((t) => (
-                  <li key={t}>{t}</li>
-                ))}
-              </ul>
-            </Card>
-          </Grid2>
-        </div>
-      </section>
-
-      {/* Data maps — ConnectionLoop */}
-      <section className="mt-24 border-t border-line pt-16">
-        <div className="max-w-3xl">
-          <Eyebrow>ConnectionLoop data map</Eyebrow>
-          <H2>
-            <span className="mt-2 block">
-              Held and never held — ConnectionLoop.
-            </span>
-          </H2>
-        </div>
-        <div className="mt-10">
-          <Grid2>
-            <Card title="What we hold" accent>
-              <ul className="list-disc space-y-1 pl-4">
-                {CONNECTIONLOOP_MAP.yes.map((t) => (
-                  <li key={t}>{t}</li>
-                ))}
-              </ul>
-            </Card>
-            <Card title="What we never hold">
-              <ul className="list-disc space-y-1 pl-4">
-                {CONNECTIONLOOP_MAP.no.map((t) => (
-                  <li key={t}>{t}</li>
-                ))}
-              </ul>
-            </Card>
-          </Grid2>
-        </div>
-      </section>
-
-      {/* Data maps — Websites */}
-      <section className="mt-24 border-t border-line pt-16">
-        <div className="max-w-3xl">
-          <Eyebrow>Websites data map</Eyebrow>
-          <H2>
-            <span className="mt-2 block">
-              Held and never held — websites we build.
-            </span>
-          </H2>
-        </div>
-        <div className="mt-10">
-          <Grid2>
-            <Card title="What ships" accent>
-              <ul className="list-disc space-y-1 pl-4">
-                {WEBSITES_MAP.yes.map((t) => (
-                  <li key={t}>{t}</li>
-                ))}
-              </ul>
-            </Card>
-            <Card title="What does not ship">
-              <ul className="list-disc space-y-1 pl-4">
-                {WEBSITES_MAP.no.map((t) => (
-                  <li key={t}>{t}</li>
-                ))}
-              </ul>
-            </Card>
-          </Grid2>
-        </div>
-      </section>
-
-      {/* Controls */}
-      <section id="controls" className="mt-24 border-t border-line pt-16">
-        <div className="max-w-3xl">
-          <Eyebrow>Controls</Eyebrow>
-          <H2>
-            <span className="mt-2 block">Specifically.</span>
-          </H2>
-        </div>
-        <div className="mt-8 overflow-x-auto border border-line">
-          <table className="w-full text-[13px]">
-            <thead className="bg-surface text-left font-mono text-[10px] uppercase tracking-wide text-muted">
-              <tr>
-                <th className="border-b border-line px-4 py-3">Area</th>
-                <th className="border-b border-line px-4 py-3">In place</th>
-                <th className="border-b border-line px-4 py-3">Meaning</th>
-              </tr>
-            </thead>
-            <tbody>
-              {CONTROLS.map((c) => (
-                <tr key={c.area} className="border-t border-line align-top">
-                  <td className="px-4 py-3 text-ink">{c.area}</td>
-                  <td className="px-4 py-3 text-mute">{c.control}</td>
-                  <td className="px-4 py-3 text-mute">{c.means}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
-
-      {/* Disclosure + account compromise */}
-      <section className="mt-24 border-t border-line pt-16">
-        <div className="max-w-3xl">
-          <Eyebrow>Reporting</Eyebrow>
-          <H2>
-            <span className="mt-2 block">Found something?</span>
-          </H2>
-        </div>
-        <div className="mt-10">
-          <Grid2>
-            <Card title="Report a vulnerability" accent>
-              Write to{" "}
-              <a
-                href={`mailto:${site.securityEmail}`}
-                className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-              >
-                {site.securityEmail}
-              </a>
-              . Tell us what you found and how to reproduce it. We answer
-              within two business days, fix confirmed issues before
-              disclosing them, and credit reporters who want it. Machine-readable
-              policy at{" "}
-              <a
-                href="/.well-known/security.txt"
-                className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-              >
-                /.well-known/security.txt
-              </a>
-              .
-            </Card>
-            <Card title="If your account is compromised">
-              Sign out everywhere from the app, change your password, add
-              or rotate a passkey. For BAI, review your brokerage account
-              directly. Broker credentials were never on our servers, so a
-              breach on our side cannot reach your brokerage account.
-            </Card>
-          </Grid2>
-        </div>
-      </section>
-
-      {/* Security changelog */}
-      <section className="mt-24 border-t border-line pt-16">
-        <div className="max-w-3xl">
-          <Eyebrow>Security changes</Eyebrow>
-          <H2>
-            <span className="mt-2 block">What we fixed, and when.</span>
-          </H2>
-        </div>
-        <ul className="mt-10 space-y-4">
-          {CHANGES.map((c, i) => (
-            <li
-              key={i}
-              className="flex flex-wrap gap-x-6 gap-y-1 border-t border-line pt-3 text-[14px]"
-            >
-              <span className="w-28 shrink-0 font-mono text-[11px] text-muted">
-                {c.date}
-              </span>
-              <span className="max-w-prose text-mute">{c.text}</span>
-            </li>
-          ))}
-        </ul>
-        <p className="mt-6 text-[13px] text-mute">
-          Live service health:{" "}
-          <Link
-            href="/status/"
-            className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-          >
-            status page
-          </Link>
-          .
-        </p>
-      </section>
-
-      {/* Close CTA */}
-      <section className="mt-24 border-t border-line pt-16">
-        <div className="max-w-3xl">
-          <Eyebrow>Talk to us</Eyebrow>
-          <H2>
-            <span className="mt-2 block">
-              Questions before you sign?
-            </span>
-          </H2>
-          <p className="mt-6 text-[16px] leading-[1.7] text-mute">
-            Send us the operation and what would make it more defensible
-            on paper. We reply within one business day.
-          </p>
-          <div className="mt-8">
-            <ContactWidget label="Start a project" />
+      {/* 1. HERO */}
+      <section className="hero-glow pt-4">
+        <div className="grid grid-cols-1 items-center gap-12 [&>*]:min-w-0 md:grid-cols-[minmax(0,7fr)_minmax(0,6fr)] md:gap-10 lg:gap-16">
+          <div>
+            <div className="hero-in hero-in--1">
+              <Eyebrow>Security</Eyebrow>
+            </div>
+            <div className="hero-in hero-in--2">
+              <H1>
+                What this website does with your information, <span className="text-accent">in plain English</span>.
+              </H1>
+            </div>
+            <div className="hero-in hero-in--3">
+              <Lead>
+                This page describes {site.domain} itself. Every line here is backed by the code that runs the site. If
+                something changes, this page changes the same day.
+              </Lead>
+            </div>
+          </div>
+          <div className="hero-in hero-in--5">
+            <Illus name="lock" className="mx-auto max-w-md" />
           </div>
         </div>
       </section>
+
+      {/* 2. WHEN YOU VISIT */}
+      <Reveal>
+        <Section>
+          <Eyebrow>When you visit</Eyebrow>
+          <H2>What we count when you visit, and what we don&apos;t.</H2>
+          <Body>
+            We do measure traffic, and we&apos;d rather tell you exactly how than pretend we don&apos;t.
+          </Body>
+          <div className="mt-10">
+            <Grid3>
+              <Card title="Cookieless analytics">
+                {analyticsLabel} counts page views, referrers, and broad browser and device categories. No cookies, no
+                persistent identifier, no session recording. If your browser blocks it, nothing breaks.
+              </Card>
+              <Card title="Approximate location counts">
+                {locationAnalyticsEnabled
+                  ? "We keep hourly counts of visits by country, region, and city, using the approximate location Cloudflare attaches to the request. Nothing about you is stored with it: no IP address, no page path, no identifier. Do Not Track and Global Privacy Control are honored, and the counts are deleted after about 31 days."
+                  : "Approximate-location counting is switched off in this build."}
+              </Card>
+              <Card title="Static files over HTTPS">
+                Every page is a static file served by Cloudflare with strict security headers: HSTS, no framing, and a
+                content-security policy that only allows scripts from this site, the analytics provider, and Cloudflare
+                Turnstile.
+              </Card>
+            </Grid3>
+          </div>
+          <div className="mt-6">
+            <Notice>
+              The full wording, including retention periods and what the provider itself receives, is in the{" "}
+              <Link href="/legal/privacy/" className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi">
+                privacy policy
+              </Link>
+              . It is generated from the same configuration the site is built with, so it can&apos;t drift from reality.
+            </Notice>
+          </div>
+        </Section>
+      </Reveal>
+
+      {/* 3. WHEN YOU SEND THE FORM — the data map */}
+      <Reveal>
+        <Section id="contact-form">
+          <Eyebrow>When you send the form</Eyebrow>
+          <H2>Where your message goes, step by step.</H2>
+          <Body>
+            The contact form is the one place this site takes information from you. Here is exactly what happens to it.
+          </Body>
+          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-5">
+            <Feature step="01" title="It must come from here">
+              The message has to be sent from {site.domain} and stay under 16 KB. Anything else is refused before it is
+              read.
+            </Feature>
+            <Feature step="02" title="A person check">
+              A Cloudflare Turnstile check confirms you&apos;re a person. If the check can&apos;t run, the form refuses to
+              send rather than sending unchecked.
+            </Feature>
+            <Feature step="03" title="A per-address limit">
+              A limit on messages per address stops floods. It counts only after the person check, so bots can&apos;t use
+              up your allowance.
+            </Feature>
+            <Feature step="04" title="Emailed to a person">
+              The message is emailed to {site.supportEmail} through Resend, a mail-delivery service, and lands in a Google
+              Workspace mailbox. Nothing is written to a database.
+            </Feature>
+            <Feature step="05" title="Kept only as needed">
+              It stays in that mailbox as long as needed to reply and work together. If something fails, the error you
+              see never includes internal details.
+            </Feature>
+          </div>
+          <MetaRow>
+            Processors: Cloudflare (hosting, Turnstile, analytics) · Resend (email delivery) · Google Workspace (mailbox) · {analyticsLabel}</MetaRow>
+        </Section>
+      </Reveal>
+
+      {/* 4. WHAT WE DON'T DO */}
+      <Reveal>
+        <Section>
+          <Eyebrow>What we don&apos;t do</Eyebrow>
+          <H2>Three things this site will never add.</H2>
+          <div className="mt-10">
+            <Grid3>
+              <Card title="No session replay, ever">
+                No tools that record your screen, your mouse, or what you type. Not now, not later.
+              </Card>
+              <Card title="No ad pixels or retargeting">
+                Nothing here tells an ad network you visited. You won&apos;t see us following you around the web.
+              </Card>
+              <Card title="No selling or sharing form data">
+                What you write in the contact form goes to Doyel Labs and stays there. It is not sold, shared, or added
+                to a list.
+              </Card>
+            </Grid3>
+          </div>
+        </Section>
+      </Reveal>
+
+      {/* 5. REPORTING A PROBLEM */}
+      <Reveal>
+        <Section>
+          <Eyebrow>Reporting a problem</Eyebrow>
+          <H2>Found something wrong? Tell a person.</H2>
+          <Body>
+            Email{" "}
+            <a href={`mailto:${site.securityEmail}`} className={link}>
+              {site.securityEmail}
+            </a>{" "}
+            with what you found and how to reproduce it. A person reads it. The machine-readable policy is at{" "}
+            <a href="/.well-known/security.txt" className={link}>
+              /.well-known/security.txt
+            </a>
+            . We thank reporters, and we don&apos;t pursue good-faith research.
+          </Body>
+          <MetaRow>
+            The site&apos;s source is public on GitHub:{" "}
+            <a href={REPO_URL} className="text-ink hover:text-accentHi" target="_blank" rel="noopener noreferrer">
+              {REPO_URL.replace("https://", "")}
+            </a>
+          </MetaRow>
+        </Section>
+      </Reveal>
+
+      {/* 6. CLOSE */}
+      <Close eyebrow="Questions" title="Ask a person about any of this.">
+        If a line on this page isn&apos;t clear, or you want to know how we&apos;d handle your own site, call or write.
+        A person answers.
+      </Close>
     </Page>
   );
 }

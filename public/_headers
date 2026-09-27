@@ -1,51 +1,44 @@
-# Cloudflare Pages custom response headers.
-# Applied on top of Cloudflare's platform defaults. Marketing surface stays
-# free of third-party marketing pixels, session-replay tools, and cookie-set
-# network I/O. Plausible is the only third-party host allowed, and only when
-# `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` is set at build time.
+# Cloudflare Pages response headers.
 #
-# CSP notes:
-#   - `script-src` allows Plausible from `plausible.io`. No `'unsafe-inline'`
-#     because analytics injection uses an external script only.
-#   - `connect-src` includes the BAI control plane hosts (queried by
-#     `/status` from the viewer's browser) and Plausible's event endpoint.
-#   - `style-src` retains `'unsafe-inline'` because Next.js emits inline
-#     styles for critical CSS in a static export. This does not weaken the
-#     script surface.
-#   - `frame-ancestors 'none'` + `X-Frame-Options: DENY` — the site never
-#     accepts being framed.
+# The Content-Security-Policy is NOT in this file. `scripts/csp-hashes.mjs`
+# runs after `next build`, hashes the inline bootstrap scripts Next emits
+# on every exported page, and appends one CSP rule per page to
+# `out/_headers` — with no 'unsafe-inline' in script-src. Never deploy
+# `out/` without that step (`npm run build` runs it for you).
+#
+# Everything else that applies to the whole site lives here.
 
 /*
   Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), interest-cohort=(), browsing-topics=()
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()
   Cross-Origin-Opener-Policy: same-origin
-  Cross-Origin-Resource-Policy: same-origin
-  Content-Security-Policy: default-src 'self'; base-uri 'self'; form-action 'self' mailto: tel:; frame-ancestors 'none'; script-src 'self' 'unsafe-inline' https://plausible.io https://challenges.cloudflare.com; script-src-elem 'self' 'unsafe-inline' https://plausible.io https://challenges.cloudflare.com; frame-src https://challenges.cloudflare.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self' https://bai-control-plane-staging.fly.dev https://bai-control-plane.fly.dev https://plausible.io https://challenges.cloudflare.com; media-src 'self'; object-src 'none'; manifest-src 'self'; upgrade-insecure-requests
   X-Robots-Tag: index, follow
 
-# Cache static assets aggressively
+# Static assets are content-hashed; cache them for a year.
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable
 /media/*
   Cache-Control: public, max-age=31536000, immutable
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
 
-# security.txt is served directly at /.well-known/security.txt
+# The logo image is embedded in contact-form emails, so it must be
+# loadable cross-origin by webmail clients.
+/apple-touch-icon.png
+  Cross-Origin-Resource-Policy: cross-origin
+  Cache-Control: public, max-age=86400
+
 /.well-known/security.txt
   Content-Type: text/plain; charset=utf-8
   Cache-Control: public, max-age=3600
 
-# Next.js emits the Open Graph image at /opengraph-image with no file
-# extension, so we force image/png here.
+# Next emits the Open Graph images with no file extension.
 /opengraph-image
   Content-Type: image/png
   Cache-Control: public, max-age=86400
-
-# Per-section OG cards live at /<section>/opengraph-image (also no file
-# extension). The splat matches across path segments, so it covers both
-# /services/opengraph-image and /services/custom-software/opengraph-image.
 /*/opengraph-image
   Content-Type: image/png
   Cache-Control: public, max-age=86400

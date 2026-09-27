@@ -32,13 +32,13 @@ export function WebsiteSteadfastFrame() {
             width={1600}
             height={900}
             className="h-auto w-full"
-            priority={false}
+            priority
           />
         </div>
       </div>
       <figcaption className="mt-3 flex flex-wrap items-center justify-between gap-2 font-mono text-[10px] uppercase tracking-wide text-muted">
         <span>{steadfastCase.domain}</span>
-        <span>Built by Doyel Labs · Live since 2026</span>
+        <span>Built by Doyel Labs · founder-owned client · live since 2026</span>
       </figcaption>
     </figure>
   );

@@ -1,82 +1,34 @@
 import type { MetadataRoute } from "next";
 import { site } from "@/lib/site";
 
-// Required for `output: 'export'` so the sitemap is emitted as a static file.
 export const dynamic = "force-static";
 
-const base = `https://${site.domain}`;
-
 /**
- * Sitemap entries.
- *
- * `priority` signals the RELATIVE importance of pages to a crawler
- * within this site — not authority vs. other sites. We put the
- * software-studio surfaces at the top (services, pricing, industries,
- * case studies) so a re-crawl re-prioritizes them over the older
- * BAI-first pages that Google has cached.
+ * XML sitemap. Lists the eight public pages and the legal documents.
  */
-type Entry = { path: string; priority: number; change: "daily" | "weekly" | "monthly" | "yearly" };
-
-const entries: Entry[] = [
-  // Front door
-  { path: "/", priority: 1.0, change: "weekly" },
-  // What we sell (highest priority after home)
-  { path: "/services/", priority: 0.95, change: "weekly" },
-  { path: "/services/websites/", priority: 0.95, change: "weekly" },
-  { path: "/services/payroll/", priority: 0.95, change: "weekly" },
-  { path: "/services/custom-software/", priority: 0.95, change: "weekly" },
-  { path: "/pricing/", priority: 0.9, change: "monthly" },
-  { path: "/industries/", priority: 0.9, change: "monthly" },
-  { path: "/industries/federal-service-contractors/", priority: 0.85, change: "monthly" },
-  // Proof
-  { path: "/work/", priority: 0.85, change: "weekly" },
-  { path: "/writing/", priority: 0.8, change: "weekly" },
-  { path: "/writing/how-to-scope-software-when-you-dont-have-a-spec/", priority: 0.8, change: "monthly" },
-  { path: "/writing/ai-native-software-what-we-write-what-we-generate/", priority: 0.8, change: "monthly" },
-  { path: "/writing/shipping-steadfast-payroll-in-six-weeks/", priority: 0.8, change: "monthly" },
-  // Consultative entry points
-  { path: "/how-we-work/", priority: 0.9, change: "monthly" },
-  { path: "/contact/", priority: 0.8, change: "monthly" },
-  { path: "/faq/", priority: 0.75, change: "monthly" },
-  // Company info
-  { path: "/company/", priority: 0.7, change: "monthly" },
-  { path: "/founder/", priority: 0.8, change: "monthly" },
-  { path: "/press/", priority: 0.7, change: "monthly" },
-  { path: "/uses/", priority: 0.7, change: "monthly" },
-  { path: "/engineering/", priority: 0.7, change: "monthly" },
-  { path: "/security/", priority: 0.7, change: "monthly" },
-  // Support surfaces
-  { path: "/support/", priority: 0.65, change: "monthly" },
-  { path: "/docs/", priority: 0.6, change: "monthly" },
-  { path: "/docs/websites/", priority: 0.6, change: "monthly" },
-  { path: "/docs/payroll/", priority: 0.6, change: "monthly" },
-  // NOTE: /products/ (BAI Desk + ConnectionLoop) and /legal/bai/*
-  // are intentionally omitted. Those pages are marked
-  // `robots: { index: false, follow: true }` because they describe
-  // internal products that haven't shipped publicly yet — leaving
-  // them in the sitemap invites Google to re-crawl and re-cache
-  // them, which is exactly what caused "BAI trading desk" snippets
-  // to dominate the company-name search result. When a product
-  // ships publicly, add its route back here and flip the page-level
-  // robots metadata to `index: true`.
-  // Ops
-  { path: "/status/", priority: 0.5, change: "weekly" },
-  { path: "/changelog/", priority: 0.5, change: "weekly" },
-  { path: "/changelog/rss.xml", priority: 0.5, change: "weekly" },
-  { path: "/sitemap/", priority: 0.5, change: "monthly" },
-  // Legal — lowest priority
-  { path: "/legal/terms/", priority: 0.4, change: "yearly" },
-  { path: "/legal/privacy/", priority: 0.4, change: "yearly" },
-  { path: "/legal/payroll-data/", priority: 0.4, change: "yearly" },
-  { path: "/legal/risk/", priority: 0.4, change: "yearly" },
-];
-
 export default function sitemap(): MetadataRoute.Sitemap {
+  const base = `https://${site.domain}`;
   const now = new Date();
-  return entries.map(({ path, priority, change }) => ({
-    url: `${base}${path}`,
+  const entries: { path: string; priority: number; changeFrequency: "weekly" | "monthly" | "yearly" }[] = [
+    { path: "/", priority: 1, changeFrequency: "weekly" },
+    { path: "/websites/", priority: 0.9, changeFrequency: "monthly" },
+    { path: "/software/", priority: 0.8, changeFrequency: "monthly" },
+    { path: "/work/", priority: 0.7, changeFrequency: "monthly" },
+    { path: "/how-we-work/", priority: 0.7, changeFrequency: "monthly" },
+    { path: "/about/", priority: 0.6, changeFrequency: "monthly" },
+    { path: "/contact/", priority: 0.8, changeFrequency: "yearly" },
+    { path: "/security/", priority: 0.4, changeFrequency: "monthly" },
+    { path: "/legal/terms/", priority: 0.2, changeFrequency: "yearly" },
+    { path: "/legal/privacy/", priority: 0.2, changeFrequency: "yearly" },
+    { path: "/legal/payroll-data/", priority: 0.1, changeFrequency: "yearly" },
+    { path: "/legal/risk/", priority: 0.1, changeFrequency: "yearly" },
+    { path: "/legal/bai/terms/", priority: 0.1, changeFrequency: "yearly" },
+    { path: "/legal/bai/privacy/", priority: 0.1, changeFrequency: "yearly" },
+  ];
+  return entries.map((e) => ({
+    url: `${base}${e.path}`,
     lastModified: now,
-    changeFrequency: change,
-    priority,
+    changeFrequency: e.changeFrequency,
+    priority: e.priority,
   }));
 }

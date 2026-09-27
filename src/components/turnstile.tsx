@@ -1,19 +1,18 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
 
 /**
  * Cloudflare Turnstile widget wrapper.
  *
- * Renders as an invisible / minimal-friction CAPTCHA. On successful
- * challenge, the widget posts a token to a hidden `cf-turnstile-response`
- * form field that the server then verifies with Turnstile's siteverify
- * endpoint.
+ * Renders an interaction-only challenge. On success it hands the token
+ * to `onToken`. The parent can call `reset()` through the ref after a
+ * failed submit — tokens are single-use, so a retry with a spent token
+ * would fail server-side.
  *
- * If `NEXT_PUBLIC_TURNSTILE_SITE_KEY` is unset (e.g. local development),
- * the component renders nothing and the form still works — the server
- * simply skips token verification when neither the client nor the
- * secret are configured.
+ * If `NEXT_PUBLIC_TURNSTILE_SITE_KEY` is unset (local dev), the parent
+ * renders nothing here and the server, outside production, skips the
+ * check. In production the server fails closed.
  */
 declare global {
   interface Window {
@@ -25,7 +24,7 @@ declare global {
           theme?: "light" | "dark" | "auto";
           size?: "normal" | "compact" | "flexible";
           appearance?: "always" | "execute" | "interaction-only";
-          "callback"?: (token: string) => void;
+          callback?: (token: string) => void;
           "expired-callback"?: () => void;
           "error-callback"?: (err: string) => void;
         },
@@ -36,76 +35,71 @@ declare global {
   }
 }
 
+export type TurnstileHandle = { reset: () => void };
+
 const SCRIPT_ID = "cf-turnstile-script";
 const SCRIPT_SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js";
 
-export function Turnstile({
-  sitekey,
-  onToken,
-}: {
-  sitekey: string;
-  onToken: (token: string) => void;
-}) {
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const widgetIdRef = useRef<string | null>(null);
-  const onTokenRef = useRef(onToken);
-  onTokenRef.current = onToken;
+export const Turnstile = forwardRef<TurnstileHandle, { sitekey: string; onToken: (token: string) => void }>(
+  function Turnstile({ sitekey, onToken }, ref) {
+    const containerRef = useRef<HTMLDivElement | null>(null);
+    const widgetIdRef = useRef<string | null>(null);
+    const onTokenRef = useRef(onToken);
+    onTokenRef.current = onToken;
 
-  useEffect(() => {
-    if (!sitekey || typeof window === "undefined") return;
+    useImperativeHandle(ref, () => ({
+      reset() {
+        onTokenRef.current("");
+        if (widgetIdRef.current && window.turnstile) window.turnstile.reset(widgetIdRef.current);
+      },
+    }));
 
-    let cancelled = false;
+    useEffect(() => {
+      if (!sitekey || typeof window === "undefined") return;
+      let cancelled = false;
+      let poll: ReturnType<typeof setInterval> | null = null;
 
-    function render() {
-      if (cancelled || !containerRef.current || !window.turnstile) return;
-      widgetIdRef.current = window.turnstile.render(containerRef.current, {
-        sitekey,
-        theme: "dark",
-        appearance: "interaction-only",
-        callback: (token: string) => {
-          onTokenRef.current(token);
-        },
-        "expired-callback": () => {
-          onTokenRef.current("");
-        },
-        "error-callback": () => {
-          onTokenRef.current("");
-        },
-      });
-    }
+      function render() {
+        if (cancelled || !containerRef.current || !window.turnstile) return;
+        widgetIdRef.current = window.turnstile.render(containerRef.current, {
+          sitekey,
+          theme: "dark",
+          appearance: "interaction-only",
+          callback: (token: string) => onTokenRef.current(token),
+          "expired-callback": () => onTokenRef.current(""),
+          "error-callback": () => onTokenRef.current(""),
+        });
+      }
 
-    if (window.turnstile) {
-      render();
-    } else if (!document.getElementById(SCRIPT_ID)) {
-      const s = document.createElement("script");
-      s.id = SCRIPT_ID;
-      s.src = SCRIPT_SRC;
-      s.async = true;
-      s.defer = true;
-      s.onload = render;
-      document.head.appendChild(s);
-    } else {
-      // Script is loading — wait for it.
-      const t = setInterval(() => {
-        if (window.turnstile) {
-          clearInterval(t);
-          render();
-        }
-      }, 100);
+      if (window.turnstile) {
+        render();
+      } else if (!document.getElementById(SCRIPT_ID)) {
+        const s = document.createElement("script");
+        s.id = SCRIPT_ID;
+        s.src = SCRIPT_SRC;
+        s.async = true;
+        s.defer = true;
+        s.onload = render;
+        document.head.appendChild(s);
+      } else {
+        poll = setInterval(() => {
+          if (window.turnstile) {
+            if (poll) clearInterval(poll);
+            render();
+          }
+        }, 100);
+      }
+
       return () => {
         cancelled = true;
-        clearInterval(t);
+        if (poll) clearInterval(poll);
+        if (widgetIdRef.current && window.turnstile) {
+          window.turnstile.remove(widgetIdRef.current);
+          widgetIdRef.current = null;
+        }
       };
-    }
+    }, [sitekey]);
 
-    return () => {
-      cancelled = true;
-      if (widgetIdRef.current && window.turnstile) {
-        window.turnstile.remove(widgetIdRef.current);
-        widgetIdRef.current = null;
-      }
-    };
-  }, [sitekey]);
-
-  return <div ref={containerRef} className="mt-2" aria-hidden="false" />;
-}
+    return <div ref={containerRef} className="mt-2" />;
+  },
+);

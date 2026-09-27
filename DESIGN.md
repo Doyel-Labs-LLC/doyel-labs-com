@@ -1,95 +1,58 @@
-# Design — Doyel Labs (v2)
+# Design — Doyel Labs (v10)
 
-The full brief lives in [`PROMPT.md`](./PROMPT.md). This file is the
-short reference for the design system tokens and rules.
+The full brief lives in [`PROMPT.md`](./PROMPT.md). This file is the short
+reference for tokens and rules.
 
-## Palette
+## Palette (v10, warm light)
 
-Anchored on the physical Doyel Labs icon: four rounded squares in dark
-gray, mid gray, light gray, and cyan. The cyan is the single accent used
-across the site.
+| Token | Value | Where |
+|---|---|---|
+| `bg` | `#faf7f2` | Cream canvas |
+| `surface` / `surface2` | `#ffffff` / `#f3efe8` | Cards, frames / warm band |
+| `ink` | `#1b1f26` | Body and display type |
+| `mute` / `muted` | 0.80 / 0.68 alpha ink | Body below the lead / captions (AA) |
+| `line` / `line2` | 0.10 / 0.22 alpha ink | Hairlines |
+| **`accent`** / `accentHi` | `#087187` / `#0b8aa3` | Teal — links, CTAs, eyebrow bars |
+| `warm` / `warmSoft` | `#f2b455` / 16% | Illustration fills, one band wash. Never text. |
+| `rise` / `fall` / `care` | green / red / amber | Status only |
 
-| Token          | Value                             | Where                                     |
-| -------------- | --------------------------------- | ----------------------------------------- |
-| `bg`           | `#0a0f14`                         | Page canvas (softened from pure black)     |
-| `surface`      | `#12181f`                         | Inset panels, product frames, hover        |
-| `surface2`     | `#171e26`                         | Cards on `surface`, tables                 |
-| `ink`          | `#f0f0fa`                         | Body / display type                        |
-| `mute`         | `rgba(240,240,250,0.66)`          | Body below the lead                        |
-| `muted`        | `rgba(240,240,250,0.50)`          | Captions, footnotes (0.50 → WCAG AA at small sizes) |
-| `line`         | `rgba(240,240,250,0.10)`          | Default hairline                           |
-| `line2`        | `rgba(240,240,250,0.22)`          | CTA border, active hairline                |
-| **`accent`**   | `#10c7eb`                         | Cyan — the one accent color               |
-| `accentHi`    | `#4edcfb`                         | Cyan on hover                              |
-| `accentDim`   | `rgba(16,199,235,0.32)`           | Cyan hairline for cards / underlines       |
-| `accentSoft`  | `rgba(16,199,235,0.10)`           | Cyan wash on active band / primary CTA fill |
-| `iconDark`     | `#3f444b`                         | Icon square (top-left)                     |
-| `iconMid`      | `#878a91`                         | Icon square (top-right)                    |
-| `iconLight`    | `#c7cad0`                         | Icon square (bottom-left)                  |
-| `rise`         | `#4ed4a2`                         | Status up                                  |
-| `fall`         | `#ff7b8a`                         | Status down                                |
-| `care`         | `#f5c15a`                         | Program status chip (NOT SHIPPING, etc.)   |
+The logo mark keeps its own cyan (`#10c7eb`). Shadows are real and
+warm-grey (`card`, `cardHover`, `glow` tokens).
 
-## Usage rules for the accent
+## Type (new in v9)
 
-Cyan is used for:
+Named scale in `tailwind.config.ts`: `display` 56/1.05 · `displaySm` 38 ·
+`h2` 36/1.15 · `h2Sm` 28 · `h3` 22/1.3 · `body` 17/1.65 · `small` 15/1.55.
+**Headings are sentence case.** Uppercase only for eyebrows, nav, chips,
+and CTA pills. Inter for everything; JetBrains Mono for eyebrows, chips,
+and figures. Both self-hosted from `src/fonts/` via `next/font/local`.
 
-- The bottom-right square of the four-square logo.
-- Focus rings on every interactive element.
-- The active nav item and hover on nav links.
-- The primary CTA on any page (cyan pill with a cyan hairline).
-- The `AccentChip` used for "Live at …" and "In use at …" proof lines.
-- The eyebrow accent bar (a 24px cyan bar before every eyebrow label).
-- The `Notice` component's left border.
-- The `/status` "up" dot when the control plane is healthy.
-- Inline emphasis inside a headline (one word per H1 at most).
+## Layout primitives (`src/components/chrome.tsx`)
 
-Cyan is **not** used for:
+`Page` · `Section` (rhythm + top rule) · `Split` (text + visual) · `H1` ·
+`H2` · `H3` · `Lead` · `Body` · `Card` · `Grid2` / `Grid3` · `Feature`
+(numbered step) · `Checks` (bullet list) · `Faq` (details/summary) ·
+`Price` · `Notice` · `AccentChip` / `StatusChip` · `PrimaryLink` /
+`GhostLink` · `Close` (closing band with the modal CTA + phone) ·
+`WhoAnswers` (footer block). Max six sections per page; never two card
+grids in a row.
 
-- Body text (never).
-- Any card fill (only borders and 10-% washes).
-- Two CTAs on the same band — one primary, everything else ghost.
-- The BAI or ConnectionLoop program pages beyond the site's chrome —
-  those pages keep their own visual identity.
+## Imagery
 
-## Depth & elevation
+Photos first, in slots (`<Photo>`; see `IMAGES.md`), then real SteadFast
+screenshots in a browser mock, then line illustrations
+(`src/components/illus.tsx`: ink linework, teal wash, amber fill, white
+paper shapes) as fallbacks. Names: `call`, `answer`, `three-days`, `keys`,
+`care`, `scope`, `flow`, `casper`, `lock`, `lost`.
 
-The canvas is near-black, so depth is built from **light, not grey shadow**
-(a grey drop-shadow is invisible here). The recipe, encoded in the
-`surface-card` utility (`globals.css`) and the `card` / `cardHover` shadow
-tokens (`tailwind.config.ts`):
+## Motion
 
-- A faint top-lit surface gradient (white at ~2%, fading by 42%).
-- An inset 1px top highlight (light-from-above).
-- A soft, very dark drop for lift — never a grey box-shadow.
-- Hover warms the border to `accentDim`, lifts 2px, and deepens the drop.
-
-Applied through the shared `Card` component and the interactive link-cards
-(home / work / products), so every page inherits it. The hero uses a quiet
-cyan **mesh** (three radials) plus a hairline grid overlay (`.hero-glow`),
-and flagship band dividers use `.divider-soft` (a cyan-tinted hairline that
-fades in from the left, rhyming with the eyebrow accent bar). Elevation is
-still restrained: subtle is the point.
-
-## Typography
-
-- Inter with system fallbacks.
-- Display + nav: uppercase, tracked `-0.01em` on H1/H2, `0.06em` on nav.
-- Body: sentence case, 16px+, `line-height: 1.65`.
-- Legal / docs prose: never uppercase, ever.
+Hero fade-in (`.hero-in`) and one scroll reveal (`<Reveal>`). The `<html>`
+element starts with `no-js`; a hashed inline script removes it before
+paint. If JS never runs, every reveal is simply visible. Reduced motion
+disables everything.
 
 ## Icon
 
-Four rounded squares (radius 10 on a 100-unit square, 44 side length,
-4-unit gap, 4-unit padding). Colors in the palette table. Rendered as
-SVG (`/logo.svg`, `/favicon.svg`, `/icon-192.svg`). Used in:
-
-- The header, next to the "DOYEL LABS" wordmark.
-- The footer, small, before the same wordmark.
-- The home page hero and the `/company` page hero.
-- The `/programs` cards on the home page.
-
-## The rest
-
-Anything not covered here — content voice, page structure, refusals —
-lives in [`PROMPT.md`](./PROMPT.md).
+Four rounded squares — dark gray, mid gray, light gray, cyan. Header,
+footer, favicon, OG card, founder signature card.

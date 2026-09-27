@@ -40,7 +40,7 @@ export const stageMeta: Record<
     blurb: "Real software, available by invite while we finish review.",
   },
   soon: {
-    label: "Coming soon",
+    label: "In private testing",
     blurb: "In testing now; not yet open outside the pilot group.",
   },
 };
@@ -66,7 +66,7 @@ export const products: Product[] = [
     stage: "beta",
     tagline:
       "An autonomous trading desk that runs on your own computer — at your broker, under your rules.",
-    href: "/products/#bai",
+    href: "/work/#lab",
     meta: "Windows · macOS later · US-only at launch",
     pathToPublic: programStatus.bai.body,
   },
@@ -76,7 +76,7 @@ export const products: Product[] = [
     stage: "soon",
     tagline:
       "An invite-only shared calendar for families and small groups. Free. No ads. No public feed.",
-    href: "/products/#connectionloop",
+    href: "/work/#lab",
     meta: "iOS · Android · invite-only",
     pathToPublic: programStatus.connectionloop.body,
   },

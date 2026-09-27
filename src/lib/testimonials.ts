@@ -40,6 +40,10 @@ export type Testimonial = {
     label: string;
     href: string;
   };
+  /** Mandatory wherever the quote or logo appears (PROMPT.md §5). */
+  disclosure: string;
+  /** Date written permission to publish was received. */
+  permissionDate: string;
 };
 
 export const steadfastTestimonial: Testimonial = {
@@ -58,19 +62,22 @@ export const steadfastTestimonial: Testimonial = {
     "Doyel Labs brought technical skill, clear communication, and a genuine commitment to quality. We recommend them without hesitation to any organization looking for a capable and dependable development partner.",
   ],
   scope: [
-    "Ten-page marketing site on steadfasttransportationinc.com",
-    "Password-gated SCA-first payroll workspace on the same domain",
-    "SAM.gov wage-determination auto-lookup + floor checks on every draft",
-    "Batch pay-run engine with PDF stub export + operator-domain email",
-    "180-day audit log with CSV export for the SCA 3-year rule",
-    "WebAuthn passkey sign-in + full JSON / DOCX backups",
-    "Live in production; running weekly pay periods since 2026",
+    "Marketing site on steadfasttransportationinc.com",
+    "Password-gated payroll workspace on the same domain",
+    "SAM.gov wage-determination lookup with floor checks on every draft",
+    "Batch pay runs with PDF stubs, sent from the operator's own domain",
+    "180-day audit log with CSV export",
+    "Passkey sign-in and JSON / DOCX backups",
+    "Live in production since 2026",
   ],
   date: "2026-09-15",
   verify: {
-    label: "Verify at steadfasttransportationinc.com",
+    label: "See the live site",
     href: steadfastCase.liveUrl,
   },
+  disclosure:
+    "SteadFast Transportation Inc. is owned by Doyel Labs' founder. The work is real; the endorsement is not independent.",
+  permissionDate: "2026-09-15",
 };
 
 /** All testimonials, newest first. */

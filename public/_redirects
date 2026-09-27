@@ -1,51 +1,81 @@
-# Cloudflare Pages redirect table.
+# Cloudflare Pages redirect table (evaluated before static files).
 #
-# The previous site was branded as "BAI by Doyel Labs" and had /download as a
-# top-level BAI-only surface. All BAI-specific routes now live under
-# /products/ (with dedicated /legal/bai/* pages for the legal docs submitted
-# to Alpaca). ConnectionLoop lives on the same products page.
-#
-# NOTE: there is deliberately NO /pricing redirect. /pricing/ is now a real
-# page (top nav, sitemap). A legacy `/pricing/* -> /products/#bai` rule used
-# to shadow it and 301 every visitor to the products page — do not re-add it.
-#
-# The `/start/`, `/reviews/`, and `/case-studies/steadfast/` pages were
-# consolidated into `/contact/` and `/work/` respectively — they had too
-# little distinct content to earn their own routes and were adding
-# indexation noise on a name-search where the AI Overview is finally
-# picking up "custom software studio" as the primary identity.
+# v9 consolidated the site to eight pages. Every retired route 301s to
+# the page that now holds its content. Keep this list; old links live on
+# in search results and inboxes for years.
 
-# ── Old BAI-brand marketing routes ─────────────────────────────
-/download            /products/#bai                 301
-/download/*          /products/#bai                 301
+# ── Services → the two lanes ──────────────────────────────────
+/services                          /websites/                301
+/services/                         /websites/                301
+/services/websites                 /websites/                301
+/services/websites/*               /websites/                301
+/services/custom-software          /software/                301
+/services/custom-software/*        /software/                301
+/services/payroll                  /software/                301
+/services/payroll/*                /software/                301
 
-# ── Old programs tree → products page ───────────────────────────
-/programs            /products/                     301
-/programs/           /products/                     301
-/programs/bai        /products/#bai                 301
-/programs/bai/       /products/#bai                 301
-/programs/connectionloop        /products/#connectionloop  301
-/programs/connectionloop/       /products/#connectionloop  301
+# ── Pricing / FAQ / support → websites + how-we-work ──────────
+/pricing                           /websites/#pricing        301
+/pricing/*                         /websites/#pricing        301
+/faq                               /websites/#faq            301
+/faq/*                             /websites/#faq            301
+/support                           /how-we-work/             301
+/support/*                         /how-we-work/             301
+/start                             /how-we-work/             301
+/start/*                           /how-we-work/             301
+/docs                              /how-we-work/             301
+/docs/payroll                      /software/                301
+/docs/payroll/*                    /software/                301
+/docs/websites                     /websites/                301
+/docs/websites/*                   /websites/                301
+/docs/*                            /how-we-work/             301
 
-# ── Old per-program docs → products page ────────────────────────
-/docs/bai            /products/#bai                 301
-/docs/bai/           /products/#bai                 301
-/docs/connectionloop /products/#connectionloop      301
-/docs/connectionloop/ /products/#connectionloop     301
+# ── Company pages → about ─────────────────────────────────────
+/company                           /about/                   301
+/company/*                         /about/                   301
+/founder                           /about/                   301
+/founder/*                         /about/                   301
+/press                             /about/                   301
+/press/*                           /about/                   301
+/uses                              /about/                   301
+/uses/*                            /about/                   301
+/changelog                         /about/                   301
+/changelog/*                       /about/                   301
+/sitemap                           /                         301
+/sitemap/                          /                         301
 
-# ── Consolidated content ────────────────────────────────────────
-/start               /contact/                      301
-/start/              /contact/                      301
-/reviews             /work/                         301
-/reviews/            /work/                         301
-/case-studies                    /work/             301
-/case-studies/                   /work/             301
-/case-studies/steadfast          /work/             301
-/case-studies/steadfast/         /work/             301
+# ── Engineering / status → security ───────────────────────────
+/engineering                       /security/                301
+/engineering/*                     /security/                301
+/status                            /security/                301
+/status/*                          /security/                301
 
-# ── Legacy support / recovery routes ────────────────────────────
-/community           /support/                      301
-/community/*         /support/                      301
-/early-access        /contact/                      301
-/reset               /support/                      301
-/verify              /support/                      301
+# ── Industries → software ─────────────────────────────────────
+/industries                        /software/                301
+/industries/*                      /software/                301
+
+# ── Products / programs / BAI → work#lab ──────────────────────
+/products                          /work/#lab                301
+/products/*                        /work/#lab                301
+/programs                          /work/#lab                301
+/programs/*                        /work/#lab                301
+/download                          /work/#lab                301
+/download/*                        /work/#lab                301
+
+# ── Reviews / case studies → work ─────────────────────────────
+/reviews                           /work/                    301
+/reviews/*                         /work/                    301
+/case-studies                      /work/                    301
+/case-studies/*                    /work/                    301
+
+# ── Writing → work ────────────────────────────────────────────
+/writing                           /work/                    301
+/writing/*                         /work/                    301
+
+# ── Legacy app routes ─────────────────────────────────────────
+/community                         /contact/                 301
+/community/*                       /contact/                 301
+/early-access                      /contact/                 301
+/early-access/*                    /contact/                 301
+/reset                             /contact/                 301
+/verify                            /contact/                 301

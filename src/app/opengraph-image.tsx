@@ -1,4 +1,6 @@
 import { ImageResponse } from "next/og";
+import { readFileSync, existsSync } from "node:fs";
+import { join } from "node:path";
 
 // Static OG image, matches the design mockup: pure black background,
 // four-square logo in the top-left, and a single centered tagline —
@@ -23,10 +25,10 @@ export const alt =
 /** Palette pulled from Tailwind tokens so the OG image always matches
  * the site. Keep these in sync with `tailwind.config.ts`. */
 const palette = {
-  bg: "#000000",
-  ink: "#f0f0fa",
-  mute: "rgba(240, 240, 250, 0.60)",
-  accent: "#10c7eb",
+  bg: "#faf7f2",
+  ink: "#1b1f26",
+  mute: "rgba(27, 31, 38, 0.62)",
+  accent: "#087187",
   square: {
     dark: "#2a2f36",
     mid: "#6a7078",
@@ -35,7 +37,15 @@ const palette = {
   },
 } as const;
 
+/** Optional photo behind the card: public/media/generated/og-background.jpg. */
+function background(): string | null {
+  const file = join(process.cwd(), "public", "media", "generated", "og-background.jpg");
+  if (!existsSync(file)) return null;
+  return `data:image/jpeg;base64,${readFileSync(file).toString("base64")}`;
+}
+
 export default function OpengraphImage() {
+  const photo = background();
   return new ImageResponse(
     (
       <div
@@ -49,8 +59,28 @@ export default function OpengraphImage() {
           background: palette.bg,
           color: palette.ink,
           fontFamily: "sans-serif",
+          position: "relative",
         }}
       >
+        {photo ? (
+          <img
+            src={photo}
+            alt=""
+            width={1200}
+            height={630}
+            style={{ position: "absolute", top: 0, left: 0, width: "1200px", height: "630px", objectFit: "cover", opacity: 0.35 }}
+          />
+        ) : null}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: "1200px",
+            height: "630px",
+            background: "linear-gradient(90deg, rgba(250,247,242,0.96) 0%, rgba(250,247,242,0.82) 55%, rgba(250,247,242,0.45) 100%)",
+          }}
+        />
         {/* Top-left: four-square logo mark, standalone (no wordmark).
          * Squares are 60px with a 10px gap, matching the site's LogoMark
          * proportions. Corner radius keeps them readable at OG sizes. */}

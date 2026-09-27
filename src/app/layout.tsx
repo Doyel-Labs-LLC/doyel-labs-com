@@ -1,8 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, JetBrains_Mono } from "next/font/google";
+import localFont from "next/font/local";
 import "./globals.css";
 import { Analytics } from "@/components/analytics";
-import { site } from "@/lib/site";
+import { promise, site } from "@/lib/site";
+import { carePlan, customSoftware, websiteBuild } from "@/lib/offer";
 
 /**
  * Brand typefaces, self-hosted via next/font. The fonts are fetched at
@@ -13,129 +14,92 @@ import { site } from "@/lib/site";
  * the Tailwind stack but never loaded, so every visitor fell back to a
  * system font. The CSS variables feed `tailwind.config.ts`.
  */
-const inter = Inter({
-  subsets: ["latin"],
+const inter = localFont({
+  src: "../fonts/inter-latin-wght.woff2",
+  weight: "100 900",
   display: "swap",
   variable: "--font-sans",
 });
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
+const jetbrainsMono = localFont({
+  src: "../fonts/jetbrains-mono-latin-wght.woff2",
+  weight: "100 800",
   display: "swap",
   variable: "--font-mono",
 });
 
-/** Search-facing description. Read out loud on Google, in the AI Overview,
- * and in Twitter/LinkedIn cards. Must state, in plain English, what
- * Doyel Labs is and who we serve. No industry jargon in the first
- * sentence. This is the single source of truth for how we appear in
- * search; every page should defer to this framing. */
+/** Search-facing description. One plain sentence about what Doyel Labs
+ * is and who it serves. Every page defers to this framing. */
 const searchDescription =
-  "Doyel Labs LLC is a custom software studio in Casper, Wyoming. We build " +
-  "websites, payroll workspaces, internal tools, and bespoke programs for " +
-  "small operators through enterprise clients. Tell us what your business " +
-  "needs; we'll build it, ship it in weeks, and stay on to keep it running.";
+  `${site.company} builds websites and custom software for businesses, from ${site.city}. ` +
+  `A five-page website is ${websiteBuild.priceLabel}, live in ${websiteBuild.turnaround}. ` +
+  `Custom software is quoted in writing. You talk to a person, not a chatbot.`;
 
 export const metadata: Metadata = {
   title: {
-    default: `${site.company} — Custom software, websites, and business tools`,
+    default: `${site.company} — Websites and custom software. Real people build it.`,
     template: `%s · ${site.companyShort}`,
   },
   description: searchDescription,
   keywords: [
+    "website design",
+    "small business website",
     "custom software development",
-    "custom software agency",
-    "website development",
-    "web application development",
     "internal tools",
-    "business dashboard",
-    "client portal",
-    "customer portal",
     "payroll workspace",
-    "API integrations",
-    "small business software",
-    "enterprise software",
-    "mom and pop software",
-    "AI-native software agency",
-    "Casper Wyoming software",
+    "Casper Wyoming web design",
     "Doyel Labs",
   ],
   authors: [{ name: site.company, url: `https://${site.domain}/` }],
   creator: site.company,
   publisher: site.company,
   metadataBase: new URL(`https://${site.domain}`),
-  alternates: {
-    canonical: `https://${site.domain}/`,
-    types: {
-      "application/rss+xml": [
-        {
-          url: `https://${site.domain}/changelog/rss.xml`,
-          title: `${site.company} — Changelog`,
-        },
-      ],
-    },
-  },
+  alternates: { canonical: `https://${site.domain}/` },
   openGraph: {
-    title: `${site.company} — Custom software for small operators through enterprises`,
+    title: `${site.company} — Real people build it. A real person answers.`,
     description: searchDescription,
     type: "website",
     url: `https://${site.domain}/`,
     siteName: site.company,
     locale: "en_US",
-    images: [
-      {
-        url: `https://${site.domain}/opengraph-image`,
-        width: 1200,
-        height: 630,
-        alt: `${site.company} — the software your business runs on`,
-      },
-    ],
+    images: [{ url: `https://${site.domain}/opengraph-image`, width: 1200, height: 630, alt: `${site.company}` }],
   },
   twitter: {
     card: "summary_large_image",
-    title: `${site.company} — Custom software studio`,
+    title: `${site.company} — Websites and custom software`,
     description: searchDescription,
     images: [`https://${site.domain}/opengraph-image`],
   },
   robots: {
     index: true,
     follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
-    },
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
   },
   applicationName: site.company,
   manifest: "/manifest.webmanifest",
+  // Google Search only shows favicons that are a multiple of 48px, so the
+  // 48/96/192/512 PNGs come first. The .ico carries 16/32/48.
   icons: {
     icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon-48.png", type: "image/png", sizes: "48x48" },
+      { url: "/favicon-96.png", type: "image/png", sizes: "96x96" },
+      { url: "/favicon-192.png", type: "image/png", sizes: "192x192" },
+      { url: "/favicon-512.png", type: "image/png", sizes: "512x512" },
       { url: "/favicon-32.png", type: "image/png", sizes: "32x32" },
       { url: "/favicon-16.png", type: "image/png", sizes: "16x16" },
-      { url: "/favicon.ico", sizes: "any" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "48x48 32x32 16x16" },
     ],
-    apple: [
-      { url: "/apple-touch-icon.png", type: "image/png", sizes: "180x180" },
-      { url: "/logo.svg", type: "image/svg+xml" },
-    ],
+    apple: [{ url: "/apple-touch-icon.png", type: "image/png", sizes: "180x180" }],
     shortcut: [{ url: "/favicon.ico" }],
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#0a0f14",
-  colorScheme: "dark",
+  themeColor: "#faf7f2",
+  colorScheme: "light",
 };
 
-/**
- * Organization schema. Search engines and AI-overview crawlers use this
- * to answer "who is Doyel Labs?" — so it must state the software-studio
- * identity clearly. The `description`, `slogan`, `knowsAbout`, and
- * `hasOfferCatalog` fields drive Google's Knowledge Panel and AI
- * Overview text. Every entry is a fact, not marketing prose.
- */
+/** Organization schema. Every value is a fact from site.ts / offer.ts. */
 const orgSchema = {
   "@context": "https://schema.org",
   "@type": ["Organization", "ProfessionalService"],
@@ -144,114 +108,49 @@ const orgSchema = {
   alternateName: site.companyShort,
   legalName: site.company,
   description: searchDescription,
-  slogan: "The software your business runs on.",
+  slogan: promise.headline,
   url: `https://${site.domain}/`,
-  logo: {
-    "@type": "ImageObject",
-    url: `https://${site.domain}/apple-touch-icon.png`,
-    width: 180,
-    height: 180,
-  },
+  logo: { "@type": "ImageObject", url: `https://${site.domain}/apple-touch-icon.png`, width: 180, height: 180 },
   image: `https://${site.domain}/opengraph-image`,
   email: site.supportEmail,
   telephone: site.phoneHref.replace("tel:", ""),
   foundingDate: "2026-09",
-  founder: {
-    "@type": "Person",
-    "@id": `https://${site.domain}/founder/#person`,
-    name: "Blake Doyel",
-    url: `https://${site.domain}/founder/`,
+  founder: { "@type": "Person", "@id": `https://${site.domain}/about/#founder`, name: site.founder, url: `https://${site.domain}/about/` },
+  address: { "@type": "PostalAddress", addressLocality: "Casper", addressRegion: "WY", addressCountry: "US" },
+  areaServed: { "@type": "Country", name: "United States" },
+  openingHoursSpecification: {
+    "@type": "OpeningHoursSpecification",
+    dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+    opens: "09:00",
+    closes: "18:00",
   },
-  address: {
-    "@type": "PostalAddress",
-    addressLocality: "Casper",
-    addressRegion: "WY",
-    addressCountry: "US",
-  },
-  areaServed: {
-    "@type": "Country",
-    name: "United States",
-  },
-  serviceArea: {
-    "@type": "Country",
-    name: "United States",
-  },
-  knowsAbout: [
-    "Custom software development",
-    "Web application development",
-    "Website development",
-    "Marketing site design",
-    "Internal tool development",
-    "Business dashboard development",
-    "Client portal development",
-    "Customer portal development",
-    "Admin console development",
-    "API integrations",
-    "Data pipelines",
-    "ETL and reporting",
-    "Payroll workspace development",
-    "E-commerce integration",
-    "Payment integration",
-    "Software maintenance",
-    "AI-assisted software development",
-    "Static site generation",
-    "Cloudflare Workers development",
-    "Next.js development",
-  ],
+  knowsAbout: ["Website development", "Custom software development", "Internal tools", "Payroll workspaces", "API integrations", "Software maintenance"],
   hasOfferCatalog: {
     "@type": "OfferCatalog",
     name: "Doyel Labs services",
     itemListElement: [
       {
         "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Custom software development",
-          description:
-            "Bespoke web applications, dashboards, portals, integrations, and internal tools for any industry — from mom-and-pop operators through enterprises. Priced per project, delivered under a written scope.",
-          url: `https://${site.domain}/services/`,
-        },
+        price: websiteBuild.price,
+        priceCurrency: "USD",
+        itemOffered: { "@type": "Service", name: websiteBuild.name, url: `https://${site.domain}/websites/` },
       },
       {
         "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Website development",
-          description:
-            "Fast, accessible marketing sites on your own domain with schema.org markup, forms wired to your own inbox, and mobile-first design. For any business.",
-          url: `https://${site.domain}/services/websites/`,
-        },
+        priceCurrency: "USD",
+        priceSpecification: { "@type": "UnitPriceSpecification", price: carePlan.price, priceCurrency: "USD", unitCode: "MON" },
+        itemOffered: { "@type": "Service", name: carePlan.name, url: `https://${site.domain}/websites/#care` },
       },
       {
         "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Payroll workspace development",
-          description:
-            "Custom pay-run workspaces built for how your business actually pays people — day-rate, hourly + overtime, salaried, tipped, per-diem, or any mix.",
-          url: `https://${site.domain}/services/payroll/`,
-        },
-      },
-      {
-        "@type": "Offer",
-        itemOffered: {
-          "@type": "Service",
-          name: "Software maintenance and support",
-          description:
-            "Monthly retainer for ongoing improvements, bug fixes, dependency updates, and priority operator support on software Doyel Labs builds.",
-          url: `https://${site.domain}/services/`,
-        },
+        priceCurrency: "USD",
+        priceSpecification: { "@type": "PriceSpecification", minPrice: customSoftware.from, priceCurrency: "USD" },
+        itemOffered: { "@type": "Service", name: customSoftware.name, url: `https://${site.domain}/software/` },
       },
     ],
   },
-  sameAs: [`https://${site.domain}/`],
 };
 
-/**
- * WebSite schema. Declares the site itself as a discrete entity so
- * Google renders a proper sitelink search box and understands the
- * relationship between pages. Points back to the Organization @id.
- */
 const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
@@ -271,9 +170,14 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`dark ${inter.variable} ${jetbrainsMono.variable}`}
+      className={`no-js ${inter.variable} ${jetbrainsMono.variable}`}
+      suppressHydrationWarning
     >
       <head>
+        {/* Removes the `no-js` hook before first paint so scroll-reveal can
+         * run. If JS is off, the class stays and every reveal is visible.
+         * This inline script is hashed into the CSP at build time. */}
+        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.remove('no-js')" }} />
         {/* Structured data. JSON-LD is not executable so it is exempt from
          * CSP `script-src`. We emit two graphs: Organization (who we are)
          * and WebSite (how the site is structured). Both are static and

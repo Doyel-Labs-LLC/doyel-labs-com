@@ -103,9 +103,9 @@ export function MobileNav({
           {/* Scrollable body */}
           <div className="flex flex-1 flex-col bg-bg px-6 py-6">
             {/* Primary section — big-type nav */}
-            <nav aria-label="Primary">
+            <nav aria-label="Menu">
               <p className="font-mono text-[10px] uppercase tracking-eyebrow text-muted">
-                Primary
+                Menu
               </p>
               <ul className="mt-4 space-y-1">
                 {items.map((n) => {
@@ -118,7 +118,7 @@ export function MobileNav({
                         href={n.href}
                         onClick={() => setOpen(false)}
                         aria-current={active ? "page" : undefined}
-                        className={`flex items-center justify-between border-b border-line py-4 text-[20px] font-semibold uppercase tracking-wide hover:text-accentHi ${
+                        className={`flex items-center justify-between border-b border-line py-4 text-[22px] font-semibold tracking-display hover:text-accentHi ${
                           active ? "text-accent" : "text-ink"
                         }`}
                       >
@@ -138,7 +138,7 @@ export function MobileNav({
 
             {/* Contact CTA — the primary conversion action */}
             <div className="mt-8">
-              <ContactWidget label="Book an orientation" variant="primary" />
+              <ContactWidget label="Talk to a person" variant="primary" />
             </div>
 
             {/* Explore section — the deeper pages */}
@@ -159,9 +159,9 @@ export function MobileNav({
             </nav>
 
             {/* Support section — utility + legal */}
-            <nav aria-label="Support" className="mt-8">
+            <nav aria-label="More" className="mt-8">
               <p className="font-mono text-[10px] uppercase tracking-eyebrow text-muted">
-                Support &amp; ops
+                More
               </p>
               <ul className="mt-4 space-y-0.5">
                 {SUPPORT_LINKS.map((n) => (
@@ -193,6 +193,7 @@ export function MobileNav({
               <p className="text-muted">
                 {site.company} · {site.city}
               </p>
+              <p className="normal-case tracking-normal text-muted">{site.hours}</p>
             </div>
           </div>
       </div>
@@ -234,24 +235,14 @@ export function MobileNav({
 // `items`), so they are intentionally absent here to avoid duplicate rows
 // in the drawer. Case studies still points at /work/ under its own label.
 const EXPLORE_LINKS = [
-  { href: "/how-we-work/", label: "How we work" },
-  { href: "/industries/", label: "Industries" },
-  { href: "/work/", label: "Case studies" },
-  { href: "/founder/", label: "Founder" },
-  { href: "/writing/", label: "Writing" },
-  { href: "/faq/", label: "FAQ" },
+  { href: "/contact/", label: "Contact" },
+  { href: "/websites/#pricing", label: "Website pricing" },
+  { href: "/websites/#faq", label: "Questions people ask" },
 ];
 
 const SUPPORT_LINKS = [
-  { href: "/support/", label: "Support" },
-  { href: "/status/", label: "Status" },
-  { href: "/press/", label: "Press & media kit" },
-  { href: "/uses/", label: "Uses" },
   { href: "/security/", label: "Security" },
-  { href: "/engineering/", label: "Engineering" },
-  { href: "/changelog/", label: "Changelog" },
   { href: "/legal/terms/", label: "Legal" },
-  { href: "/sitemap/", label: "Site map" },
 ];
 
 /**

@@ -7,7 +7,16 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default [
-  { ignores: [".next/**", "out/**", "node_modules/**", "next-env.d.ts"] },
+  {
+    ignores: [
+      ".next/**",
+      "out/**",
+      "node_modules/**",
+      ".wrangler/**",
+      "**/*.generated.ts",
+      "next-env.d.ts",
+    ],
+  },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {

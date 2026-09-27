@@ -24,3 +24,15 @@ desktop.ini
 
 # Local logs
 *.log
+
+# Generated at build time
+src/lib/public-paths.generated.ts
+server/analytics/admin-assets.generated.ts
+src/lib/generated-images.generated.ts
+
+# Local Cloudflare/Wrangler state — never commit
+.wrangler/
+
+# Private business docs and AI scratch — NEVER publish to the public repo
+Claude outputs/
+*.docx

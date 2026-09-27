@@ -1,6 +1,6 @@
 /**
  * Facts about the SteadFast Transportation Inc. build, used as the
- * concrete example on `/services/websites`. Every claim here maps to a
+ * concrete example on `/websites/` and `/work/`. Every claim here maps to a
  * file in `C:\Users\bdoye\Desktop\index\` (kept out of git).
  */
 
@@ -19,7 +19,7 @@ export const steadfastCase = {
     "schema.org Organization, PostalAddress and telephone markup",
     "System-fonts fallback, print-media font preload, no render-blocking CSS",
     "Formspree contact + contractor-inquiry with honeypot",
-    "Privacy-friendly analytics (Plausible) plus Microsoft Clarity for session review",
+    "Privacy-friendly analytics (Plausible), no session recording",
     "OpenGraph and Twitter card art for social previews",
     "Password-gated operator workspace on the same domain — the SteadFast Payroll app",
   ],

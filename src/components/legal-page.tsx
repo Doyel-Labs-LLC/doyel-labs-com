@@ -127,14 +127,8 @@ export function LegalPage({ doc, nav, breadcrumbs, lead }: LegalPageProps) {
               This document reflects how Doyel Labs actually operates
               today. It is being finalized with counsel; if the
               wording changes as part of that review, we&apos;ll
-              publish the new version and note the change on{" "}
-              <Link
-                href="/changelog/"
-                className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-              >
-                the changelog
-              </Link>
-              . For a specific legal question, email{" "}
+              publish the new version with a new version date. For a
+              specific legal question, email{" "}
               <a
                 href={`mailto:${site.supportEmail}?subject=Legal%20question`}
                 className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"

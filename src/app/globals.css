@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
   --m-fast: 160ms;
   --m-base: 240ms;
   --m-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
@@ -11,8 +11,8 @@
 
 html,
 body {
-  background: #0a0f14;
-  color: #f0f0fa;
+  background: #faf7f2;
+  color: #1b1f26;
   font-feature-settings: "ss01", "tnum", "cv11";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -35,14 +35,14 @@ code {
 
 /* Selection uses the cyan accent so highlighted text stands out. */
 ::selection {
-  background: rgba(16, 199, 235, 0.24);
-  color: #ffffff;
+  background: rgba(242, 180, 85, 0.45);
+  color: #1b1f26;
 }
 
 /* Focus ring uses the cyan accent — visible on the dark canvas without
  * looking like a browser default. */
 :focus-visible {
-  outline: 2px solid #10c7eb;
+  outline: 2px solid #087187;
   outline-offset: 2px;
   border-radius: 2px;
 }
@@ -62,25 +62,11 @@ code {
 .hero-glow {
   position: relative;
   background:
-    radial-gradient(
-      ellipse 900px 520px at 10% -12%,
-      rgba(16, 199, 235, 0.13),
-      transparent 62%
-    ),
-    radial-gradient(
-      ellipse 680px 460px at 88% 108%,
-      rgba(16, 199, 235, 0.06),
-      transparent 60%
-    ),
-    radial-gradient(
-      ellipse 700px 700px at 62% 30%,
-      rgba(78, 220, 251, 0.035),
-      transparent 70%
-    );
+    radial-gradient(ellipse 900px 520px at 8% -10%, rgba(242, 180, 85, 0.22), transparent 62%),
+    radial-gradient(ellipse 720px 480px at 92% 110%, rgba(8, 113, 135, 0.10), transparent 60%),
+    radial-gradient(ellipse 700px 700px at 60% 30%, rgba(255, 255, 255, 0.6), transparent 70%);
 }
-/* Hairline engineering grid, faded top-to-bottom, sitting *behind* the
- * hero content. Kept extremely low-contrast so it registers as texture,
- * not decoration. */
+/* A faint paper grid behind the hero, fading downward. */
 .hero-glow::before {
   content: "";
   position: absolute;
@@ -88,8 +74,8 @@ code {
   pointer-events: none;
   z-index: 0;
   background-image:
-    linear-gradient(to right, rgba(240, 240, 250, 0.028) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(240, 240, 250, 0.028) 1px, transparent 1px);
+    linear-gradient(to right, rgba(27, 31, 38, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(27, 31, 38, 0.045) 1px, transparent 1px);
   background-size: 56px 56px;
   -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
   mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
@@ -103,40 +89,34 @@ code {
  * comes from a faint top-lit gradient + an inset highlight + a soft dark
  * drop (see the `card` shadow token), never a grey box-shadow. */
 .surface-card {
+  background: #ffffff;
+}
+/* Warm band: a soft cream-to-amber wash for one section per page. */
+.band-warm {
   background:
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.022),
-      rgba(255, 255, 255, 0) 42%
-    ),
-    #12181f;
+    radial-gradient(ellipse 800px 400px at 100% 0%, rgba(242, 180, 85, 0.18), transparent 60%),
+    #f3efe8;
 }
 
 /* A section divider that fades a cyan-tinted hairline in from the left,
  * so band transitions feel intentional rather than ruled-off. Opt-in via
  * the `.divider-soft` class on a top border element. */
 .divider-soft {
-  border-image: linear-gradient(
-      to right,
-      rgba(16, 199, 235, 0.28),
-      rgba(240, 240, 250, 0.10) 22%,
-      transparent 80%
-    )
-    1;
+  border-image: linear-gradient(to right, rgba(8, 113, 135, 0.35), rgba(27, 31, 38, 0.10) 22%, transparent 80%) 1;
 }
 
 /* Legal / docs prose. */
 .prose-legal {
-  color: rgba(240, 240, 250, 0.76);
+  color: rgba(27, 31, 38, 0.8);
 }
 .prose-legal h1 {
-  color: #f0f0fa;
+  color: #1b1f26;
   font-size: 1.5rem;
   font-weight: 600;
   margin: 0 0 1rem;
 }
 .prose-legal h2 {
-  color: #f0f0fa;
+  color: #1b1f26;
   font-size: 1.125rem;
   font-weight: 600;
   margin: 2rem 0 0.5rem;
@@ -156,25 +136,25 @@ code {
   list-style: disc;
 }
 .prose-legal a {
-  color: #10c7eb;
+  color: #087187;
   text-decoration: underline;
-  text-decoration-color: rgba(16, 199, 235, 0.45);
+  text-decoration-color: rgba(8, 113, 135, 0.45);
   text-underline-offset: 3px;
 }
 .prose-legal a:hover {
-  color: #4edcfb;
-  text-decoration-color: #4edcfb;
+  color: #0b8aa3;
+  text-decoration-color: #0b8aa3;
 }
 .prose-legal code {
   font-family: var(--font-mono), "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
   font-size: 0.9em;
-  color: #f0f0fa;
-  background: rgba(240, 240, 250, 0.06);
+  color: #1b1f26;
+  background: rgba(27, 31, 38, 0.06);
   padding: 0.1rem 0.35rem;
   border-radius: 3px;
 }
 .prose-legal strong {
-  color: #f0f0fa;
+  color: #1b1f26;
 }
 
 /* Product frame corner labels — small caps mono. */
@@ -183,7 +163,7 @@ code {
   font-size: 10px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: rgba(240, 240, 250, 0.50);
+  color: rgba(27, 31, 38, 0.68);
 }
 
 /* Small accent bar used to introduce a band's eyebrow. Cyan, 24px wide. */
@@ -191,7 +171,7 @@ code {
   display: inline-block;
   width: 24px;
   height: 2px;
-  background: #10c7eb;
+  background: #087187;
   vertical-align: middle;
   margin-right: 10px;
 }
@@ -199,7 +179,7 @@ code {
 /* Thin scrollbars everywhere */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(240, 240, 250, 0.14) transparent;
+  scrollbar-color: rgba(27, 31, 38, 0.18) transparent;
 }
 
 /* ── Scroll-reveal ───────────────────────────────────────────────
@@ -220,20 +200,13 @@ code {
   transform: translate3d(0, 0, 0);
 }
 
-/* If JS hasn't run yet, we don't want a permanent hidden state.
- * Any <noscript> environment or delayed hydration will still show
- * content once this override kicks in (200ms after paint). */
-@keyframes reveal-fallback {
-  to {
-    opacity: 1;
-    transform: none;
-  }
-}
-.reveal {
-  animation: reveal-fallback 0ms linear 1500ms forwards;
-}
-.reveal--in {
-  animation: none;
+/* No-JS fallback: the <html> element starts with `no-js`; a tiny inline
+ * script in layout.tsx removes it before paint. If JS never runs, every
+ * reveal element is simply visible. No timers. */
+html.no-js .reveal {
+  opacity: 1;
+  transform: none;
+  transition: none;
 }
 
 /* ── Hero fade-in on load ────────────────────────────────────────
@@ -271,6 +244,48 @@ code {
 
 /* Trust strip — a mono-typed line of proof signals directly under the
  * hero. Muted, tabular, small. Every item is a real fact. */
+/* Illustration wrapper: inline SVG inherits `currentColor` for lines and
+ * uses the cyan token for its single fill. */
+.illus {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: #1b1f26;
+}
+.illus .fill {
+  fill: #087187;
+  fill-opacity: 0.14;
+}
+.illus .warm {
+  fill: #f2b455;
+  fill-opacity: 0.55;
+}
+.illus .paper {
+  fill: #ffffff;
+}
+.illus .line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.illus .accent {
+  stroke: #087187;
+}
+.illus .dot {
+  fill: #087187;
+}
+
+/* Who-answers block in the footer. */
+.who-answers {
+  border: 1px solid rgba(8, 113, 135, 0.28);
+  background:
+    radial-gradient(ellipse 600px 300px at 100% 0%, rgba(242, 180, 85, 0.2), transparent 60%),
+    #ffffff;
+}
+
 .trust-strip {
   display: flex;
   flex-wrap: wrap;
@@ -280,10 +295,10 @@ code {
   font-size: 10.5px;
   letter-spacing: 0.10em;
   text-transform: uppercase;
-  color: rgba(240, 240, 250, 0.50);
+  color: rgba(27, 31, 38, 0.68);
 }
 .trust-strip strong {
-  color: #f0f0fa;
+  color: #1b1f26;
   font-weight: 600;
 }
 .trust-strip .dot {
@@ -291,8 +306,8 @@ code {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background: #10c7eb;
-  box-shadow: 0 0 8px rgba(16, 199, 235, 0.5);
+  background: #087187;
+  box-shadow: 0 0 8px rgba(8, 113, 135, 0.4);
   margin-right: 8px;
   vertical-align: middle;
 }

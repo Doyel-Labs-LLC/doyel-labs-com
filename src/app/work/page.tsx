@@ -1,39 +1,41 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import {
   AccentChip,
+  Body,
   Card,
+  Checks,
+  Close,
   Eyebrow,
   GhostLink,
+  Grid2,
   H1,
   H2,
   Lead,
-  Notice,
   Page,
-  StageBadge,
+  Section,
+  Split,
+  StatusChip,
 } from "@/components/chrome";
-import { ClientBadge } from "@/components/client-badge";
 import { ContactWidget } from "@/components/contact-modal";
-import { PayrollScaFrame } from "@/components/frames/payroll-sca";
+import { Breadcrumbs } from "@/components/breadcrumbs";
+import { PayrollAuditFrame } from "@/components/frames/payroll-audit";
+import { PayrollBatchFrame } from "@/components/frames/payroll-batch";
 import { WebsiteSteadfastFrame } from "@/components/frames/websites-preview";
+import { Photo } from "@/components/photo";
 import { Quote } from "@/components/quote";
-import { products, type Stage } from "@/lib/products";
-import { site } from "@/lib/site";
+import { Reveal } from "@/components/reveal";
 import { steadfastCase } from "@/lib/demo/websites";
+import { products } from "@/lib/products";
+import { baiDisclaimer, programStatus, site } from "@/lib/site";
 import { steadfastTestimonial } from "@/lib/testimonials";
 
-const bai = products.find((p) => p.key === "bai")!;
-const connectionloop = products.find((p) => p.key === "connectionloop")!;
-
 export const metadata: Metadata = {
-  title: "Work — recent shipments from Doyel Labs",
-  description:
-    "Real software Doyel Labs has shipped — a live marketing site and custom payroll workspace for SteadFast Transportation Inc., plus internal programs BAI and ConnectionLoop. Every project names the client, the domain, and what shipped.",
+  title: "Work — what we built for SteadFast Transportation",
+  description: `A marketing site and a password-gated payroll workspace for ${steadfastCase.name}, both live and in daily use. Plus two products in the lab. Built by Doyel Labs, ${site.city}.`,
   alternates: { canonical: `https://${site.domain}/work/` },
   openGraph: {
-    title: "Work — recent shipments | Doyel Labs",
-    description:
-      "Real software Doyel Labs has shipped. Live marketing sites, custom payroll workspaces, internal programs.",
+    title: "Work — what we built for SteadFast | Doyel Labs",
+    description: `A website and a payroll workspace for ${steadfastCase.name}. Live, in use, and shown here because it is real.`,
     url: `https://${site.domain}/work/`,
     type: "website",
   },
@@ -42,252 +44,117 @@ export const metadata: Metadata = {
 export default function Work() {
   return (
     <Page>
-      {/* HERO */}
-      <section className="pt-24 md:pt-32">
-        <Eyebrow>Work</Eyebrow>
-        <H1>
-          What we've <span className="text-accent">shipped</span>.
-        </H1>
-        <Lead>
-          Every project below is real software running in production or
-          in private testing. Each one names the client, the domain, and
-          what shipped.
-        </Lead>
-      </section>
+      <Breadcrumbs items={[{ name: "Work", href: "/work/" }]} />
 
-      {/* Full multi-paragraph testimonial — /reviews/ was folded into
-       * this page, so the whole quote lives here. Short-form use of
-       * the same quote continues on the homepage. */}
-      <section className="mt-24 border-t border-line pt-16">
-        <div className="max-w-3xl">
-          <Eyebrow>What a client says</Eyebrow>
-        </div>
-        <div className="mt-8">
-          <Quote
-            paragraphs={steadfastTestimonial.full}
-            attribution={steadfastTestimonial.attribution}
-            company={steadfastTestimonial.company}
-            companyUrl={steadfastTestimonial.companyUrl}
-            logo={steadfastTestimonial.logo}
-            size="large"
-          />
-        </div>
-        <p className="mt-6 max-w-prose text-[13px] leading-[1.65] text-muted">
-          Approved and signed off by the quoted party.{" "}
-          <a
-            href={steadfastTestimonial.verify.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-mute underline decoration-line2 underline-offset-2 hover:text-accentHi"
-          >
-            {steadfastTestimonial.verify.label}
-          </a>
-          .
-        </p>
-      </section>
-
-      {/* STEADFAST WEBSITE */}
-      <section className="mt-24 border-t border-line pt-16">
-        <div className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-          <WebsiteSteadfastFrame />
-          <div className="flex flex-col justify-center">
-            <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
-              Client · Website build
-            </p>
-            <H2>
-              <span className="mt-2 block">
-                A federal service contractor's marketing site.
-              </span>
-            </H2>
-            <p className="mt-4 text-[15px] leading-[1.7] text-mute">
-              Ten pages, custom domain, mobile-first navigation, hero
-              video, schema.org markup, and contact + contractor-inquiry
-              forms wired to the operator's inbox. Password-gated payroll
-              workspace on the same domain.
-            </p>
-            <div className="mt-5">
-              <ClientBadge
-                name={steadfastCase.name}
-                logo={steadfastCase.logo}
-                url={steadfastCase.liveUrl}
-              />
-            </div>
-            <p className="mt-4 flex flex-wrap gap-2">
-              <AccentChip>Live at {steadfastCase.domain}</AccentChip>
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <GhostLink
-                href={steadfastCase.liveUrl}
-                small
-                external
-              >
-                Visit the live site
-              </GhostLink>
-              <GhostLink href="/services/websites/" small>
-                Websites service
-              </GhostLink>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* STEADFAST PAYROLL */}
-      <section className="mt-32 border-t border-line pt-16">
-        <div className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-          <PayrollScaFrame />
-          <div className="flex flex-col justify-center">
-            <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
-              Client · Payroll workspace
-            </p>
-            <H2>
-              <span className="mt-2 block">
-                A custom payroll workspace, live for a real operator.
-              </span>
-            </H2>
-            <p className="mt-4 text-[15px] leading-[1.7] text-mute">
-              A password-gated workspace with a contractor register,
-              batch pay runs, PDF stubs from the operator&apos;s own
-              domain, 180-day audit log with CSV export, and passkey
-              sign-in. This particular build layers on SCA
-              wage-determination checks for the client&apos;s federal
-              award — yours would layer on whatever compliance rules
-              your business answers to.
-            </p>
-            <div className="mt-5">
-              <ClientBadge
-                name={steadfastCase.name}
-                logo={steadfastCase.logo}
-                url={steadfastCase.liveUrl}
-              />
-            </div>
-            <p className="mt-4 flex flex-wrap gap-2">
-              <AccentChip>In operator use</AccentChip>
-              <AccentChip>Not tax filing</AccentChip>
-              <AccentChip>Not money movement</AccentChip>
-            </p>
-            <div className="mt-6 flex flex-wrap gap-3">
-              <GhostLink href="/services/payroll/" small>
-                Payroll service
-              </GhostLink>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* INTERNAL PRODUCTS */}
-      <section className="mt-32 border-t border-line pt-16">
-        <div className="max-w-3xl">
-          <Eyebrow>Doyel Labs products</Eyebrow>
-          <H2>
-            <span className="mt-2 block">Software we ship under our own brand.</span>
-          </H2>
-          <p className="mt-6 text-[15px] leading-[1.7] text-mute">
-            Two products, both in private beta today. Full details on the{" "}
-            <Link
-              href="/products/"
-              className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-            >
-              products page
-            </Link>
-            .
-          </p>
-        </div>
-        <div className="mt-12 grid gap-4 md:grid-cols-2">
-          <ProgramCard
-            eyebrow="Product · BAI Desk"
-            title="An autonomous trading desk that runs on your own computer."
-            body="At your broker, under your rules. Keys stay on the operator's machine. Every trade has a stop and a target held at the broker. Chat cannot spend."
-            href="/products/#bai"
-            stage={bai.stage}
-          />
-          <ProgramCard
-            eyebrow="Product · ConnectionLoop"
-            title="Shared plans, lists, and chat for families."
-            body="Invite-only. Free. No ads. No public feed. iOS and Android. Built by Doyel Labs, credited to The Hamilton Family."
-            href="/products/#connectionloop"
-            stage={connectionloop.stage}
-          />
-        </div>
-      </section>
-
-      {/* CLOSE */}
-      <section className="mt-32 border-t border-line pt-16">
-        <div className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+      {/* 1. HERO */}
+      <section className="hero-glow pt-4">
+        <div className="grid grid-cols-1 items-center gap-12 [&>*]:min-w-0 md:grid-cols-[minmax(0,7fr)_minmax(0,6fr)] md:gap-10 lg:gap-16">
           <div>
-            <Eyebrow>Your project next</Eyebrow>
-            <H2>
-              <span className="mt-2 block">
-                What would you like to see here?
-              </span>
-            </H2>
-            <p className="mt-6 max-w-prose text-[16px] leading-[1.7] text-mute">
-              Tell us what you'd like to build and we'll tell you what it
-              would take.
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <ContactWidget label="Start a project" />
-              <GhostLink href={site.phoneHref} small external>
-                Call {site.phone}
+            <div className="hero-in hero-in--1">
+              <Eyebrow>Work</Eyebrow>
+            </div>
+            <div className="hero-in hero-in--2">
+              <H1>
+                What we&apos;ve built, <span className="text-accent">and what it&apos;s doing today.</span>
+              </H1>
+            </div>
+            <div className="hero-in hero-in--3">
+              <Lead>
+                One named client so far. The work is live and in daily use. We show it because it&apos;s real, and we say who
+                owns it.
+              </Lead>
+            </div>
+            <div className="hero-in hero-in--4 mt-8 flex flex-wrap items-center gap-3">
+              <ContactWidget label="Talk to a person" />
+              <GhostLink href="/websites/" small>
+                See the offer
               </GhostLink>
             </div>
+            <div className="hero-in hero-in--5 mt-8 flex flex-wrap gap-2">
+              <AccentChip>Live in production</AccentChip>
+              <AccentChip>Named client</AccentChip>
+              <AccentChip>Ownership disclosed</AccentChip>
+            </div>
           </div>
-          <div />
-        </div>
-        <div className="mt-16">
-          <Notice>
-            Or reach us directly at{" "}
-            <a
-              href={`mailto:${site.supportEmail}?subject=New%20project`}
-              className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-            >
-              {site.supportEmail}
-            </a>
-            . One-business-day response.
-          </Notice>
+          <div className="hero-in hero-in--5">
+            <WebsiteSteadfastFrame />
+          </div>
         </div>
       </section>
-    </Page>
-  );
-}
 
-function ProgramCard({
-  eyebrow,
-  title,
-  body,
-  href,
-  stage,
-}: {
-  eyebrow: string;
-  title: string;
-  body: string;
-  href: string;
-  stage: Stage;
-}) {
-  return (
-    <Link
-      href={href}
-      className="group surface-card flex flex-col justify-between rounded-[3px] border border-line p-6 shadow-card transition-all duration-200 ease-soft hover:-translate-y-0.5 hover:border-accentDim hover:shadow-cardHover"
-    >
-      <div>
-        <div className="flex items-center justify-between gap-3">
-          <p className="font-mono text-[10px] uppercase tracking-eyebrow text-mute">
-            {eyebrow}
-          </p>
-          <StageBadge stage={stage} />
-        </div>
-        <h3 className="mt-3 text-[19px] font-semibold leading-tight text-ink group-hover:text-accentHi">
-          {title}
-        </h3>
-        <p className="mt-4 text-[14px] leading-[1.65] text-mute">{body}</p>
-      </div>
-      <div className="mt-6 flex items-center justify-end">
-        <span
-          className="text-accent transition-transform duration-200 ease-soft group-hover:translate-x-1"
-          aria-hidden="true"
-        >
-          →
-        </span>
-      </div>
-    </Link>
+      {/* 2. STEADFAST */}
+      <Reveal>
+        <Section id="steadfast">
+          <Split visual={<Photo name="work-steadfast-context" fallback="flow" alt="A two-lane highway across Montana at dawn with a single delivery vehicle in the distance" className="mx-auto max-w-md" />}>
+            <Eyebrow>Client · Transportation</Eyebrow>
+            <H2>A website and a payroll workspace for a Montana transportation operator.</H2>
+            <Body>
+              {steadfastCase.what} They needed a public site that represented the company well and a private place to run
+              contractor pay. Both live on the same domain today.
+            </Body>
+            <Checks items={steadfastTestimonial.scope} />
+            <div className="mt-8">
+              <GhostLink href={steadfastCase.liveUrl} external small>
+                See the live site
+              </GhostLink>
+            </div>
+          </Split>
+        </Section>
+      </Reveal>
+
+      {/* 3. IN THEIR WORDS */}
+      <Reveal>
+        <Section>
+          <Eyebrow>In their words</Eyebrow>
+          <H2>What SteadFast said about the work.</H2>
+          <div className="mt-8 max-w-3xl">
+            <Quote t={steadfastTestimonial} full />
+          </div>
+        </Section>
+      </Reveal>
+
+      {/* 4. INSIDE THE PAYROLL WORKSPACE */}
+      <Reveal>
+        <Section>
+          <Eyebrow>Inside the payroll workspace</Eyebrow>
+          <H2>Two of the screens the operator uses.</H2>
+          <Body>The frames below use synthetic demo data and carry a label saying so. The shapes match the real app.</Body>
+          <div className="mt-10">
+            <Grid2>
+              <PayrollBatchFrame />
+              <PayrollAuditFrame />
+            </Grid2>
+          </div>
+        </Section>
+      </Reveal>
+
+      {/* 5. IN THE LAB */}
+      <Reveal>
+        <Section id="lab">
+          <Eyebrow>In the lab</Eyebrow>
+          <H2>Two products we&apos;re building for ourselves.</H2>
+          <Body>Not client work, and not open to the public yet.</Body>
+          <div className="mt-10">
+            <Grid2>
+              {products.map((p) => (
+                <Card key={p.key} title={p.name}>
+                  <p>{p.tagline}</p>
+                  <div className="mt-4 flex flex-wrap items-center gap-3">
+                    <StatusChip>{programStatus[p.key].label}</StatusChip>
+                    <span className="font-mono text-[10px] uppercase tracking-wide text-muted">{p.meta}</span>
+                  </div>
+                </Card>
+              ))}
+            </Grid2>
+          </div>
+          <p className="mt-6 max-w-prose text-[12px] leading-relaxed text-muted">{baiDisclaimer}</p>
+        </Section>
+      </Reveal>
+
+      {/* 6. CLOSE */}
+      <Close title="Want something like this for your business?">
+        Tell us what you do and what is slow today. A person reads it and replies with what we would build.
+      </Close>
+    </Page>
   );
 }

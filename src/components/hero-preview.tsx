@@ -17,7 +17,7 @@ import { demoContractors, scaFloor } from "@/lib/demo/payroll";
  *
  * All assets are real: the SteadFast screenshot is the actual live
  * site, the SCA numbers come from `demoContractors[0]` which is the
- * same fixture the /services/payroll page uses.
+ * same fixture the /software/ page uses.
  */
 export function HeroPreview() {
   const c = demoContractors[0];
@@ -27,8 +27,8 @@ export function HeroPreview() {
   return (
     <div className="hero-preview relative w-full">
       {/* Secondary card — SCA compliance snapshot, hidden on mobile */}
-      <div className="pointer-events-none absolute -right-2 -top-6 z-10 hidden w-[220px] md:block lg:-right-6 lg:w-[260px]">
-        <div className="border border-line bg-[#12181f]/95 p-4 shadow-2xl backdrop-blur-sm">
+      <div aria-hidden="true" className="pointer-events-none absolute -right-2 -top-6 z-10 hidden w-[220px] md:block lg:-right-6 lg:w-[260px]">
+        <div className="border border-line bg-surface/95 p-4 shadow-2xl backdrop-blur-sm">
           <div className="flex items-center justify-between">
             <p className="font-mono text-[9px] uppercase tracking-eyebrow text-accent">
               SCA compliance
@@ -92,7 +92,7 @@ export function HeroPreview() {
           </div>
         </div>
         <figcaption className="mt-3 flex flex-wrap items-center justify-between gap-2 font-mono text-[9px] uppercase tracking-eyebrow text-muted md:text-[10px]">
-          <span>Client · {steadfastCase.shortName}</span>
+          <span>Client · {steadfastCase.shortName} · founder-owned</span>
           <span>Live since 2026 · Built by Doyel Labs</span>
         </figcaption>
       </figure>

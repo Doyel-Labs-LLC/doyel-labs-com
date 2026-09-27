@@ -3,6 +3,20 @@
 Company website for **Doyel Labs LLC** (Casper, Wyoming). Static export,
 deployed on Cloudflare Pages with a serverless contact-form function.
 
+**v10 (September 2026):** eight pages on a warm light theme, a published
+website offer ($1,299 build + $99/month care, from `src/lib/offer.ts`),
+self-hosted fonts, a hashed strict CSP (`scripts/csp-hashes.mjs`), a
+hardened contact function, first-party analytics with an owner-only
+dashboard at `/admin/analytics/` (Cloudflare Access), image slots with
+illustration fallbacks (`IMAGES.md`), and CI. Retired routes 301 via
+`public/_redirects`.
+
+Build pipeline: `prebuild` generates the public-path allowlist and the
+generated-image list → `next build` → `scripts/package-admin.mjs` moves
+the admin export into the Functions bundle → `scripts/csp-hashes.mjs`
+writes the per-page CSP into `out/_headers`. Node 22.18+ is required
+(`.nvmrc`).
+
 - **Framework:** Next.js 16 (App Router) + React 19 + TypeScript
 - **Styling:** Tailwind CSS 3, cyan accent (`#10c7eb`) on a softened
   near-black canvas
@@ -11,8 +25,8 @@ deployed on Cloudflare Pages with a serverless contact-form function.
 - **Contact form:** Cloudflare Pages Function → Resend → Google Workspace
 - **Analytics:** Plausible only. Cookieless. No session replay.
 
-The source-of-truth design brief lives in `PROMPT.md`. Read it before
-you write copy. Read it *first* before you change positioning.
+The source-of-truth design brief lives in `PROMPT.md` (v9). Read it before
+you write copy. Prices live only in `src/lib/offer.ts`.
 
 ## Repo layout
 
@@ -126,9 +140,11 @@ NEXT_PUBLIC_API_BASE=https://bai-control-plane-staging.fly.dev
 Other useful commands:
 
 ```bash
-npm run typecheck       # strict TypeScript check
-npm run lint            # ESLint + jsx-a11y
-npm run build           # static export to out/
+npm run typecheck       # strict TypeScript check (site + function)
+npm run lint            # ESLint
+npm test                # vitest — contact-form validation
+npm run build           # static export to out/ + CSP hashes into out/_headers
+npm run check           # all of the above
 node scripts/optimize-images.mjs    # re-encode screenshots
 ```
 
@@ -167,8 +183,10 @@ Set these in the Cloudflare Pages project settings (Settings → Environment var
 | `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Plain | Turnstile client widget key (build-time) |
 | `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | Plain | `doyel-labs.com` — enables analytics |
 
-Also required: a **KV binding** named `CONTACT_KV` bound to a KV namespace,
-used to rate-limit contact submissions by IP (5 messages per 5 minutes).
+Also required: a **Rate Limiting binding** named `RATE_LIMITER` (5 requests
+per 300 seconds, keyed by IP) or, as a fallback, a **KV binding** named
+`CONTACT_KV`. In production (`CF_PAGES_BRANCH=master`) the function refuses
+to send if the Turnstile secret or a rate-limit binding is missing.
 
 ## Adding a changelog entry (post-v22 pattern)
 
@@ -295,7 +313,7 @@ edge on every `POST /api/contact` request. Flow:
    `CONTACT_KV` (5 msgs / 5 min).
 3. Composes an HTML + plain-text email via Resend, from
    `noreply@doyel-labs.com`, to `support@doyel-labs.com` (routes via
-   Google Workspace to Blake's inbox).
+   Google Workspace to the support inbox).
 4. Returns `{ ok: true }` on success or a JSON error the client renders
    with a fallback mailto.
 

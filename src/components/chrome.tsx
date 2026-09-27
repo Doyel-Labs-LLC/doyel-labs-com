@@ -1,36 +1,25 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { companyLegal, site } from "@/lib/site";
-import { stageMeta, type Stage } from "@/lib/products";
+import { response } from "@/lib/offer";
 import { ContactWidget } from "@/components/contact-modal";
 import { MobileNav } from "@/components/mobile-nav";
 import { NavLinks } from "@/components/nav-links";
+import { Illus } from "@/components/illus";
+import { Photo } from "@/components/photo";
 
-const nav = [
-  { href: "/services/", label: "Services" },
+export const nav = [
+  { href: "/websites/", label: "Websites" },
+  { href: "/software/", label: "Software" },
   { href: "/work/", label: "Work" },
-  { href: "/products/", label: "Products" },
-  { href: "/pricing/", label: "Pricing" },
-  { href: "/company/", label: "Company" },
+  { href: "/how-we-work/", label: "How we work" },
+  { href: "/about/", label: "About" },
 ];
 
 /** Four-square logo mark, matching the physical icon. */
-export function LogoMark({
-  size = 22,
-  className = "",
-}: {
-  size?: number;
-  className?: string;
-}) {
+export function LogoMark({ size = 22, className = "" }: { size?: number; className?: string }) {
   return (
-    <svg
-      viewBox="0 0 100 100"
-      width={size}
-      height={size}
-      className={className}
-      aria-hidden="true"
-      focusable="false"
-    >
+    <svg viewBox="0 0 100 100" width={size} height={size} className={className} aria-hidden="true" focusable="false">
       <rect x="4" y="4" width="44" height="44" rx="10" fill="#3f444b" />
       <rect x="52" y="4" width="44" height="44" rx="10" fill="#878a91" />
       <rect x="4" y="52" width="44" height="44" rx="10" fill="#c7cad0" />
@@ -39,31 +28,19 @@ export function LogoMark({
   );
 }
 
-/** Sparse header with the four-square logo and a wordmark next to it. */
-// Header background: fully opaque on mobile (`bg-bg`) so sticky-header
-// content never bleeds through on iOS Safari — where `backdrop-filter`
-// can drop under certain compositing conditions. Desktop keeps the
-// tasteful light translucency + blur.
+// Header background: fully opaque on mobile so sticky content never bleeds
+// through on iOS Safari; translucent + blur on desktop.
 export function Header() {
   return (
     <header className="sticky top-0 z-30 border-b border-line bg-bg md:bg-bg/85 md:backdrop-blur-md">
       <div className="mx-auto flex max-w-band items-center justify-between px-6 py-4 md:px-10">
-        <Link
-          href="/"
-          className="group flex items-center gap-3"
-          aria-label="Doyel Labs — home"
-        >
+        <Link href="/" className="group flex items-center gap-3" aria-label="Doyel Labs — home">
           <LogoMark />
-          <span className="wordmark text-[13px] text-ink transition-colors group-hover:text-accentHi">
-            Doyel Labs
-          </span>
+          <span className="wordmark text-[13px] text-ink transition-colors group-hover:text-accentHi">Doyel Labs</span>
         </Link>
-        <nav
-          aria-label="Primary"
-          className="hidden items-center gap-8 text-[11px] uppercase tracking-wide text-mute md:flex"
-        >
+        <nav aria-label="Primary" className="hidden items-center gap-8 text-[11px] uppercase tracking-wide text-mute md:flex">
           <NavLinks items={nav} />
-          <ContactWidget label="Contact" variant="primary" size="small" />
+          <ContactWidget label="Talk to a person" variant="primary" size="small" />
         </nav>
         <MobileNav items={nav} />
       </div>
@@ -71,84 +48,64 @@ export function Header() {
   );
 }
 
+/** The "who answers" block. Every page, above the footer links. */
+export function WhoAnswers() {
+  return (
+    <div className="who-answers rounded-[3px] p-6 md:p-8">
+      <div className="grid items-center gap-8 md:grid-cols-[minmax(0,1fr)_200px]">
+        <div>
+          <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">Who answers</p>
+          <p className="mt-3 text-h3 text-ink">
+            A real person. Not a chatbot, not a ticket queue.
+          </p>
+          <p className="mt-3 max-w-prose text-small text-mute">
+            Call{" "}
+            <a href={site.phoneHref} className="text-ink underline decoration-accentDim underline-offset-4 hover:text-accentHi">
+              {site.phone}
+            </a>{" "}
+            {site.hours}. Or email{" "}
+            <a href={`mailto:${site.supportEmail}`} className="text-ink underline decoration-accentDim underline-offset-4 hover:text-accentHi">
+              {site.supportEmail}
+            </a>{" "}
+            and a person replies {response.window}, {response.usually}.
+          </p>
+        </div>
+        <Illus name="answer" decorative className="hidden max-w-[200px] md:block" />
+      </div>
+    </div>
+  );
+}
+
 export function Footer() {
   const year = new Date().getFullYear();
   return (
-    <footer className="mt-32 border-t border-line">
+    <footer className="mt-24 border-t border-line">
       <div className="mx-auto max-w-band px-6 py-12 md:px-10">
-        <div className="flex items-center gap-3">
-          <LogoMark size={18} />
-          <span className="wordmark text-[11px] text-ink">Doyel Labs</span>
-        </div>
-        <p className="mt-6 max-w-prose text-[12px] leading-relaxed text-muted">
-          {companyLegal}
-        </p>
-        <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] uppercase tracking-wide text-mute">
-          <span className="text-ink">
-            {site.company} · {site.city}
+        <WhoAnswers />
+        <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-[11px] uppercase tracking-wide text-mute">
+          <span className="flex items-center gap-2 text-ink">
+            <LogoMark size={16} />
+            <span className="wordmark text-[11px]">Doyel Labs</span>
           </span>
-          <a
-            href={`mailto:${site.supportEmail}`}
-            className="hover:text-accentHi"
-          >
-            {site.supportEmail}
-          </a>
-          <a href={site.phoneHref} className="hover:text-accentHi">
-            {site.phone}
-          </a>
+          <span>{site.city}</span>
           <span className="grow" />
-          <Link href="/products/" className="hover:text-accentHi">
-            Products
+          {nav.map((n) => (
+            <Link key={n.href} href={n.href} className="hover:text-accentHi">
+              {n.label}
+            </Link>
+          ))}
+          <Link href="/contact/" className="hover:text-accentHi">
+            Contact
           </Link>
-          <Link href="/how-we-work/" className="hover:text-accentHi">
-            How we work
-          </Link>
-          <Link href="/industries/" className="hover:text-accentHi">
-            Industries
-          </Link>
-          <Link href="/work/" className="hover:text-accentHi">
-            Case studies
-          </Link>
-          <Link href="/founder/" className="hover:text-accentHi">
-            Founder
-          </Link>
-          <Link href="/writing/" className="hover:text-accentHi">
-            Writing
-          </Link>
-          <Link href="/faq/" className="hover:text-accentHi">
-            FAQ
-          </Link>
-          <Link href="/press/" className="hover:text-accentHi">
-            Press
-          </Link>
-          <Link href="/uses/" className="hover:text-accentHi">
-            Uses
+          <Link href="/security/" className="hover:text-accentHi">
+            Security
           </Link>
           <Link href="/legal/terms/" className="hover:text-accentHi">
             Legal
           </Link>
-          <Link href="/status/" className="hover:text-accentHi">
-            Status
-          </Link>
-          <Link href="/support/" className="hover:text-accentHi">
-            Support
-          </Link>
-          <Link href="/sitemap/" className="hover:text-accentHi">
-            Site map
-          </Link>
-          <span aria-hidden="true">·</span>
-          <span className="text-muted">© {year}</span>
         </div>
-        <p className="mt-6 max-w-prose text-[11px] text-muted">
-          Terms, privacy, and program-specific risk disclosures are under
-          review by counsel. Contact{" "}
-          <a
-            href={`mailto:${site.supportEmail}`}
-            className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-          >
-            {site.supportEmail}
-          </a>{" "}
-          with any question.
+        <p className="mt-8 max-w-prose text-[12px] leading-relaxed text-muted">
+          © {year} {site.company}. {companyLegal} Terms and privacy notices are under review by counsel.
         </p>
       </div>
     </footer>
@@ -156,26 +113,12 @@ export function Footer() {
 }
 
 /** Whole-page shell. */
-export function Page({
-  children,
-  narrow = false,
-  bandFooter,
-}: {
-  children: ReactNode;
-  narrow?: boolean;
-  bandFooter?: ReactNode;
-}) {
+export function Page({ children, narrow = false }: { children: ReactNode; narrow?: boolean }) {
   return (
     <>
       <Header />
-      <main
-        id="main"
-        className={`mx-auto px-6 md:px-10 ${narrow ? "max-w-3xl" : "max-w-band"}`}
-      >
+      <main id="main" className={`mx-auto px-6 md:px-10 ${narrow ? "max-w-3xl" : "max-w-band"}`}>
         {children}
-        {bandFooter ? (
-          <div className="mt-24 border-t border-line pt-8">{bandFooter}</div>
-        ) : null}
       </main>
       <Footer />
     </>
@@ -192,56 +135,57 @@ export function Eyebrow({ children }: { children: ReactNode }) {
   );
 }
 
+/** Sentence-case display heading. One per page. */
 export function H1({ children }: { children: ReactNode }) {
-  return (
-    <h1 className="mt-4 max-w-4xl text-3xl font-semibold uppercase leading-[1.05] tracking-display text-ink md:text-[54px]">
-      {children}
-    </h1>
-  );
+  return <h1 className="mt-4 max-w-4xl text-displaySm text-ink md:text-display">{children}</h1>;
 }
 
 export function H2({ children }: { children: ReactNode }) {
-  return (
-    <h2 className="text-2xl font-semibold uppercase tracking-display text-ink md:text-[32px]">
-      {children}
-    </h2>
-  );
+  return <h2 className="mt-3 max-w-3xl text-h2Sm text-ink md:text-h2">{children}</h2>;
+}
+
+export function H3({ children }: { children: ReactNode }) {
+  return <h3 className="text-h3 text-ink">{children}</h3>;
 }
 
 export function Lead({ children }: { children: ReactNode }) {
+  return <p className="mt-6 max-w-prose text-[18px] leading-[1.6] text-mute md:text-[19px]">{children}</p>;
+}
+
+export function Body({ children, className = "" }: { children: ReactNode; className?: string }) {
+  return <p className={`mt-5 max-w-prose text-body text-mute ${className}`}>{children}</p>;
+}
+
+/** A page band: consistent vertical rhythm and an optional top rule. */
+export function Section({ children, rule = true, id, className = "" }: { children: ReactNode; rule?: boolean; id?: string; className?: string }) {
   return (
-    <p className="mt-6 max-w-prose text-[17px] leading-[1.6] text-mute">
+    <section id={id} className={`mt-20 md:mt-28 ${rule ? "border-t border-line pt-14 md:pt-20" : ""} ${className}`}>
       {children}
-    </p>
+    </section>
   );
 }
 
-/**
- * Primary CTA. Cyan pill with a hairline. This is the ONE bright button
- * on any page — every other action is a ghost secondary.
- */
-export function PrimaryLink({
-  href,
-  children,
-  small = false,
-  external = false,
-}: {
-  href: string;
-  children: ReactNode;
-  small?: boolean;
-  external?: boolean;
-}) {
-  const className = `inline-flex items-center gap-2 rounded-full border border-accent bg-accentSoft text-accent shadow-glow transition-all duration-200 ease-soft hover:border-accentHi hover:bg-accent/15 hover:text-accentHi hover:shadow-[0_0_0_1px_rgba(78,220,251,0.5),0_10px_34px_-10px_rgba(16,199,235,0.5)] focus-visible:border-accentHi ${
+/** Two-column split: text on one side, a visual on the other. */
+export function Split({ children, visual, reverse = false }: { children: ReactNode; visual: ReactNode; reverse?: boolean }) {
+  return (
+    <div className={`grid grid-cols-1 items-center gap-10 [&>*]:min-w-0 md:grid-cols-2 md:gap-16 ${reverse ? "md:[&>*:first-child]:order-2" : ""}`}>
+      <div>{children}</div>
+      <div>{visual}</div>
+    </div>
+  );
+}
+
+const ctaBase =
+  "inline-flex items-center gap-2 rounded-full transition-all duration-200 ease-soft uppercase tracking-wide";
+
+/** Primary CTA — the one bright button on any band. */
+export function PrimaryLink({ href, children, small = false, external = false }: { href: string; children: ReactNode; small?: boolean; external?: boolean }) {
+  const className = `${ctaBase} border border-accent bg-accentSoft text-accent shadow-glow hover:border-accentHi hover:bg-accent/15 hover:text-accentHi focus-visible:border-accentHi ${
     small ? "px-4 py-2 text-[12px]" : "px-6 py-3 text-[13px]"
-  } uppercase tracking-wide`;
+  }`;
   if (external) {
     return (
-      <a
-        href={href}
-        className={className}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
+      <a href={href} className={className} target="_blank" rel="noopener noreferrer">
         {children}
         <span aria-hidden="true">→</span>
       </a>
@@ -255,29 +199,14 @@ export function PrimaryLink({
   );
 }
 
-/** Ghost secondary CTA — no fill, hairline border. */
-export function GhostLink({
-  href,
-  children,
-  small = false,
-  external = false,
-}: {
-  href: string;
-  children: ReactNode;
-  small?: boolean;
-  external?: boolean;
-}) {
-  const className = `inline-flex items-center gap-2 rounded-full border border-line2 text-ink transition-colors duration-200 ease-soft hover:border-ink hover:bg-ink/[0.04] focus-visible:border-ink ${
+/** Ghost secondary CTA. */
+export function GhostLink({ href, children, small = false, external = false }: { href: string; children: ReactNode; small?: boolean; external?: boolean }) {
+  const className = `${ctaBase} border border-line2 text-ink hover:border-ink hover:bg-ink/[0.04] focus-visible:border-ink ${
     small ? "px-4 py-2 text-[12px]" : "px-6 py-3 text-[13px]"
-  } uppercase tracking-wide`;
+  }`;
   if (external) {
     return (
-      <a
-        href={href}
-        className={className}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
+      <a href={href} className={className} target="_blank" rel="noopener noreferrer">
         {children}
         <span aria-hidden="true">→</span>
       </a>
@@ -291,104 +220,59 @@ export function GhostLink({
   );
 }
 
-/**
- * An elevated card. On the near-black canvas depth reads through a faint
- * top-lit surface + inset highlight + soft drop (the `surface-card` class
- * and `shadow-card` token), not a grey box-shadow. Hover lifts it a hair
- * and warms the border to cyan so the whole card feels interactive even
- * when it isn't a link.
- */
-export function Card({
-  title,
-  children,
-  accent = false,
-}: {
-  title: string;
-  children: ReactNode;
-  accent?: boolean;
-}) {
+/** Elevated card. Sentence-case title. */
+export function Card({ title, children, accent = false }: { title: string; children: ReactNode; accent?: boolean }) {
   return (
     <div
       className={`group/card rounded-[3px] border p-6 shadow-card transition-all duration-200 ease-soft hover:-translate-y-0.5 hover:shadow-cardHover ${
-        accent
-          ? "border-accentDim bg-accentSoft/40"
-          : "surface-card border-line hover:border-accentDim"
+        accent ? "border-accentDim bg-accentSoft" : "surface-card border-line hover:border-accentDim"
       }`}
     >
-      <h3
-        className={`text-[13px] font-semibold uppercase tracking-wide ${
-          accent ? "text-accent" : "text-ink"
-        }`}
-      >
-        {title}
-      </h3>
-      <div className="mt-3 text-[14px] leading-[1.65] text-mute">
-        {children}
-      </div>
+      <h3 className={`text-[17px] font-semibold leading-snug ${accent ? "text-accent" : "text-ink"}`}>{title}</h3>
+      <div className="mt-3 text-small text-mute">{children}</div>
     </div>
   );
 }
 
-/** Three-across grid on desktop, single column on mobile. */
 export function Grid3({ children }: { children: ReactNode }) {
-  return (
-    <div className="grid gap-5 md:grid-cols-3">{children}</div>
-  );
+  return <div className="grid gap-5 md:grid-cols-3">{children}</div>;
 }
 
-/** Two-across grid. */
 export function Grid2({ children }: { children: ReactNode }) {
-  return (
-    <div className="grid gap-5 md:grid-cols-2">{children}</div>
-  );
+  return <div className="grid gap-5 md:grid-cols-2">{children}</div>;
 }
 
-/** A short feature line — icon + label + body. Used in the "how we work"
- * section on the home page and the "what's in the app" band on services. */
-export function Feature({
-  step,
-  title,
-  children,
-}: {
-  step: string;
-  title: string;
-  children: ReactNode;
-}) {
+/** Numbered step. */
+export function Feature({ step, title, children }: { step: string; title: string; children: ReactNode }) {
   return (
-    <div className="border-t border-line pt-4">
-      <p className="font-mono text-[10px] uppercase tracking-wide text-accent">
-        {step}
-      </p>
-      {/* Feature steps live inside a band whose section heading is
-       * `<H2>`, so an `<h3>` here keeps the outline hierarchy tight
-       * (no H2→H4 skips). Visual size stays deliberately small — this
-       * is a step title, not a section header. */}
-      <h3 className="mt-2 text-[15px] font-semibold text-ink">{title}</h3>
-      <p className="mt-2 text-[14px] leading-[1.65] text-mute">{children}</p>
+    <div className="border-t border-line pt-5">
+      <p className="font-mono text-[10px] uppercase tracking-wide text-accent">{step}</p>
+      <h3 className="mt-2 text-[17px] font-semibold text-ink">{title}</h3>
+      <p className="mt-2 text-small text-mute">{children}</p>
     </div>
   );
 }
 
-/** A boxed callout. */
+/** Callout. */
 export function Notice({ children }: { children: ReactNode }) {
+  return <div className="border-l-2 border-accent bg-accentSoft px-5 py-4 text-small text-ink">{children}</div>;
+}
+
+/** Simple check list. */
+export function Checks({ items }: { items: readonly string[] }) {
   return (
-    <div className="border-l-2 border-accent bg-accentSoft/40 px-5 py-4 text-[13px] leading-[1.7] text-ink">
-      {children}
-    </div>
+    <ul className="mt-6 space-y-3">
+      {items.map((t) => (
+        <li key={t} className="flex gap-3 text-body text-mute">
+          <span aria-hidden="true" className="mt-[9px] inline-block h-2 w-2 shrink-0 rounded-full bg-accent" />
+          <span>{t}</span>
+        </li>
+      ))}
+    </ul>
   );
 }
 
-/** Status chip for programs (2027, coming this month, etc.). */
-export function StatusChip({ children }: { children: ReactNode }) {
-  return (
-    <span className="inline-flex items-center gap-2 border border-care/60 px-3 py-1 font-mono text-[10px] uppercase tracking-wide text-care">
-      <span className="inline-block h-1.5 w-1.5 rounded-full bg-care" />
-      {children}
-    </span>
-  );
-}
-
-/** Cyan status chip (for "in use," "shipping now," etc.). */
+/** Cyan chip for facts. */
 export function AccentChip({ children }: { children: ReactNode }) {
   return (
     <span className="inline-flex items-center gap-2 border border-accentDim px-3 py-1 font-mono text-[10px] uppercase tracking-wide text-accent">
@@ -398,68 +282,69 @@ export function AccentChip({ children }: { children: ReactNode }) {
   );
 }
 
-/**
- * The one status badge for Doyel Labs' own-brand products. Three stages,
- * one visual language, used everywhere a product appears so a visitor
- * never has to guess what "live" vs "beta" vs "coming" means. The label
- * text comes from `stageMeta` in `@/lib/products` — single source of truth.
- *
- *   live → rise green   (shipped, in real use)
- *   beta → care amber    (real software, invite-only)
- *   soon → muted         (announced, not yet available)
- */
-const STAGE_STYLES: Record<Stage, { border: string; text: string; dot: string }> =
-  {
-    live: { border: "border-rise/60", text: "text-rise", dot: "bg-rise" },
-    beta: { border: "border-care/60", text: "text-care", dot: "bg-care" },
-    soon: { border: "border-line2", text: "text-mute", dot: "bg-mute" },
-  };
-
-export function StageBadge({
-  stage,
-  children,
-}: {
-  stage: Stage;
-  /** Optional override; defaults to the canonical stage label. */
-  children?: ReactNode;
-}) {
-  const s = STAGE_STYLES[stage];
+/** Amber chip for program status. */
+export function StatusChip({ children }: { children: ReactNode }) {
   return (
-    <span
-      className={`inline-flex items-center gap-2 border px-3 py-1 font-mono text-[10px] uppercase tracking-wide ${s.border} ${s.text}`}
-    >
-      <span className={`inline-block h-1.5 w-1.5 rounded-full ${s.dot}`} />
-      {children ?? stageMeta[stage].label}
+    <span className="inline-flex items-center gap-2 border border-care/60 px-3 py-1 font-mono text-[10px] uppercase tracking-wide text-care">
+      <span className="inline-block h-1.5 w-1.5 rounded-full bg-care" />
+      {children}
     </span>
   );
 }
 
-/**
- * A one-line legend that defines the three stages up front. Used at the
- * top of the products page so the status vocabulary is explicit before
- * the reader meets a single badge.
- */
-export function StageLegend() {
-  const order: Stage[] = ["live", "beta", "soon"];
+/** Big price line. */
+export function Price({ amount, terms }: { amount: string; terms: string }) {
   return (
-    <dl className="flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:gap-x-8 sm:gap-y-3">
-      {order.map((stage) => (
-        <div key={stage} className="flex items-center gap-3">
-          <StageBadge stage={stage} />
-          <dd className="text-[12px] leading-snug text-muted">
-            {stageMeta[stage].blurb}
-          </dd>
-        </div>
-      ))}
-    </dl>
+    <p className="mt-2 flex items-baseline gap-3">
+      <span className="text-[44px] font-semibold leading-none tracking-display text-ink md:text-[56px]">{amount}</span>
+      <span className="font-mono text-[11px] uppercase tracking-wide text-mute">{terms}</span>
+    </p>
   );
 }
 
-/** Small mono footnote — used to name the source-of-truth file for a claim. */
-export function MetaRow({ children }: { children: ReactNode }) {
+/** FAQ list using native details/summary. */
+export function Faq({ items }: { items: readonly { q: string; a: string }[] }) {
   return (
-    <p className="mt-6 font-mono text-[10px] uppercase tracking-wide text-muted">
-      {children}
-    </p>
+    <div className="mt-8 divide-y divide-line border-y border-line">
+      {items.map((it) => (
+        <details key={it.q} className="group py-4">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-[17px] font-semibold text-ink [&::-webkit-details-marker]:hidden">
+            {it.q}
+            <span aria-hidden="true" className="text-accent transition-transform group-open:rotate-45">
+              +
+            </span>
+          </summary>
+          <p className="mt-3 max-w-prose text-small text-mute">{it.a}</p>
+        </details>
+      ))}
+    </div>
   );
+}
+
+/** Closing band: one primary CTA plus the phone. */
+export function Close({ eyebrow = "Next step", title, children }: { eyebrow?: string; title: string; children?: ReactNode }) {
+  return (
+    <Section>
+      <div className="grid items-center gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
+        <div>
+          <Eyebrow>{eyebrow}</Eyebrow>
+          <H2>{title}</H2>
+          {children ? <Body>{children}</Body> : null}
+          <div className="mt-8 flex flex-wrap items-center gap-3">
+            <ContactWidget label="Talk to a person" />
+            <GhostLink href={site.phoneHref} small>
+              Call {site.phone}
+            </GhostLink>
+          </div>
+          <p className="mt-4 font-mono text-[10px] uppercase tracking-wide text-muted">{site.hoursShort} · reply {response.window}</p>
+        </div>
+        <Photo name="close-desk" fallback="call" alt="A tidy desk with a phone, notebook, and a window with morning light" className="mx-auto max-w-sm" />
+      </div>
+    </Section>
+  );
+}
+
+/** Small mono footnote. */
+export function MetaRow({ children }: { children: ReactNode }) {
+  return <p className="mt-6 font-mono text-[10px] uppercase tracking-wide text-muted">{children}</p>;
 }

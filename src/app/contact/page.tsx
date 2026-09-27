@@ -1,46 +1,51 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import {
   AccentChip,
   Card,
+  Checks,
   Eyebrow,
-  GhostLink,
+  Feature,
   H1,
   H2,
   Lead,
   Notice,
   Page,
+  Section,
+  Split,
 } from "@/components/chrome";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ContactPageForm } from "@/components/contact-page-form";
+import { Photo } from "@/components/photo";
 import { Reveal } from "@/components/reveal";
+import { customSoftware, response, websiteBuild } from "@/lib/offer";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Contact — book a one-hour orientation with a real human",
-  description: `Contact ${site.company}. One paragraph on your business, and a real person will reply within one business day to schedule a one-hour orientation call over Zoom or phone. Free, no obligation.`,
+  title: "Contact — talk to a person",
+  description: `Contact ${site.company}. One paragraph about your business is all we need. A person replies ${response.window}, ${response.usually}. Call ${site.phone}, ${site.hoursShort}.`,
   alternates: { canonical: `https://${site.domain}/contact/` },
-  openGraph: {
-    title: `Contact ${site.company} — book a one-hour orientation`,
-    description:
-      "One paragraph on your business, and a real person replies within one business day. Free orientation over Zoom or phone.",
-    url: `https://${site.domain}/contact/`,
-    type: "website",
-  },
 };
 
+const link = "text-ink underline decoration-accentDim underline-offset-4 hover:text-accentHi";
+
+const NOT_DONE = [
+  "No sales sequence. One reply from a person, then it's up to you.",
+  "No newsletter. Your address is used to answer you, nothing else.",
+  "No pressure on the call. It's an orientation: listening, not pitching.",
+  "No hidden charges. Every price is written down before work starts, and you see it before you agree to anything.",
+] as const;
+
 /**
- * `/contact/` — the primary conversion surface.
- *
- * Layout: hero with orientation framing + trust chips → two-column
- * form + direct-contact panel → a "what happens after you hit send"
- * band so the visitor knows exactly what to expect.
+ * /contact/ — the form is the close. No <Close> band; the page ends after
+ * the "what we don't do" split.
  */
 export default function Contact() {
   return (
     <Page>
       <Breadcrumbs items={[{ name: "Contact", href: "/contact/" }]} />
 
-      {/* HERO */}
+      {/* 1. HERO */}
       <section className="hero-glow pt-4">
         <div className="max-w-3xl">
           <div className="hero-in hero-in--1">
@@ -48,248 +53,96 @@ export default function Contact() {
           </div>
           <div className="hero-in hero-in--2">
             <H1>
-              Let&apos;s <span className="text-accent">talk</span>.
+              Talk to <span className="text-accent">a person</span>.
             </H1>
           </div>
           <div className="hero-in hero-in--3">
             <Lead>
-              One paragraph on the business is all we need. A real
-              person from Doyel Labs replies within one business day
-              with a couple of times that could work for a one-hour
-              orientation over Zoom or phone. No cost, no obligation,
-              no follow-up drip.
+              One paragraph about the business is all we need. You&apos;ll get a reply from a person {response.window},{" "}
+              {response.usually}.
             </Lead>
           </div>
-          <div className="hero-in hero-in--4 mt-6 flex flex-wrap gap-2">
-            <AccentChip>1-business-day reply</AccentChip>
-            <AccentChip>Real human, always</AccentChip>
-            <AccentChip>Free orientation</AccentChip>
+          <div className="hero-in hero-in--4 mt-8 flex flex-wrap gap-2">
+            <AccentChip>{site.hoursShort}</AccentChip>
+            <AccentChip>Real person, always</AccentChip>
             <AccentChip>No obligation</AccentChip>
           </div>
         </div>
       </section>
 
-      {/* FORM + DIRECT CONTACT */}
-      <section className="mt-16 grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)]">
-        <div>
-          <ContactPageForm />
-        </div>
-
-        <div className="grid gap-4">
-          <Card title="Direct" accent>
-            <p className="font-mono text-[10px] uppercase tracking-eyebrow text-muted">
-              Email
-            </p>
-            <p className="mt-1">
-              <a
-                href={`mailto:${site.supportEmail}`}
-                className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-              >
-                {site.supportEmail}
-              </a>
-            </p>
-            <p className="mt-5 font-mono text-[10px] uppercase tracking-eyebrow text-muted">
-              Phone
-            </p>
-            <p className="mt-1">
-              <a
-                href={site.phoneHref}
-                className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-              >
-                {site.phone}
-              </a>{" "}
-              <span className="text-muted">· US business hours (MT)</span>
-            </p>
-            <p className="mt-5 font-mono text-[10px] uppercase tracking-eyebrow text-muted">
-              Response time
-            </p>
-            <p className="mt-1 text-[13px] leading-[1.6] text-mute">
-              One business day, always with a real person on the other
-              end — never a chatbot or an autoresponder.
-            </p>
-          </Card>
-
-          <Card title="Security disclosure">
-            Report a vulnerability at{" "}
-            <a
-              href={`mailto:${site.securityEmail}?subject=Security%20disclosure`}
-              className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-            >
-              {site.securityEmail}
-            </a>
-            . Two-business-day response. See{" "}
-            <a
-              href="/security/"
-              className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-            >
-              /security
-            </a>{" "}
-            for our full posture.
-          </Card>
-
-          <Card title="Registered office">
-            {site.company}
-            <br />
-            {site.city}, United States
-            <br />
-            <span className="text-muted">
-              Written notice via{" "}
-              <a
-                href={`mailto:${site.supportEmail}`}
-                className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-              >
-                {site.supportEmail}
-              </a>
-              .
-            </span>
-          </Card>
-        </div>
-      </section>
-
-      {/* WHAT HAPPENS AFTER YOU HIT SEND */}
+      {/* 2. FORM + DIRECT LINES */}
       <Reveal>
-        <section className="mt-24 border-t border-line pt-16">
-          <div className="max-w-3xl">
-            <Eyebrow>What happens after you hit send</Eyebrow>
-            <H2>
-              <span className="mt-2 block">
-                Three steps, then a real conversation.
-              </span>
-            </H2>
-            <p className="mt-6 text-[16px] leading-[1.7] text-mute">
-              We spelled this out because a lot of contact forms lie
-              about what happens next. Here&apos;s the actual sequence,
-              in order.
-            </p>
+        <Section>
+          <h2 className="sr-only">Send a message</h2>
+          <div className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] md:gap-16">
+            <div>
+              <ContactPageForm />
+            </div>
+            <div className="space-y-5">
+              <Notice>
+                <strong className="text-ink">This form goes to a person, not a queue.</strong> It lands in a person&apos;s
+                inbox, and that person replies.
+              </Notice>
+              <Card title="Call">
+                <a href={site.phoneHref} className={link}>
+                  {site.phone}
+                </a>
+                <br />
+                {site.hours}. If it goes to voicemail, leave a message and a person calls back.
+              </Card>
+              <Card title="Email">
+                <a href={`mailto:${site.supportEmail}`} className={link}>
+                  {site.supportEmail}
+                </a>
+                <br />
+                Read by a person. Reply {response.window}, {response.usually}.
+              </Card>
+              <Card title="Security disclosures">
+                <a href={`mailto:${site.securityEmail}`} className={link}>
+                  {site.securityEmail}
+                </a>
+                <br />
+                Found a problem with this site? See{" "}
+                <Link href="/security/" className={link}>
+                  how we handle reports
+                </Link>
+                .
+              </Card>
+            </div>
           </div>
+        </Section>
+      </Reveal>
+
+      {/* 3. WHAT HAPPENS NEXT */}
+      <Reveal>
+        <Section>
+          <Eyebrow>What happens next</Eyebrow>
+          <H2>Three steps, no surprises.</H2>
           <div className="mt-10 grid gap-6 md:grid-cols-3">
-            <StepCard
-              step="01"
-              title="A real person emails you back"
-              body="Within one business day. Not a form-letter, not a chatbot. If you suggested orientation times, we confirm one; if you didn't, we propose two or three."
-            />
-            <StepCard
-              step="02"
-              title="One-hour orientation over Zoom or phone"
-              body="We listen more than we talk. You describe the operation; we ask questions. At the end of the hour, you decide whether to move forward."
-            />
-            <StepCard
-              step="03"
-              title="Written scope + fixed price (only if you're moving forward)"
-              body="If you decide yes, a scope + price land in your inbox by the end of the next business day. If you decide no, we send our notes anyway."
-            />
+            <Feature step="01" title="A person reads it">
+              Not an assistant, not a bot. Someone reads what you wrote and replies {response.window}.
+            </Feature>
+            <Feature step="02" title="You talk, briefly">
+              A short call by phone or Zoom about your business and what you need. Listening, not pitching.
+            </Feature>
+            <Feature step="03" title="Work starts">
+              Websites go live in {websiteBuild.turnaround} once your content is in. Software gets a written scope and a
+              fixed price, {customSoftware.fromLabel}, within one business day of the call.
+            </Feature>
           </div>
-          <div className="mt-8">
-            <GhostLink href="/how-we-work/" small>
-              The full &quot;how we work&quot; page
-            </GhostLink>
-          </div>
-        </section>
+        </Section>
       </Reveal>
 
-      {/* QUIET COMMITMENTS */}
+      {/* 4. WHAT WE DON'T DO */}
       <Reveal>
-        <section className="mt-24 border-t border-line pt-16">
-          <div className="max-w-3xl">
-            <Eyebrow>Quiet commitments</Eyebrow>
-            <H2>
-              <span className="mt-2 block">
-                What we do not do when you contact us.
-              </span>
-            </H2>
-          </div>
-          <div className="mt-10 grid gap-4 md:grid-cols-2">
-            <Card title="No sales sequence">
-              One reply from a real person. If you don&apos;t reply, we
-              don&apos;t chase. No &quot;just checking in&quot; emails,
-              no six-touch cadence.
-            </Card>
-            <Card title="No pressure on the call">
-              The one-hour orientation is a conversation, not a pitch.
-              If we realize we&apos;re not a fit, we say so and (if we
-              can) point you at someone who is.
-            </Card>
-            <Card title="No hidden charges">
-              The orientation is free. The scope + quote is free. You
-              only pay against a scope you signed for.
-            </Card>
-            <Card title="No newsletter sign-up">
-              We don&apos;t collect emails for a mailing list. Your
-              contact info is used to reply to you and nothing else.
-              See our{" "}
-              <a
-                href="/legal/privacy/"
-                className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
-              >
-                privacy policy
-              </a>
-              .
-            </Card>
-          </div>
-        </section>
+        <Section>
+          <Split reverse visual={<Photo name="contact-call" fallback="call" alt="A phone handset resting on a notebook next to a mug on a warm wooden desk" className="mx-auto max-w-md" />}>
+            <Eyebrow>What we don&apos;t do</Eyebrow>
+            <H2>What we don&apos;t do when you contact us.</H2>
+            <Checks items={NOT_DONE} />
+          </Split>
+        </Section>
       </Reveal>
-
-      {/* RELATED */}
-      <section className="mt-24 border-t border-line pt-16">
-        <div className="max-w-3xl">
-          <Eyebrow>While you&apos;re here</Eyebrow>
-          <H2>
-            <span className="mt-2 block">More places to look.</span>
-          </H2>
-        </div>
-        <div className="mt-8 flex flex-wrap gap-3">
-          <GhostLink href="/how-we-work/" small>
-            How we work
-          </GhostLink>
-          <GhostLink href="/services/" small>
-            What we build
-          </GhostLink>
-          <GhostLink href="/pricing/" small>
-            Pricing bands
-          </GhostLink>
-          <GhostLink href="/work/" small>
-            Case study
-          </GhostLink>
-          <GhostLink href="/faq/" small>
-            FAQ
-          </GhostLink>
-          <GhostLink href="/writing/" small>
-            Writing
-          </GhostLink>
-        </div>
-        <div className="mt-12">
-          <Notice>
-            <p>
-              If you&apos;re here for a security disclosure or a legal
-              notice rather than a project, use the direct contact card
-              above — those go to different queues than the form.
-            </p>
-          </Notice>
-        </div>
-      </section>
     </Page>
-  );
-}
-
-/** Numbered step card in the "what happens after you hit send" band. */
-function StepCard({
-  step,
-  title,
-  body,
-}: {
-  step: string;
-  title: string;
-  body: string;
-}) {
-  return (
-    <div className="border border-line bg-surface/30 p-6">
-      <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
-        Step {step}
-      </p>
-      <h3 className="mt-3 text-[17px] font-semibold leading-tight text-ink">
-        {title}
-      </h3>
-      <p className="mt-4 text-[13px] leading-[1.65] text-mute">{body}</p>
-    </div>
   );
 }

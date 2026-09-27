@@ -1,71 +1,59 @@
 /**
  * One place for company-level facts. Anything that names Doyel Labs
- * itself, its city, its addresses, its status page target, or the
- * disclaimers used across pages, lives here.
+ * itself, its city, its contact details, or the disclaimers used across
+ * pages, lives here. Prices and timelines live in `offer.ts`.
  */
 export const site = {
+  /** Exact legal name as filed with the Wyoming Secretary of State. */
   company: "Doyel Labs LLC",
   companyShort: "Doyel Labs",
   domain: "doyel-labs.com",
   city: "Casper, Wyoming",
   founded: "September 2026",
+  founder: "Blake Doyel",
   supportEmail: "support@doyel-labs.com",
   securityEmail: "security@doyel-labs.com",
   phone: "(307) 429-0389",
   phoneHref: "tel:+13074290389",
-  apiBase: (
-    process.env.NEXT_PUBLIC_API_BASE ||
-    "https://bai-control-plane-staging.fly.dev"
-  ).replace(/\/$/, ""),
+  hours: "Monday–Friday, 9:00 a.m.–6:00 p.m. Mountain",
+  hoursShort: "Mon–Fri, 9–6 Mountain",
 };
 
-/**
- * One-line company positioning. Read this before you write copy anywhere
- * else. This is what Doyel Labs *is*, not a marketing line. Never
- * mentions size or headcount — the customer hires us for what we ship,
- * not for how many chairs are in the office.
- */
+/** Company positioning, one line. Read before writing copy anywhere. */
 export const positioning =
-  "Doyel Labs builds the software your business runs on. We use AI to ship fast, and we stay on to keep it running.";
+  "Doyel Labs builds websites and custom software for businesses. Real people build it. A real person answers.";
 
-/** Company-scale legal line — footer only, small. */
+/** The promise. Used verbatim in the hero and the footer. */
+export const promise = {
+  headline: "Real people build it. A real person answers.",
+  body:
+    "AI builds most of what we ship. A person checks it, and a person is who you talk to — on the first call, during the build, and any time something needs attention afterward. No chatbot, no screening AI, no ticket queue.",
+} as const;
+
+/** Footer legal line — every page, small. */
 export const companyLegal =
-  `${site.company} is a Wyoming limited liability company. Doyel Labs is not a broker-dealer, ` +
-  `investment adviser, bank, payroll processor, or money transmitter, and none of its software ` +
-  `holds customer money or securities. Trading with the BAI program can lose money, including all of it.`;
+  `${site.company} is a Wyoming limited liability company. It is not a payroll processor, ` +
+  `money transmitter, broker-dealer, or investment adviser.`;
 
-/** BAI-only disclaimer — used on /products/#bai and /legal/bai/*. */
+/** BAI-only disclaimer — /work/#lab and /legal/bai/* only. Never in the footer. */
 export const baiDisclaimer =
   "BAI is software you run on your own computer. It connects to your own brokerage and market-data " +
   "accounts and places orders at your broker under rules you set. Doyel Labs LLC is not a broker-dealer " +
   "or an investment adviser, never holds your funds, and nothing on this site or in the app is a " +
   "recommendation to buy or sell any security. Trading can lose money, including all of it.";
 
-/** Payroll-page disclaimer — narrows what the software does. */
+/** Payroll-scope disclaimer — /software/ only. */
 export const payrollDisclaimer =
-  "The payroll product prepares pay runs and records; it does not file taxes, does not move money, " +
-  "does not run direct deposit, and is not a payroll processor or money transmitter under any state law. " +
-  "The operator pays through their own bank; Doyel Labs never touches funds.";
+  "Payroll workspaces we build prepare pay runs and records. They do not file taxes, move money, " +
+  "or run direct deposit, and Doyel Labs is not a payroll processor or money transmitter. " +
+  "You pay through your own bank; Doyel Labs never touches funds.";
 
 export const programStatus = {
-  bai: {
-    label: "PRIVATE BETA · BROKER REVIEW",
-    body:
-      "In private testing with a small cohort of operators. Alpaca broker-app " +
-      "review is underway; public availability follows once the app is approved " +
-      "and the risk-control gates pass a final audit.",
-  },
-  connectionloop: {
-    label: "STORE SUBMISSION THIS MONTH",
-    body: "In private testing with the Hamilton Family. Store review pending; App Check enforcement and attorney sign-off still open.",
-  },
+  bai: { label: "Private beta", body: "In private testing with a small group of operators." },
+  connectionloop: { label: "In private testing", body: "A shared calendar, lists, notes, and photos for one family or group. Invite-only." },
 } as const;
 
-/**
- * Analytics. Plausible only. Injected from `NEXT_PUBLIC_PLAUSIBLE_DOMAIN`
- * at build time; if unset, no script renders and no third-party network
- * I/O occurs on marketing pages.
- */
+/** Analytics. Plausible only, cookieless. Injected at build time. */
 export const analytics = {
   plausibleDomain: process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || "",
 };
