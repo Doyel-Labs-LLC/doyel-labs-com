@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - name: CSP has no unsafe-inline in script-src
+        run: |
+          if grep -E "script-src[^;]*'unsafe-inline'" out/_headers; then
+            echo "script-src must not allow 'unsafe-inline'"; exit 1; fi
+          grep -q "sha256-" out/_headers
+      - name: Every sitemap URL was exported
+        run: |
+          for u in $(grep -o '<loc>[^<]*</loc>' out/sitemap.xml | sed 's/<[^>]*>//g'); do
+            p="${u#https://doyel-labs.com}"; f="out${p}index.html"
+            [ -f "$f" ] || { echo "missing $f"; exit 1; }
+          done
+      - name: Banned copy
+        run: |
+          ! grep -rEn --include=*.tsx --include=*.ts \
+            -e "AI-powered|world-class|cutting-edge|seamless|next-gen|revolutioni|mission-critical|best-in-class" \
+            -e "\bour team\b|small team|two-person|\bsolo\b" \
+            -e "carry .*insurance|liability insurance|Errors & Omissions|DOL inspector|SOC 2|HIPAA|PCI|GLBA" \
+            -e "80% of|on average|most of our clients|Loom" \
+            --exclude=changelog.ts src/ || { echo "banned phrase found"; exit 1; }
