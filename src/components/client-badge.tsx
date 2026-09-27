@@ -35,7 +35,7 @@ export function ClientBadge({
         height={size}
         className="shrink-0"
       />
-      <span className="text-[13px] font-medium text-ink group-hover:text-accentHi">
+      <span className="text-[13px] font-medium text-ink group-hover:text-accentInk">
         {name}
       </span>
       <span

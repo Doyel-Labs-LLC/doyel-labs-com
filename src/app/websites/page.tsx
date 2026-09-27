@@ -170,7 +170,7 @@ export default function Websites() {
                       <p className="text-[16px] font-semibold text-ink">{a.name}</p>
                       <p className="mt-0.5 text-[14px] text-mute">{a.note}</p>
                     </div>
-                    <p className="shrink-0 font-mono text-[14px] text-ink">{money(a.price)}</p>
+                    <p className="shrink-0 font-display text-[20px] font-medium text-ink tabular-nums">{money(a.price)}</p>
                   </li>
                 ))}
               </ul>

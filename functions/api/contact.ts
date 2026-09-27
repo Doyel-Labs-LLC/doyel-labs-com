@@ -16,11 +16,13 @@
  *      Cloudflare Rate Limiting binding when present, KV otherwise.
  *      Fails CLOSED in production if neither binding exists.
  *   6. Resend delivery with a 5 s timeout.
+ *   7. A best-effort automatic receipt to the visitor (templates in
+ *      src/lib/contact-email.ts). It never repeats the visitor's message.
  *
  * Errors return a generic message only. Upstream details are logged to
  * the Pages Function log, never to the client.
  *
- * Status codes: 200 sent · 400 invalid · 403 origin/CAPTCHA · 405 method
+ * Status codes: 200 sent ({ ok, receipt }) · 400 invalid · 403 origin/CAPTCHA · 405 method
  * · 413 too large · 429 rate limited · 500 not configured / upstream.
  * (No 502/504: Cloudflare replaces those with its own HTML error page.)
  */
@@ -32,6 +34,13 @@ import {
   LIMITS,
   type ContactInput,
 } from "../../src/lib/contact-form";
+import {
+  renderNotificationHtml,
+  renderNotificationText,
+  renderReceiptHtml,
+  renderReceiptText,
+  receiptSubject,
+} from "../../src/lib/contact-email";
 
 interface RateLimiter {
   limit(opts: { key: string }): Promise<{ success: boolean }>;
@@ -75,15 +84,6 @@ function j(status: number, body: Record<string, unknown>): Response {
       "x-content-type-options": "nosniff",
     },
   });
-}
-
-function escapeHtml(s: string): string {
-  return s
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#39;");
 }
 
 function isProduction(env: Env): boolean {
@@ -192,8 +192,8 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
     to: [to],
     reply_to: c.email,
     subject: `[Website · ${projectTypeLabel}] ${subject}`,
-    text: renderTextEmail({ ...c, projectTypeLabel, subject }),
-    html: renderHtmlEmail({ ...c, projectTypeLabel, subject, replyMailto }),
+    text: renderNotificationText({ ...c, projectTypeLabel, subject }),
+    html: renderNotificationHtml({ ...c, projectTypeLabel, subject, replyMailto }),
   };
 
   let resendResp: Response;
@@ -220,7 +220,34 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
     console.error("contact: resend rejected", resendResp.status, detail);
     return j(500, { error: GENERIC.internal });
   }
-  return j(200, { ok: true });
+
+  // 7. Receipt to the visitor. Best effort: the message is already
+  //    delivered, so a failure here is logged and never shown as an error.
+  const receipt = await sendReceipt(key, from, to, c.email, c.name);
+  return j(200, { ok: true, receipt });
+}
+
+async function sendReceipt(key: string, from: string, replyTo: string, email: string, name: string): Promise<boolean> {
+  try {
+    const resp = await fetch("https://api.resend.com/emails", {
+      method: "POST",
+      headers: { Authorization: "Bearer " + key, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        from,
+        to: [email],
+        reply_to: replyTo,
+        subject: receiptSubject,
+        text: renderReceiptText({ name }),
+        html: renderReceiptHtml({ name }),
+      }),
+      signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
+    });
+    if (!resp.ok) console.error("contact: receipt rejected", resp.status);
+    return resp.ok;
+  } catch (e) {
+    console.error("contact: receipt unreachable", e instanceof Error ? e.message : String(e));
+    return false;
+  }
 }
 
 async function verifyTurnstile(secret: string, token: string, ip: string): Promise<boolean> {
@@ -277,67 +304,4 @@ async function rateLimit(env: Env, ip: string): Promise<"ok" | "limited" | "unav
     }
   }
   return "unavailable";
-}
-
-/* ───────────────────────── Email templates ───────────────────────── */
-
-type EmailVars = {
-  name: string;
-  email: string;
-  projectTypeLabel: string;
-  subject: string;
-  message: string;
-  preferredTimes: string;
-};
-
-function renderTextEmail(v: EmailVars): string {
-  const rule = "─".repeat(64);
-  const sender = v.name ? `${v.name} <${v.email}>` : v.email;
-  const times = v.preferredTimes ? `PROPOSED CALL TIMES:\n${v.preferredTimes}\n\n${rule}\n\n` : "";
-  return (
-    `${rule}\n  DOYEL LABS  ·  CASPER, WYOMING\n${rule}\n\n` +
-    `  [ ${v.projectTypeLabel.toUpperCase()} ]  NEW MESSAGE\n\n` +
-    `  From:     ${sender}\n  Subject:  ${v.subject}\n\n${rule}\n\n` +
-    `${v.message}\n\n${rule}\n\n${times}` +
-    `Reply directly to this email.\n\nReceived at doyel-labs.com/api/contact\n` +
-    `Doyel Labs LLC  ·  Casper, Wyoming  ·  https://doyel-labs.com\n`
-  );
-}
-
-function renderHtmlEmail(v: EmailVars & { replyMailto: string }): string {
-  const bodyMessage = escapeHtml(v.message).replace(/\n/g, "<br>");
-  const heading = v.name ? `New message from ${v.name}` : "New message";
-  const replyLabel = v.name ? `Reply to ${v.name.split(/\s+/)[0]}` : "Reply";
-  const timesBlock = v.preferredTimes
-    ? `<tr><td style="padding:0 32px 24px;"><div style="border:1px solid rgba(16,199,235,0.35);background:rgba(16,199,235,0.06);padding:16px 20px;">
-        <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:10px;letter-spacing:0.10em;text-transform:uppercase;color:#10c7eb;">Suggested call times</p>
-        <p style="margin:8px 0 0;font-size:14px;line-height:1.6;color:#f0f0fa;">${escapeHtml(v.preferredTimes).replace(/\n/g, "<br>")}</p>
-      </div></td></tr>`
-    : "";
-  const mono = "font-family:Consolas,'Courier New',monospace;font-size:10px;letter-spacing:0.10em;text-transform:uppercase;color:rgba(240,240,250,0.5);";
-
-  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><title>${escapeHtml(heading)}</title></head>
-<body style="margin:0;padding:0;background:#0a0f14;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:#f0f0fa;">
-<div style="display:none;font-size:1px;color:#0a0f14;max-height:0;overflow:hidden;">${escapeHtml(v.projectTypeLabel)} · ${escapeHtml(v.subject)}</div>
-<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#0a0f14;"><tr><td align="center" style="padding:32px 16px;">
-<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;background:#12181f;border:1px solid rgba(240,240,250,0.10);">
-<tr><td style="padding:28px 32px 20px;border-bottom:1px solid rgba(240,240,250,0.10);">
-  <table role="presentation" cellspacing="0" cellpadding="0" border="0"><tr>
-    <td style="vertical-align:middle;padding-right:14px;"><img src="https://doyel-labs.com/apple-touch-icon.png" width="44" height="44" alt="" style="display:block;border-radius:6px;"></td>
-    <td style="vertical-align:middle;"><div style="font-size:15px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#f0f0fa;line-height:1;">Doyel Labs</div>
-    <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(240,240,250,0.5);margin-top:5px;line-height:1;">Casper, Wyoming</div></td>
-  </tr></table></td></tr>
-<tr><td style="padding:28px 32px 12px;"><span style="display:inline-block;${mono}color:#10c7eb;border:1px solid rgba(16,199,235,0.35);padding:6px 12px;font-size:11px;">${escapeHtml(v.projectTypeLabel)}</span></td></tr>
-<tr><td style="padding:0 32px 24px;">
-  <h1 style="margin:0;font-size:24px;font-weight:600;line-height:1.2;color:#f0f0fa;">${escapeHtml(heading)}</h1>
-  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top:16px;">
-    <tr><td style="padding:4px 0;${mono}width:70px;vertical-align:top;">From</td><td style="padding:4px 0;font-size:14px;"><a href="mailto:${encodeURIComponent(v.email)}" style="color:#10c7eb;text-decoration:none;">${escapeHtml(v.email)}</a></td></tr>
-    <tr><td style="padding:4px 0;${mono}width:70px;vertical-align:top;">Subject</td><td style="padding:4px 0;font-size:14px;color:#f0f0fa;">${escapeHtml(v.subject)}</td></tr>
-  </table></td></tr>
-<tr><td style="padding:0 32px 32px;"><div style="border-left:2px solid #10c7eb;background:rgba(16,199,235,0.08);padding:18px 22px;font-size:15px;line-height:1.65;color:#f0f0fa;">${bodyMessage}</div></td></tr>${timesBlock}
-<tr><td style="padding:0 32px 36px;"><a href="${escapeHtml(v.replyMailto)}" style="display:inline-block;background:rgba(16,199,235,0.10);border:1px solid #10c7eb;color:#10c7eb;padding:13px 26px;font-size:13px;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;text-decoration:none;">${escapeHtml(replyLabel)} →</a>
-  <span style="display:inline-block;padding:13px 12px;font-size:12px;color:rgba(240,240,250,0.5);">or hit Reply on this email</span></td></tr>
-<tr><td style="padding:20px 32px 28px;border-top:1px solid rgba(240,240,250,0.10);"><p style="margin:0;${mono}">Received at doyel-labs.com/api/contact</p>
-  <p style="margin:10px 0 0;font-size:12px;color:rgba(240,240,250,0.66);">Doyel Labs LLC · Casper, Wyoming · <a href="https://doyel-labs.com" style="color:#10c7eb;text-decoration:none;">doyel-labs.com</a></p></td></tr>
-</table></td></tr></table></body></html>`;
 }

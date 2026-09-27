@@ -141,7 +141,7 @@ export default function Work() {
                   <p>{p.tagline}</p>
                   <div className="mt-4 flex flex-wrap items-center gap-3">
                     <StatusChip>{programStatus[p.key].label}</StatusChip>
-                    <span className="font-mono text-[10px] uppercase tracking-wide text-muted">{p.meta}</span>
+                    <span className="text-[13px] text-muted">{p.meta}</span>
                   </div>
                 </Card>
               ))}

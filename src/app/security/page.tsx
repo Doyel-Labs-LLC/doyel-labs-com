@@ -30,7 +30,7 @@ export const metadata: Metadata = {
 
 const REPO_URL = "https://github.com/Doyel-Labs-LLC/doyel-labs-com";
 
-const link = "text-accent underline decoration-accentDim underline-offset-4 hover:text-accentHi";
+const link = "text-accent underline decoration-accentDim underline-offset-4 hover:text-accentInk";
 
 /**
  * /security/ — describes doyel-labs.com itself and nothing else. Every
@@ -97,7 +97,7 @@ export default function Security() {
           <div className="mt-6">
             <Notice>
               The full wording, including retention periods and what the provider itself receives, is in the{" "}
-              <Link href="/legal/privacy/" className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi">
+              <Link href="/legal/privacy/" className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentInk">
                 privacy policy
               </Link>
               . It is generated from the same configuration the site is built with, so it can&apos;t drift from reality.
@@ -129,7 +129,8 @@ export default function Security() {
             </Feature>
             <Feature step="04" title="Emailed to a person">
               The message is emailed to {site.supportEmail} through Resend, a mail-delivery service, and lands in a Google
-              Workspace mailbox. Nothing is written to a database.
+              Workspace mailbox. You get one short automatic receipt that doesn&apos;t repeat what you wrote. Nothing is
+              written to a database.
             </Feature>
             <Feature step="05" title="Kept only as needed">
               It stays in that mailbox as long as needed to reply and work together. If something fails, the error you
@@ -181,7 +182,7 @@ export default function Security() {
           </Body>
           <MetaRow>
             The site&apos;s source is public on GitHub:{" "}
-            <a href={REPO_URL} className="text-ink hover:text-accentHi" target="_blank" rel="noopener noreferrer">
+            <a href={REPO_URL} className="text-ink hover:text-accentInk" target="_blank" rel="noopener noreferrer">
               {REPO_URL.replace("https://", "")}
             </a>
           </MetaRow>

@@ -2,8 +2,10 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { buttonClass } from "@/components/button-styles";
 import { ContactForm } from "@/components/contact-form";
-import { promise } from "@/lib/site";
+import { response } from "@/lib/offer";
+import { site } from "@/lib/site";
 
 /**
  * ContactWidget — a button that opens a modal with the contact form.
@@ -27,12 +29,6 @@ export function ContactWidget({
     requestAnimationFrame(() => triggerRef.current?.focus());
   }, []);
 
-  const buttonClass =
-    variant === "primary"
-      ? "inline-flex items-center gap-2 rounded-full border border-accent bg-accentSoft text-accent shadow-glow transition-all duration-200 ease-soft hover:border-accentHi hover:bg-accent/15 hover:text-accentHi focus-visible:border-accentHi"
-      : "inline-flex items-center gap-2 rounded-full border border-line2 text-ink transition-colors duration-200 ease-soft hover:border-ink hover:bg-ink/[0.04] focus-visible:border-ink";
-  const sizeClass = size === "small" ? "px-4 py-2 text-[12px]" : "px-6 py-3 text-[13px]";
-
   return (
     <>
       <button
@@ -41,10 +37,12 @@ export function ContactWidget({
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
         aria-expanded={open}
-        className={`${buttonClass} ${sizeClass} cursor-pointer uppercase tracking-wide`}
+        className={`group/btn ${buttonClass(variant === "primary" ? "primary" : "secondary", size)}`}
       >
         {label}
-        <span aria-hidden="true">→</span>
+        <svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16" className="shrink-0 transition-transform duration-200 ease-soft group-hover/btn:translate-x-0.5">
+          <path d="M3 8h9.5M8.5 4l4 4-4 4" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
       </button>
       {open ? <Modal onClose={close} /> : null}
     </>
@@ -52,14 +50,20 @@ export function ContactWidget({
 }
 
 const FOCUSABLE =
-  'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+  'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), iframe, [tabindex]:not([tabindex="-1"])';
 
 function Modal({ onClose }: { onClose: () => void }) {
   const panelRef = useRef<HTMLDivElement | null>(null);
   const firstFieldRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
-    firstFieldRef.current?.focus();
+    // Only move focus into a text field on devices with a fine pointer, so
+    // phones don't throw the keyboard up over the modal heading.
+    if (window.matchMedia("(pointer: fine)").matches) {
+      firstFieldRef.current?.focus();
+    } else {
+      panelRef.current?.focus();
+    }
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
@@ -76,7 +80,7 @@ function Modal({ onClose }: { onClose: () => void }) {
       if (nodes.length === 0) return;
       const first = nodes[0];
       const last = nodes[nodes.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
+      if (e.shiftKey && (document.activeElement === first || document.activeElement === panelRef.current)) {
         e.preventDefault();
         last.focus();
       } else if (!e.shiftKey && document.activeElement === last) {
@@ -93,7 +97,7 @@ function Modal({ onClose }: { onClose: () => void }) {
 
   return createPortal(
     <div
-      className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto bg-bg/85 p-4 backdrop-blur-md md:items-center"
+      className="fixed inset-0 z-[100] flex items-start justify-center overflow-y-auto overscroll-contain bg-ink/30 p-4 backdrop-blur-sm md:items-center"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -103,27 +107,35 @@ function Modal({ onClose }: { onClose: () => void }) {
         role="dialog"
         aria-modal="true"
         aria-labelledby="contact-title"
-        className="relative my-8 w-full max-w-lg rounded-[3px] border border-line2 bg-surface p-6 shadow-cardHover md:p-8"
+        aria-describedby="contact-desc"
+        tabIndex={-1}
+        className="hero-in relative my-6 w-full max-w-xl rounded-panel border border-line bg-surface p-6 shadow-lift focus:outline-none md:p-10"
       >
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-3 top-3 flex h-9 w-9 items-center justify-center rounded-full text-mute hover:bg-ink/[0.06] hover:text-ink"
+          className="absolute right-4 top-4 flex h-10 w-10 items-center justify-center rounded-full text-mute transition-colors hover:bg-surface2 hover:text-ink"
           aria-label="Close"
         >
-          <span aria-hidden="true" className="text-2xl leading-none">
-            ×
-          </span>
+          <svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16">
+            <path d="M4 4l8 8M12 4l-8 8" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" />
+          </svg>
         </button>
-        <p className="font-mono text-[10px] uppercase tracking-eyebrow text-accent">
-          <span className="accent-bar" />
-          Contact
+        <p className="text-[13px] font-semibold uppercase tracking-eyebrow text-accent">
+          <span className="accent-bar" aria-hidden="true" />
+          Talk to a person
         </p>
-        <h2 id="contact-title" className="mt-2 text-[24px] font-semibold leading-tight tracking-display text-ink">
-          {promise.headline}
+        <h2 id="contact-title" className="mt-3 pr-10 font-display text-[30px] font-medium leading-[1.12] tracking-[-0.015em] text-ink">
+          Tell us about your business.
         </h2>
-        <p className="mt-3 text-[15px] leading-relaxed text-mute">{promise.body}</p>
-        <div className="mt-6">
+        <p id="contact-desc" className="mt-3 text-[16px] leading-relaxed text-mute">
+          A person reads every message and replies {response.window}, {response.usually}. Prefer the phone? Call{" "}
+          <a href={site.phoneHref} className="whitespace-nowrap font-medium text-accent underline decoration-accent/35 underline-offset-4 hover:text-accentInk">
+            {site.phone}
+          </a>
+          .
+        </p>
+        <div className="mt-7">
           <ContactForm compact firstFieldRef={firstFieldRef} onDone={onClose} />
         </div>
       </div>

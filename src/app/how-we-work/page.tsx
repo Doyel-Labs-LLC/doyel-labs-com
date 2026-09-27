@@ -153,7 +153,7 @@ export default function HowWeWork() {
             <Grid2>
               <Card title={`Websites — ${websiteBuild.priceLabel}, ${websiteBuild.terms}`} accent>
                 {websiteBuild.depositLabel}. The whole price for five pages on your own domain.{" "}
-                <Link href="/websites/" className="text-accent underline decoration-accentDim underline-offset-4 hover:text-accentHi">
+                <Link href="/websites/" className="text-accent underline decoration-accentDim underline-offset-4 hover:text-accentInk">
                   What&apos;s included
                 </Link>
               </Card>

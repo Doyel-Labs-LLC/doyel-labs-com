@@ -22,6 +22,7 @@ import { HeroPreview } from "@/components/hero-preview";
 import { Photo } from "@/components/photo";
 import { Quote } from "@/components/quote";
 import { Reveal } from "@/components/reveal";
+import { textLink } from "@/components/button-styles";
 import { carePlan, customSoftware, response, websiteBuild } from "@/lib/offer";
 import { promise, site } from "@/lib/site";
 import { steadfastTestimonial } from "@/lib/testimonials";
@@ -84,19 +85,19 @@ export default function Home() {
               <Card title={`Website — ${websiteBuild.priceLabel}`} accent>
                 Five pages on your own domain, a contact form to your inbox, no cookie banner. Live in {websiteBuild.turnaround}{" "}
                 once your content is in.{" "}
-                <Link href="/websites/" className="text-accent underline decoration-accentDim underline-offset-4 hover:text-accentHi">
+                <Link href="/websites/" className={textLink}>
                   What&apos;s included
                 </Link>
               </Card>
               <Card title={`Care plan — ${carePlan.priceLabel}/month`}>
                 Hosting, backups, monitoring, and small edits whenever you need them. One number to call. Cancel any month.{" "}
-                <Link href="/websites/#care" className="text-accent underline decoration-accentDim underline-offset-4 hover:text-accentHi">
+                <Link href="/websites/#care" className={textLink}>
                   How it works
                 </Link>
               </Card>
               <Card title={`Custom software — ${customSoftware.fromLabel}`}>
                 Internal tools, payroll workspaces, portals, integrations. One call, a written scope, a fixed price.{" "}
-                <Link href="/software/" className="text-accent underline decoration-accentDim underline-offset-4 hover:text-accentHi">
+                <Link href="/software/" className={textLink}>
                   What we can build
                 </Link>
               </Card>
@@ -110,7 +111,9 @@ export default function Home() {
         <Section>
           <Split visual={<Photo name="home-answer" fallback="answer" alt="A person at a desk taking a phone call in a bright workshop office" className="mx-auto max-w-md" />}>
             <Eyebrow>Why it&apos;s different</Eyebrow>
-            <H2>{promise.headline}</H2>
+            <H2>
+              Built with AI. <span className="text-accent">Checked by a person.</span>
+            </H2>
             <Body>{promise.body}</Body>
             <Body>
               We&apos;re open about it: AI does most of the building. That&apos;s why a real website costs{" "}
@@ -128,7 +131,7 @@ export default function Home() {
 
       {/* 4. PROOF */}
       <Reveal>
-        <Section>
+        <Section tone="warm">
           <Eyebrow>Built and in use</Eyebrow>
           <H2>What we built for SteadFast Transportation.</H2>
           <Body>

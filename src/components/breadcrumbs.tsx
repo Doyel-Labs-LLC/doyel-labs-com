@@ -40,7 +40,7 @@ export function Breadcrumbs({
         aria-label="Breadcrumb"
         className="pt-20 md:pt-28"
       >
-        <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 font-mono text-[10px] uppercase tracking-eyebrow text-muted">
+        <ol className="flex flex-wrap items-center gap-x-2 gap-y-1 text-[14px] text-muted">
           {trail.map((entry, i) => {
             const isLast = i === trail.length - 1;
             return (
@@ -52,7 +52,7 @@ export function Breadcrumbs({
                 ) : (
                   <Link
                     href={entry.href}
-                    className="hover:text-accentHi transition-colors"
+                    className="transition-colors hover:text-accent"
                   >
                     {entry.name}
                   </Link>

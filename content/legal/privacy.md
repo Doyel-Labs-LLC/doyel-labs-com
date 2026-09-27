@@ -106,6 +106,9 @@ optionally good times for a call. Sending it triggers the following, and nothing
   counter keyed to your IP address that expires within five minutes.
 - **Resend** (resend.com) delivers the message as an email to `support@doyel-labs.com`, which
   is a Google Workspace mailbox read by people at Doyel Labs, not by an automated system.
+- **One automatic receipt.** Resend also sends you a single short email confirming the message
+  arrived and when to expect a reply. It does not repeat what you wrote, and nothing else is
+  sent unless a person replies to you.
 
 Nothing from the form is written to a database, sold, shared for marketing, or added to a
 list. We keep your message in the mailbox for as long as it takes to reply and, if we work

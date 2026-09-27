@@ -7,7 +7,9 @@ file name, run `npm run build`, and it appears. No code changes.
 ## Rules for every image
 
 - **Size:** 1600 × 1200 px (4:3), JPG, quality 80, under 250 KB. Run
-  `node scripts/optimize-images.mjs` if a file is larger.
+  `node scripts/optimize-images.mjs` if a file is larger. Then run
+  `node scripts/optimize-generated-images.mjs` to make the smaller
+  WebP copy the site serves first (the JPG stays as the fallback).
 - **Style, one line to paste at the end of every prompt:**
   > warm natural light, soft cream and amber tones with a hint of teal,
   > shallow depth of field, editorial photography, calm, unposed, no

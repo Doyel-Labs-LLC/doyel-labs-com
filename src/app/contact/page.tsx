@@ -27,7 +27,7 @@ export const metadata: Metadata = {
   alternates: { canonical: `https://${site.domain}/contact/` },
 };
 
-const link = "text-ink underline decoration-accentDim underline-offset-4 hover:text-accentHi";
+const link = "text-ink underline decoration-accentDim underline-offset-4 hover:text-accentInk";
 
 const NOT_DONE = [
   "No sales sequence. One reply from a person, then it's up to you.",

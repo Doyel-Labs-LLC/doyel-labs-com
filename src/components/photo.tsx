@@ -14,7 +14,7 @@ import { generatedImages } from "@/lib/generated-images.generated";
  * The list of files is generated at build time by
  * scripts/generate-public-paths.mjs, so this works in any component.
  */
-const EXTENSIONS = ["jpg", "jpeg", "webp", "png"] as const;
+const EXTENSIONS = ["webp", "jpg", "jpeg", "png"] as const;
 
 export function generatedImage(name: string): string | null {
   for (const ext of EXTENSIONS) {
@@ -56,7 +56,8 @@ export function Photo({
       width={width}
       height={height}
       priority={priority}
-      className={`h-auto w-full ${frame ? "rounded-[6px] shadow-card" : ""} ${className}`}
+      sizes="(min-width: 768px) 448px, 100vw"
+      className={`h-auto w-full ${frame ? "rounded-card shadow-card ring-1 ring-ink/5" : ""} ${className}`}
     />
   );
 }

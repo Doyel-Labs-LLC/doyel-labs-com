@@ -314,12 +314,18 @@ edge on every `POST /api/contact` request. Flow:
 3. Composes an HTML + plain-text email via Resend, from
    `noreply@doyel-labs.com`, to `support@doyel-labs.com` (routes via
    Google Workspace to the support inbox).
-4. Returns `{ ok: true }` on success or a JSON error the client renders
-   with a fallback mailto.
+4. Sends the visitor one best-effort automatic receipt (reply-to
+   `support@`). It never repeats their message and only uses a first
+   name that is plain letters. A failure here is logged, not surfaced.
+5. Returns `{ ok: true, receipt }` on success or a JSON error the client
+   renders with a fallback mailto. The success card mentions the
+   receipt only when `receipt` is `true`.
 
-The email template is designed — full HTML with the four-square logo,
-category chip, From/Subject grid, cyan-bordered "Suggested orientation
-times" block (if the field was populated), and a Reply CTA button.
+Both templates live in `src/lib/contact-email.ts` (tested in
+`tests/contact-email.test.ts`) and match the site: cream canvas, one
+white rounded card, Georgia headings, amber bar, solid teal pill button.
+That file runs in the Worker, so it must not import `site.ts` (which
+reads `process.env`).
 
 ## Static export gotchas
 
@@ -327,7 +333,9 @@ times" block (if the field was populated), and a Reply CTA button.
   behaviour lives in `functions/api/contact.ts` (Cloudflare Pages
   Functions, separate from Next.js).
 - **No dynamic image optimization.** `next/image` serves the source
-  file. Optimize offline via `scripts/optimize-images.mjs`.
+  file. Optimize offline via `scripts/optimize-images.mjs` (SteadFast
+  screenshots) and `scripts/optimize-generated-images.mjs` (WebP copies
+  of the photo slots; `<Photo>` prefers `.webp`).
 - **No `<Link>` prefetching over the network** — Next.js still prefetches
   RSC data but you'll see them in DevTools as `.txt?_rsc=...` requests,
   not HTML.

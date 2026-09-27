@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 /**
  * ProductFrame — the only surface that carries product UI on this site.
  *
- * A chromeless dark box with a 1px hairline and a corner label. The
+ * A rounded white card with a hairline and corner labels. The
  * body renders a real reproduction of the underlying app screen so the
  * shapes stay honest. No live values ever go inside a frame; the data
  * comes from `src/lib/demo/*.ts` and every corner reads
@@ -28,23 +28,23 @@ export function ProductFrame({
   return (
     <figure className="not-prose">
       <div
-        className={`relative overflow-hidden border border-line bg-surface ${
+        className={`relative overflow-hidden rounded-card border border-line bg-surface shadow-card ${
           aspect ?? ""
         }`}
       >
-        <div className="pointer-events-none absolute inset-0 [background-image:radial-gradient(circle_at_50%_-10%,rgba(240,240,250,0.05),transparent_60%)]" />
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-surface2/70 to-transparent" />
         <div className={compact ? "p-4 md:p-5" : "p-5 md:p-7"}>{children}</div>
-        <div className="pointer-events-none absolute right-3 top-3">
-          <span className="frame-label border border-line px-2 py-1 text-muted">
+        <div className="pointer-events-none absolute right-4 top-4">
+          <span className="frame-label rounded-full border border-line bg-surface px-2.5 py-1 text-muted">
             Demo · Synthetic data
           </span>
         </div>
-        <div className="pointer-events-none absolute left-3 top-3">
+        <div className="pointer-events-none absolute left-4 top-4">
           <span className="frame-label text-muted">{screen}</span>
         </div>
       </div>
       {caption ? (
-        <figcaption className="mt-3 font-mono text-[10px] uppercase tracking-wide text-muted">
+        <figcaption className="mt-4 text-[14px] text-muted">
           {caption}
         </figcaption>
       ) : null}

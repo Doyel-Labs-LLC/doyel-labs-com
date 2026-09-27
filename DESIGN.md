@@ -12,20 +12,37 @@ reference for tokens and rules.
 | `ink` | `#1b1f26` | Body and display type |
 | `mute` / `muted` | 0.80 / 0.68 alpha ink | Body below the lead / captions (AA) |
 | `line` / `line2` | 0.10 / 0.22 alpha ink | Hairlines |
-| **`accent`** / `accentHi` | `#087187` / `#0b8aa3` | Teal — links, CTAs, eyebrow bars |
+| **`accent`** / `accentInk` | `#087187` / `#06596a` | Teal — links, solid buttons / hover (darker) |
 | `warm` / `warmSoft` | `#f2b455` / 16% | Illustration fills, one band wash. Never text. |
 | `rise` / `fall` / `care` | green / red / amber | Status only |
 
 The logo mark keeps its own cyan (`#10c7eb`). Shadows are real and
-warm-grey (`card`, `cardHover`, `glow` tokens).
+warm (`card`, `cardHover`, `lift`, `button`, `glow` tokens). Radii: `card`
+20px, `panel` 32px, buttons are full pills.
 
-## Type (new in v9)
+## Type (v12)
 
-Named scale in `tailwind.config.ts`: `display` 56/1.05 · `displaySm` 38 ·
-`h2` 36/1.15 · `h2Sm` 28 · `h3` 22/1.3 · `body` 17/1.65 · `small` 15/1.55.
-**Headings are sentence case.** Uppercase only for eyebrows, nav, chips,
-and CTA pills. Inter for everything; JetBrains Mono for eyebrows, chips,
-and figures. Both self-hosted from `src/fonts/` via `next/font/local`.
+Fraunces (variable, soft axis) for H1–H3, prices, and quotes — teal words
+inside a heading render in Fraunces italic. Figtree for body, nav,
+buttons, and labels. Both self-hosted from `src/fonts/` via
+`next/font/local`. System monospace only inside product frames. Named
+scale in `tailwind.config.ts`: `display` 64 · `displaySm` 42 · `h2` 44 ·
+`h2Sm` 32 · `h3` 24 · `lead` 20 · `body` 18 · `small` 16. **Everything is
+sentence case** except the short eyebrow label.
+
+## Buttons
+
+`buttonClass(variant, size)` in `src/components/button-styles.ts` is the
+only button style. Primary: solid teal pill, white text, hover darkens to
+`accentInk`. Secondary: white pill, hairline border. `textLink` is the
+inline link style.
+
+## Email
+
+`src/lib/contact-email.ts` renders the internal notification and the
+visitor receipt: cream canvas, one white rounded card, Georgia headings,
+amber bar, teal pill button, plain-text twin. Preview both by rendering
+them to HTML files before changing them.
 
 ## Layout primitives (`src/components/chrome.tsx`)
 
@@ -55,4 +72,4 @@ disables everything.
 ## Icon
 
 Four rounded squares — dark gray, mid gray, light gray, cyan. Header,
-footer, favicon, OG card, founder signature card.
+footer, favicon, OG card, emails, the About "who answers" card.

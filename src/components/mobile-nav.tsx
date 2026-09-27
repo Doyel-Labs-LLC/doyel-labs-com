@@ -92,11 +92,11 @@ export function MobileNav({
               type="button"
               onClick={() => setOpen(false)}
               aria-label="Close menu"
-              className="flex h-10 w-10 items-center justify-center text-mute hover:text-ink"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-line bg-surface text-mute transition-colors hover:text-ink"
             >
-              <span aria-hidden="true" className="text-2xl leading-none">
-                ×
-              </span>
+              <svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16">
+                <path d="M4 4l8 8M12 4l-8 8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
             </button>
           </div>
 
@@ -104,7 +104,7 @@ export function MobileNav({
           <div className="flex flex-1 flex-col bg-bg px-6 py-6">
             {/* Primary section — big-type nav */}
             <nav aria-label="Menu">
-              <p className="font-mono text-[10px] uppercase tracking-eyebrow text-muted">
+              <p className="text-[13px] font-semibold text-muted">
                 Menu
               </p>
               <ul className="mt-4 space-y-1">
@@ -118,17 +118,16 @@ export function MobileNav({
                         href={n.href}
                         onClick={() => setOpen(false)}
                         aria-current={active ? "page" : undefined}
-                        className={`flex items-center justify-between border-b border-line py-4 text-[22px] font-semibold tracking-display hover:text-accentHi ${
+                        className={`flex items-center justify-between border-b border-line py-4 font-display text-[26px] font-medium tracking-tight transition-colors hover:text-accent ${
                           active ? "text-accent" : "text-ink"
                         }`}
                       >
                         <span>{n.label}</span>
-                        <span
-                          aria-hidden="true"
-                          className="font-mono text-[12px] text-mute"
-                        >
-                          {active ? "●" : "→"}
-                        </span>
+                        {active ? (
+                          <span aria-hidden="true" className="h-2 w-2 rounded-full bg-warm" />
+                        ) : (
+                          <Arrow />
+                        )}
                       </Link>
                     </li>
                   );
@@ -143,7 +142,7 @@ export function MobileNav({
 
             {/* Explore section — the deeper pages */}
             <nav aria-label="Explore" className="mt-10">
-              <p className="font-mono text-[10px] uppercase tracking-eyebrow text-muted">
+              <p className="text-[13px] font-semibold text-muted">
                 Explore
               </p>
               <ul className="mt-4 space-y-0.5">
@@ -160,7 +159,7 @@ export function MobileNav({
 
             {/* Support section — utility + legal */}
             <nav aria-label="More" className="mt-8">
-              <p className="font-mono text-[10px] uppercase tracking-eyebrow text-muted">
+              <p className="text-[13px] font-semibold text-muted">
                 More
               </p>
               <ul className="mt-4 space-y-0.5">
@@ -176,24 +175,24 @@ export function MobileNav({
             </nav>
 
             {/* Bottom: contact details */}
-            <div className="mt-10 space-y-3 border-t border-line pt-6 font-mono text-[11px] uppercase tracking-wide text-mute">
+            <div className="mt-10 space-y-1 border-t border-line pt-6 text-[15px] text-mute">
               <p>
                 <a
                   href={`mailto:${site.supportEmail}`}
-                  className="hover:text-accentHi"
+                  className="inline-flex min-h-[44px] items-center transition-colors hover:text-accent"
                 >
                   {site.supportEmail}
                 </a>
               </p>
               <p>
-                <a href={site.phoneHref} className="hover:text-accentHi">
+                <a href={site.phoneHref} className="inline-flex min-h-[44px] items-center transition-colors hover:text-accent">
                   {site.phone}
                 </a>
               </p>
               <p className="text-muted">
                 {site.company} · {site.city}
               </p>
-              <p className="normal-case tracking-normal text-muted">{site.hours}</p>
+              <p className="text-muted">{site.hours}</p>
             </div>
           </div>
       </div>
@@ -207,7 +206,7 @@ export function MobileNav({
         aria-expanded={open}
         aria-controls="mobile-nav-panel"
         aria-label="Open menu"
-        className="inline-flex h-10 w-10 items-center justify-center border border-line text-ink transition-colors hover:border-line2"
+        className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line bg-surface text-ink shadow-button transition-colors hover:border-line2"
       >
         <span aria-hidden="true" className="flex flex-col gap-1">
           <span className="block h-[1.5px] w-4 bg-ink" />
@@ -263,16 +262,19 @@ function MobileSubLink({
       <Link
         href={href}
         onClick={onNavigate}
-        className="flex min-h-[44px] items-center justify-between border-b border-line/70 py-3 text-[15px] text-mute hover:text-accentHi"
+        className="flex min-h-[44px] items-center justify-between border-b border-line/70 py-3 text-[16px] text-mute transition-colors hover:text-accent"
       >
         <span>{label}</span>
-        <span
-          aria-hidden="true"
-          className="font-mono text-[11px] text-muted"
-        >
-          →
-        </span>
+        <Arrow />
       </Link>
     </li>
+  );
+}
+
+function Arrow() {
+  return (
+    <svg aria-hidden="true" viewBox="0 0 16 16" width="14" height="14" className="shrink-0 text-muted">
+      <path d="M3 8h9M8.5 4.5L12 8l-3.5 3.5" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
   );
 }
