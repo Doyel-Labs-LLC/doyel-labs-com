@@ -181,7 +181,7 @@ for (const period of ["24h", "7d", "30d"]) {
     assert.equal(report.status, "ready");
     assert.equal(report.pageViews, 12);
     assert.equal(report.visits, 5);
-    assert.deepEqual(report.breakdowns.paths.rows, [{ label: "/services/", pageViews: 12 }]);
+    assert.deepEqual(report.breakdowns.paths.rows, [{ label: "/websites/", pageViews: 12 }]);
     assert.doesNotMatch(body, /SYNTHETIC|owner@example|hidden@example|siteTag|accountTag/);
     expectCalls(harness.outbound, ["jwks", "schema", "report"]);
   });

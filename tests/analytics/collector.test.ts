@@ -19,7 +19,7 @@ test("collector selection preserves legacy default and selects one provider with
 });
 
 test("collection is restricted to exact canonical public browser origin and unambiguous paths", () => {
-  assert.equal(canCollectAnalytics("https://doyel-labs.com", "/services/"), true);
+  assert.equal(canCollectAnalytics("https://doyel-labs.com", "/websites/"), true);
   for (const origin of ["", "http://doyel-labs.com", "https://www.doyel-labs.com", "https://doyel-labs.com:8443",
     "https://website-8xx.pages.dev", "https://preview.website-8xx.pages.dev", "http://localhost:3100"]) {
     assert.equal(canCollectAnalytics(origin, "/"), false, origin);

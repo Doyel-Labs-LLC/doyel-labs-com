@@ -37,7 +37,7 @@ test("encoded and alternate artifact URLs cannot reach a public static admin cop
 });
 
 test("public pages and contact keep their existing routing without analytics configuration", async ({ request }) => {
-  for (const path of ["/", "/contact/", "/services/", "/company/", "/sitemap.xml"]) {
+  for (const path of ["/", "/contact/", "/websites/", "/about/", "/sitemap.xml"]) {
     const response = await request.get(`${base}${path}`);
     expect(response.status(), path).toBe(200);
     expect(response.headers()["cache-control"]).not.toContain("private");
@@ -49,5 +49,5 @@ test("public pages and contact keep their existing routing without analytics con
   expect(await invalid.json()).toEqual({ error: "Invalid JSON body." });
   const legacy = await request.get(`${base}/founder/`, { maxRedirects: 0 });
   expect(legacy.status()).toBe(301);
-  expect(legacy.headers().location).toContain("/company/");
+  expect(legacy.headers().location).toContain("/about/");
 });

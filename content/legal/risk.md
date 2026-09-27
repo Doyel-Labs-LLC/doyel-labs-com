@@ -1,6 +1,6 @@
 ---
 kind: risk
-version: 2026-09-20
+version: 2026-09-27
 title: BAI Risk Disclosure
 under_review: true
 ---
@@ -35,6 +35,5 @@ Read this before you arm BAI for the first time, and again whenever it changes.
 
 ## Program status
 
-BAI is in private testing until 2027. Public availability, if any, no earlier than the year
-labelled on `/programs/bai`. During private testing, invitations are individual; do not
-distribute the installer to other operators.
+BAI is in private testing. Invitations are individual; do not distribute the installer to
+other operators. Current status is shown on `/work/#lab`.

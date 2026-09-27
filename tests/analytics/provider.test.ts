@@ -84,7 +84,7 @@ test("adapter keeps scaled counts, sampling, bounded normalized aggregate result
   assert.equal(report.visits, 5);
   assert.equal(report.sampled, true);
   assert.equal(report.maxSampleInterval, 10);
-  assert.deepEqual(report.breakdowns.paths.rows, [{ label: "/services/", pageViews: 12 }]);
+  assert.deepEqual(report.breakdowns.paths.rows, [{ label: "/websites/", pageViews: 12 }]);
   assert.equal(report.breakdowns.referrers.rows[0].label, "example.com");
   assert.doesNotMatch(JSON.stringify(report), /hidden|secret|@/);
   const source = data.viewer.accounts[0];
@@ -95,10 +95,10 @@ test("adapter keeps scaled counts, sampling, bounded normalized aggregate result
 });
 
 test("unknown/sensitive paths, referer IPs and raw user agent labels are not exposed", () => {
-  for (const path of ["/people/person@example.com", "/admin/analytics/", "https://evil.test/services/", "/%zz", "/services/%253fsecret"]) {
+  for (const path of ["/people/person@example.com", "/admin/analytics/", "https://evil.test/websites/", "/%zz", "/websites/%253fsecret"]) {
     assert.equal(normalizePath(path), "Other paths");
   }
-  assert.equal(normalizePath("/services%3Fsecret=123"), "/services/");
+  assert.equal(normalizePath("/websites%3Fsecret=123"), "/websites/");
   const data = reportFixture();
   data.viewer.accounts[0].referrers = [groupFixture({ refererHost: "192.0.2.10" })];
   data.viewer.accounts[0].browsers = [groupFixture({ userAgentBrowser: "<script>personal-secret</script>" })];

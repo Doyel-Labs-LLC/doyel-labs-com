@@ -60,7 +60,7 @@ export function reportFixture() {
   return { viewer: { accounts: [{
     overview: [groupFixture()],
     trend: [groupFixture({ date: "2026-09-22", datetimeHour: "2026-09-22T12:00:00Z" })],
-    paths: [groupFixture({ requestPath: "/services/?email=hidden@example.test#private" })],
+    paths: [groupFixture({ requestPath: "/websites/?email=hidden@example.test#private" })],
     referrers: [groupFixture({ refererHost: "example.com/path?secret=hidden" })],
     countries: [groupFixture({ countryName: "US" })],
     devices: [groupFixture({ deviceType: "mobile" })],

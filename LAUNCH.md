@@ -1,86 +1,52 @@
-# Launching v9 — step by step
+# Launching — how a change gets live
 
-Everything below happens on your computer, in the folder
-`C:\Users\bdoye\Desktop\Doyel-labs.com`.
+The site deploys from GitHub. **Pushing to the `master` branch of
+`Doyel-Labs-LLC/doyel-labs-com` is the deploy.** Cloudflare Pages builds it
+with `npm run build` and puts it live in a couple of minutes. Nothing is
+uploaded by hand, so GitHub and the live site can never drift apart.
 
-## 1. Open a terminal in the site folder
+## One-time Cloudflare settings
 
-1. Open File Explorer and go to `C:\Users\bdoye\Desktop\Doyel-labs.com`.
-2. Click once in the address bar at the top (where the folder path is shown).
-3. Type `powershell` and press Enter. A blue window opens, already inside the folder.
+In https://dash.cloudflare.com → Workers & Pages → **website** → Settings:
 
-## 2. Install and check (about 2 minutes)
+**Build** — Build command `npm run build`, output directory `out`,
+Node version `22` (set `NODE_VERSION` = `22` under environment variables
+if the build log shows an older Node).
 
-Type each line and press Enter. Wait for each to finish before the next.
+**Environment variables (Production)** — see `.env.example` for the full
+list. The important ones:
 
-```
-npm install
-npm run check
-```
+- `NEXT_PUBLIC_ANALYTICS_PROVIDER` = `cloudflare`
+- `NEXT_PUBLIC_CF_WEB_ANALYTICS_TOKEN` = your Web Analytics token
+- `NEXT_PUBLIC_LOCATION_ANALYTICS_ENABLED` = `true`
+- `NEXT_PUBLIC_TURNSTILE_SITE_KEY`, `TURNSTILE_SECRET_KEY` (secret),
+  `RESEND_API_KEY` (secret), `RESEND_FROM`, `CONTACT_TO`
+- `ANALYTICS_ENABLED` = `true`, `LOCATION_ANALYTICS_ENABLED` = `true`,
+  `CF_ACCESS_TEAM_DOMAIN`, `CF_ACCESS_AUD`, `ANALYTICS_ALLOWED_EMAIL`,
+  `CF_ACCOUNT_ID`, `CF_ANALYTICS_API_TOKEN`, `CF_WEB_ANALYTICS_SITE_TAG`
 
-`npm run check` runs the type check, the lint, the tests, and the build.
-The last line you should see is:
+**Bindings** — `LOCATION_DB` (D1: website-location-analytics) and either a
+Rate Limiting binding `RATE_LIMITER` (5 per 300 s) or the KV binding
+`CONTACT_KV`.
 
-```
-csp-hashes: wrote 42 CSP rules (50 rules total, longest line 606 chars)
-```
+## After every deploy (2 minutes)
 
-If anything says `error`, stop and send me the text.
+- https://doyel-labs.com/ loads and looks right on your phone.
+- https://doyel-labs.com/contact/ — send yourself a test message.
+- https://doyel-labs.com/pricing/ jumps to the websites page.
+- https://doyel-labs.com/admin/analytics/ asks you to sign in through
+  Cloudflare Access, then shows the dashboard.
 
-## 3. Set two things in Cloudflare (one time, 5 minutes)
+## Favicon in Google
 
-The contact form now refuses to run in production unless bot protection
-and rate limiting are configured. Do this before deploying.
+Google only shows favicons that are a multiple of 48 px. The site now
+ships 48/96/192/512 px PNGs. After deploying, open
+https://search.google.com/search-console, pick the doyel-labs.com
+property, paste `https://doyel-labs.com/` into the top search box, and
+click **Request indexing**. Google usually updates the icon within a few
+days of the next crawl.
 
-1. Go to https://dash.cloudflare.com and sign in.
-2. Left menu → **Workers & Pages** → click the project named **website**.
-3. Click **Settings** (top tabs).
-4. Under **Variables and Secrets**, check these exist for **Production**:
-   - `TURNSTILE_SECRET_KEY` (type Secret)
-   - `RESEND_API_KEY` (type Secret)
-   - `RESEND_FROM` and `CONTACT_TO` (plain text)
-   - `NEXT_PUBLIC_TURNSTILE_SITE_KEY` and `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` (plain text)
-   If one is missing, click **Add**, type the name exactly, paste the value, save.
-5. Scroll to **Bindings**. You need ONE of these:
-   - **Rate Limiting** binding named `RATE_LIMITER`, with limit `5` requests per `300` seconds
-     (click Add → Rate limiting → name `RATE_LIMITER` → 5 / 300 → Save), **or**
-   - the existing **KV namespace** binding named `CONTACT_KV`.
+## Adding photos
 
-## 4. Deploy
-
-Back in the blue PowerShell window:
-
-```
-npx wrangler pages deploy out --project-name=website --branch=master
-```
-
-If it asks you to log in, a browser tab opens; click **Allow**, then come
-back to the window. When it finishes it prints a URL. The live site at
-https://doyel-labs.com updates within a minute.
-
-## 5. Check the live site (2 minutes)
-
-Open these in your browser and make sure each loads:
-
-- https://doyel-labs.com/
-- https://doyel-labs.com/websites/
-- https://doyel-labs.com/contact/ — send yourself a test message. It
-  should arrive at support@doyel-labs.com within a minute.
-- https://doyel-labs.com/pricing/ — should jump to the websites page
-  (old address, now redirected).
-
-## 6. Optional cleanup (any time)
-
-These folders under `src\app` are retired. They contain tiny placeholder
-files so nothing breaks; you can delete the whole folders in File Explorer
-(right-click → Delete):
-
-`changelog`, `company`, `docs`, `engineering`, `faq`, `founder`,
-`industries`, `press`, `pricing`, `products`, `services`, `sitemap`,
-`status`, `support`, `uses`, `writing`
-
-## 7. Optional: GitHub Actions
-
-If you push this folder to GitHub, put the file `ci.yml` (sent in the chat)
-at `.github\workflows\ci.yml`. It runs the same `npm run check` on every
-push and blocks a merge if the security headers or copy rules regress.
+See `IMAGES.md`. Drop the file into `public\media\generated\` with the
+exact name, push to GitHub, done.

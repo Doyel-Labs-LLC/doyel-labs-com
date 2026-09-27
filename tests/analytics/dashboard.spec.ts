@@ -52,7 +52,7 @@ test("responsive aggregate display, sampling, keyboard controls and no private s
   await page.goto("/admin/analytics/");
   await expect(page.getByRole("heading", { name: "Page views", exact: true })).toBeVisible();
   await expect(page.getByText(/^Sampled estimates\. Counts are/)).toBeVisible();
-  await expect(page.getByRole("rowheader", { name: "/services/", exact: true })).toBeVisible();
+  await expect(page.getByRole("rowheader", { name: "/websites/", exact: true })).toBeVisible();
   for (const width of [1440, 768, 375, 320]) {
     await page.setViewportSize({ width, height: 900 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);

@@ -69,13 +69,13 @@ test("only one selected collector loads on canonical public pages and survives p
     await expect.poll(() => beacons.length).toBeGreaterThan(0);
   }
   await page.evaluate(() => { (window as Window & { testDocument?: string }).testDocument = "public"; });
-  await page.locator('header a[href="/services/"]').first().click();
-  await expect(page).toHaveURL("https://doyel-labs.com/services/");
+  await page.locator('header a[href="/websites/"]').first().click();
+  await expect(page).toHaveURL("https://doyel-labs.com/websites/");
   expect(await page.evaluate(() => (window as Window & { testDocument?: string }).testDocument)).toBe("public");
   await expect(page.locator(selector)).toHaveCount(analytics.provider === "none" ? 0 : 1);
   if (analytics.provider === "cloudflare") {
     // The real vendor implementation, not a simulated history listener.
-    await expect.poll(() => beacons.some((body) => body.includes("doyel-labs.com/services/"))).toBe(true);
+    await expect.poll(() => beacons.some((body) => body.includes("doyel-labs.com/websites/"))).toBe(true);
     expect(beacons.join("")).not.toContain("/admin");
   }
 });
@@ -174,17 +174,17 @@ test("location beacon counts published SPA path changes only, with no cookies, r
   if (locationAnalyticsEnabled) await expect.poll(() => locations.length).toBe(1);
   await settleCollectors(page);
   expect(locations.map((event) => JSON.parse(event.body))).toEqual(locationAnalyticsEnabled ? [{ path: "/" }] : []);
-  await page.locator('header a[href="/services/"]').first().hover();
+  await page.locator('header a[href="/websites/"]').first().hover();
   await settleCollectors(page);
   expect(locations.length).toBe(locationAnalyticsEnabled ? 1 : 0);
   await page.evaluate(() => { history.pushState(null, "", "/?changed=query#another"); });
   await settleCollectors(page);
   expect(locations.length).toBe(locationAnalyticsEnabled ? 1 : 0);
-  await page.locator('header a[href="/services/"]').first().click();
-  await expect(page).toHaveURL("https://doyel-labs.com/services/");
+  await page.locator('header a[href="/websites/"]').first().click();
+  await expect(page).toHaveURL("https://doyel-labs.com/websites/");
   if (locationAnalyticsEnabled) await expect.poll(() => locations.length).toBe(2);
   await settleCollectors(page);
-  expect(locations.map((event) => JSON.parse(event.body))).toEqual(locationAnalyticsEnabled ? [{ path: "/" }, { path: "/services/" }] : []);
+  expect(locations.map((event) => JSON.parse(event.body))).toEqual(locationAnalyticsEnabled ? [{ path: "/" }, { path: "/websites/" }] : []);
   for (const event of locations) {
     expect(event.headers.cookie).toBeUndefined();
     expect(event.headers.referer).toBeUndefined();
@@ -205,8 +205,8 @@ for (const signal of ["globalPrivacyControl", "doNotTrack"]) {
     }, signal);
     const { locations } = await mockSite(page);
     await page.goto("https://doyel-labs.com/");
-    await page.locator('header a[href="/services/"]').first().click();
-    await expect(page).toHaveURL("https://doyel-labs.com/services/");
+    await page.locator('header a[href="/websites/"]').first().click();
+    await expect(page).toHaveURL("https://doyel-labs.com/websites/");
     await settleCollectors(page);
     expect(locations).toEqual([]);
     if (analytics.provider === "cloudflare") await expect(page.locator(`script[src="${beaconScript}"]`)).toHaveCount(1);
@@ -222,8 +222,8 @@ test("failed location delivery never retries or blocks public navigation", async
   await page.goto("https://doyel-labs.com/");
   if (locationAnalyticsEnabled) await expect.poll(() => attempts).toBe(1);
   await settleCollectors(page);
-  await page.locator('header a[href="/services/"]').first().click();
-  await expect(page).toHaveURL("https://doyel-labs.com/services/");
+  await page.locator('header a[href="/websites/"]').first().click();
+  await expect(page).toHaveURL("https://doyel-labs.com/websites/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   if (locationAnalyticsEnabled) await expect.poll(() => attempts).toBe(2);
   await settleCollectors(page);

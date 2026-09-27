@@ -8,15 +8,9 @@ const { analytics, analyticsCsp } = await import("../src/lib/analytics-config.ts
 const { locationAnalyticsEnabled } = await import("../src/lib/location-config.ts");
 const { publishedPaths } = await import("../src/lib/public-paths.generated.ts");
 
-const headersPath = path.resolve("out", "_headers");
-const headersTemplate = await readFile(headersPath, "utf8");
-const hosts = analyticsCsp(analytics);
-if (!headersTemplate.includes("__ANALYTICS_SCRIPT_SRC__") || !headersTemplate.includes("__ANALYTICS_CONNECT_SRC__")) {
-  throw new Error("Missing analytics CSP placeholders");
-}
-await writeFile(headersPath, headersTemplate
-  .replaceAll("__ANALYTICS_SCRIPT_SRC__", hosts.script)
-  .replaceAll("__ANALYTICS_CONNECT_SRC__", hosts.connect));
+// The Content-Security-Policy (including the analytics hosts from
+// analyticsCsp) is written by scripts/csp-hashes.mjs, which runs after this.
+void analyticsCsp;
 
 // Admin documents live only in the Functions bundle, never Pages' public
 // asset fallback (including when the platform exhausts its Functions quota).

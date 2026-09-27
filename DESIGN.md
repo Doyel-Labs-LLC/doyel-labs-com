@@ -1,20 +1,23 @@
-# Design — Doyel Labs (v9)
+# Design — Doyel Labs (v10)
 
 The full brief lives in [`PROMPT.md`](./PROMPT.md). This file is the short
 reference for tokens and rules.
 
-## Palette (unchanged from v8)
+## Palette (v10, warm light)
 
 | Token | Value | Where |
 |---|---|---|
-| `bg` | `#0a0f14` | Page canvas |
-| `surface` / `surface2` | `#12181f` / `#171e26` | Panels, frames, cards |
-| `ink` | `#f0f0fa` | Body and display type |
-| `mute` / `muted` | 0.66 / 0.50 alpha | Body below the lead / captions (AA at small sizes) |
-| `line` / `line2` | 0.10 / 0.22 alpha | Hairlines |
-| **`accent`** | `#10c7eb` | The one accent |
-| `accentHi` / `accentDim` / `accentSoft` | hover / hairline / wash | |
+| `bg` | `#faf7f2` | Cream canvas |
+| `surface` / `surface2` | `#ffffff` / `#f3efe8` | Cards, frames / warm band |
+| `ink` | `#1b1f26` | Body and display type |
+| `mute` / `muted` | 0.80 / 0.68 alpha ink | Body below the lead / captions (AA) |
+| `line` / `line2` | 0.10 / 0.22 alpha ink | Hairlines |
+| **`accent`** / `accentHi` | `#087187` / `#0b8aa3` | Teal — links, CTAs, eyebrow bars |
+| `warm` / `warmSoft` | `#f2b455` / 16% | Illustration fills, one band wash. Never text. |
 | `rise` / `fall` / `care` | green / red / amber | Status only |
+
+The logo mark keeps its own cyan (`#10c7eb`). Shadows are real and
+warm-grey (`card`, `cardHover`, `glow` tokens).
 
 ## Type (new in v9)
 
@@ -34,12 +37,13 @@ and figures. Both self-hosted from `src/fonts/` via `next/font/local`.
 `WhoAnswers` (footer block). Max six sections per page; never two card
 grids in a row.
 
-## Illustration (`src/components/illus.tsx`)
+## Imagery
 
-Ten inline SVGs, one style: off-white 1.5px linework, one flat cyan fill at
-16% opacity, no faces, no gradients. Names: `call`, `answer`, `three-days`,
-`keys`, `care`, `scope`, `flow`, `casper`, `lock`, `lost`. Real SteadFast
-screenshots stay, framed in a browser mock. No photography.
+Photos first, in slots (`<Photo>`; see `IMAGES.md`), then real SteadFast
+screenshots in a browser mock, then line illustrations
+(`src/components/illus.tsx`: ink linework, teal wash, amber fill, white
+paper shapes) as fallbacks. Names: `call`, `answer`, `three-days`, `keys`,
+`care`, `scope`, `flow`, `casper`, `lock`, `lost`.
 
 ## Motion
 
