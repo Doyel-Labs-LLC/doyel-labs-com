@@ -1,11 +1,16 @@
-# doyel-labs.com — the design brief, v9
+# doyel-labs.com — the design brief, v10
 
 The reference the site is written against. Change this document first,
 then the page. If a page contradicts this brief, the page is wrong.
 
-v9 replaces v8 in full. What changed: eight pages instead of thirty; a
-published, fixed website offer; "a real person" as the lead promise;
-an illustration system instead of screenshots; products demoted; every
+v10 replaces v9. What changed: a warm light theme instead of the dark
+canvas; photographs in defined slots with illustration fallbacks
+(`IMAGES.md`); "AI builds most of it" stated plainly; first-party
+analytics and approximate-location counts, disclosed in full; a favicon
+set Google can actually show; GitHub as the single deploy path.
+
+v9 changed: eight pages instead of thirty; a published, fixed website
+offer; "a real person" as the lead promise; products demoted; every
 claim on the site must be evidenced by this repo or by the offer.
 
 ---
@@ -18,9 +23,10 @@ of State) is a software company in Casper, Wyoming, formed September
 size and any industry, and it keeps that software running afterward.
 
 Doyel Labs is run by its founder, Blake Doyel. He takes the calls,
-builds the work, and answers when something breaks. AI is the primary
-build tool. Every change is reviewed by a person and every ship is a
-human decision.
+builds the work, and answers when something breaks. **AI builds most of
+what ships** — the majority of code, layouts, and first-draft copy is
+generated — and the site says so plainly. Every change is checked by a
+person, every ship is a human decision, and a person answers for all of it.
 
 **What Doyel Labs is not** (never claim otherwise, anywhere):
 a broker-dealer, an investment adviser, a bank, a payroll processor,
@@ -48,9 +54,10 @@ Concretely, the site may say — because it is true:
 Say it plainly. Do not turn it into a slogan wall. One clear statement
 per page, one "who answers" block in the footer, that's it.
 
-**On AI.** Be open: "We use AI to build fast. That's why a five-page
-site is $1,299 and not $8,000. A person reviews everything, and a
-person is who you talk to." Never write "AI-powered" as an adjective.
+**On AI.** Be open, and specific: "AI builds most of what we ship.
+That's why a five-page site is $1,299 and not $8,000. Blake checks
+every change, stands behind it, and is who you talk to." Never write
+"AI-powered" as an adjective, and never imply the work is hand-written.
 
 **On size.** Do not inflate and do not apologize. "Our team" is
 forbidden. "Blake" is fine. One accountable person is a feature.
@@ -192,50 +199,57 @@ Readable by someone who is not a software engineer.
 
 ## 7. Design
 
-**Palette.** Unchanged from v8: dark canvas `#0a0f14`, ink `#f0f0fa`,
-one accent `#10c7eb`. Tokens live in `tailwind.config.ts`. Never a
-second accent.
+**Feel.** Welcoming, warm, like paper on a wooden desk in morning light.
+Not a dashboard, not a dev tool. A visitor who runs a bakery should feel
+at home in the first second.
+
+**Palette (v10, light).** Tokens live in `tailwind.config.ts`.
+
+| Token | Value | Use |
+|---|---|---|
+| `bg` | `#faf7f2` | Cream canvas |
+| `surface` / `surface2` | `#ffffff` / `#f3efe8` | Cards, frames / warm band |
+| `ink` | `#1b1f26` | Text |
+| `mute` / `muted` | 0.80 / 0.68 alpha ink | Body / captions (AA) |
+| `accent` / `accentHi` | `#087187` / `#0b8aa3` | Teal: links, CTAs, eyebrow bars |
+| `warm` / `warmSoft` | `#f2b455` / 16% | Illustration fills, one soft band wash. Never text. |
+| `rise` / `fall` / `care` | green / red / amber | Status only |
+
+The logo mark keeps its own cyan (`#10c7eb`); the accent used for text
+and buttons is the deeper teal so it passes AA on cream.
 
 **Type.** Inter (body, display) and JetBrains Mono (eyebrows, figures
-only). Named scale in Tailwind: `display` 56/1.05, `h2` 36/1.15,
-`h3` 22/1.3, `body` 17/1.65, `small` 15/1.5. **Headings are sentence
-case.** Uppercase is reserved for eyebrows, nav, and chips.
+only). Named scale: `display` 56/1.05 · `h2` 36/1.15 · `h3` 22/1.3 ·
+`body` 17/1.65 · `small` 15/1.55. **Headings are sentence case.**
+Uppercase only for eyebrows, nav, chips, and CTA pills.
 
-**Layout.** Max six sections per page. Alternate layouts: split
-hero, full-width illustration band, three-up, statement paragraph,
-FAQ list, close. Never two card grids in a row.
+**Layout.** Max six sections per page. Alternate: split hero, photo
+band, three-up, statement paragraph, FAQ list, close. Never two card
+grids in a row. Real shadows, soft and warm-grey, on white cards.
 
-**Illustration system** (replaces all photography; the SteadFast
-screenshots stay, framed in a browser mock). One style across the site: `#f0f0fa` linework at 1.5px,
-a single flat cyan fill, transparent background, no gradients, no
-faces. Delivered as hand-cleaned SVG under `public/illus/` and
-rendered through `<Illus name="…" />`. The set:
+**Imagery.** Three kinds, in this order of preference:
 
-| Name | Where | Shows |
-|---|---|---|
-| `call` | home hero, contact | a person at a desk on a phone call, seen from behind |
-| `answer` | footer "who answers" block | a handset and a hand |
-| `three-days` | websites | a three-day calendar strip |
-| `keys` | websites, how-we-work | a key and a folder: you own it |
-| `care` | websites | a shield with a wrench |
-| `scope` | how-we-work, software | a signed one-page document |
-| `flow` | software | boxes and arrows: a workspace |
-| `casper` | about | a Wyoming skyline / plains line |
-| `lock` | security | a padlock over a page |
-| `lost` | 404 | an empty road sign |
+1. **Photographs** in defined slots (`<Photo name=… fallback=…>`).
+   Each slot has a file name, size, and generation prompt in
+   `IMAGES.md`. Warm natural light, cream and amber with a hint of
+   teal, editorial, calm, no faces, no text, no logos. Until a file
+   exists the slot shows its illustration, so nothing is ever blank.
+2. **Real screenshots** of shipped work (SteadFast), framed in a
+   browser mock, labeled with the ownership disclosure.
+3. **Line illustrations** (`src/components/illus.tsx`): ink linework,
+   a teal wash, an amber fill, white paper shapes. Used as fallbacks
+   and for small spots (footer, close band).
 
-The OG card is the four-square mark plus the page title on the dark
-canvas; no illustration.
+No stock photography. No photos of the founder (the signature card is
+his visual identity).
 
-**Motion.** Hero fade-in and a single scroll reveal. Reveal falls back
-to visible only when JavaScript is absent (`.no-js`), not on a timer.
-`prefers-reduced-motion` disables all of it.
+**Motion.** Hero fade-in and one scroll reveal, gated on a `no-js`
+class removed by a hashed inline script. Reduced motion disables all.
 
-**Icon.** Four rounded squares — dark gray, mid gray, light gray,
-cyan. Header, footer, favicon, OG card, signature card.
-
-**No photos of the founder.** The signature card (mark + name + role +
-city + email) is the founder's visual identity on the site.
+**Icon.** Four rounded squares. Ships as `favicon.ico` (16/32/48),
+`favicon-48/96/192/512.png` (Google Search needs a multiple of 48px),
+`favicon.svg`, and `apple-touch-icon.png` on a cream background. The
+48/96/192 PNGs are listed first in `<link rel="icon">`.
 
 ## 8. Security posture (must be true, verified in CI)
 
@@ -248,9 +262,17 @@ city + email) is the founder's visual identity on the site.
   `X-Frame-Options: DENY`, `frame-ancestors 'none'`,
   `Referrer-Policy: strict-origin-when-cross-origin`,
   Permissions-Policy without `interest-cohort`.
-- Analytics: Plausible only, cookieless. Disclosed on `/security/` and
-  in `content/legal/privacy.md`. No session replay, ever. No Cloudflare
-  Web Analytics, no Sentry, unless added to both disclosures first.
+- Analytics, disclosed in full: **Cloudflare Web Analytics** (cookieless
+  beacon, no persistent identifier) plus **first-party approximate
+  location counts** (hourly country/region/city counters in D1; no IP,
+  no path, no identifier stored; honors Do Not Track and Global Privacy
+  Control; 5,000/day cap; ~31-day retention). The provider is chosen at
+  build time (`NEXT_PUBLIC_ANALYTICS_PROVIDER`) and the privacy policy
+  renders the matching section automatically (`src/lib/legal.ts`), so
+  the policy cannot say one thing while the build does another.
+  `/security/` describes the same, in plain English. No session replay,
+  ever. No ad pixels. An owner-only dashboard at `/admin/analytics/`
+  sits behind Cloudflare Access and is never indexed.
 - Contact form (`functions/api/contact.ts`): same-origin `Origin`
   required; `Content-Type: application/json` required; body capped at
   16 KB; Turnstile verified with hostname check; rate limit counted
@@ -265,9 +287,13 @@ city + email) is the founder's visual identity on the site.
   the disclosure address.
 - Secrets only as encrypted Pages secrets. MFA on GitHub, Cloudflare,
   Resend, Google Workspace, Cloudflare Registrar.
-- CI on every push: `npm ci`, typecheck, lint, build, CSP hash step,
-  unit tests for `contact.ts`, Lighthouse budget (mobile LCP < 2.0 s,
-  accessibility ≥ 95).
+- CI on every push: `npm ci`, typecheck, lint, unit tests, build
+  (which packages the admin export and writes the hashed CSP), a check
+  that `script-src` has no `'unsafe-inline'`, and a banned-copy grep.
+- **Deploy path:** push to `master` on GitHub
+  (`Doyel-Labs-LLC/doyel-labs-com`); Cloudflare Pages builds with
+  `npm run build`, Node 22.18+. No web uploads, no manual `wrangler`
+  deploys, so GitHub and the live site never drift.
 
 If any of the above stops being true, `/security/` changes the same
 day. The page never runs ahead of the code.
@@ -319,8 +345,9 @@ broker-dealer, or investment adviser."
 - No claims of insurance, certification, uptime, or regulatory
   outcomes.
 - CSP stays strict and hashed. Plausible only.
-- No photos of the founder. No stock photography. Illustration plus
-  real SteadFast screenshots only.
+- No photos of the founder. No stock photography. Generated photos in
+  the `IMAGES.md` slots, real SteadFast screenshots, and line
+  illustrations only.
 - Every page has "Talk to a person" within one screen.
 - If a claim cannot be shown in this repo or in the offer, it does
   not go on the site.

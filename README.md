@@ -3,11 +3,19 @@
 Company website for **Doyel Labs LLC** (Casper, Wyoming). Static export,
 deployed on Cloudflare Pages with a serverless contact-form function.
 
-**v9 (September 2026):** eight pages, a published website offer
-($1,299 build + $99/month care, from `src/lib/offer.ts`), self-hosted
-fonts, a hashed strict CSP (`scripts/csp-hashes.mjs`), a hardened contact
-function, and CI. Retired routes 301 via `public/_redirects`; their
-folders under `src/app/` contain stub pages and can be deleted.
+**v10 (September 2026):** eight pages on a warm light theme, a published
+website offer ($1,299 build + $99/month care, from `src/lib/offer.ts`),
+self-hosted fonts, a hashed strict CSP (`scripts/csp-hashes.mjs`), a
+hardened contact function, first-party analytics with an owner-only
+dashboard at `/admin/analytics/` (Cloudflare Access), image slots with
+illustration fallbacks (`IMAGES.md`), and CI. Retired routes 301 via
+`public/_redirects`.
+
+Build pipeline: `prebuild` generates the public-path allowlist and the
+generated-image list → `next build` → `scripts/package-admin.mjs` moves
+the admin export into the Functions bundle → `scripts/csp-hashes.mjs`
+writes the per-page CSP into `out/_headers`. Node 22.18+ is required
+(`.nvmrc`).
 
 - **Framework:** Next.js 16 (App Router) + React 19 + TypeScript
 - **Styling:** Tailwind CSS 3, cyan accent (`#10c7eb`) on a softened

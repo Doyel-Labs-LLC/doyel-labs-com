@@ -13,33 +13,39 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Canvas — softened from pure black so the site has warmth.
-        bg: "#0a0f14",
-        surface: "#12181f",
-        surface2: "#171e26",
+        // v10: warm light canvas. Cream, not white, so the page feels like
+        // paper rather than a form. Ink is a warm near-black.
+        bg: "#faf7f2",
+        surface: "#ffffff",
+        surface2: "#f3efe8",
         // Type
-        ink: "#f0f0fa",
-        mute: "rgba(240, 240, 250, 0.66)",
-        // 0.50 (not lower) so muted small text clears WCAG AA (4.5:1) on
-        // both the canvas (#0a0f14 → 4.84) and card surfaces (#12181f →
-        // 4.77). Still clearly quieter than `mute` (0.66) and `ink`.
-        muted: "rgba(240, 240, 250, 0.50)",
-        // Hairline
-        line: "rgba(240, 240, 250, 0.10)",
-        line2: "rgba(240, 240, 250, 0.22)",
-        // Cyan accent — from the bottom-right icon square. Used sparingly.
-        accent: "#10c7eb",
-        accentHi: "#4edcfb",
-        accentDim: "rgba(16, 199, 235, 0.32)",
-        accentSoft: "rgba(16, 199, 235, 0.10)",
-        // Icon palette (also used as chip / step accents)
+        ink: "#1b1f26",
+        mute: "rgba(27, 31, 38, 0.80)",
+        // 0.68 alpha clears WCAG AA (4.5:1) for small text on the cream
+        // canvas and on white cards (≈ #626366 on #faf7f2 ≈ 5.3:1).
+        muted: "rgba(27, 31, 38, 0.68)",
+        // Hairlines
+        line: "rgba(27, 31, 38, 0.10)",
+        line2: "rgba(27, 31, 38, 0.22)",
+        // Teal accent — the logo's cyan, deepened so it passes AA as text
+        // on cream (#087187 on #faf7f2 ≈ 4.9:1).
+        accent: "#087187",
+        accentHi: "#0b8aa3",
+        accentDim: "rgba(8, 113, 135, 0.35)",
+        accentSoft: "rgba(8, 113, 135, 0.08)",
+        // Warm highlight — used for illustration fills and one soft band
+        // wash. Never for text.
+        warm: "#f2b455",
+        warmSoft: "rgba(242, 180, 85, 0.16)",
+        // Icon palette (the physical mark; unchanged)
         iconDark: "#3f444b",
         iconMid: "#878a91",
         iconLight: "#c7cad0",
-        // Semantic
-        rise: "#4ed4a2",
-        fall: "#ff7b8a",
-        care: "#f5c15a",
+        iconCyan: "#10c7eb",
+        // Semantic (light-safe)
+        rise: "#1f8f5f",
+        fall: "#c8434f",
+        care: "#9a6a0f",
       },
       fontFamily: {
         // `--font-sans` / `--font-mono` are the self-hosted next/font faces
@@ -84,15 +90,11 @@ const config: Config = {
         soft: "cubic-bezier(0.2, 0.8, 0.2, 1)",
       },
       boxShadow: {
-        accent: "0 0 0 1px rgba(16, 199, 235, 0.4)",
-        // Depth on a near-black canvas comes from an inset top highlight
-        // (light-from-above) plus a soft dark drop — not a grey shadow,
-        // which is invisible here. Used by the elevated card surface.
-        card:
-          "inset 0 1px 0 rgba(255, 255, 255, 0.045), 0 12px 32px -20px rgba(0, 0, 0, 0.85)",
-        cardHover:
-          "inset 0 1px 0 rgba(16, 199, 235, 0.14), 0 22px 48px -22px rgba(0, 0, 0, 0.9)",
-        glow: "0 0 0 1px rgba(16, 199, 235, 0.35), 0 8px 30px -12px rgba(16, 199, 235, 0.35)",
+        accent: "0 0 0 1px rgba(8, 113, 135, 0.4)",
+        // Real, soft shadows on the light canvas.
+        card: "0 1px 2px rgba(27, 31, 38, 0.05), 0 12px 32px -20px rgba(27, 31, 38, 0.28)",
+        cardHover: "0 1px 2px rgba(27, 31, 38, 0.06), 0 22px 48px -22px rgba(27, 31, 38, 0.32)",
+        glow: "0 1px 2px rgba(8, 113, 135, 0.18), 0 8px 24px -12px rgba(8, 113, 135, 0.45)",
       },
     },
   },
