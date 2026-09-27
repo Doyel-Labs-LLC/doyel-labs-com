@@ -7,7 +7,7 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 
 export default [
-  { ignores: [".next/**", ".wrangler/**", "out/**", "node_modules/**", "next-env.d.ts", "server/analytics/admin-assets.generated.ts", "test-results/**", "playwright-report/**"] },
+  { ignores: [".next/**", "out/**", "node_modules/**", "next-env.d.ts"] },
   js.configs.recommended,
   ...tseslint.configs.recommended,
   {

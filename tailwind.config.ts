@@ -19,9 +19,11 @@ const config: Config = {
         surface2: "#171e26",
         // Type
         ink: "#f0f0fa",
-        mute: "rgba(240, 240, 250, 0.72)",
-        // Keep secondary text readable on both canvas and card surfaces.
-        muted: "rgba(240, 240, 250, 0.60)",
+        mute: "rgba(240, 240, 250, 0.66)",
+        // 0.50 (not lower) so muted small text clears WCAG AA (4.5:1) on
+        // both the canvas (#0a0f14 → 4.84) and card surfaces (#12181f →
+        // 4.77). Still clearly quieter than `mute` (0.66) and `ink`.
+        muted: "rgba(240, 240, 250, 0.50)",
         // Hairline
         line: "rgba(240, 240, 250, 0.10)",
         line2: "rgba(240, 240, 250, 0.22)",
@@ -61,6 +63,16 @@ const config: Config = {
           "ui-monospace",
           "monospace",
         ],
+      },
+      fontSize: {
+        // Named scale (PROMPT.md §7). Headings are sentence case.
+        display: ["56px", { lineHeight: "1.05", letterSpacing: "-0.02em", fontWeight: "600" }],
+        displaySm: ["38px", { lineHeight: "1.08", letterSpacing: "-0.02em", fontWeight: "600" }],
+        h2: ["36px", { lineHeight: "1.15", letterSpacing: "-0.015em", fontWeight: "600" }],
+        h2Sm: ["28px", { lineHeight: "1.2", letterSpacing: "-0.015em", fontWeight: "600" }],
+        h3: ["22px", { lineHeight: "1.3", letterSpacing: "-0.01em", fontWeight: "600" }],
+        body: ["17px", { lineHeight: "1.65" }],
+        small: ["15px", { lineHeight: "1.55" }],
       },
       letterSpacing: {
         eyebrow: "0.18em",

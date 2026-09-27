@@ -1,175 +1,326 @@
-# Doyel Labs website brief, v10
+# doyel-labs.com — the design brief, v9
 
-This is the source of truth for positioning and experience. Update this
-brief before intentionally changing those decisions.
+The reference the site is written against. Change this document first,
+then the page. If a page contradicts this brief, the page is wrong.
 
-## Purpose
+v9 replaces v8 in full. What changed: eight pages instead of thirty; a
+published, fixed website offer; "a real person" as the lead promise;
+an illustration system instead of screenshots; products demoted; every
+claim on the site must be evidenced by this repo or by the offer.
 
-Doyel Labs LLC builds software for businesses. Lead with small-business
-needs: websites, payroll workspaces, internal tools, integrations, and
-custom applications. These are examples, not company or industry limits.
+---
 
-The main journey is **understand the services, see real work, start a
-conversation**. Enterprise quality means clarity, consistency, credible
-evidence, accessibility, and reliable interactions, not inflated claims.
+## 1. Who Doyel Labs is
 
-## Navigation and pages
+**Doyel Labs LLC** (exact legal name, as filed with the Wyoming Secretary
+of State) is a software company in Casper, Wyoming, formed September
+2026. It builds websites and custom software for businesses of any
+size and any industry, and it keeps that software running afterward.
 
-The logo links Home. Desktop and mobile share four primary links:
-**Services, Work, Products, About**, plus **Start a conversation**.
-About uses the existing `/company/` URL.
+Doyel Labs is run by its founder, Blake Doyel. He takes the calls,
+builds the work, and answers when something breaks. AI is the primary
+build tool. Every change is reviewed by a person and every ship is a
+human decision.
 
-Home has four major sections: hero with project evidence, services,
-products, and contact. One primary and one secondary hero action.
-Do not repeat the project or process in separate homepage sections.
+**What Doyel Labs is not** (never claim otherwise, anywhere):
+a broker-dealer, an investment adviser, a bank, a payroll processor,
+a professional employer organization, a money transmitter, a tax
+reporting agent, a fiduciary, or an insurer. Doyel Labs does not carry
+professional liability or cyber insurance; do not say it does.
 
-Services covers capabilities, process, pricing, and support concisely.
-Use contextual links for work and industry examples. Retain service-detail
-pages and the full FAQ for deeper reading; make walkthroughs optional.
+## 2. The promise (site-wide)
 
-Work shows real website/payroll evidence. About presents the company,
-not a personal profile. Products shows each product once, with artwork,
-status, and optional details. Do not frame the company around a product count.
-Contact is the only inquiry form; do not reintroduce modal forms.
+> **Real people build it. A real person answers.**
 
-`/pricing/`, `/how-we-work/`, `/founder/`, and the `/industries/` overview
-redirect to relevant Services sections or About. Preserve old URLs, product
-anchors, and useful service anchors. Keep supporting resources reachable
-through contextual links, Support, and the human sitemap without putting
-the complete directory in the mobile menu.
+Every hero and every closing band carries this idea in some form. It is
+the reason to choose Doyel Labs over a page builder, a marketplace
+freelancer, or an agency with a ticket queue.
 
-The footer copyright area includes a discreet, keyboard-accessible **Owner
-login** link with a mobile-sized touch target. Use a normal HTML anchor to
-`https://doyel-labs.com/admin/analytics/`, including on previews, so entering
-the dashboard starts a new document without the public collector. Do not
-add it to primary navigation or sitemap listings. Keep private pages noindex,
-preview/default-host admin access denied, and the existing owner-only Access
-OTP plus independent MFA intact; do not add a client-side password form.
+Concretely, the site may say — because it is true:
 
-## Voice and truth
+- You talk to Blake. On the first call, during the build, and after.
+- No chatbot, no screening AI, no ticket queue, no autoresponder.
+- The phone number on the site rings a person: **(307) 429-0389**,
+  Monday–Friday, 9:00 a.m.–6:00 p.m. Mountain.
+- Email is read by a person and answered within one business day,
+  usually the same day.
 
-Use short, concrete, welcoming sentences that a business owner can read.
-Lead with what the software does, not frameworks or technical jargon.
-Welcome projects beyond the examples without promising every possible
-feature or outcome.
+Say it plainly. Do not turn it into a slogan wall. One clear statement
+per page, one "who answers" block in the footer, that's it.
 
-Keep hero descriptions to one short sentence and card descriptions to one
-line of thought. Do not stack an eyebrow, slogan, paragraph, and reassurance
-that all say the same thing. Link to detail rather than repeating it.
-Keep legal notices and product limitations visible, not hidden for brevity.
+**On AI.** Be open: "We use AI to build fast. That's why a five-page
+site is $1,299 and not $8,000. A person reviews everything, and a
+person is who you talk to." Never write "AI-powered" as an adjective.
 
-Do not use "revolutionize", "next-gen", "AI-powered", "world-class",
-"best-in-class", "leading", or headcount language. Do not narrow the
-company to one industry because of its first project.
+**On size.** Do not inflate and do not apologize. "Our team" is
+forbidden. "Blake" is fine. One accountable person is a feature.
 
-Use AI as a tool, not the central sales proposition. A person makes the
-decisions and reviews the work.
+## 3. The offer (single source: `src/lib/offer.ts`)
 
-Only use approved, real evidence. SteadFast Transportation and Doyel Labs
-share an owner; disclose this wherever its endorsement is
-shown. Do not imply it is independent third-party validation. Keep real
-screenshots distinct from frames labeled "Demo - synthetic data".
+Every price, timeline, and inclusion on the site is imported from
+`src/lib/offer.ts`. Nothing is typed inline on a page.
 
-No invented customers, performance metrics, certifications, awards,
-testimonials, launch dates, trading returns, or team photographs.
-Do not use a founder portrait, signature card, personal bio, or Person
-schema. Do not call Blake Doyel an engineer or make him the company spokesperson.
-Use company-level contact details and unnamed shared-ownership disclosures.
+### Website build — $1,299, one-time
 
-## Design
+- Five pages (home, about, services, contact, plus one of your choice).
+- Your own domain, on your own registrar. You own the site and the code.
+- Contact form delivered to your inbox. Phone and email links.
+- Mobile-first, fast, accessible. No cookie banner, because nothing
+  tracks your visitors.
+- Live in **three business days** after your content is in hand
+  (logo, hours, photos, one paragraph per page). The clock starts when
+  content arrives, not when the deposit is paid.
+- 50% ($650) to start, 50% at launch.
 
-Refine the existing dark navy and cyan brand. Preserve the four-square
-logo, Inter, and the single cyan interface accent. See `DESIGN.md` for
-tokens. Product artwork may keep its own colors.
+### Care plan — $99 / month, optional
 
-Use sentence-case headings, readable navigation, normal body copy and form
-inputs of at least 16px, generous but disciplined spacing, and restrained
-surfaces. Small uppercase labels are secondary, never the primary way to
-understand the page. Do not make static cards look interactive.
+- Hosting, TLS, backups, uptime monitoring.
+- Small edits included: text, prices, hours, photos — up to 30 minutes
+  of work per week. Larger changes are quoted first.
+- One person to call. Same phone number, same hours.
+- Cancel any month. The site stays yours; we hand over the files.
 
-No carousel, theme switcher, chatbot, decorative animation library, or
-stock corporate/team photos. Content must be visible without waiting for
-scroll effects. Honor reduced motion and visible keyboard focus.
+### Add-ons (flat)
 
-## Products
+- Extra page — $199
+- Booking or quote-request form — $249
+- Google Business Profile setup or cleanup — $299
+- Page copywriting from a 20-minute interview — $499
 
-Products are secondary to client services. BAI is an automated trading
-desk. ConnectionLoop is a shared calendar for families and groups.
+### Custom software — quoted, from $4,000
 
-`src/lib/products.ts` is the source for product labels, descriptions,
-artwork, stages, and inquiry topics. BAI is private beta; ConnectionLoop
-is coming soon/in private testing. Neither is publicly launched.
-Do not restate both as "private beta" or promise release "this month".
+- One-hour orientation call (Zoom or phone) with Blake. Listening, not
+  pitching. No obligation.
+- Written scope and a fixed price within one business day of the call.
+- Progress you can see every business day.
+- You own the code and the accounts it runs in.
 
-Use existing optimized BAI artwork and the supplied ConnectionLoop icon.
-Do not crop product wordmarks. Product artwork is not a customer/team photo.
-Use honest inquiry actions, not a waitlist subscription or guaranteed access.
+Never bill hourly. Never publish a range that contradicts these
+numbers. Never say "starting at" for the website build — it is $1,299.
 
-## Pricing and engagement
+## 4. Pages (eight, plus legal)
 
-Use **Quoted per project**. Do not publish Doyel Labs service price ranges,
-retainer amounts, quote examples, or pricing thresholds in page copy,
-metadata, structured data, or RSS. Synthetic payroll/trading amounts are
-not service prices and remain labeled demo data.
+| Route | Job |
+|---|---|
+| `/` | The promise, the offer, one SteadFast excerpt (with disclosure), the three lanes, how it works, who answers. |
+| `/websites/` | The $1,299 offer in full: inclusions, care plan, add-ons, timeline, what we refuse, six FAQs. |
+| `/software/` | Custom software and internal tools. Examples of what a workspace can do (synthetic frames). Exclusions. Quoted per project. |
+| `/work/` | The SteadFast build (site + payroll) with the ownership disclosure; product frames. "In the lab" strip for BAI and ConnectionLoop. |
+| `/how-we-work/` | The one canonical copy of the engagement: call → scope → build → launch → a person on support. Billing rules, ownership, cancellation. |
+| `/security/` | Written for a business owner. Only claims the repo evidences. Contact-form data map. `/.well-known/security.txt`. |
+| `/about/` | Doyel Labs LLC, Casper, founded September 2026. Founder signature card (no photo). Why one person answering the phone is the point. One paragraph on products in the lab. |
+| `/contact/` | Form, phone, email, hours. "Blake reads this." |
+| `/legal/*` | Terms, privacy, BAI terms and privacy. `under_review` banner until counsel signs. |
 
-Scope and price are agreed before work begins. Do not invent payment terms,
-discounts, delivery guarantees, or new service commitments.
+Nav: **Websites · Software · Work · How we work · About** + a Contact
+pill ("Talk to a person"). Footer: Security · Legal · phone · hours.
 
-The existing orientation is a free, no-obligation, one-hour conversation
-over Zoom or phone with a real person. We listen; the client decides
-whether to proceed. It is not a required commitment to send an inquiry.
+Everything else from v8 is removed and 301-redirected. No status page.
+No FAQ page (FAQs live on `/websites/` and `/how-we-work/`). No press,
+uses, founder, engineering, industries, pricing, docs, support, or
+start, writing, or changelog pages. Old URLs 301 to the page that now
+holds their content.
 
-## Contact
+Word budget: home ≤ 450 words; every other page ≤ 600.
 
-All general primary actions say "Start a conversation" and link to
-`/contact/`. Service/product links may preselect an allowlisted
-`projectType` query value.
+## 5. Proof
 
-Require email and message only. Name and topic are optional. Suggested
-orientation times are tucked into an optional disclosure; no ordinary
-subject field. Product/support inquiries must not receive sales-call or
-waitlist promises.
+**One named client: SteadFast Transportation Inc.** The website
+(steadfasttransportationinc.com) and the payroll workspace are real,
+shipped, and in use. Show them: the live-site screenshots in
+`public/media/websites/`, the SteadFast logo (permission on file), and
+the quote in `src/lib/testimonials.ts`.
 
-Preserve the existing POST `/api/contact` contract, Resend delivery,
-Turnstile, honeypot, and rate limiting. Show validation, sending, success,
-and failure states; retain input on failure and support retry. Include
-direct email/phone alternatives. Never show success on a failed request.
+**Disclosure is mandatory.** SteadFast is owned by Doyel Labs' founder.
+Wherever the SteadFast quote or logo appears, this line appears within
+the same block, visible without interaction:
 
-## Boundaries and quality
+> SteadFast Transportation Inc. is owned by Doyel Labs' founder. The
+> work is real; the endorsement is not independent.
 
-Keep Next.js static export, React, TypeScript, Tailwind, and Cloudflare
-Pages. No framework/hosting migration, CMS, new product functionality,
-booking integration, or marketing tracker.
+Do not call it a "review" or "testimonial." Call it "what we built for
+SteadFast." One full quote on `/work/`; one short excerpt on the home
+page; nowhere else. The disclosure travels with both.
 
-Preserve legal wording, review notices, and strict CSP. The approved analytics
-target is Cloudflare Web Analytics for aggregate reporting, with Plausible
-retained until the coordinated switch passes account/schema/data checks.
-Exactly one build-selected provider may run on public doyel-labs.com pages;
-none may run on admin, preview, or local pages. Collector, CSP, and privacy
-copy must use the same selection. Never enable automatic injection or dual
-tracking. No raw-IP collection, replay, fingerprinting, form capture, or
-contact/browsing linkage. Backend read enablement is not collection enablement.
-The separately approved, default-off first-party location layer is allowed only
-with Cloudflare mode and `NEXT_PUBLIC_LOCATION_ANALYTICS_ENABLED=true`.
-`LOCATION_ANALYTICS_ENABLED` independently gates canonical same-origin ingest.
-Store only hourly country/region/city counts in dedicated `LOCATION_DB`, capped
-atomically at 5,000 accepted pageviews per UTC day. Never store paths, raw events,
-IP addresses, GPS/postal/coordinates, user agents, referrers, cookies or visitor IDs.
-Honor GPC/DNT; no retries, profiles, public KV writes, or custom CF beacon events.
-The owner-only locations panel is independent of RUM; counts are not unique people
-or CF visits. Surface unknowns, partial coverage, caps and no historical backfill.
-Retain about 31 days with the separate scheduled-only retention Worker; disclose
-provider backups up to 30 additional days. No production D1 bindings or flags in
-Preview, no root Pages Wrangler config, no billing or authentication changes.
-Payroll prepares records; it does not file taxes or move money.
-BAI can lose money; never promise returns. Existing product-specific
-limitations remain visible on relevant surfaces.
+Facts allowed about the SteadFast build (from the repo): ten-page
+marketing site; password-gated payroll workspace on the same domain;
+SAM.gov wage-determination lookup with floor checks; batch pay runs
+with PDF stubs; 180-day audit log with CSV export; passkey sign-in;
+JSON/DOCX backups; live in production since 2026. Do not add
+turnaround claims, page counts that don't match the site, or pay-period
+frequency.
 
-Target WCAG 2.2 AA: semantic headings, labeled controls, sufficient
-contrast, keyboard navigation, accessible mobile-menu focus, reduced
-motion, and reflow. Use optimized images with explicit dimensions.
+Additional proof:
 
-Update retained links, redirects, sitemaps, canonicals, breadcrumbs, and
-structured data together. Preserve noindex on pre-release product surfaces.
-Run existing lint, typecheck, and static build and check real browser
-journeys. Report unverified production behavior honestly.
+1. **Product frames.** The synthetic workspace screens in
+   `src/components/frames/*` with the `DEMO · SYNTHETIC DATA` corner
+   label, on `/software/` and `/work/`. Names are `OPERATOR 04` /
+   `J. REED`; amounts are round demo figures.
+2. **The offer itself.** A published price, a published timeline, and
+   a phone number that a person answers.
+
+New clients: add to `src/lib/testimonials.ts` only with written
+permission on file (`permissionDate`) and a disclosure line if any
+ownership or family relationship exists.
+
+Never invent a client, review, logo, statistic, or "average." No
+"80% of engagements," no "most of our clients," no "on average."
+
+## 6. Voice
+
+Short sentences. Concrete nouns. One idea per sentence. Warm, not cold.
+Readable by someone who is not a software engineer.
+
+- Say what the software does. Then say who it's for.
+- "Tell us what your business does. We can build it."
+- Primary CTA verb: **"Talk to a person."** Secondary: "See the offer,"
+  "See our work." Never "Submit," "Buy now," "Book a demo,"
+  "Discovery call," "Strategy session." The first call is an
+  **orientation**.
+- Refused words: revolutionize, next-gen, unlock, transform, seamless,
+  cutting-edge, world-class, best-in-class, mission-critical, leading,
+  AI-powered, our team, small team, solo.
+- Refused claims (removed from v8, do not reintroduce): insurance of
+  any kind; refunds beyond the written scope; "DOL inspector" or any
+  inspection-outcome language; named competitors; HIPAA, SOC 2, PCI,
+  GLBA, or any certification; "compresses two-month builds"; "a
+  fraction of what a vendor charges"; uptime percentages; "we never
+  hold PII" (the contact form holds it briefly — say what happens to
+  it instead).
+- Engineering language ("fail closed," "signed updates") belongs on
+  `/security/` and `/legal/bai/*` only.
+
+## 7. Design
+
+**Palette.** Unchanged from v8: dark canvas `#0a0f14`, ink `#f0f0fa`,
+one accent `#10c7eb`. Tokens live in `tailwind.config.ts`. Never a
+second accent.
+
+**Type.** Inter (body, display) and JetBrains Mono (eyebrows, figures
+only). Named scale in Tailwind: `display` 56/1.05, `h2` 36/1.15,
+`h3` 22/1.3, `body` 17/1.65, `small` 15/1.5. **Headings are sentence
+case.** Uppercase is reserved for eyebrows, nav, and chips.
+
+**Layout.** Max six sections per page. Alternate layouts: split
+hero, full-width illustration band, three-up, statement paragraph,
+FAQ list, close. Never two card grids in a row.
+
+**Illustration system** (replaces all photography; the SteadFast
+screenshots stay, framed in a browser mock). One style across the site: `#f0f0fa` linework at 1.5px,
+a single flat cyan fill, transparent background, no gradients, no
+faces. Delivered as hand-cleaned SVG under `public/illus/` and
+rendered through `<Illus name="…" />`. The set:
+
+| Name | Where | Shows |
+|---|---|---|
+| `call` | home hero, contact | a person at a desk on a phone call, seen from behind |
+| `answer` | footer "who answers" block | a handset and a hand |
+| `three-days` | websites | a three-day calendar strip |
+| `keys` | websites, how-we-work | a key and a folder: you own it |
+| `care` | websites | a shield with a wrench |
+| `scope` | how-we-work, software | a signed one-page document |
+| `flow` | software | boxes and arrows: a workspace |
+| `casper` | about | a Wyoming skyline / plains line |
+| `lock` | security | a padlock over a page |
+| `lost` | 404 | an empty road sign |
+
+The OG card is the four-square mark plus the page title on the dark
+canvas; no illustration.
+
+**Motion.** Hero fade-in and a single scroll reveal. Reveal falls back
+to visible only when JavaScript is absent (`.no-js`), not on a timer.
+`prefers-reduced-motion` disables all of it.
+
+**Icon.** Four rounded squares — dark gray, mid gray, light gray,
+cyan. Header, footer, favicon, OG card, signature card.
+
+**No photos of the founder.** The signature card (mark + name + role +
+city + email) is the founder's visual identity on the site.
+
+## 8. Security posture (must be true, verified in CI)
+
+- CSP with **no `'unsafe-inline'` in `script-src`**. Inline Next
+  bootstrap scripts are hashed at build time by
+  `scripts/csp-hashes.mjs` into `public/_headers`. `style-src` keeps
+  `'unsafe-inline'` (Next critical CSS). `connect-src` is `'self'`,
+  Plausible, and Turnstile only. `report-uri` set.
+- HSTS with preload, `X-Content-Type-Options: nosniff`,
+  `X-Frame-Options: DENY`, `frame-ancestors 'none'`,
+  `Referrer-Policy: strict-origin-when-cross-origin`,
+  Permissions-Policy without `interest-cohort`.
+- Analytics: Plausible only, cookieless. Disclosed on `/security/` and
+  in `content/legal/privacy.md`. No session replay, ever. No Cloudflare
+  Web Analytics, no Sentry, unless added to both disclosures first.
+- Contact form (`functions/api/contact.ts`): same-origin `Origin`
+  required; `Content-Type: application/json` required; body capped at
+  16 KB; Turnstile verified with hostname check; rate limit counted
+  after Turnstile passes; **fails closed in production** if the
+  Turnstile secret or the rate-limit binding is missing; 5-second
+  timeouts on Turnstile and Resend; errors return a generic message
+  and never upstream text; email is strictly validated and
+  URL-encoded in the reply link; subject stripped of line breaks.
+  Processors disclosed in privacy: Cloudflare (Pages, Turnstile),
+  Resend (email delivery), Google Workspace (mailbox).
+- `/.well-known/security.txt` published; `security@doyel-labs.com` is
+  the disclosure address.
+- Secrets only as encrypted Pages secrets. MFA on GitHub, Cloudflare,
+  Resend, Google Workspace, Cloudflare Registrar.
+- CI on every push: `npm ci`, typecheck, lint, build, CSP hash step,
+  unit tests for `contact.ts`, Lighthouse budget (mobile LCP < 2.0 s,
+  accessibility ≥ 95).
+
+If any of the above stops being true, `/security/` changes the same
+day. The page never runs ahead of the code.
+
+## 9. Accessibility, performance, SEO
+
+- WCAG AA contrast everywhere. Visible focus rings. Skip link. One H1
+  per page, heading order intact. Form errors announced with
+  `role="alert"`; fields use `aria-invalid` and `aria-describedby`.
+  Modal and mobile drawer trap focus and return it on close.
+- LCP < 2.0 s on mobile. No render-blocking third-party scripts.
+  Illustrations are inline or single-file SVG; no raster hero.
+- Unique `<title>` (`%s · Doyel Labs`) and description per page.
+  Organization JSON-LD in the root layout with `legalName:
+  "Doyel Labs LLC"`, `foundingDate: "2026-09"`, `telephone`,
+  `openingHoursSpecification` (Mo–Fr 09:00–18:00, America/Denver).
+  `Offer` JSON-LD on `/websites/` with `price: 1299` and a
+  `priceSpecification` for the $99/month care plan. `FAQPage` JSON-LD
+  on `/websites/` and `/how-we-work/`. Breadcrumb JSON-LD on interior
+  pages. XML sitemap lists only the eight pages and legal.
+
+## 10. Products in the lab (BAI, ConnectionLoop)
+
+Demoted, not hidden. They appear as one short strip on `/work/#lab`
+and one paragraph on `/about/`. Not in the nav. Not on the home page.
+Labels: BAI "Private beta"; ConnectionLoop "In private testing." No
+dates, no "this month." The BAI trading disclaimer appears on
+`/work/#lab` and `/legal/bai/*` only — **not** in the site footer.
+The footer legal line is: "Doyel Labs LLC is a Wyoming limited
+liability company. It is not a payroll processor, money transmitter,
+broker-dealer, or investment adviser."
+
+## 11. Content refresh
+
+- Offer (`src/lib/offer.ts`): review monthly. Any change ships the same
+  day to `/websites/`, `/how-we-work/`, and the JSON-LD.
+- Legal: bump `version` on any material change; keep `under_review`
+  until counsel signs.
+- Testimonials: only with written permission and a disclosure line
+  where a relationship exists.
+
+## 12. Non-negotiables
+
+- No client names, logos, screenshots, or quotes without written
+  permission on file. SteadFast only today, always with the
+  ownership disclosure.
+- Prices on the site come only from `src/lib/offer.ts`.
+- Never bill hourly. Never say "starting at $1,299."
+- No claims of insurance, certification, uptime, or regulatory
+  outcomes.
+- CSP stays strict and hashed. Plausible only.
+- No photos of the founder. No stock photography. Illustration plus
+  real SteadFast screenshots only.
+- Every page has "Talk to a person" within one screen.
+- If a claim cannot be shown in this repo or in the offer, it does
+  not go on the site.
