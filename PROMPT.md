@@ -332,7 +332,7 @@ class removed by a hashed inline script. Reduced motion disables all.
   required; `Content-Type: application/json` required; body capped at
   16 KB while streaming (never fully buffered); Turnstile verified with a strict hostname check (production accepts
   only doyel-labs.com hosts); rate limit counted
-  after Turnstile passes; **fails closed in production** if the
+  after Turnstile passes; **fails closed on every deployment** (production and preview) if the
   Turnstile secret or the rate-limit binding is missing; 5-second
   timeouts on Turnstile and Resend; errors return a generic message
   and never upstream text; email is strictly validated and

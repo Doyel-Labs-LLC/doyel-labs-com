@@ -10,14 +10,16 @@
  *   1. Method + same-origin Origin + JSON content type + body size cap.
  *   2. Honeypot (silent 200).
  *   3. Field cleaning + validation (shared with the client).
- *   4. Turnstile verification with hostname check. Fails CLOSED in
- *      production if the secret is missing.
+ *   4. Turnstile verification with hostname check. Fails CLOSED on
+ *      every Pages deployment (production and preview) if the secret
+ *      is missing.
  *   5. Per-IP rate limit, counted only after Turnstile passes. Uses the
  *      Cloudflare Rate Limiting binding when present, KV otherwise.
- *      Fails CLOSED in production if neither binding exists.
+ *      Fails CLOSED on every Pages deployment if neither binding exists.
  *   6. Resend delivery with a 5 s timeout.
  *   7. A best-effort automatic receipt to the visitor (templates in
- *      src/lib/contact-email.ts). It never repeats the visitor's message.
+ *      src/lib/contact-email.ts). It never repeats the visitor's message
+ *      and is capped per recipient address.
  *
  * Errors return a generic message only. Upstream details are logged to
  * the Pages Function log, never to the client.
@@ -118,6 +120,13 @@ async function readBounded(request: Request, max: number): Promise<string | null
   return new TextDecoder().decode(all);
 }
 
+/** Any Cloudflare Pages deployment (production or preview). Unset only in
+ * local dev, which is the one place the form may run without Turnstile or
+ * a rate limiter. */
+function isDeployed(env: Env): boolean {
+  return !!env.CF_PAGES_BRANCH;
+}
+
 function isProduction(env: Env): boolean {
   return env.CF_PAGES_BRANCH === "master";
 }
@@ -127,7 +136,7 @@ function originAllowed(request: Request, env: Env): boolean {
   if (origin && ALLOWED_ORIGINS.has(origin)) return true;
   // Preview deployments (*.website.pages.dev) are allowed outside production.
   if (!isProduction(env) && origin && /^https:\/\/[a-z0-9-]+\.website\.pages\.dev$/.test(origin)) return true;
-  if (!isProduction(env) && origin && /^http:\/\/localhost(:\d+)?$/.test(origin)) return true;
+  if (!isDeployed(env) && origin && /^http:\/\/localhost(:\d+)?$/.test(origin)) return true;
   return false;
 }
 
@@ -184,10 +193,10 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
 
   const clientIp = request.headers.get("cf-connecting-ip") || "";
 
-  // 4. Turnstile. Fail closed in production.
+  // 4. Turnstile. Fail closed on every deployment (production and preview).
   if (!env.TURNSTILE_SECRET_KEY) {
-    if (isProduction(env)) {
-      console.error("contact: TURNSTILE_SECRET_KEY missing in production");
+    if (isDeployed(env)) {
+      console.error("contact: TURNSTILE_SECRET_KEY missing on a deployment");
       return j(500, { error: GENERIC.notConfigured });
     }
   } else {
@@ -197,12 +206,12 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
   }
 
   // 5. Rate limit — after the CAPTCHA, so bots can't burn a real
-  //    visitor's allowance. Fail closed in production.
+  //    visitor's allowance. Fail closed on every deployment.
   const rl = await rateLimit(env, clientIp || "unknown");
   if (rl === "limited") return j(429, { error: GENERIC.rate });
   if (rl === "unavailable") {
-    if (isProduction(env)) {
-      console.error("contact: no rate-limit binding in production");
+    if (isDeployed(env)) {
+      console.error("contact: no rate-limit binding on a deployment");
       return j(500, { error: GENERIC.notConfigured });
     }
   }
@@ -276,7 +285,7 @@ async function receiptAllowed(env: Env, email: string): Promise<boolean> {
       const { success } = await env.RATE_LIMITER.limit({ key: id });
       return success;
     }
-    return !isProduction(env);
+    return !isDeployed(env);
   } catch (e) {
     console.error("contact: receipt limit error", e instanceof Error ? e.message : String(e));
     return false;
