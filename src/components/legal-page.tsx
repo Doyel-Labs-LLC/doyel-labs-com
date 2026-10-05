@@ -92,7 +92,7 @@ export function LegalPage({ doc, nav, breadcrumbs, lead }: LegalPageProps) {
         <Eyebrow>Legal</Eyebrow>
         <H1>{doc.title}</H1>
         {leadText ? <Lead>{leadText}</Lead> : null}
-        <p className="mt-6 font-mono text-[10px] uppercase tracking-wide text-muted">
+        <p className="mt-6 text-[14px] text-muted">
           Version {doc.version}
           {doc.underReview ? " · under counsel review" : ""}
         </p>
@@ -100,16 +100,17 @@ export function LegalPage({ doc, nav, breadcrumbs, lead }: LegalPageProps) {
 
       <nav
         aria-label="Legal documents"
-        className="mt-10 flex flex-wrap gap-x-6 gap-y-2 border-t border-line pt-6 font-mono text-[11px] uppercase tracking-wide"
+        className="mt-10 flex flex-wrap gap-x-6 gap-y-2 border-t border-line pt-6 text-[15px]"
       >
         {navItems.map((n) => (
           <Link
             key={n.href}
             href={n.href}
+            aria-current={n.slug === doc.slug ? "page" : undefined}
             className={
               n.slug === doc.slug
-                ? "text-accent underline decoration-accentDim underline-offset-2"
-                : "text-mute underline decoration-line2 underline-offset-2 hover:text-accentHi"
+                ? "font-semibold text-accent underline decoration-accentDim underline-offset-4"
+                : "text-mute underline decoration-line2 underline-offset-4 transition-colors hover:text-accent"
             }
           >
             {n.label}
@@ -131,7 +132,7 @@ export function LegalPage({ doc, nav, breadcrumbs, lead }: LegalPageProps) {
               specific legal question, email{" "}
               <a
                 href={`mailto:${site.supportEmail}?subject=Legal%20question`}
-                className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentHi"
+                className="text-accent underline decoration-accentDim underline-offset-2 hover:text-accentInk"
               >
                 {site.supportEmail}
               </a>{" "}
@@ -148,7 +149,7 @@ export function LegalPage({ doc, nav, breadcrumbs, lead }: LegalPageProps) {
 
       <section className="mt-16 border-t border-line pt-8">
         <div className="flex flex-wrap items-baseline justify-between gap-y-2">
-          <p className="font-mono text-[10px] uppercase tracking-wide text-muted">
+          <p className="text-[14px] text-muted">
             Version {doc.version}
             {doc.underReview ? " · under counsel review" : ""}
           </p>
