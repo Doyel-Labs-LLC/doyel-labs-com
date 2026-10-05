@@ -22,7 +22,6 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { PayrollPaystubFrame } from "@/components/frames/payroll-paystub";
 import { PayrollScaFrame } from "@/components/frames/payroll-sca";
 import { Photo } from "@/components/photo";
-import { Reveal } from "@/components/reveal";
 import { customSoftware, refused, response } from "@/lib/offer";
 import { payrollDisclaimer, site } from "@/lib/site";
 
@@ -133,91 +132,83 @@ export default function Software() {
       </section>
 
       {/* 2. WHAT WE CAN BUILD */}
-      <Reveal>
-        <Section>
-          <Eyebrow>What we can build</Eyebrow>
-          <H2>Software shaped around how your business already works.</H2>
-          <div className="mt-10">
-            <Grid3>
-              {canBuild.map((c) => (
-                <Card key={c.title} title={c.title}>
-                  {c.body}
-                </Card>
-              ))}
-            </Grid3>
-          </div>
-        </Section>
-      </Reveal>
+      <Section>
+        <Eyebrow>What we can build</Eyebrow>
+        <H2>Software shaped around how your business already works.</H2>
+        <div className="mt-10">
+          <Grid3>
+            {canBuild.map((c) => (
+              <Card key={c.title} title={c.title}>
+                {c.body}
+              </Card>
+            ))}
+          </Grid3>
+        </div>
+      </Section>
 
       {/* 3. HOW A PROJECT RUNS */}
-      <Reveal>
-        <Section id="how">
-          <Split visual={<Photo name="software-scope" fallback="scope" alt="A shop owner and a builder reviewing a printed plan at a workbench" className="mx-auto max-w-md" />}>
-            <Eyebrow>How a software project runs</Eyebrow>
-            <H2>One call, one page, one price.</H2>
-            <Price amount={customSoftware.fromLabel} terms={customSoftware.terms} />
-            <Body>{customSoftware.billing}</Body>
-          </Split>
-          <div className="mt-12 grid gap-6 md:grid-cols-4">
-            <Feature step="01" title="Orientation call">
-              {customSoftware.steps[0]}
-            </Feature>
-            <Feature step="02" title="Written scope">
-              {customSoftware.steps[1]}
-            </Feature>
-            <Feature step="03" title="Daily progress">
-              {customSoftware.steps[2]}
-            </Feature>
-            <Feature step="04" title="You own it">
-              {customSoftware.steps[3]}
-            </Feature>
-          </div>
-        </Section>
-      </Reveal>
+      <Section id="how">
+        <Split visual={<Photo name="software-scope" fallback="scope" alt="A shop owner and a builder reviewing a printed plan at a workbench" className="mx-auto max-w-md" />}>
+          <Eyebrow>How a software project runs</Eyebrow>
+          <H2>One call, one page, one price.</H2>
+          <Price amount={customSoftware.fromLabel} terms={customSoftware.terms} />
+          <Body>{customSoftware.billing}</Body>
+        </Split>
+        <div className="mt-12 grid gap-6 md:grid-cols-4">
+          <Feature step="01" title="Orientation call">
+            {customSoftware.steps[0]}
+          </Feature>
+          <Feature step="02" title="Written scope">
+            {customSoftware.steps[1]}
+          </Feature>
+          <Feature step="03" title="Daily progress">
+            {customSoftware.steps[2]}
+          </Feature>
+          <Feature step="04" title="You own it">
+            {customSoftware.steps[3]}
+          </Feature>
+        </div>
+      </Section>
 
       {/* 4. ONE EXAMPLE */}
-      <Reveal>
-        <Section>
-          <Split reverse visual={<PayrollPaystubFrame />}>
-            <Eyebrow>One example</Eyebrow>
-            <H2>A payroll workspace.</H2>
-            <Body>
-              Built for a transportation operator. It checks each day rate against the published wage floor before a stub can
-              be issued. Pay runs go out in one batch with a PDF stub for every contractor. Every draft, email, and blocked
-              action lands in an audit log you can export as CSV.
-            </Body>
-            <Body>
-              This is one example of a workspace, not a product. If your business pays people differently, we build for that.
-            </Body>
-            <div className="mt-8">
-              <Notice>{payrollDisclaimer}</Notice>
-            </div>
-          </Split>
-        </Section>
-      </Reveal>
+      <Section>
+        <Split reverse visual={<PayrollPaystubFrame />}>
+          <Eyebrow>One example</Eyebrow>
+          <H2>A payroll workspace.</H2>
+          <Body>
+            Built for a transportation operator. It checks each day rate against the published wage floor before a stub can
+            be issued. Pay runs go out in one batch with a PDF stub for every contractor. Every draft, email, and blocked
+            action lands in an audit log you can export as CSV.
+          </Body>
+          <Body>
+            This is one example of a workspace, not a product. If your business pays people differently, we build for that.
+          </Body>
+          <div className="mt-8">
+            <Notice>{payrollDisclaimer}</Notice>
+          </div>
+        </Split>
+      </Section>
 
       {/* 5. WHAT WE WON'T BUILD */}
-      <Reveal>
-        <Section>
-          <Eyebrow>What we won&apos;t build</Eyebrow>
-          <H2>Some things are off the table on purpose.</H2>
-          <div className="mt-10">
-            <Grid3>
-              {refused.software.map((r) => {
-                const [first, ...rest] = r.split(". ");
-                const title = first.endsWith(".") ? first : `${first}.`;
-                const body = rest.join(". ");
-                return (
-                  <Card key={r} title={title}>
-                    {body || "If we can’t say what it does in plain words, we don’t ship it."}
-                  </Card>
-                );
-              })}
-            </Grid3>
-          </div>
-          <Body>Every &ldquo;no&rdquo; here is about a specific build, not a limit on what we&apos;ll try.</Body>
-        </Section>
-      </Reveal>
+      <Section>
+        <Eyebrow>What we won&apos;t build</Eyebrow>
+        <H2>Some things are off the table on purpose.</H2>
+        <div className="mt-10">
+          <Grid3>
+            {refused.software.map((r) => {
+              const [first, ...rest] = r.split(". ");
+              const title = first.endsWith(".") ? first : `${first}.`;
+              const body = rest.join(". ");
+              return (
+                <Card key={r} title={title}>
+                  {body || "If we can’t say what it does in plain words, we don’t ship it."}
+                </Card>
+              );
+            })}
+          </Grid3>
+        </div>
+        <Body>Every &ldquo;no&rdquo; here is about a specific build, not a limit on what we&apos;ll try.</Body>
+      </Section>
 
       {/* 6. CLOSE */}
       <Close eyebrow="Start a software project" title="Describe the job you want done. We&apos;ll write back with a scope and a price.">

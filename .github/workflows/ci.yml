@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches: [master, release/v11]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+      - name: Security headers survive CSP generation
+        run: |
+          test "$(grep -c '^/\*$' out/_headers)" = "1"
+          grep -q "Strict-Transport-Security: max-age=63072000" out/_headers
+          grep -q "X-Content-Type-Options: nosniff" out/_headers
+          grep -q "X-Frame-Options: DENY" out/_headers
+          grep -q "frame-ancestors 'none'" out/_headers
+          if grep -E "script-src[^;]*'unsafe-inline'" out/_headers; then
+            echo "script-src must not allow unsafe-inline"
+            exit 1
+          fi
+          grep -q "sha256-" out/_headers
+      - name: Install Playwright
+        run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e

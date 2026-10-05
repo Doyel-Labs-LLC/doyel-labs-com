@@ -7,42 +7,25 @@ reference for tokens and rules.
 
 | Token | Value | Where |
 |---|---|---|
-| `bg` | `#f6eee2` | Warm linen canvas (never pure white) |
-| `surface` / `surface2` | `#fffaf2` / `#f1e7d8` | Ivory cards, frames / sand band |
+| `bg` | `#faf7f2` | Cream canvas |
+| `surface` / `surface2` | `#ffffff` / `#f3efe8` | Cards, frames / warm band |
 | `ink` | `#1b1f26` | Body and display type |
 | `mute` / `muted` | 0.80 / 0.68 alpha ink | Body below the lead / captions (AA) |
 | `line` / `line2` | 0.10 / 0.22 alpha ink | Hairlines |
-| **`accent`** / `accentInk` | `#087187` / `#06596a` | Teal — links, solid buttons / hover (darker) |
+| **`accent`** / `accentHi` | `#087187` / `#065e70` | Teal — links, CTAs, eyebrow bars. `accentHi` is the darker hover so small text stays WCAG AA on cream. |
 | `warm` / `warmSoft` | `#f2b455` / 16% | Illustration fills, one band wash. Never text. |
 | `rise` / `fall` / `care` | green / red / amber | Status only |
 
 The logo mark keeps its own cyan (`#10c7eb`). Shadows are real and
-warm (`card`, `cardHover`, `lift`, `button`, `glow` tokens). Radii: `card`
-20px, `panel` 32px, buttons are full pills.
+warm-grey (`card`, `cardHover`, `glow` tokens).
 
-## Type (v12)
+## Type (new in v9)
 
-Fraunces (variable, soft axis) for H1–H3, prices, and quotes — teal words
-inside a heading render in Fraunces italic. Figtree for body, nav,
-buttons, and labels. Both self-hosted from `src/fonts/` via
-`next/font/local`. System monospace only inside product frames. Named
-scale in `tailwind.config.ts`: `display` 64 · `displaySm` 42 · `h2` 44 ·
-`h2Sm` 32 · `h3` 24 · `lead` 20 · `body` 18 · `small` 16. **Everything is
-sentence case** except the short eyebrow label.
-
-## Buttons
-
-`buttonClass(variant, size)` in `src/components/button-styles.ts` is the
-only button style. Primary: solid teal pill, white text, hover darkens to
-`accentInk`. Secondary: ivory pill, hairline border. `textLink` is the
-inline link style.
-
-## Email
-
-`src/lib/contact-email.ts` renders the internal notification and the
-visitor receipt: linen canvas, one ivory rounded card, Georgia headings,
-amber bar, teal pill button, plain-text twin. Preview both by rendering
-them to HTML files before changing them.
+Named scale in `tailwind.config.ts`: `display` 56/1.05 · `displaySm` 38 ·
+`h2` 36/1.15 · `h2Sm` 28 · `h3` 22/1.3 · `body` 17/1.65 · `small` 15/1.55.
+**Headings are sentence case.** Uppercase only for eyebrows, nav, chips,
+and CTA pills. Inter for everything; JetBrains Mono for eyebrows, chips,
+and figures. Both self-hosted from `src/fonts/` via `next/font/local`.
 
 ## Layout primitives (`src/components/chrome.tsx`)
 
@@ -58,18 +41,18 @@ grids in a row.
 
 Photos first, in slots (`<Photo>`; see `IMAGES.md`), then real SteadFast
 screenshots in a browser mock, then line illustrations
-(`src/components/illus.tsx`: ink linework, teal wash, amber fill, ivory
+(`src/components/illus.tsx`: ink linework, teal wash, amber fill, white
 paper shapes) as fallbacks. Names: `call`, `answer`, `three-days`, `keys`,
 `care`, `scope`, `flow`, `casper`, `lock`, `lost`.
 
 ## Motion
 
-Hero fade-in (`.hero-in`) and one scroll reveal (`<Reveal>`). The `<html>`
-element starts with `no-js`; a hashed inline script removes it before
-paint. If JS never runs, every reveal is simply visible. Reduced motion
-disables everything.
+Hero fade-in (`.hero-in`) only. Sections below the fold are in the first
+paint: a scroll reveal that starts at opacity 0 hides them from anyone
+who has not scrolled, from some crawlers, and from full-page captures.
+Reduced motion finishes the hero immediately.
 
 ## Icon
 
 Four rounded squares — dark gray, mid gray, light gray, cyan. Header,
-footer, favicon, OG card, emails, the About "who answers" card.
+footer, favicon, OG card, founder signature card.

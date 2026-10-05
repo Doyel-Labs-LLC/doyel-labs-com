@@ -12,19 +12,17 @@
  *   3. Field cleaning + validation (shared with the client).
  *   4. Turnstile verification with hostname check. Fails CLOSED on
  *      every Pages deployment (production and preview) if the secret
- *      is missing.
- *   5. Per-IP rate limit, counted only after Turnstile passes. Uses the
- *      Cloudflare Rate Limiting binding when present, KV otherwise.
- *      Fails CLOSED on every Pages deployment if neither binding exists.
+ *      is missing. Production tokens must be minted for doyel-labs.com.
+ *   5. Per-IP and per-email rate limits, counted only after Turnstile
+ *      passes. Uses the Cloudflare Rate Limiting binding when present,
+ *      KV otherwise. Fails CLOSED on every Pages deployment if neither
+ *      binding exists.
  *   6. Resend delivery with a 5 s timeout.
- *   7. A best-effort automatic receipt to the visitor (templates in
- *      src/lib/contact-email.ts). It never repeats the visitor's message
- *      and is capped per recipient address.
  *
  * Errors return a generic message only. Upstream details are logged to
  * the Pages Function log, never to the client.
  *
- * Status codes: 200 sent ({ ok, receipt }) · 400 invalid · 403 origin/CAPTCHA · 405 method
+ * Status codes: 200 sent · 400 invalid · 403 origin/CAPTCHA · 405 method
  * · 413 too large · 429 rate limited · 500 not configured / upstream.
  * (No 502/504: Cloudflare replaces those with its own HTML error page.)
  */
@@ -37,12 +35,14 @@ import {
   type ContactInput,
 } from "../../src/lib/contact-form";
 import {
-  renderNotificationHtml,
-  renderNotificationText,
-  renderReceiptHtml,
-  renderReceiptText,
-  receiptSubject,
-} from "../../src/lib/contact-email";
+  API_SECURITY_HEADERS,
+  isDeployedBranch,
+  isJsonContentType,
+  isProductionBranch,
+  originAllowed,
+  readBoundedBody,
+  turnstileHostAllowed,
+} from "../../src/lib/contact-guard";
 
 interface RateLimiter {
   limit(opts: { key: string }): Promise<{ success: boolean }>;
@@ -64,12 +64,6 @@ interface Env {
 const RATE_LIMIT_MAX = 5;
 const RATE_LIMIT_WINDOW = 300; // seconds
 const UPSTREAM_TIMEOUT_MS = 5000;
-const ALLOWED_ORIGINS = new Set([
-  "https://doyel-labs.com",
-  "https://www.doyel-labs.com",
-]);
-const ALLOWED_HOSTS = new Set(["doyel-labs.com", "www.doyel-labs.com"]);
-
 const GENERIC = {
   internal: "Something went wrong on our end. Please email support@doyel-labs.com or call (307) 429-0389.",
   captcha: "We couldn't confirm you're a person. Please refresh the page and try again.",
@@ -77,74 +71,36 @@ const GENERIC = {
   notConfigured: "The contact form isn't available right now. Please email support@doyel-labs.com.",
 } as const;
 
-// `_headers` rules don't apply to Pages Functions responses, so the API
-// sets its own. JSON only: nothing here may render, frame, or run script.
-const API_HEADERS = {
-  "cache-control": "no-store",
-  "x-content-type-options": "nosniff",
-  "x-frame-options": "DENY",
-  "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
-  "content-security-policy": "default-src 'none'; frame-ancestors 'none'",
-  "referrer-policy": "no-referrer",
-} as const;
-
 function j(status: number, body: Record<string, unknown>): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { ...API_HEADERS, "content-type": "application/json; charset=utf-8" },
+    headers: { ...API_SECURITY_HEADERS, "content-type": "application/json; charset=utf-8" },
   });
 }
 
-/** Reads at most `max` bytes of the body; returns null if it is larger. */
-async function readBounded(request: Request, max: number): Promise<string | null> {
-  if (!request.body) return "";
-  const reader = request.body.getReader();
-  const chunks: Uint8Array[] = [];
-  let size = 0;
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    size += value.byteLength;
-    if (size > max) {
-      await reader.cancel();
-      return null;
-    }
-    chunks.push(value);
-  }
-  const all = new Uint8Array(size);
-  let at = 0;
-  for (const c of chunks) {
-    all.set(c, at);
-    at += c.byteLength;
-  }
-  return new TextDecoder().decode(all);
-}
-
-/** Any Cloudflare Pages deployment (production or preview). Unset only in
- * local dev, which is the one place the form may run without Turnstile or
- * a rate limiter. */
-function isDeployed(env: Env): boolean {
-  return !!env.CF_PAGES_BRANCH;
+function escapeHtml(s: string): string {
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#39;");
 }
 
 function isProduction(env: Env): boolean {
-  return env.CF_PAGES_BRANCH === "master";
+  return isProductionBranch(env.CF_PAGES_BRANCH);
 }
 
-function originAllowed(request: Request, env: Env): boolean {
-  const origin = request.headers.get("origin");
-  if (origin && ALLOWED_ORIGINS.has(origin)) return true;
-  // Preview deployments (*.website.pages.dev) are allowed outside production.
-  if (!isProduction(env) && origin && /^https:\/\/[a-z0-9-]+\.website\.pages\.dev$/.test(origin)) return true;
-  if (!isDeployed(env) && origin && /^http:\/\/localhost(:\d+)?$/.test(origin)) return true;
-  return false;
+function isDeployed(env: Env): boolean {
+  return isDeployedBranch(env.CF_PAGES_BRANCH);
 }
 
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   try {
     return await handleContact(ctx.request, ctx.env);
-  } catch (err) {
-    console.error("contact: unhandled", err instanceof Error ? err.message : String(err));
+  } catch {
+    // Do not log the exception message. It can echo part of the request.
+    console.error("contact: unhandled");
     return j(500, { error: GENERIC.internal });
   }
 };
@@ -152,24 +108,21 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
 export const onRequest: PagesFunction<Env> = async () =>
   new Response("Method not allowed", {
     status: 405,
-    headers: { ...API_HEADERS, allow: "POST", "content-type": "text/plain; charset=utf-8" },
+    headers: { ...API_SECURITY_HEADERS, allow: "POST", "content-type": "text/plain; charset=utf-8" },
   });
 
 async function handleContact(request: Request, env: Env): Promise<Response> {
   // 1. Request shape.
-  if (!originAllowed(request, env)) {
+  if (request.headers.get("Sec-Fetch-Site") === "cross-site" || !originAllowed(request.headers.get("origin"), env.CF_PAGES_BRANCH)) {
     return j(403, { error: "Requests must come from doyel-labs.com." });
   }
-  const ct = request.headers.get("content-type") || "";
-  if (!ct.toLowerCase().startsWith("application/json")) {
+  if (!isJsonContentType(request.headers.get("content-type"))) {
     return j(400, { error: "Expected application/json." });
   }
-  const len = Number(request.headers.get("content-length") || "0");
-  if (len > LIMITS.body) return j(413, { error: "Message too large." });
 
   let text: string | null;
   try {
-    text = await readBounded(request, LIMITS.body);
+    text = await readBoundedBody(request, LIMITS.body);
   } catch {
     return j(400, { error: "Could not read the request." });
   }
@@ -181,7 +134,7 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
   } catch {
     return j(400, { error: "Invalid JSON body." });
   }
-  if (!raw || typeof raw !== "object") return j(400, { error: "Invalid JSON body." });
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return j(400, { error: "Invalid JSON body." });
 
   // 2. Honeypot: bots fill hidden fields. Accept silently, send nothing.
   const c = cleanContact(raw);
@@ -192,6 +145,10 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
   if (problem) return j(400, { error: problem });
 
   const clientIp = request.headers.get("cf-connecting-ip") || "";
+  if (!clientIp && isDeployed(env)) {
+    console.error("contact: missing client ip on a deployment");
+    return j(500, { error: GENERIC.notConfigured });
+  }
 
   // 4. Turnstile. Fail closed on every deployment (production and preview).
   if (!env.TURNSTILE_SECRET_KEY) {
@@ -206,14 +163,20 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
   }
 
   // 5. Rate limit — after the CAPTCHA, so bots can't burn a real
-  //    visitor's allowance. Fail closed on every deployment.
-  const rl = await rateLimit(env, clientIp || "unknown");
-  if (rl === "limited") return j(429, { error: GENERIC.rate });
-  if (rl === "unavailable") {
-    if (isDeployed(env)) {
-      console.error("contact: no rate-limit binding on a deployment");
-      return j(500, { error: GENERIC.notConfigured });
-    }
+  //    visitor's allowance. Count the IP and the email address
+  //    separately. Fail closed on every deployment.
+  const ipKey = clientIp ? `ip:${clientIp}` : "ip:local";
+  const ipLimit = await rateLimit(env, ipKey);
+  if (ipLimit === "limited") return j(429, { error: GENERIC.rate });
+  if (ipLimit === "unavailable" && isDeployed(env)) {
+    console.error("contact: no rate-limit binding on a deployment");
+    return j(500, { error: GENERIC.notConfigured });
+  }
+  const emailLimit = await rateLimit(env, await emailRateKey(c.email));
+  if (emailLimit === "limited") return j(429, { error: GENERIC.rate });
+  if (emailLimit === "unavailable" && isDeployed(env)) {
+    console.error("contact: no rate-limit binding on a deployment");
+    return j(500, { error: GENERIC.notConfigured });
   }
 
   // 6. Deliver.
@@ -233,8 +196,8 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
     to: [to],
     reply_to: c.email,
     subject: `[Website · ${projectTypeLabel}] ${subject}`,
-    text: renderNotificationText({ ...c, projectTypeLabel, subject }),
-    html: renderNotificationHtml({ ...c, projectTypeLabel, subject, replyMailto }),
+    text: renderTextEmail({ ...c, projectTypeLabel, subject }),
+    html: renderHtmlEmail({ ...c, projectTypeLabel, subject, replyMailto }),
   };
 
   let resendResp: Response;
@@ -252,67 +215,18 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
 
   if (resendResp.status === 429) return j(429, { error: GENERIC.rate });
   if (!resendResp.ok) {
-    let detail = "";
-    try {
-      detail = (await resendResp.text()).slice(0, 300);
-    } catch {
-      /* ignore */
-    }
-    console.error("contact: resend rejected", resendResp.status, detail);
+    // Status only. The upstream body can echo the message, address, or subject.
+    await resendResp.body?.cancel();
+    console.error("contact: resend rejected", resendResp.status);
     return j(500, { error: GENERIC.internal });
   }
-
-  // 7. Receipt to the visitor. Best effort: the message is already
-  //    delivered, so a failure here is logged and never shown as an error.
-  //    Receipts to the same address are capped (one per day when KV is
-  //    bound), so the form can't be used to mail someone repeatedly.
-  const receipt = (await receiptAllowed(env, c.email)) && (await sendReceipt(key, from, to, c.email, c.name));
-  return j(200, { ok: true, receipt });
+  return j(200, { ok: true });
 }
 
-const RECEIPT_WINDOW = 86400; // seconds
-
-async function receiptAllowed(env: Env, email: string): Promise<boolean> {
-  try {
-    const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(email.trim().toLowerCase()));
-    const id = "rcpt:" + [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
-    if (env.CONTACT_KV) {
-      if (await env.CONTACT_KV.get(id)) return false;
-      await env.CONTACT_KV.put(id, "1", { expirationTtl: RECEIPT_WINDOW });
-      return true;
-    }
-    if (env.RATE_LIMITER) {
-      const { success } = await env.RATE_LIMITER.limit({ key: id });
-      return success;
-    }
-    return !isDeployed(env);
-  } catch (e) {
-    console.error("contact: receipt limit error", e instanceof Error ? e.message : String(e));
-    return false;
-  }
-}
-
-async function sendReceipt(key: string, from: string, replyTo: string, email: string, name: string): Promise<boolean> {
-  try {
-    const resp = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: { Authorization: "Bearer " + key, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        from,
-        to: [email],
-        reply_to: replyTo,
-        subject: receiptSubject,
-        text: renderReceiptText({ name }),
-        html: renderReceiptHtml({ name }),
-      }),
-      signal: AbortSignal.timeout(UPSTREAM_TIMEOUT_MS),
-    });
-    if (!resp.ok) console.error("contact: receipt rejected", resp.status);
-    return resp.ok;
-  } catch (e) {
-    console.error("contact: receipt unreachable", e instanceof Error ? e.message : String(e));
-    return false;
-  }
+async function emailRateKey(email: string): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(email.trim().toLowerCase()));
+  const hex = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+  return `em:${hex}`;
 }
 
 async function verifyTurnstile(secret: string, token: string, ip: string, production: boolean): Promise<boolean> {
@@ -333,14 +247,8 @@ async function verifyTurnstile(secret: string, token: string, ip: string, produc
       console.warn("contact: turnstile failed", (body["error-codes"] || []).join(","));
       return false;
     }
-    // Token must have been issued for our site, not a lookalike. Production
-    // accepts only the real hostnames; previews also accept pages.dev/localhost.
-    const hostOk =
-      !!body.hostname &&
-      (ALLOWED_HOSTS.has(body.hostname) ||
-        (!production && (/^[a-z0-9-]+\.website\.pages\.dev$/.test(body.hostname) || body.hostname === "localhost")));
-    if (!hostOk) {
-      console.warn("contact: turnstile hostname mismatch", body.hostname);
+    if (!turnstileHostAllowed(body.hostname, production)) {
+      console.warn("contact: turnstile hostname mismatch");
       return false;
     }
     return true;
@@ -374,4 +282,67 @@ async function rateLimit(env: Env, ip: string): Promise<"ok" | "limited" | "unav
     }
   }
   return "unavailable";
+}
+
+/* ───────────────────────── Email templates ───────────────────────── */
+
+type EmailVars = {
+  name: string;
+  email: string;
+  projectTypeLabel: string;
+  subject: string;
+  message: string;
+  preferredTimes: string;
+};
+
+function renderTextEmail(v: EmailVars): string {
+  const rule = "─".repeat(64);
+  const sender = v.name ? `${v.name} <${v.email}>` : v.email;
+  const times = v.preferredTimes ? `PROPOSED CALL TIMES:\n${v.preferredTimes}\n\n${rule}\n\n` : "";
+  return (
+    `${rule}\n  DOYEL LABS  ·  CASPER, WYOMING\n${rule}\n\n` +
+    `  [ ${v.projectTypeLabel.toUpperCase()} ]  NEW MESSAGE\n\n` +
+    `  From:     ${sender}\n  Subject:  ${v.subject}\n\n${rule}\n\n` +
+    `${v.message}\n\n${rule}\n\n${times}` +
+    `Reply directly to this email.\n\nReceived at doyel-labs.com/api/contact\n` +
+    `Doyel Labs LLC  ·  Casper, Wyoming  ·  https://doyel-labs.com\n`
+  );
+}
+
+function renderHtmlEmail(v: EmailVars & { replyMailto: string }): string {
+  const bodyMessage = escapeHtml(v.message).replace(/\n/g, "<br>");
+  const heading = v.name ? `New message from ${v.name}` : "New message";
+  const replyLabel = v.name ? `Reply to ${v.name.split(/\s+/)[0]}` : "Reply";
+  const timesBlock = v.preferredTimes
+    ? `<tr><td style="padding:0 32px 24px;"><div style="border:1px solid rgba(16,199,235,0.35);background:rgba(16,199,235,0.06);padding:16px 20px;">
+        <p style="margin:0;font-family:Consolas,'Courier New',monospace;font-size:10px;letter-spacing:0.10em;text-transform:uppercase;color:#10c7eb;">Suggested call times</p>
+        <p style="margin:8px 0 0;font-size:14px;line-height:1.6;color:#f0f0fa;">${escapeHtml(v.preferredTimes).replace(/\n/g, "<br>")}</p>
+      </div></td></tr>`
+    : "";
+  const mono = "font-family:Consolas,'Courier New',monospace;font-size:10px;letter-spacing:0.10em;text-transform:uppercase;color:rgba(240,240,250,0.5);";
+
+  return `<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="color-scheme" content="dark"><title>${escapeHtml(heading)}</title></head>
+<body style="margin:0;padding:0;background:#0a0f14;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Arial,sans-serif;color:#f0f0fa;">
+<div style="display:none;font-size:1px;color:#0a0f14;max-height:0;overflow:hidden;">${escapeHtml(v.projectTypeLabel)} · ${escapeHtml(v.subject)}</div>
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="background:#0a0f14;"><tr><td align="center" style="padding:32px 16px;">
+<table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="max-width:600px;background:#12181f;border:1px solid rgba(240,240,250,0.10);">
+<tr><td style="padding:28px 32px 20px;border-bottom:1px solid rgba(240,240,250,0.10);">
+  <table role="presentation" cellspacing="0" cellpadding="0" border="0"><tr>
+    <td style="vertical-align:middle;padding-right:14px;"><img src="https://doyel-labs.com/apple-touch-icon.png" width="44" height="44" alt="" style="display:block;border-radius:6px;"></td>
+    <td style="vertical-align:middle;"><div style="font-size:15px;font-weight:600;letter-spacing:0.22em;text-transform:uppercase;color:#f0f0fa;line-height:1;">Doyel Labs</div>
+    <div style="font-size:11px;letter-spacing:0.12em;text-transform:uppercase;color:rgba(240,240,250,0.5);margin-top:5px;line-height:1;">Casper, Wyoming</div></td>
+  </tr></table></td></tr>
+<tr><td style="padding:28px 32px 12px;"><span style="display:inline-block;${mono}color:#10c7eb;border:1px solid rgba(16,199,235,0.35);padding:6px 12px;font-size:11px;">${escapeHtml(v.projectTypeLabel)}</span></td></tr>
+<tr><td style="padding:0 32px 24px;">
+  <h1 style="margin:0;font-size:24px;font-weight:600;line-height:1.2;color:#f0f0fa;">${escapeHtml(heading)}</h1>
+  <table role="presentation" width="100%" cellspacing="0" cellpadding="0" border="0" style="margin-top:16px;">
+    <tr><td style="padding:4px 0;${mono}width:70px;vertical-align:top;">From</td><td style="padding:4px 0;font-size:14px;"><a href="mailto:${encodeURIComponent(v.email)}" style="color:#10c7eb;text-decoration:none;">${escapeHtml(v.email)}</a></td></tr>
+    <tr><td style="padding:4px 0;${mono}width:70px;vertical-align:top;">Subject</td><td style="padding:4px 0;font-size:14px;color:#f0f0fa;">${escapeHtml(v.subject)}</td></tr>
+  </table></td></tr>
+<tr><td style="padding:0 32px 32px;"><div style="border-left:2px solid #10c7eb;background:rgba(16,199,235,0.08);padding:18px 22px;font-size:15px;line-height:1.65;color:#f0f0fa;">${bodyMessage}</div></td></tr>${timesBlock}
+<tr><td style="padding:0 32px 36px;"><a href="${escapeHtml(v.replyMailto)}" style="display:inline-block;background:rgba(16,199,235,0.10);border:1px solid #10c7eb;color:#10c7eb;padding:13px 26px;font-size:13px;font-weight:500;letter-spacing:0.10em;text-transform:uppercase;text-decoration:none;">${escapeHtml(replyLabel)} →</a>
+  <span style="display:inline-block;padding:13px 12px;font-size:12px;color:rgba(240,240,250,0.5);">or hit Reply on this email</span></td></tr>
+<tr><td style="padding:20px 32px 28px;border-top:1px solid rgba(240,240,250,0.10);"><p style="margin:0;${mono}">Received at doyel-labs.com/api/contact</p>
+  <p style="margin:10px 0 0;font-size:12px;color:rgba(240,240,250,0.66);">Doyel Labs LLC · Casper, Wyoming · <a href="https://doyel-labs.com" style="color:#10c7eb;text-decoration:none;">doyel-labs.com</a></p></td></tr>
+</table></td></tr></table></body></html>`;
 }

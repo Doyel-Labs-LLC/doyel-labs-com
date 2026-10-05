@@ -2,9 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Doyel Labs — v12 stylesheet. Tokens live in tailwind.config.ts and are
- * documented in DESIGN.md. Warm cream paper, deep teal, amber light. */
-
 :root {
   color-scheme: light;
   --m-fast: 160ms;
@@ -12,153 +9,118 @@
   --m-ease: cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-html {
-  -webkit-text-size-adjust: 100%;
-  text-size-adjust: 100%;
-  scroll-padding-top: 96px;
-}
-
 html,
 body {
-  background: #f6eee2;
+  background: #faf7f2;
   color: #1b1f26;
+  font-feature-settings: "ss01", "tnum", "cv11";
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* No page should ever scroll sideways on a phone. Elements that need to
-   * overflow (tables, code) use `overflow-x-auto` themselves. */
+  /* Preventive: no page should ever cause horizontal scroll on mobile.
+   * If a specific element genuinely needs to overflow (e.g. a code
+   * block, a table), it should be `overflow-x-auto` on that element,
+   * not spill out to the body. */
   overflow-x: hidden;
 }
 
-body {
-  font-feature-settings: "kern", "liga", "calt";
-  text-rendering: optimizeLegibility;
-}
-
-a,
-button,
-summary,
-[role="button"] {
-  touch-action: manipulation;
-  -webkit-tap-highlight-color: rgba(8, 113, 135, 0.12);
-}
-
-/* Headings: Fraunces with its soft axis turned up so the serif reads
- * friendly rather than formal. Balanced wrapping avoids one-word widows. */
-.font-display {
-  font-variation-settings: "SOFT" 100, "WONK" 0;
-  font-optical-sizing: auto;
-}
-h1,
-h2,
-h3 {
-  text-wrap: balance;
-}
-p,
-li,
-blockquote {
-  text-wrap: pretty;
-}
-
-/* The accent phrase inside a heading is set in Fraunces italic. */
-.font-display .text-accent,
-.font-display em {
-  font-style: italic;
-  font-weight: 450;
-}
-
-/* Long URLs, hashes, and emails wrap instead of forcing sideways scroll. */
+/* Long URLs, hashes, and other unbreakable strings should wrap
+ * gracefully on narrow screens rather than force horizontal scroll.
+ * Applied to any mono-font block so paths like
+ * `/writing/ai-native-software-what-we-write-what-we-generate/`
+ * always fit inside their container. */
 .font-mono,
-code,
-.break-anywhere {
+code {
   overflow-wrap: anywhere;
 }
 
-.tabular {
-  font-variant-numeric: tabular-nums;
-}
-
+/* Selection uses the cyan accent so highlighted text stands out. */
 ::selection {
   background: rgba(242, 180, 85, 0.45);
   color: #1b1f26;
 }
 
-/* Focus ring: teal, offset, rounded — visible on cream and white. */
+/* Focus ring uses the teal accent, visible on the cream canvas. */
 :focus-visible {
   outline: 2px solid #087187;
-  outline-offset: 3px;
-  border-radius: 6px;
+  outline-offset: 2px;
+  border-radius: 2px;
 }
 
-/* Wordmark: spaced small caps next to the four-square logo. */
+/* Wordmark: spaced small caps. Sits next to the four-square logo. */
 .wordmark {
-  font-weight: 700;
-  letter-spacing: 0.18em;
+  font-weight: 600;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
 }
 
-/* Hero wash: morning light from the top-left, a cool teal echo bottom
- * right. The only gradient on the page. */
+/* A subtle textured background used behind the hero. A quiet amber mesh
+ * at the top left, a soft teal echo at the bottom right, and a faint
+ * paper wash through the middle. A hairline grid fades downward. */
 .hero-glow {
   position: relative;
-  isolation: isolate;
+  background:
+    radial-gradient(ellipse 900px 520px at 8% -10%, rgba(242, 180, 85, 0.22), transparent 62%),
+    radial-gradient(ellipse 720px 480px at 92% 110%, rgba(8, 113, 135, 0.10), transparent 60%),
+    radial-gradient(ellipse 700px 700px at 60% 30%, rgba(255, 255, 255, 0.6), transparent 70%);
 }
+/* A faint paper grid behind the hero, fading downward. */
 .hero-glow::before {
   content: "";
   position: absolute;
-  /* Full-bleed to the viewport edges, never wider (no sideways scroll). */
-  inset: -120px calc(50% - 50vw) 0;
-  z-index: -1;
+  inset: 0;
   pointer-events: none;
-  /* Fade out at the bottom so the wash never ends on a hard line. */
-  -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent);
-  mask-image: linear-gradient(to bottom, #000 60%, transparent);
-  background:
-    radial-gradient(ellipse 760px 480px at 18% 8%, rgba(242, 180, 85, 0.26), transparent 65%),
-    radial-gradient(ellipse 640px 420px at 88% 70%, rgba(8, 113, 135, 0.09), transparent 65%);
+  z-index: 0;
+  background-image:
+    linear-gradient(to right, rgba(27, 31, 38, 0.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(27, 31, 38, 0.045) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 70%);
+}
+.hero-glow > * {
+  position: relative;
+  z-index: 1;
 }
 
+/* Elevated surface for cards and product frames. */
 .surface-card {
-  background: #fffaf2;
+  background: #ffffff;
 }
-
-/* Warm panel: a soft cream-to-amber wash for one band per page. */
+/* Warm band: a soft cream-to-amber wash for one section per page. */
 .band-warm {
   background:
-    radial-gradient(ellipse 820px 420px at 100% 0%, rgba(242, 180, 85, 0.24), transparent 62%),
-    radial-gradient(ellipse 600px 380px at 0% 100%, rgba(8, 113, 135, 0.06), transparent 60%),
-    #f1e7d8;
+    radial-gradient(ellipse 800px 400px at 100% 0%, rgba(242, 180, 85, 0.18), transparent 60%),
+    #f3efe8;
 }
 
-/* Legal prose. */
+/* A section divider that fades a cyan-tinted hairline in from the left,
+ * so band transitions feel intentional rather than ruled-off. Opt-in via
+ * the `.divider-soft` class on a top border element. */
+.divider-soft {
+  border-image: linear-gradient(to right, rgba(8, 113, 135, 0.35), rgba(27, 31, 38, 0.10) 22%, transparent 80%) 1;
+}
+
+/* Legal / docs prose. */
 .prose-legal {
   color: rgba(27, 31, 38, 0.8);
 }
 .prose-legal h1 {
   color: #1b1f26;
-  font-family: var(--font-display), Georgia, serif;
-  font-size: 1.75rem;
-  font-weight: 500;
+  font-size: 1.5rem;
+  font-weight: 600;
   margin: 0 0 1rem;
 }
 .prose-legal h2 {
   color: #1b1f26;
-  font-family: var(--font-display), Georgia, serif;
-  font-variation-settings: "SOFT" 100;
-  font-size: 1.375rem;
-  font-weight: 500;
-  margin: 2.25rem 0 0.5rem;
-}
-.prose-legal h3 {
-  color: #1b1f26;
-  font-size: 1.0625rem;
+  font-size: 1.125rem;
   font-weight: 600;
-  margin: 1.5rem 0 0.25rem;
+  margin: 2rem 0 0.5rem;
 }
 .prose-legal p,
 .prose-legal li {
   line-height: 1.7;
   margin: 0.7rem 0;
-  font-size: 16px;
+  font-size: 15px;
 }
 .prose-legal ol {
   padding-left: 1.4rem;
@@ -175,79 +137,60 @@ code,
   text-underline-offset: 3px;
 }
 .prose-legal a:hover {
-  color: #06596a;
-  text-decoration-color: #06596a;
+  color: #065e70;
+  text-decoration-color: #065e70;
 }
 .prose-legal code {
-  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-family: var(--font-mono), "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
   font-size: 0.9em;
   color: #1b1f26;
   background: rgba(27, 31, 38, 0.06);
   padding: 0.1rem 0.35rem;
-  border-radius: 4px;
+  border-radius: 3px;
 }
 .prose-legal strong {
   color: #1b1f26;
 }
-.prose-legal table {
-  display: block;
-  overflow-x: auto;
-  font-size: 15px;
-}
 
-/* Product-frame corner labels — small caps, system mono. */
+/* Product frame corner labels — small caps mono. */
 .frame-label {
-  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-family: var(--font-mono), "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
   font-size: 10px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: rgba(27, 31, 38, 0.68);
 }
 
-/* Short amber bar that introduces an eyebrow. */
+/* Small accent bar used to introduce a band's eyebrow. Cyan, 24px wide. */
 .accent-bar {
   display: inline-block;
-  width: 20px;
+  width: 24px;
   height: 2px;
-  border-radius: 2px;
-  background: #f2b455;
+  background: #087187;
   vertical-align: middle;
   margin-right: 10px;
-  transform: translateY(-1px);
 }
 
+/* Thin scrollbars everywhere */
 * {
   scrollbar-width: thin;
   scrollbar-color: rgba(27, 31, 38, 0.18) transparent;
 }
 
-/* ── Scroll reveal ───────────────────────────────────────────────
- * <Reveal> children start slightly lowered and transparent, then settle
- * when IntersectionObserver adds `.reveal--in`. Without JS (html.no-js)
- * everything is simply visible. */
-.reveal {
-  opacity: 0;
-  transform: translate3d(0, 16px, 0);
-  transition:
-    opacity 700ms var(--m-ease),
-    transform 700ms var(--m-ease);
-}
-.reveal--in {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-}
-html.no-js .reveal {
-  opacity: 1;
-  transform: none;
-  transition: none;
+/* Lock page scroll while a dialog is open. A class, not an inline style,
+ * so style-src can stay free of 'unsafe-inline'. */
+html.scroll-lock,
+html.scroll-lock body {
+  overflow: hidden;
 }
 
-/* ── Hero fade-in on load ─────────────────────────────────────── */
+/* ── Hero fade-in on load ────────────────────────────────────────
+ * The hero's headline, subhead, and CTA row lift into place on
+ * first paint. Staggered by class. Doesn't need IntersectionObserver
+ * because it's always above the fold. */
 @keyframes hero-in {
-  /* 0.01, not 0: an element that starts fully transparent is not an LCP
-     candidate, so the headline would not count as the page's first paint. */
   from {
-    opacity: 0.01;
+    opacity: 0;
     transform: translate3d(0, 12px, 0);
   }
   to {
@@ -256,25 +199,28 @@ html.no-js .reveal {
   }
 }
 .hero-in {
-  animation: hero-in 720ms var(--m-ease) both;
+  animation: hero-in 720ms var(--m-ease, cubic-bezier(0.2, 0.8, 0.2, 1)) both;
 }
 .hero-in--1 {
   animation-delay: 40ms;
 }
 .hero-in--2 {
-  animation-delay: 120ms;
+  animation-delay: 140ms;
 }
 .hero-in--3 {
-  animation-delay: 200ms;
+  animation-delay: 240ms;
 }
 .hero-in--4 {
-  animation-delay: 280ms;
+  animation-delay: 340ms;
 }
 .hero-in--5 {
-  animation-delay: 360ms;
+  animation-delay: 440ms;
 }
 
-/* ── Illustrations ────────────────────────────────────────────── */
+/* Trust strip — a mono-typed line of proof signals directly under the
+ * hero. Muted, tabular, small. Every item is a real fact. */
+/* Illustration wrapper: inline SVG inherits `currentColor` for lines and
+ * uses the cyan token for its single fill. */
 .illus {
   display: block;
   width: 100%;
@@ -290,7 +236,7 @@ html.no-js .reveal {
   fill-opacity: 0.55;
 }
 .illus .paper {
-  fill: #fffaf2;
+  fill: #ffffff;
 }
 .illus .line {
   fill: none;
@@ -309,20 +255,39 @@ html.no-js .reveal {
 
 /* Who-answers block in the footer. */
 .who-answers {
-  border: 1px solid rgba(8, 113, 135, 0.18);
+  border: 1px solid rgba(8, 113, 135, 0.28);
   background:
-    radial-gradient(ellipse 640px 320px at 100% 0%, rgba(242, 180, 85, 0.22), transparent 62%),
-    #fffaf2;
+    radial-gradient(ellipse 600px 300px at 100% 0%, rgba(242, 180, 85, 0.2), transparent 60%),
+    #ffffff;
 }
 
-/* FAQ disclosure: the plus turns into a close mark when open. */
-.faq-icon {
-  transition: transform var(--m-base) var(--m-ease);
+.trust-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px 24px;
+  font-family: var(--font-mono), "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
+  font-size: 10.5px;
+  letter-spacing: 0.10em;
+  text-transform: uppercase;
+  color: rgba(27, 31, 38, 0.68);
 }
-details[open] .faq-icon {
-  transform: rotate(45deg);
+.trust-strip strong {
+  color: #1b1f26;
+  font-weight: 600;
+}
+.trust-strip .dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #087187;
+  box-shadow: 0 0 8px rgba(8, 113, 135, 0.4);
+  margin-right: 8px;
+  vertical-align: middle;
 }
 
+/* Reduced motion. */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -332,8 +297,9 @@ details[open] .faq-icon {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-  .reveal {
-    opacity: 1;
-    transform: none;
+  .hero-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

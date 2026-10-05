@@ -15,16 +15,22 @@ import {
   Split,
 } from "@/components/chrome";
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { ContactPageForm } from "@/components/contact-page-form";
+import { ContactForm } from "@/components/contact-form";
 import { Photo } from "@/components/photo";
-import { Reveal } from "@/components/reveal";
 import { customSoftware, response, websiteBuild } from "@/lib/offer";
 import { site } from "@/lib/site";
 
+const contactDescription = `Contact ${site.company}. One paragraph about your business is all we need. A person replies ${response.window}, ${response.usually}. Call ${site.phone}, ${site.hoursShort}.`;
+
 export const metadata: Metadata = {
   title: "Contact — talk to a person",
-  description: `Contact ${site.company}. One paragraph about your business is all we need. A person replies ${response.window}, ${response.usually}. Call ${site.phone}, ${site.hoursShort}.`,
+  description: contactDescription,
   alternates: { canonical: `https://${site.domain}/contact/` },
+  openGraph: {
+    title: "Contact — talk to a person",
+    description: contactDescription,
+    url: `https://${site.domain}/contact/`,
+  },
 };
 
 const link = "text-ink underline decoration-accentDim underline-offset-4 hover:text-accentInk";
@@ -71,78 +77,72 @@ export default function Contact() {
       </section>
 
       {/* 2. FORM + DIRECT LINES */}
-      <Reveal>
-        <Section>
-          <h2 className="sr-only">Send a message</h2>
-          <div className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] md:gap-16">
-            <div>
-              <ContactPageForm />
-            </div>
-            <div className="space-y-5">
-              <Notice>
-                <strong className="text-ink">This form goes to a person, not a queue.</strong> It lands in a person&apos;s
-                inbox, and that person replies.
-              </Notice>
-              <Card title="Call">
-                <a href={site.phoneHref} className={link}>
-                  {site.phone}
-                </a>
-                <br />
-                {site.hours}. If it goes to voicemail, leave a message and a person calls back.
-              </Card>
-              <Card title="Email">
-                <a href={`mailto:${site.supportEmail}`} className={link}>
-                  {site.supportEmail}
-                </a>
-                <br />
-                Read by a person. Reply {response.window}, {response.usually}.
-              </Card>
-              <Card title="Security disclosures">
-                <a href={`mailto:${site.securityEmail}`} className={link}>
-                  {site.securityEmail}
-                </a>
-                <br />
-                Found a problem with this site? See{" "}
-                <Link href="/security/" className={link}>
-                  how we handle reports
-                </Link>
-                .
-              </Card>
-            </div>
+      <Section>
+        <h2 className="sr-only">Send a message</h2>
+        <div className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] md:gap-16">
+          <div>
+            <ContactForm />
           </div>
-        </Section>
-      </Reveal>
+          <div className="space-y-5">
+            <Notice>
+              <strong className="text-ink">This form goes to a person, not a queue.</strong> It lands in a person&apos;s
+              inbox, and that person replies.
+            </Notice>
+            <Card title="Call">
+              <a href={site.phoneHref} className={link}>
+                {site.phone}
+              </a>
+              <br />
+              {site.hours}. If it goes to voicemail, leave a message and a person calls back.
+            </Card>
+            <Card title="Email">
+              <a href={`mailto:${site.supportEmail}`} className={link}>
+                {site.supportEmail}
+              </a>
+              <br />
+              Read by a person. Reply {response.window}, {response.usually}.
+            </Card>
+            <Card title="Security disclosures">
+              <a href={`mailto:${site.securityEmail}`} className={link}>
+                {site.securityEmail}
+              </a>
+              <br />
+              Found a problem with this site? See{" "}
+              <Link href="/security/" className={link}>
+                how we handle reports
+              </Link>
+              .
+            </Card>
+          </div>
+        </div>
+      </Section>
 
       {/* 3. WHAT HAPPENS NEXT */}
-      <Reveal>
-        <Section>
-          <Eyebrow>What happens next</Eyebrow>
-          <H2>Three steps, no surprises.</H2>
-          <div className="mt-10 grid gap-6 md:grid-cols-3">
-            <Feature step="01" title="A person reads it">
-              Not an assistant, not a bot. Someone reads what you wrote and replies {response.window}.
-            </Feature>
-            <Feature step="02" title="You talk, briefly">
-              A short call by phone or Zoom about your business and what you need. Listening, not pitching.
-            </Feature>
-            <Feature step="03" title="Work starts">
-              Websites go live in {websiteBuild.turnaround} once your content is in. Software gets a written scope and a
-              fixed price, {customSoftware.fromLabel}, within one business day of the call.
-            </Feature>
-          </div>
-        </Section>
-      </Reveal>
+      <Section>
+        <Eyebrow>What happens next</Eyebrow>
+        <H2>Three steps, no surprises.</H2>
+        <div className="mt-10 grid gap-6 md:grid-cols-3">
+          <Feature step="01" title="A person reads it">
+            Not an assistant, not a bot. Someone reads what you wrote and replies {response.window}.
+          </Feature>
+          <Feature step="02" title="You talk, briefly">
+            A short call by phone or Zoom about your business and what you need. Listening, not pitching.
+          </Feature>
+          <Feature step="03" title="Work starts">
+            Websites go live in {websiteBuild.turnaround} once your content is in. Software gets a written scope and a
+            fixed price, {customSoftware.fromLabel}, within one business day of the call.
+          </Feature>
+        </div>
+      </Section>
 
       {/* 4. WHAT WE DON'T DO */}
-      <Reveal>
-        <Section>
-          <Split reverse visual={<Photo name="contact-call" fallback="call" alt="A phone handset resting on a notebook next to a mug on a warm wooden desk" className="mx-auto max-w-md" />}>
-            <Eyebrow>What we don&apos;t do</Eyebrow>
-            <H2>What we don&apos;t do when you contact us.</H2>
-            <Checks items={NOT_DONE} />
-          </Split>
-        </Section>
-      </Reveal>
+      <Section>
+        <Split reverse visual={<Photo name="contact-call" fallback="call" alt="A phone handset resting on a notebook next to a mug on a warm wooden desk" className="mx-auto max-w-md" />}>
+          <Eyebrow>What we don&apos;t do</Eyebrow>
+          <H2>What we don&apos;t do when you contact us.</H2>
+          <Checks items={NOT_DONE} />
+        </Split>
+      </Section>
     </Page>
   );
 }

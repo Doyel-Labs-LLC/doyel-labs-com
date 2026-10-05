@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 /**
  * A small inline client badge — logo + name + link. Used everywhere a
  * real client is credited on the site. Grayscale by default, cyan on
@@ -28,14 +26,8 @@ export function ClientBadge({
       className="group inline-flex items-center gap-3 border border-line px-3 py-2 transition-colors duration-200 ease-soft hover:border-accentDim"
       aria-label={`${name} — visit their website`}
     >
-      <Image
-        src={logo}
-        alt=""
-        width={size}
-        height={size}
-        className="shrink-0"
-      />
-      <span className="text-[13px] font-medium text-ink group-hover:text-accentInk">
+      <img src={logo} alt="" width={size} height={size} decoding="async" className="shrink-0" />
+      <span className="text-[13px] font-medium text-ink group-hover:text-accentHi">
         {name}
       </span>
       <span

@@ -22,8 +22,12 @@ desktop.ini
 # TypeScript build artefacts
 *.tsbuildinfo
 
-# Local logs
+# Local logs and test output
 *.log
+playwright-report/
+test-results/
+blob-report/
+coverage/
 
 # Generated at build time
 src/lib/public-paths.generated.ts

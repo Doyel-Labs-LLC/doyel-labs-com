@@ -1,19 +1,9 @@
-# doyel-labs.com — the design brief, v12
+# doyel-labs.com — the design brief, v11
 
 The reference the site is written against. Change this document first,
 then the page. If a page contradicts this brief, the page is wrong.
 
-v12 replaces v11. What changed: a premium-but-warm finish on the same
-eight pages — no new pages, no new steps. Fraunces (soft serif) for
-headings and Figtree for everything else; Inter and JetBrains Mono are
-gone. Solid teal pill buttons in sentence case, rounded cards and
-panels, warm shadows. No individual is named in page copy at all — the
-About page describes the role ("the person on the other end"); the
-founder's name lives only in the legal documents and structured data.
-The contact form now sends the visitor one automatic receipt, and both
-emails use the site's palette.
-
-v11 replaced v10. What changed: the site no longer names an individual
+v11 replaces v10. What changed: the site no longer names an individual
 outside `/about/`. Every "who you talk to" line says **a person** — the
 same person from first call to support — so the copy stays true as
 Doyel Labs hires. The founder is named once, on the About page and in
@@ -42,9 +32,8 @@ Doyel Labs was founded by Blake Doyel and is built to grow: other
 people will take calls, review work, and answer the phone. So the site
 describes a **role, not a name**: a person reads your message, the same
 person stays on your project, and a person answers afterward. The
-founder's name appears only in the legal documents and in structured
-data (JSON-LD) — never in visible page copy, including `/about/`.
-**AI builds most of what ships** — the majority of
+founder's name appears on `/about/` (signature card) and in the legal
+documents only. **AI builds most of what ships** — the majority of
 code, layouts, and first-draft copy is generated — and the site says so
 plainly. Every change is checked by a person, every ship is a human
 decision, and a person answers for all of it.
@@ -67,10 +56,7 @@ Concretely, the site may say — because it is true:
 
 - You talk to a person. On the first call, during the build, and
   after. The same person, not a hand-off chain.
-- No chatbot, no screening AI, no ticket queue, no drip sequences.
-  The form sends exactly one automatic receipt — labeled as
-  automatic, never repeating the visitor's message — and every email
-  after that is written by a person.
+- No chatbot, no screening AI, no ticket queue, no autoresponder.
 - The phone number on the site rings a person: **(307) 429-0389**,
   Monday–Friday, 9:00 a.m.–6:00 p.m. Mountain.
 - Email is read by a person and answered within one business day,
@@ -84,9 +70,9 @@ That's why a five-page site is $1,299 and not $8,000. A person checks
 every change, stands behind it, and is who you talk to." Never write
 "AI-powered" as an adjective, and never imply the work is hand-written.
 
-**On names and size.** Do not inflate and do not apologize. The site
-names no individual in page copy: no first names, no "he" or "she."
-"The founder" appears only in the mandatory SteadFast disclosure. Write "a person," "a real person," or "the
+**On names and size.** Do not inflate and do not apologize. Outside
+`/about/`, the site names no individual: no first names, no "the
+founder," no "he" or "she." Write "a person," "a real person," or "the
 same person." "Our team," "small team," and "solo" are forbidden. The
 copy must read as true whether one person or five work at Doyel Labs.
 What makes it different is accountability, not headcount: one person
@@ -145,7 +131,7 @@ numbers. Never say "starting at" for the website build — it is $1,299.
 | `/work/` | The SteadFast build (site + payroll) with the ownership disclosure; product frames. "In the lab" strip for BAI and ConnectionLoop. |
 | `/how-we-work/` | The one canonical copy of the engagement: call → scope → build → launch → a person on support. Billing rules, ownership, cancellation. |
 | `/security/` | Written for a business owner. Only claims the repo evidences. Contact-form data map. `/.well-known/security.txt`. |
-| `/about/` | Doyel Labs LLC, Casper, founded September 2026. A "who answers" card (role, phone, email — no name, no photo). Why a person answering the phone is the point. One paragraph on products in the lab. |
+| `/about/` | Doyel Labs LLC, Casper, founded September 2026. Founder signature card (no photo) — the only place the founder is named. Why a person answering the phone is the point. One paragraph on products in the lab. |
 | `/contact/` | Form, phone, email, hours. "A person reads this." Button: "Send message." |
 | `/legal/*` | Terms, privacy, BAI terms and privacy. `under_review` banner until counsel signs. |
 
@@ -216,8 +202,8 @@ Readable by someone who is not a software engineer.
   **orientation**.
 - Refused words: revolutionize, next-gen, unlock, transform, seamless,
   cutting-edge, world-class, best-in-class, mission-critical, leading,
-  AI-powered, our team, small team, solo, and any person's name in
-  page copy.
+  AI-powered, our team, small team, solo, and any person's name
+  outside `/about/`.
 - Pronouns for whoever answers: "a person," "the same person," "we."
   Never "he," "she," or "I" in page copy. "We" means Doyel Labs, the
   company, which is fine because it is one; "our team" is not.
@@ -235,43 +221,31 @@ Readable by someone who is not a software engineer.
 
 **Feel.** Welcoming, warm, like paper on a wooden desk in morning light.
 Not a dashboard, not a dev tool. A visitor who runs a bakery should feel
-at home in the first second — and a buyer comparing agencies should see
-the finish of a company that sweats details: generous space, one clear
-action per band, nothing that wiggles for attention.
+at home in the first second.
 
-**Palette (v10, light; `accentInk` added in v12; linen/ivory/sand in v13).** Tokens live in
-`tailwind.config.ts`.
+**Palette (v10, light).** Tokens live in `tailwind.config.ts`.
 
 | Token | Value | Use |
 |---|---|---|
-| `bg` | `#f6eee2` | Warm linen canvas (never pure white) |
-| `surface` / `surface2` | `#fffaf2` / `#f1e7d8` | Ivory cards, frames / sand band |
+| `bg` | `#faf7f2` | Cream canvas |
+| `surface` / `surface2` | `#ffffff` / `#f3efe8` | Cards, frames / warm band |
 | `ink` | `#1b1f26` | Text |
 | `mute` / `muted` | 0.80 / 0.68 alpha ink | Body / captions (AA) |
-| `accent` / `accentInk` | `#087187` / `#06596a` | Teal: links, solid buttons / hover (hover always darkens) |
+| `accent` / `accentHi` | `#087187` / `#065e70` | Teal: links, CTAs, eyebrow bars. Hover is darker so it stays AA on cream. |
 | `warm` / `warmSoft` | `#f2b455` / 16% | Illustration fills, one soft band wash. Never text. |
 | `rise` / `fall` / `care` | green / red / amber | Status only |
 
 The logo mark keeps its own cyan (`#10c7eb`); the accent used for text
-and buttons is the deeper teal so it passes AA on linen and sand.
+and buttons is the deeper teal so it passes AA on cream.
 
-**Type.** Fraunces (variable, soft axis) for H1–H3, prices, and
-quotes; teal words inside a heading render in Fraunces italic.
-Figtree for body, nav, buttons, and labels. Both self-hosted in
-`src/fonts/`. No Inter, no JetBrains Mono; product frames use the
-system monospace for figures. Named scale: `display` 64 · `h2` 44 ·
-`h3` 24 · `lead` 20 · `body` 18 · `small` 16. **Everything is sentence
-case** except the short eyebrow label above a heading.
-
-**Buttons.** One shared style (`src/components/button-styles.ts`):
-solid teal pill with white text for the primary action, ivory pill
-with a hairline for the secondary. Sentence case, arrow icon, 48px tall
-(40px small). One primary per band.
+**Type.** Inter (body, display) and JetBrains Mono (eyebrows, figures
+only). Named scale: `display` 56/1.05 · `h2` 36/1.15 · `h3` 22/1.3 ·
+`body` 17/1.65 · `small` 15/1.55. **Headings are sentence case.**
+Uppercase only for eyebrows, nav, chips, and CTA pills.
 
 **Layout.** Max six sections per page. Alternate: split hero, photo
 band, three-up, statement paragraph, FAQ list, close. Never two card
-grids in a row. Cards 20px radius, panels 32px; soft warm shadows. At
-most one warm-washed panel per page besides the closing band.
+grids in a row. Real shadows, soft and warm-grey, on white cards.
 
 **Imagery.** Three kinds, in this order of preference:
 
@@ -283,18 +257,14 @@ most one warm-washed panel per page besides the closing band.
 2. **Real screenshots** of shipped work (SteadFast), framed in a
    browser mock, labeled with the ownership disclosure.
 3. **Line illustrations** (`src/components/illus.tsx`): ink linework,
-   a teal wash, an amber fill, ivory paper shapes. Used as fallbacks
+   a teal wash, an amber fill, white paper shapes. Used as fallbacks
    and for small spots (footer, close band).
 
-No stock photography. No photos of anyone who works at Doyel Labs.
+No stock photography. No photos of the founder (the signature card is
+his visual identity).
 
-**Email.** The contact notification and the visitor receipt share the
-site's look (`src/lib/contact-email.ts`): linen background, one ivory
-rounded card, Georgia headings (the email-safe cousin of Fraunces), an
-amber bar, a solid teal pill button, and a plain-text twin. Light only.
-
-**Motion.** Hero fade-in and one scroll reveal, gated on a `no-js`
-class removed by a hashed inline script. Reduced motion disables all.
+**Motion.** Hero fade-in only. Do not hide sections until they scroll
+into view. Reduced motion finishes the hero immediately.
 
 **Icon.** Four rounded squares. Ships as `favicon.ico` (16/32/48),
 `favicon-48/96/192/512.png` (Google Search needs a multiple of 48px),
@@ -305,18 +275,16 @@ class removed by a hashed inline script. Reduced motion disables all.
 
 - CSP with **no `'unsafe-inline'` in `script-src`**. Inline Next
   bootstrap scripts are hashed at build time by
-  `scripts/csp-hashes.mjs` into `out/_headers`. The catch-all CSP is merged
-  into the single existing `/*` block; a second `/*` block silently drops
-  the site-wide headers on Cloudflare Pages (the build fails if one exists). `style-src` keeps
-  `'unsafe-inline'` (Next critical CSS). `connect-src` is `'self'`,
-  the analytics host selected at build time, and Turnstile only.
-  `report-uri` set.
+  `scripts/csp-hashes.mjs` into `public/_headers`. Public `style-src` is
+  `'self'` plus hashes of any `<style>` blocks — not `'unsafe-inline'`.
+  The owner dashboard still allows `style-src 'unsafe-inline'` for
+  chart heights. `connect-src` is `'self'`, the analytics host selected
+  at build time, and Turnstile only. There is no `report-uri`; no
+  collector is configured.
 - HSTS with preload, `X-Content-Type-Options: nosniff`,
   `X-Frame-Options: DENY`, `frame-ancestors 'none'`,
   `Referrer-Policy: strict-origin-when-cross-origin`,
-  Permissions-Policy without `interest-cohort`. Verify on the live site
-  with `curl -I`, not only in the file. `_headers` never applies to
-  Pages Functions, so `/api/contact` sets the same headers itself.
+  Permissions-Policy without `interest-cohort`.
 - Analytics, disclosed in full: **Cloudflare Web Analytics** (cookieless
   beacon, no persistent identifier) plus **first-party approximate
   location counts** (hourly country/region/city counters in D1; no IP,
@@ -330,17 +298,13 @@ class removed by a hashed inline script. Reduced motion disables all.
   sits behind Cloudflare Access and is never indexed.
 - Contact form (`functions/api/contact.ts`): same-origin `Origin`
   required; `Content-Type: application/json` required; body capped at
-  16 KB while streaming (never fully buffered); Turnstile verified with a strict hostname check (production accepts
-  only doyel-labs.com hosts); rate limit counted
-  after Turnstile passes; **fails closed on every deployment** (production and preview) if the
-  Turnstile secret or the rate-limit binding is missing; 5-second
+  16 KB; Turnstile verified with hostname check; rate limit counted
+  after Turnstile passes; **fails closed on every Pages deployment**
+  (any `CF_PAGES_BRANCH`, including previews) if the Turnstile secret
+  or the rate-limit binding is missing; 5-second
   timeouts on Turnstile and Resend; errors return a generic message
   and never upstream text; email is strictly validated and
   URL-encoded in the reply link; subject stripped of line breaks.
-  After delivery, one best-effort receipt goes to the visitor: it
-  never repeats their message, greets by first name only when the
-  name is plain letters, is capped per address (one per day with KV),
-  and its failure never fails the request.
   Processors disclosed in privacy: Cloudflare (Pages, Turnstile),
   Resend (email delivery), Google Workspace (mailbox).
 - `/.well-known/security.txt` published; `security@doyel-labs.com` is
@@ -365,9 +329,7 @@ day. The page never runs ahead of the code.
   `role="alert"`; fields use `aria-invalid` and `aria-describedby`.
   Modal and mobile drawer trap focus and return it on close.
 - LCP < 2.0 s on mobile. No render-blocking third-party scripts.
-  Illustrations are inline or single-file SVG. Photos and screenshots
-  ship as WebP (`scripts/optimize-generated-images.mjs`); fonts are
-  subset latin woff2, preloaded by `next/font`.
+  Illustrations are inline or single-file SVG; no raster hero.
 - Unique `<title>` (`%s · Doyel Labs`) and description per page.
   Organization JSON-LD in the root layout with `legalName:
   "Doyel Labs LLC"`, `foundingDate: "2026-09"`, `telephone`,
@@ -408,10 +370,10 @@ broker-dealer, or investment adviser."
   outcomes.
 - CSP stays strict and hashed. Only the analytics provider selected at
   build time, disclosed in the privacy policy and on `/security/`.
-- No individual is named in page copy — only in the legal documents
-  and structured data. Every "who answers" line says a person, so
-  nothing has to be rewritten when someone is hired.
-- No photos of people who work here. No stock photography. Generated photos in
+- No individual is named outside `/about/` and the legal documents.
+  Every "who answers" line says a person, so nothing has to be
+  rewritten when someone is hired.
+- No photos of the founder. No stock photography. Generated photos in
   the `IMAGES.md` slots, real SteadFast screenshots, and line
   illustrations only.
 - Every page has "Talk to a person" within one screen.

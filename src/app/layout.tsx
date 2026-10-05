@@ -6,27 +6,25 @@ import { promise, site } from "@/lib/site";
 import { carePlan, customSoftware, websiteBuild } from "@/lib/offer";
 
 /**
- * Brand typefaces, self-hosted via next/font from `src/fonts/` (both SIL
- * OFL). No runtime request to a font CDN, so no third-party network I/O
- * and no CSP change. Fraunces (soft axis) sets every heading; Figtree
- * sets everything else. The CSS variables feed `tailwind.config.ts`.
+ * Brand typefaces, self-hosted via next/font. The fonts are fetched at
+ * build time and served from our own origin — no runtime request to
+ * Google Fonts, so there is no third-party network I/O and no CSP or
+ * privacy change (consistent with the analytics decision in AUDIT.md).
+ * DESIGN.md specifies Inter + JetBrains Mono; before this, both were in
+ * the Tailwind stack but never loaded, so every visitor fell back to a
+ * system font. The CSS variables feed `tailwind.config.ts`.
  */
-const fraunces = localFont({
-  src: [
-    { path: "../fonts/fraunces-latin-soft.woff2", style: "normal" },
-    { path: "../fonts/fraunces-latin-wght-italic.woff2", style: "italic" },
-  ],
-  weight: "300 900",
-  display: "swap",
-  variable: "--font-display",
-  fallback: ["Georgia", "Cambria", "Times New Roman", "serif"],
-});
-const figtree = localFont({
-  src: "../fonts/figtree-latin-wght.woff2",
-  weight: "300 900",
+const inter = localFont({
+  src: "../fonts/inter-latin-wght.woff2",
+  weight: "100 900",
   display: "swap",
   variable: "--font-sans",
-  fallback: ["ui-sans-serif", "system-ui", "Segoe UI", "Roboto", "Helvetica", "Arial", "sans-serif"],
+});
+const jetbrainsMono = localFont({
+  src: "../fonts/jetbrains-mono-latin-wght.woff2",
+  weight: "100 800",
+  display: "swap",
+  variable: "--font-mono",
 });
 
 /** Search-facing description. One plain sentence about what Doyel Labs
@@ -97,7 +95,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f6eee2",
+  themeColor: "#faf7f2",
   colorScheme: "light",
 };
 
@@ -170,16 +168,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`no-js ${fraunces.variable} ${figtree.variable}`}
-      suppressHydrationWarning
-    >
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <head>
-        {/* Removes the `no-js` hook before first paint so scroll-reveal can
-         * run. If JS is off, the class stays and every reveal is visible.
-         * This inline script is hashed into the CSP at build time. */}
-        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.remove('no-js')" }} />
         {/* Structured data. JSON-LD is not executable so it is exempt from
          * CSP `script-src`. We emit two graphs: Organization (who we are)
          * and WebSite (how the site is structured). Both are static and
@@ -196,7 +186,7 @@ export default function RootLayout({
       <body className="min-h-screen bg-bg font-sans text-ink antialiased">
         <a
           href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:border focus:border-line2 focus:bg-surface focus:px-5 focus:py-2.5 focus:text-[15px] focus:font-semibold focus:text-ink focus:shadow-card"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:border focus:border-line2 focus:bg-bg focus:px-4 focus:py-2 focus:text-ink"
         >
           Skip to main content
         </a>

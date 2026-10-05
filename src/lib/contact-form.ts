@@ -63,7 +63,7 @@ export const EMAIL_RE = /^[A-Za-z0-9.!#$%&'*+/=^_`{|}~-]+@[A-Za-z0-9-]+(?:\.[A-Z
 
 function str(v: unknown, max: number): string {
   if (typeof v !== "string") return "";
-  return v.trim().slice(0, max);
+  return [...v].filter((ch) => ch.charCodeAt(0) !== 0).join("").trim().slice(0, max);
 }
 
 /** Single-line fields must not carry line breaks (email header safety). */
