@@ -13,14 +13,21 @@ import { generatedImages } from "@/lib/generated-images.generated";
  * The list of files is generated at build time by
  * scripts/generate-public-paths.mjs, so this works in any component.
  */
-const EXTENSIONS = ["webp", "jpg", "jpeg", "png"] as const;
+const RASTER = ["jpg", "jpeg", "png"] as const;
 
+function generatedFile(name: string, ext: string): string | null {
+  const file = `${name}.${ext}`;
+  return generatedImages.includes(file) ? `/media/generated/${file}` : null;
+}
+
+/** Prefer a JPEG/PNG url for the <img> src so a browser that cannot
+ *  decode WebP still has a picture. WebP, when present, is a <source>. */
 export function generatedImage(name: string): string | null {
-  for (const ext of EXTENSIONS) {
-    const file = `${name}.${ext}`;
-    if (generatedImages.includes(file)) return `/media/generated/${file}`;
+  for (const ext of RASTER) {
+    const src = generatedFile(name, ext);
+    if (src) return src;
   }
-  return null;
+  return generatedFile(name, "webp");
 }
 
 export function Photo({
@@ -48,15 +55,25 @@ export function Photo({
 }) {
   const src = generatedImage(name);
   if (!src) return <Illus name={fallback} className={className} decorative />;
-  return (
+  const webp = generatedFile(name, "webp");
+  const img = (
     <img
       src={src}
       alt={alt}
       width={width}
       height={height}
-      decoding="async"
-      fetchPriority={priority ? "high" : "auto"}
+      // Synchronous decode so a full-page capture paints the photo instead
+      // of an empty reserved box. These slots are few and already sized.
+      decoding="sync"
+      fetchPriority={priority ? "high" : undefined}
       className={`h-auto w-full ${frame ? "rounded-[6px] shadow-card" : ""} ${className}`}
     />
+  );
+  if (!webp || webp === src) return img;
+  return (
+    <picture>
+      <source srcSet={webp} type="image/webp" />
+      {img}
+    </picture>
   );
 }

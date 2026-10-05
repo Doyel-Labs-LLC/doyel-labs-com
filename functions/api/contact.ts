@@ -98,8 +98,9 @@ function isDeployed(env: Env): boolean {
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
   try {
     return await handleContact(ctx.request, ctx.env);
-  } catch (err) {
-    console.error("contact: unhandled", err instanceof Error ? err.message : String(err));
+  } catch {
+    // Do not log the exception message. It can echo part of the request.
+    console.error("contact: unhandled");
     return j(500, { error: GENERIC.internal });
   }
 };
@@ -133,7 +134,7 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
   } catch {
     return j(400, { error: "Invalid JSON body." });
   }
-  if (!raw || typeof raw !== "object") return j(400, { error: "Invalid JSON body." });
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return j(400, { error: "Invalid JSON body." });
 
   // 2. Honeypot: bots fill hidden fields. Accept silently, send nothing.
   const c = cleanContact(raw);
@@ -214,13 +215,9 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
 
   if (resendResp.status === 429) return j(429, { error: GENERIC.rate });
   if (!resendResp.ok) {
-    let detail = "";
-    try {
-      detail = (await resendResp.text()).slice(0, 300);
-    } catch {
-      /* ignore */
-    }
-    console.error("contact: resend rejected", resendResp.status, detail);
+    // Status only. The upstream body can echo the message, address, or subject.
+    await resendResp.body?.cancel();
+    console.error("contact: resend rejected", resendResp.status);
     return j(500, { error: GENERIC.internal });
   }
   return j(200, { ok: true });
@@ -251,7 +248,7 @@ async function verifyTurnstile(secret: string, token: string, ip: string, produc
       return false;
     }
     if (!turnstileHostAllowed(body.hostname, production)) {
-      console.warn("contact: turnstile hostname mismatch", body.hostname);
+      console.warn("contact: turnstile hostname mismatch");
       return false;
     }
     return true;

@@ -1,3 +1,5 @@
+import { SITE_PERMISSIONS_POLICY } from "./security-headers";
+
 /**
  * Pure checks for the contact Pages Function. Kept out of the Worker
  * entry so unit tests can run them in Node without Cloudflare bindings.
@@ -61,8 +63,11 @@ export const API_SECURITY_HEADERS = {
   "strict-transport-security": "max-age=63072000; includeSubDomains; preload",
   "content-security-policy": "default-src 'none'; frame-ancestors 'none'; base-uri 'none'",
   "referrer-policy": "no-referrer",
-  "permissions-policy": "camera=(), microphone=(), geolocation=(), payment=(), usb=()",
+  "permissions-policy": SITE_PERMISSIONS_POLICY,
+  "cross-origin-opener-policy": "same-origin",
   "cross-origin-resource-policy": "same-origin",
+  "x-permitted-cross-domain-policies": "none",
+  "x-robots-tag": "noindex",
 } as const;
 
 /**

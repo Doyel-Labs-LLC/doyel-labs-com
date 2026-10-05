@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { LogoMark } from "@/components/chrome";
 import { ContactWidget } from "@/components/contact-modal";
+import { lockPageScroll } from "@/lib/scroll-lock";
 import { site } from "@/lib/site";
 
 /**
@@ -79,11 +80,10 @@ export function MobileNav({
       }
     };
     window.addEventListener("keydown", onKey);
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const unlock = lockPageScroll();
     return () => {
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = previousOverflow;
+      unlock();
       buttonRef.current?.focus();
     };
   }, [open]);

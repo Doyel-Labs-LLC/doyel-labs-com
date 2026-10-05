@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ContactForm } from "@/components/contact-form";
+import { lockPageScroll } from "@/lib/scroll-lock";
 import { promise } from "@/lib/site";
 
 /**
@@ -60,8 +61,7 @@ function Modal({ onClose }: { onClose: () => void }) {
 
   useEffect(() => {
     firstFieldRef.current?.focus();
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const unlock = lockPageScroll();
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -87,7 +87,7 @@ function Modal({ onClose }: { onClose: () => void }) {
     document.addEventListener("keydown", onKey);
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
+      unlock();
     };
   }, [onClose]);
 

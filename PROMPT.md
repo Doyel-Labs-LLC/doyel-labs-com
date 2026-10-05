@@ -263,8 +263,8 @@ grids in a row. Real shadows, soft and warm-grey, on white cards.
 No stock photography. No photos of the founder (the signature card is
 his visual identity).
 
-**Motion.** Hero fade-in and one scroll reveal, gated on a `no-js`
-class removed by a hashed inline script. Reduced motion disables all.
+**Motion.** Hero fade-in only. Do not hide sections until they scroll
+into view. Reduced motion finishes the hero immediately.
 
 **Icon.** Four rounded squares. Ships as `favicon.ico` (16/32/48),
 `favicon-48/96/192/512.png` (Google Search needs a multiple of 48px),
@@ -275,10 +275,12 @@ class removed by a hashed inline script. Reduced motion disables all.
 
 - CSP with **no `'unsafe-inline'` in `script-src`**. Inline Next
   bootstrap scripts are hashed at build time by
-  `scripts/csp-hashes.mjs` into `public/_headers`. `style-src` keeps
-  `'unsafe-inline'` (Next critical CSS). `connect-src` is `'self'`,
-  the analytics host selected at build time, and Turnstile only.
-  `report-uri` set.
+  `scripts/csp-hashes.mjs` into `public/_headers`. Public `style-src` is
+  `'self'` plus hashes of any `<style>` blocks — not `'unsafe-inline'`.
+  The owner dashboard still allows `style-src 'unsafe-inline'` for
+  chart heights. `connect-src` is `'self'`, the analytics host selected
+  at build time, and Turnstile only. There is no `report-uri`; no
+  collector is configured.
 - HSTS with preload, `X-Content-Type-Options: nosniff`,
   `X-Frame-Options: DENY`, `frame-ancestors 'none'`,
   `Referrer-Policy: strict-origin-when-cross-origin`,
@@ -297,8 +299,9 @@ class removed by a hashed inline script. Reduced motion disables all.
 - Contact form (`functions/api/contact.ts`): same-origin `Origin`
   required; `Content-Type: application/json` required; body capped at
   16 KB; Turnstile verified with hostname check; rate limit counted
-  after Turnstile passes; **fails closed in production** if the
-  Turnstile secret or the rate-limit binding is missing; 5-second
+  after Turnstile passes; **fails closed on every Pages deployment**
+  (any `CF_PAGES_BRANCH`, including previews) if the Turnstile secret
+  or the rate-limit binding is missing; 5-second
   timeouts on Turnstile and Resend; errors return a generic message
   and never upstream text; email is strictly validated and
   URL-encoded in the reply link; subject stripped of line breaks.

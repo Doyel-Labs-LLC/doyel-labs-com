@@ -2,9 +2,9 @@
  * Post-build: write a strict Content-Security-Policy into out/_headers.
  *
  * Next.js static export inlines a few bootstrap <script> blocks on every
- * page (the flight data and a tiny `__next_f` shim), plus our own
- * `no-js` hook in layout.tsx. Instead of allowing 'unsafe-inline', this
- * script hashes each inline script and emits the hashes into the CSP.
+ * page (the flight data and a tiny `__next_f` shim). Instead of allowing
+ * 'unsafe-inline', this script hashes each inline script and emits the
+ * hashes into the CSP.
  *
  * Cloudflare Pages `_headers` rules: max 100 rules, ~2,000 chars per
  * line, and a header set in several matching rules is joined — so each

@@ -97,5 +97,10 @@ describe("API response headers", () => {
     expect(API_SECURITY_HEADERS["content-security-policy"]).not.toContain("unsafe-inline");
     expect(API_SECURITY_HEADERS["x-frame-options"]).toBe("DENY");
     expect(API_SECURITY_HEADERS["referrer-policy"]).toBe("no-referrer");
+    expect(API_SECURITY_HEADERS["cross-origin-opener-policy"]).toBe("same-origin");
+    expect(API_SECURITY_HEADERS["x-permitted-cross-domain-policies"]).toBe("none");
+    expect(API_SECURITY_HEADERS["x-robots-tag"]).toBe("noindex");
+    expect(API_SECURITY_HEADERS["permissions-policy"]).toContain("interest-cohort=()");
+    expect(API_SECURITY_HEADERS["permissions-policy"]).toContain("display-capture=()");
   });
 });

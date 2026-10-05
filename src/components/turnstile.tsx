@@ -63,7 +63,7 @@ export const Turnstile = forwardRef<TurnstileHandle, { sitekey: string; onToken:
         if (cancelled || !containerRef.current || !window.turnstile) return;
         widgetIdRef.current = window.turnstile.render(containerRef.current, {
           sitekey,
-          theme: "dark",
+          theme: "light",
           appearance: "interaction-only",
           callback: (token: string) => onTokenRef.current(token),
           "expired-callback": () => onTokenRef.current(""),

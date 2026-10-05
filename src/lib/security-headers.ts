@@ -22,6 +22,10 @@ export function mergeCatchAllCsp(headersFile: string, policy: string): string {
   return source.replace(/^\/\*$/m, `/*\n  Content-Security-Policy: ${policy}`);
 }
 
+/** Same sensor lock as public/_headers. API responses reuse it. */
+export const SITE_PERMISSIONS_POLICY =
+  "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=(), interest-cohort=(), accelerometer=(), gyroscope=(), magnetometer=(), display-capture=()";
+
 export const REQUIRED_SITE_HEADERS = [
   "Strict-Transport-Security",
   "X-Content-Type-Options",

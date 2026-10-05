@@ -23,7 +23,6 @@ import { PayrollBatchFrame } from "@/components/frames/payroll-batch";
 import { WebsiteSteadfastFrame } from "@/components/frames/websites-preview";
 import { Photo } from "@/components/photo";
 import { Quote } from "@/components/quote";
-import { Reveal } from "@/components/reveal";
 import { steadfastCase } from "@/lib/demo/websites";
 import { products } from "@/lib/products";
 import { baiDisclaimer, programStatus, site } from "@/lib/site";
@@ -83,73 +82,65 @@ export default function Work() {
       </section>
 
       {/* 2. STEADFAST */}
-      <Reveal>
-        <Section id="steadfast">
-          <Split visual={<Photo name="work-steadfast-context" fallback="flow" alt="A two-lane highway across Montana at dawn with a single delivery vehicle in the distance" className="mx-auto max-w-md" />}>
-            <Eyebrow>Client · Transportation</Eyebrow>
-            <H2>A website and a payroll workspace for a Montana transportation operator.</H2>
-            <Body>
-              {steadfastCase.what} They needed a public site that represented the company well and a private place to run
-              contractor pay. Both live on the same domain today.
-            </Body>
-            <Checks items={steadfastTestimonial.scope} />
-            <div className="mt-8">
-              <GhostLink href={steadfastCase.liveUrl} external small>
-                See the live site
-              </GhostLink>
-            </div>
-          </Split>
-        </Section>
-      </Reveal>
+      <Section id="steadfast">
+        <Split visual={<Photo name="work-steadfast-context" fallback="flow" alt="A two-lane highway across Montana at dawn with a single delivery vehicle in the distance" className="mx-auto max-w-md" />}>
+          <Eyebrow>Client · Transportation</Eyebrow>
+          <H2>A website and a payroll workspace for a Montana transportation operator.</H2>
+          <Body>
+            {steadfastCase.what} They needed a public site that represented the company well and a private place to run
+            contractor pay. Both live on the same domain today.
+          </Body>
+          <Checks items={steadfastTestimonial.scope} />
+          <div className="mt-8">
+            <GhostLink href={steadfastCase.liveUrl} external small>
+              See the live site
+            </GhostLink>
+          </div>
+        </Split>
+      </Section>
 
       {/* 3. IN THEIR WORDS */}
-      <Reveal>
-        <Section>
-          <Eyebrow>In their words</Eyebrow>
-          <H2>What SteadFast said about the work.</H2>
-          <div className="mt-8 max-w-3xl">
-            <Quote t={steadfastTestimonial} full />
-          </div>
-        </Section>
-      </Reveal>
+      <Section>
+        <Eyebrow>In their words</Eyebrow>
+        <H2>What SteadFast said about the work.</H2>
+        <div className="mt-8 max-w-3xl">
+          <Quote t={steadfastTestimonial} full />
+        </div>
+      </Section>
 
       {/* 4. INSIDE THE PAYROLL WORKSPACE */}
-      <Reveal>
-        <Section>
-          <Eyebrow>Inside the payroll workspace</Eyebrow>
-          <H2>Two of the screens the operator uses.</H2>
-          <Body>The frames below use synthetic demo data and carry a label saying so. The shapes match the real app.</Body>
-          <div className="mt-10">
-            <Grid2>
-              <PayrollBatchFrame />
-              <PayrollAuditFrame />
-            </Grid2>
-          </div>
-        </Section>
-      </Reveal>
+      <Section>
+        <Eyebrow>Inside the payroll workspace</Eyebrow>
+        <H2>Two of the screens the operator uses.</H2>
+        <Body>The frames below use synthetic demo data and carry a label saying so. The shapes match the real app.</Body>
+        <div className="mt-10">
+          <Grid2>
+            <PayrollBatchFrame />
+            <PayrollAuditFrame />
+          </Grid2>
+        </div>
+      </Section>
 
       {/* 5. IN THE LAB */}
-      <Reveal>
-        <Section id="lab">
-          <Eyebrow>In the lab</Eyebrow>
-          <H2>Two products we&apos;re building for ourselves.</H2>
-          <Body>Not client work, and not open to the public yet.</Body>
-          <div className="mt-10">
-            <Grid2>
-              {products.map((p) => (
-                <Card key={p.key} title={p.name}>
-                  <p>{p.tagline}</p>
-                  <div className="mt-4 flex flex-wrap items-center gap-3">
-                    <StatusChip>{programStatus[p.key].label}</StatusChip>
-                    <span className="font-mono text-[10px] uppercase tracking-wide text-muted">{p.meta}</span>
-                  </div>
-                </Card>
-              ))}
-            </Grid2>
-          </div>
-          <p className="mt-6 max-w-prose text-[12px] leading-relaxed text-muted">{baiDisclaimer}</p>
-        </Section>
-      </Reveal>
+      <Section id="lab">
+        <Eyebrow>In the lab</Eyebrow>
+        <H2>Two products we&apos;re building for ourselves.</H2>
+        <Body>Not client work, and not open to the public yet.</Body>
+        <div className="mt-10">
+          <Grid2>
+            {products.map((p) => (
+              <Card key={p.key} title={p.name}>
+                <p>{p.tagline}</p>
+                <div className="mt-4 flex flex-wrap items-center gap-3">
+                  <StatusChip>{programStatus[p.key].label}</StatusChip>
+                  <span className="font-mono text-[10px] uppercase tracking-wide text-muted">{p.meta}</span>
+                </div>
+              </Card>
+            ))}
+          </Grid2>
+        </div>
+        <p className="mt-6 max-w-prose text-[12px] leading-relaxed text-muted">{baiDisclaimer}</p>
+      </Section>
 
       {/* 6. CLOSE */}
       <Close title="Want something like this for your business?">
