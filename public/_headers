@@ -1,10 +1,11 @@
 # Cloudflare Pages response headers.
 #
 # The Content-Security-Policy is NOT in this file. `scripts/csp-hashes.mjs`
-# runs after `next build`, hashes the inline bootstrap scripts Next emits
-# on every exported page, and appends one CSP rule per page to
-# `out/_headers` — with no 'unsafe-inline' in script-src. Never deploy
-# `out/` without that step (`npm run build` runs it for you).
+# runs after `next build`, hashes inline scripts and style blocks, and
+# writes one CSP rule per page into `out/_headers`. The catch-all CSP is
+# inserted into the single `/*` block below — a second `/*` block makes
+# Cloudflare Pages drop these headers. Inline scripts are hashed.
+# Never deploy `out/` without that step (`npm run build` runs it for you).
 #
 # Everything else that applies to the whole site lives here.
 
@@ -13,8 +14,10 @@
   X-Content-Type-Options: nosniff
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
-  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=(), interest-cohort=(), accelerometer=(), gyroscope=(), magnetometer=(), display-capture=()
   Cross-Origin-Opener-Policy: same-origin
+  Cross-Origin-Resource-Policy: same-origin
+  X-Permitted-Cross-Domain-Policies: none
   X-Robots-Tag: index, follow
 
 # Static assets are content-hashed; cache them for a year.
@@ -28,6 +31,7 @@
 # The logo image is embedded in contact-form emails, so it must be
 # loadable cross-origin by webmail clients.
 /apple-touch-icon.png
+  ! Cross-Origin-Resource-Policy
   Cross-Origin-Resource-Policy: cross-origin
   Cache-Control: public, max-age=86400
 

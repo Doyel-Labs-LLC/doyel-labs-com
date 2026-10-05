@@ -70,11 +70,12 @@ export function Reveal({
     return () => observer.disconnect();
   }, []);
 
-  const style = reduced
-    ? undefined
-    : ({
-        transitionDelay: `${delay}ms`,
-      } as React.CSSProperties);
+  // A zero delay must not emit a style attribute. Inline styles force
+  // style-src 'unsafe-inline' into the page CSP, and no caller uses a delay.
+  const style =
+    reduced || delay <= 0
+      ? undefined
+      : ({ transitionDelay: `${delay}ms` } as React.CSSProperties);
 
   const Component = Tag as React.ElementType;
   return (

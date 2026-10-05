@@ -22,10 +22,17 @@ import { site } from "@/lib/site";
 import { analyticsLabel } from "@/lib/analytics-config";
 import { locationAnalyticsEnabled } from "@/lib/location-config";
 
+const securityDescription = `How ${site.domain} handles your information, in plain English: no cookies, no tracking, and a contact form that emails a person. Every line is backed by the site's code.`;
+
 export const metadata: Metadata = {
   title: "Security — what this website does with your information",
-  description: `How ${site.domain} handles your information, in plain English: no cookies, no tracking, and a contact form that emails a person. Every line is backed by the site's code.`,
+  description: securityDescription,
   alternates: { canonical: `https://${site.domain}/security/` },
+  openGraph: {
+    title: "Security — what this website does with your information",
+    description: securityDescription,
+    url: `https://${site.domain}/security/`,
+  },
 };
 
 const REPO_URL = "https://github.com/Doyel-Labs-LLC/doyel-labs-com";
@@ -120,12 +127,12 @@ export default function Security() {
               read.
             </Feature>
             <Feature step="02" title="A person check">
-              A Cloudflare Turnstile check confirms you&apos;re a person. If the check can&apos;t run, the form refuses to
-              send rather than sending unchecked.
+              A Cloudflare Turnstile check confirms you&apos;re a person. On the live site and on preview deploys, if
+              that check isn&apos;t configured, the form refuses to send rather than sending unchecked.
             </Feature>
-            <Feature step="03" title="A per-address limit">
-              A limit on messages per address stops floods. It counts only after the person check, so bots can&apos;t use
-              up your allowance.
+            <Feature step="03" title="A limit on repeats">
+              Five messages in five minutes, counted separately for the IP address and the email address. The count
+              starts only after the person check, so a bot can&apos;t use up a real visitor&apos;s allowance.
             </Feature>
             <Feature step="04" title="Emailed to a person">
               The message is emailed to {site.supportEmail} through Resend, a mail-delivery service, and lands in a Google

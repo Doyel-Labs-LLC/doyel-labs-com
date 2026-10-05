@@ -23,6 +23,10 @@ describe("cleanContact", () => {
     expect(cleanContact({ projectType: 42 }).projectType).toBe("general");
   });
 
+  it("strips null bytes before the length cap", () => {
+    expect(cleanContact({ name: "Ada\u0000Lovelace" }).name).toBe("AdaLovelace");
+  });
+
   it("caps message length", () => {
     const c = cleanContact({ message: "x".repeat(LIMITS.message + 500) });
     expect(c.message.length).toBe(LIMITS.message);

@@ -10,11 +10,13 @@
  *   1. Method + same-origin Origin + JSON content type + body size cap.
  *   2. Honeypot (silent 200).
  *   3. Field cleaning + validation (shared with the client).
- *   4. Turnstile verification with hostname check. Fails CLOSED in
- *      production if the secret is missing.
- *   5. Per-IP rate limit, counted only after Turnstile passes. Uses the
- *      Cloudflare Rate Limiting binding when present, KV otherwise.
- *      Fails CLOSED in production if neither binding exists.
+ *   4. Turnstile verification with hostname check. Fails CLOSED on
+ *      every Pages deployment (production and preview) if the secret
+ *      is missing. Production tokens must be minted for doyel-labs.com.
+ *   5. Per-IP and per-email rate limits, counted only after Turnstile
+ *      passes. Uses the Cloudflare Rate Limiting binding when present,
+ *      KV otherwise. Fails CLOSED on every Pages deployment if neither
+ *      binding exists.
  *   6. Resend delivery with a 5 s timeout.
  *
  * Errors return a generic message only. Upstream details are logged to
@@ -32,6 +34,15 @@ import {
   LIMITS,
   type ContactInput,
 } from "../../src/lib/contact-form";
+import {
+  API_SECURITY_HEADERS,
+  isDeployedBranch,
+  isJsonContentType,
+  isProductionBranch,
+  originAllowed,
+  readBoundedBody,
+  turnstileHostAllowed,
+} from "../../src/lib/contact-guard";
 
 interface RateLimiter {
   limit(opts: { key: string }): Promise<{ success: boolean }>;
@@ -53,12 +64,6 @@ interface Env {
 const RATE_LIMIT_MAX = 5;
 const RATE_LIMIT_WINDOW = 300; // seconds
 const UPSTREAM_TIMEOUT_MS = 5000;
-const ALLOWED_ORIGINS = new Set([
-  "https://doyel-labs.com",
-  "https://www.doyel-labs.com",
-]);
-const ALLOWED_HOSTS = new Set(["doyel-labs.com", "www.doyel-labs.com"]);
-
 const GENERIC = {
   internal: "Something went wrong on our end. Please email support@doyel-labs.com or call (307) 429-0389.",
   captcha: "We couldn't confirm you're a person. Please refresh the page and try again.",
@@ -69,11 +74,7 @@ const GENERIC = {
 function j(status: number, body: Record<string, unknown>): Response {
   return new Response(JSON.stringify(body), {
     status,
-    headers: {
-      "content-type": "application/json; charset=utf-8",
-      "cache-control": "no-store",
-      "x-content-type-options": "nosniff",
-    },
+    headers: { ...API_SECURITY_HEADERS, "content-type": "application/json; charset=utf-8" },
   });
 }
 
@@ -87,16 +88,11 @@ function escapeHtml(s: string): string {
 }
 
 function isProduction(env: Env): boolean {
-  return env.CF_PAGES_BRANCH === "master";
+  return isProductionBranch(env.CF_PAGES_BRANCH);
 }
 
-function originAllowed(request: Request, env: Env): boolean {
-  const origin = request.headers.get("origin");
-  if (origin && ALLOWED_ORIGINS.has(origin)) return true;
-  // Preview deployments (*.website.pages.dev) are allowed outside production.
-  if (!isProduction(env) && origin && /^https:\/\/[a-z0-9-]+\.website\.pages\.dev$/.test(origin)) return true;
-  if (!isProduction(env) && origin && /^http:\/\/localhost(:\d+)?$/.test(origin)) return true;
-  return false;
+function isDeployed(env: Env): boolean {
+  return isDeployedBranch(env.CF_PAGES_BRANCH);
 }
 
 export const onRequestPost: PagesFunction<Env> = async (ctx) => {
@@ -111,28 +107,25 @@ export const onRequestPost: PagesFunction<Env> = async (ctx) => {
 export const onRequest: PagesFunction<Env> = async () =>
   new Response("Method not allowed", {
     status: 405,
-    headers: { allow: "POST", "cache-control": "no-store" },
+    headers: { ...API_SECURITY_HEADERS, allow: "POST", "content-type": "text/plain; charset=utf-8" },
   });
 
 async function handleContact(request: Request, env: Env): Promise<Response> {
   // 1. Request shape.
-  if (!originAllowed(request, env)) {
+  if (request.headers.get("Sec-Fetch-Site") === "cross-site" || !originAllowed(request.headers.get("origin"), env.CF_PAGES_BRANCH)) {
     return j(403, { error: "Requests must come from doyel-labs.com." });
   }
-  const ct = request.headers.get("content-type") || "";
-  if (!ct.toLowerCase().startsWith("application/json")) {
+  if (!isJsonContentType(request.headers.get("content-type"))) {
     return j(400, { error: "Expected application/json." });
   }
-  const len = Number(request.headers.get("content-length") || "0");
-  if (len > LIMITS.body) return j(413, { error: "Message too large." });
 
-  let text: string;
+  let text: string | null;
   try {
-    text = await request.text();
+    text = await readBoundedBody(request, LIMITS.body);
   } catch {
     return j(400, { error: "Could not read the request." });
   }
-  if (text.length > LIMITS.body) return j(413, { error: "Message too large." });
+  if (text === null) return j(413, { error: "Message too large." });
 
   let raw: ContactInput;
   try {
@@ -151,28 +144,38 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
   if (problem) return j(400, { error: problem });
 
   const clientIp = request.headers.get("cf-connecting-ip") || "";
+  if (!clientIp && isDeployed(env)) {
+    console.error("contact: missing client ip on a deployment");
+    return j(500, { error: GENERIC.notConfigured });
+  }
 
-  // 4. Turnstile. Fail closed in production.
+  // 4. Turnstile. Fail closed on every deployment (production and preview).
   if (!env.TURNSTILE_SECRET_KEY) {
-    if (isProduction(env)) {
-      console.error("contact: TURNSTILE_SECRET_KEY missing in production");
+    if (isDeployed(env)) {
+      console.error("contact: TURNSTILE_SECRET_KEY missing on a deployment");
       return j(500, { error: GENERIC.notConfigured });
     }
   } else {
     if (!c.turnstileToken) return j(403, { error: GENERIC.captcha });
-    const ok = await verifyTurnstile(env.TURNSTILE_SECRET_KEY, c.turnstileToken, clientIp);
+    const ok = await verifyTurnstile(env.TURNSTILE_SECRET_KEY, c.turnstileToken, clientIp, isProduction(env));
     if (!ok) return j(403, { error: GENERIC.captcha });
   }
 
   // 5. Rate limit — after the CAPTCHA, so bots can't burn a real
-  //    visitor's allowance. Fail closed in production.
-  const rl = await rateLimit(env, clientIp || "unknown");
-  if (rl === "limited") return j(429, { error: GENERIC.rate });
-  if (rl === "unavailable") {
-    if (isProduction(env)) {
-      console.error("contact: no rate-limit binding in production");
-      return j(500, { error: GENERIC.notConfigured });
-    }
+  //    visitor's allowance. Count the IP and the email address
+  //    separately. Fail closed on every deployment.
+  const ipKey = clientIp ? `ip:${clientIp}` : "ip:local";
+  const ipLimit = await rateLimit(env, ipKey);
+  if (ipLimit === "limited") return j(429, { error: GENERIC.rate });
+  if (ipLimit === "unavailable" && isDeployed(env)) {
+    console.error("contact: no rate-limit binding on a deployment");
+    return j(500, { error: GENERIC.notConfigured });
+  }
+  const emailLimit = await rateLimit(env, await emailRateKey(c.email));
+  if (emailLimit === "limited") return j(429, { error: GENERIC.rate });
+  if (emailLimit === "unavailable" && isDeployed(env)) {
+    console.error("contact: no rate-limit binding on a deployment");
+    return j(500, { error: GENERIC.notConfigured });
   }
 
   // 6. Deliver.
@@ -223,7 +226,13 @@ async function handleContact(request: Request, env: Env): Promise<Response> {
   return j(200, { ok: true });
 }
 
-async function verifyTurnstile(secret: string, token: string, ip: string): Promise<boolean> {
+async function emailRateKey(email: string): Promise<string> {
+  const digest = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(email.trim().toLowerCase()));
+  const hex = [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
+  return `em:${hex}`;
+}
+
+async function verifyTurnstile(secret: string, token: string, ip: string, production: boolean): Promise<boolean> {
   try {
     const form = new URLSearchParams();
     form.set("secret", secret);
@@ -241,8 +250,7 @@ async function verifyTurnstile(secret: string, token: string, ip: string): Promi
       console.warn("contact: turnstile failed", (body["error-codes"] || []).join(","));
       return false;
     }
-    // Token must have been issued for our site, not a lookalike.
-    if (body.hostname && !ALLOWED_HOSTS.has(body.hostname) && !/\.website\.pages\.dev$/.test(body.hostname) && body.hostname !== "localhost") {
+    if (!turnstileHostAllowed(body.hostname, production)) {
       console.warn("contact: turnstile hostname mismatch", body.hostname);
       return false;
     }

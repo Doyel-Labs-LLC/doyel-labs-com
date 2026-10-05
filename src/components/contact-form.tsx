@@ -44,7 +44,7 @@ export function ContactForm({
       subject: String(fd.get("subject") || ""),
       message: String(fd.get("message") || "").trim(),
       preferredTimes: String(fd.get("preferredTimes") || ""),
-      website: String(fd.get("website") || ""),
+      website: String(fd.get("dl_hp") || ""),
       turnstileToken: token,
     };
     if (payload.website) {
@@ -115,8 +115,8 @@ export function ContactForm({
   return (
     <form onSubmit={submit} className={compact ? "space-y-3" : "space-y-4"} noValidate>
       <label className="hidden" aria-hidden="true">
-        Website (leave blank)
-        <input type="text" name="website" autoComplete="off" tabIndex={-1} />
+        Leave this field blank
+        <input type="text" name="dl_hp" autoComplete="off" tabIndex={-1} />
       </label>
 
       <div className="grid gap-3 md:grid-cols-2">
@@ -208,7 +208,7 @@ export function ContactForm({
 }
 
 const fieldClass =
-  "block w-full rounded-[3px] border border-line bg-bg/60 px-3 py-2.5 text-[15px] text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accentDim aria-[invalid=true]:border-fall";
+  "block w-full rounded-[3px] border border-line bg-bg/60 px-3 py-2.5 text-[15px] text-ink placeholder:text-muted focus-visible:border-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent aria-[invalid=true]:border-fall";
 
 function Field({
   label,

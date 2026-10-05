@@ -21,6 +21,7 @@ import nextEnv from "@next/env";
 
 nextEnv.loadEnvConfig(process.cwd());
 const { analytics, analyticsCsp } = await import("../src/lib/analytics-config.ts");
+const { mergeCatchAllCsp } = await import("../src/lib/security-headers.ts");
 const vendor = analyticsCsp(analytics);
 
 const OUT = "out";
@@ -36,7 +37,6 @@ const BASE = [
   "img-src 'self' data:",
   "font-src 'self'",
   "media-src 'self'",
-  "style-src 'self' 'unsafe-inline'", // Next inlines critical CSS in static export
   "frame-src https://challenges.cloudflare.com",
   `connect-src 'self' https://challenges.cloudflare.com${vendor.connect ? " " + vendor.connect : ""}`,
   "upgrade-insecure-requests",
@@ -53,22 +53,40 @@ function walk(dir, acc = []) {
   return acc;
 }
 
-function hashesFor(file) {
+function sha(body) {
+  return "'sha256-" + createHash("sha256").update(body, "utf8").digest("base64") + "'";
+}
+
+function policyParts(file) {
   const html = readFileSync(file, "utf8");
-  const re = /<script(?![^>]*\bsrc=)([^>]*)>([\s\S]*?)<\/script>/g;
-  const out = new Set();
+  const scripts = new Set();
+  const styles = new Set();
+  const scriptRe = /<script(?![^>]*\bsrc=)([^>]*)>([\s\S]*?)<\/script>/g;
   let m;
-  while ((m = re.exec(html))) {
+  while ((m = scriptRe.exec(html))) {
     const [, attrs, body] = m;
     if (/application\/ld\+json/.test(attrs)) continue; // data block, never executed
     if (!body.trim()) continue;
-    out.add("'sha256-" + createHash("sha256").update(body, "utf8").digest("base64") + "'");
+    scripts.add(sha(body));
   }
-  return [...out];
+  const styleRe = /<style([^>]*)>([\s\S]*?)<\/style>/gi;
+  while ((m = styleRe.exec(html))) {
+    const body = m[2];
+    if (!body.trim()) continue;
+    styles.add(sha(body));
+  }
+  // A style attribute cannot be hashed when its value is dynamic. Public
+  // pages should not need one; if any do, keep style-src 'unsafe-inline'
+  // for that page only.
+  const styleAttr = /<[^>]+\sstyle\s*=/.test(html);
+  return { scripts: [...scripts], styles: [...styles], styleAttr };
 }
 
-function csp(hashes) {
-  return [...BASE, `script-src ${SCRIPT_HOSTS} ${hashes.join(" ")}`].join("; ");
+function csp(parts) {
+  const styleSrc = parts.styleAttr
+    ? "style-src 'self' 'unsafe-inline'"
+    : `style-src 'self'${parts.styles.length ? " " + parts.styles.join(" ") : ""}`;
+  return [...BASE, styleSrc, `script-src ${SCRIPT_HOSTS} ${parts.scripts.join(" ")}`].join("; ");
 }
 
 function urlFor(file) {
@@ -84,20 +102,27 @@ const notFound = files.find((f) => relative(OUT, f) === "404.html");
 const rules = [];
 let longest = 0;
 
-// Catch-all: other headers stay in public/_headers; here we add the 404 CSP.
-const catchAll = csp(notFound ? hashesFor(notFound) : []);
-rules.push(`/*\n  Content-Security-Policy: ${catchAll}`);
+// Catch-all CSP (the 404 page) is inserted into the existing `/*` block.
+// A second `/*` rule makes Cloudflare Pages drop that block's HSTS,
+// framing, and referrer headers.
+const catchAll = csp(notFound ? policyParts(notFound) : { scripts: [], styles: [], styleAttr: false });
 longest = Math.max(longest, catchAll.length);
 
 for (const f of files) {
   const url = urlFor(f);
   if (!url) continue;
-  const policy = csp(hashesFor(f));
+  const policy = csp(policyParts(f));
   longest = Math.max(longest, policy.length);
   rules.push(`${url}\n  ! Content-Security-Policy\n  Content-Security-Policy: ${policy}`);
 }
 
-const existing = readFileSync(HEADERS, "utf8").trimEnd();
+let existing;
+try {
+  existing = mergeCatchAllCsp(readFileSync(HEADERS, "utf8"), catchAll);
+} catch (error) {
+  console.error(`csp-hashes: ${error instanceof Error ? error.message : String(error)}`);
+  process.exit(1);
+}
 const existingRules = (existing.match(/^\/[^\n]*$/gm) || []).length;
 const total = existingRules + rules.length;
 if (total > 100) {
