@@ -1,4 +1,3 @@
-import Image from "next/image";
 import type { Testimonial } from "@/lib/testimonials";
 
 /**
@@ -40,7 +39,7 @@ export function Quote({ t, full = false }: { t: Testimonial; full?: boolean }) {
         )}
       </blockquote>
       <figcaption className="mt-6 flex flex-wrap items-center gap-4">
-        <Image src={t.logo} alt="" width={40} height={40} className="shrink-0" />
+        <img src={t.logo} alt="" width={40} height={40} decoding="async" className="shrink-0" />
         <div>
           <p className="text-[14px] font-semibold text-ink">
             {t.role ? `${t.role}, ` : ""}

@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { LogoMark } from "@/components/chrome";
 import { ContactWidget } from "@/components/contact-modal";
+import { lockPageScroll } from "@/lib/scroll-lock";
 import { site } from "@/lib/site";
 
 /**
@@ -43,6 +44,8 @@ export function MobileNav({
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
 
   // Track mount so we don't try to `createPortal` during SSR (document
   // doesn't exist during static export prerender).
@@ -52,20 +55,43 @@ export function MobileNav({
 
   useEffect(() => {
     if (!open) return;
+    const panel = panelRef.current;
+    const focusable = () =>
+      panel
+        ? Array.from(panel.querySelectorAll<HTMLElement>(FOCUSABLE)).filter((node) => node.tabIndex !== -1 && node.offsetParent !== null)
+        : [];
+    focusable()[0]?.focus();
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const nodes = focusable();
+      if (nodes.length === 0) return;
+      const first = nodes[0];
+      const last = nodes[nodes.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
     window.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
+    const unlock = lockPageScroll();
     return () => {
       window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
+      unlock();
+      buttonRef.current?.focus();
     };
   }, [open]);
 
   const drawer =
     open && mounted ? (
       <div
+        ref={panelRef}
         id="mobile-nav-panel"
         role="dialog"
         aria-modal="true"
@@ -202,6 +228,7 @@ export function MobileNav({
   return (
     <div className="md:hidden">
       <button
+        ref={buttonRef}
         type="button"
         onClick={() => setOpen(true)}
         aria-expanded={open}
@@ -249,6 +276,9 @@ const SUPPORT_LINKS = [
  * A single row in the "Explore" / "Support" nav sections. Tap target
  * is at least 44px tall (Apple HIG minimum). Renders label + arrow.
  */
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
 function MobileSubLink({
   href,
   label,

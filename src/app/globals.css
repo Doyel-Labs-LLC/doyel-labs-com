@@ -39,8 +39,7 @@ code {
   color: #1b1f26;
 }
 
-/* Focus ring uses the cyan accent — visible on the dark canvas without
- * looking like a browser default. */
+/* Focus ring uses the teal accent, visible on the cream canvas. */
 :focus-visible {
   outline: 2px solid #087187;
   outline-offset: 2px;
@@ -54,11 +53,9 @@ code {
   text-transform: uppercase;
 }
 
-/* A subtle textured background used behind the hero. A quiet cyan mesh:
- * a bright top-left glow, a soft bottom-right echo, and a faint cool
- * wash through the middle so the near-black canvas has depth instead of
- * reading flat. Still restrained — this is the only "gradient" on the
- * site. A hairline grid overlay adds engineered texture without noise. */
+/* A subtle textured background used behind the hero. A quiet amber mesh
+ * at the top left, a soft teal echo at the bottom right, and a faint
+ * paper wash through the middle. A hairline grid fades downward. */
 .hero-glow {
   position: relative;
   background:
@@ -85,9 +82,7 @@ code {
   z-index: 1;
 }
 
-/* Elevated surface for cards and product frames. Depth on near-black
- * comes from a faint top-lit gradient + an inset highlight + a soft dark
- * drop (see the `card` shadow token), never a grey box-shadow. */
+/* Elevated surface for cards and product frames. */
 .surface-card {
   background: #ffffff;
 }
@@ -142,8 +137,8 @@ code {
   text-underline-offset: 3px;
 }
 .prose-legal a:hover {
-  color: #0b8aa3;
-  text-decoration-color: #0b8aa3;
+  color: #065e70;
+  text-decoration-color: #065e70;
 }
 .prose-legal code {
   font-family: var(--font-mono), "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
@@ -182,31 +177,11 @@ code {
   scrollbar-color: rgba(27, 31, 38, 0.18) transparent;
 }
 
-/* ── Scroll-reveal ───────────────────────────────────────────────
- * Elements wrapped in <Reveal> start slightly offset with 0 opacity,
- * then transition into place when IntersectionObserver flips `.reveal--in`.
- * A safety fallback: if JS never runs, elements still render (fallback
- * declared as `no-js` below). */
-.reveal {
-  opacity: 0;
-  transform: translate3d(0, 14px, 0);
-  transition:
-    opacity 700ms var(--m-ease, cubic-bezier(0.2, 0.8, 0.2, 1)),
-    transform 700ms var(--m-ease, cubic-bezier(0.2, 0.8, 0.2, 1));
-  will-change: opacity, transform;
-}
-.reveal--in {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-}
-
-/* No-JS fallback: the <html> element starts with `no-js`; a tiny inline
- * script in layout.tsx removes it before paint. If JS never runs, every
- * reveal element is simply visible. No timers. */
-html.no-js .reveal {
-  opacity: 1;
-  transform: none;
-  transition: none;
+/* Lock page scroll while a dialog is open. A class, not an inline style,
+ * so style-src can stay free of 'unsafe-inline'. */
+html.scroll-lock,
+html.scroll-lock body {
+  overflow: hidden;
 }
 
 /* ── Hero fade-in on load ────────────────────────────────────────
@@ -322,8 +297,9 @@ html.no-js .reveal {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-  .reveal {
-    opacity: 1;
-    transform: none;
+  .hero-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

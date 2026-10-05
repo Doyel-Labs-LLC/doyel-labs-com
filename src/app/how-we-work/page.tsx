@@ -21,7 +21,6 @@ import { ContactWidget } from "@/components/contact-modal";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Illus } from "@/components/illus";
 import { Photo } from "@/components/photo";
-import { Reveal } from "@/components/reveal";
 import { carePlan, customSoftware, response, websiteBuild } from "@/lib/offer";
 import { site } from "@/lib/site";
 
@@ -114,91 +113,83 @@ export default function HowWeWork() {
       </section>
 
       {/* 2. THE STEPS */}
-      <Reveal>
-        <Section id="steps">
-          <Eyebrow>The steps</Eyebrow>
-          <H2>From first message to long after launch.</H2>
-          <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-5">
-            <Feature step="01" title="You reach out">
-              Form, email, or phone. A person reads it and replies {response.window}, {response.usually}.
-            </Feature>
-            <Feature step="02" title="We talk">
-              A short orientation call about your business. Listening, no pitch, no obligation. If it&apos;s a website, we
-              collect your content on the call.
-            </Feature>
-            <Feature step="03" title="You get it in writing">
-              For websites, the price is already public: {websiteBuild.priceLabel}. For software, a written scope and a
-              fixed price within one business day of the call.
-            </Feature>
-            <Feature step="04" title="We build">
-              Websites go live in {websiteBuild.turnaround} after your content is in. Software shows progress you can see
-              every business day.
-            </Feature>
-            <Feature step="05" title="A person stays on">
-              Take the care plan, or just call when something needs attention. Same number, same person.
-            </Feature>
-          </div>
-        </Section>
-      </Reveal>
+      <Section id="steps">
+        <Eyebrow>The steps</Eyebrow>
+        <H2>From first message to long after launch.</H2>
+        <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-5">
+          <Feature step="01" title="You reach out">
+            Form, email, or phone. A person reads it and replies {response.window}, {response.usually}.
+          </Feature>
+          <Feature step="02" title="We talk">
+            A short orientation call about your business. Listening, no pitch, no obligation. If it&apos;s a website, we
+            collect your content on the call.
+          </Feature>
+          <Feature step="03" title="You get it in writing">
+            For websites, the price is already public: {websiteBuild.priceLabel}. For software, a written scope and a
+            fixed price within one business day of the call.
+          </Feature>
+          <Feature step="04" title="We build">
+            Websites go live in {websiteBuild.turnaround} after your content is in. Software shows progress you can see
+            every business day.
+          </Feature>
+          <Feature step="05" title="A person stays on">
+            Take the care plan, or just call when something needs attention. Same number, same person.
+          </Feature>
+        </div>
+      </Section>
 
       {/* 3. MONEY */}
-      <Reveal>
-        <Section id="money">
-          <Eyebrow>Money, plainly</Eyebrow>
-          <H2>Every price is fixed and written down first.</H2>
-          <Body>
-            AI builds most of what we ship. That&apos;s the reason the prices are what they are. A person checks every change and answers for it.
-          </Body>
-          <div className="mt-10">
-            <Grid2>
-              <Card title={`Websites — ${websiteBuild.priceLabel}, ${websiteBuild.terms}`} accent>
-                {websiteBuild.depositLabel}. The whole price for five pages on your own domain.{" "}
-                <Link href="/websites/" className="text-accent underline decoration-accentDim underline-offset-4 hover:text-accentHi">
-                  What&apos;s included
-                </Link>
-              </Card>
-              <Card title={`Care plan — ${carePlan.priceLabel} per month`}>
-                Hosting, backups, monitoring, and small edits. Optional. {carePlan.cancel}
-              </Card>
-              <Card title={`Custom software — ${customSoftware.fromLabel}`}>
-                Quoted per project after the call. {customSoftware.billing} If the scope grows, we requote in writing.
-              </Card>
-              <Card title="What's never charged">
-                The first call. Small questions by email. A quote. You only pay for work you agreed to in writing.
-              </Card>
-            </Grid2>
-          </div>
-        </Section>
-      </Reveal>
+      <Section id="money">
+        <Eyebrow>Money, plainly</Eyebrow>
+        <H2>Every price is fixed and written down first.</H2>
+        <Body>
+          AI builds most of what we ship. That&apos;s the reason the prices are what they are. A person checks every change and answers for it.
+        </Body>
+        <div className="mt-10">
+          <Grid2>
+            <Card title={`Websites — ${websiteBuild.priceLabel}, ${websiteBuild.terms}`} accent>
+              {websiteBuild.depositLabel}. The whole price for five pages on your own domain.{" "}
+              <Link href="/websites/" className="text-accent underline decoration-accentDim underline-offset-4 hover:text-accentHi">
+                What&apos;s included
+              </Link>
+            </Card>
+            <Card title={`Care plan — ${carePlan.priceLabel} per month`}>
+              Hosting, backups, monitoring, and small edits. Optional. {carePlan.cancel}
+            </Card>
+            <Card title={`Custom software — ${customSoftware.fromLabel}`}>
+              Quoted per project after the call. {customSoftware.billing} If the scope grows, we requote in writing.
+            </Card>
+            <Card title="What's never charged">
+              The first call. Small questions by email. A quote. You only pay for work you agreed to in writing.
+            </Card>
+          </Grid2>
+        </div>
+      </Section>
 
       {/* 4. OWNERSHIP */}
-      <Reveal>
-        <Section id="ownership">
-          <Split visual={<Illus name="keys" className="mx-auto max-w-sm" />}>
-            <Eyebrow>Ownership</Eyebrow>
-            <H2>You own it. All of it.</H2>
-            <Body>
-              The code, the domain, and the accounts it runs in are yours from the start. Your domain sits on your own
-              registrar. Nothing is locked in a format only we can open.
-            </Body>
-            <Body>
-              If you ever leave, we hand over everything and help you move it. No exit fee, no &quot;call us to
-              migrate.&quot; We&apos;d rather you stay because the work is good.
-            </Body>
-          </Split>
-        </Section>
-      </Reveal>
+      <Section id="ownership">
+        <Split visual={<Illus name="keys" className="mx-auto max-w-sm" />}>
+          <Eyebrow>Ownership</Eyebrow>
+          <H2>You own it. All of it.</H2>
+          <Body>
+            The code, the domain, and the accounts it runs in are yours from the start. Your domain sits on your own
+            registrar. Nothing is locked in a format only we can open.
+          </Body>
+          <Body>
+            If you ever leave, we hand over everything and help you move it. No exit fee, no &quot;call us to
+            migrate.&quot; We&apos;d rather you stay because the work is good.
+          </Body>
+        </Split>
+      </Section>
 
       {/* 5. FAQ */}
-      <Reveal>
-        <Section id="faq">
-          <Eyebrow>Questions people ask</Eyebrow>
-          <H2>Before you send that first message.</H2>
-          <div className="max-w-3xl">
-            <Faq items={faq} />
-          </div>
-        </Section>
-      </Reveal>
+      <Section id="faq">
+        <Eyebrow>Questions people ask</Eyebrow>
+        <H2>Before you send that first message.</H2>
+        <div className="max-w-3xl">
+          <Faq items={faq} />
+        </div>
+      </Section>
 
       {/* 6. CLOSE */}
       <Close title="Start with one paragraph about your business.">

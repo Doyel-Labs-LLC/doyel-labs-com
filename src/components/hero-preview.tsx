@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { steadfastCase } from "@/lib/demo/websites";
 import { demoContractors, scaFloor } from "@/lib/demo/payroll";
 
@@ -80,13 +79,13 @@ export function HeroPreview() {
             </span>
           </div>
           <div className="relative">
-            <Image
-              src="/media/websites/steadfast-contractors-v2.jpg"
+            <img
+              src="/media/websites/steadfast-contractors-v2.webp"
               alt={`Live site we built for ${steadfastCase.name}, at ${steadfastCase.domain}.`}
               width={1600}
               height={900}
-              priority
-              sizes="(min-width: 1024px) 40vw, (min-width: 768px) 50vw, 100vw"
+              decoding="async"
+              fetchPriority="high"
               className="h-auto w-full"
             />
           </div>

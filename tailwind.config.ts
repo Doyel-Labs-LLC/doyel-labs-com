@@ -3,10 +3,8 @@ import type { Config } from "tailwindcss";
 /**
  * Tokens are documented in DESIGN.md and PROMPT.md. Keep them in sync.
  *
- * The palette is anchored on the physical Doyel Labs icon: four rounded
- * squares in dark gray, mid gray, light gray, and cyan. The cyan is the
- * one accent used across the site. Everything else is spectral off-white
- * on a softened near-black canvas.
+ * The palette is the v10 warm light canvas. The logo mark keeps its own
+ * cyan; text and buttons use a deeper teal that stays WCAG AA on cream.
  */
 const config: Config = {
   content: ["./src/**/*.{ts,tsx,mdx}"],
@@ -30,7 +28,10 @@ const config: Config = {
         // Teal accent — the logo's cyan, deepened so it passes AA as text
         // on cream (#087187 on #faf7f2 ≈ 4.9:1).
         accent: "#087187",
-        accentHi: "#0b8aa3",
+        // Hover / pressed teal. Darker than `accent` so small text stays
+        // above 4.5:1 on cream (#065e70 on #faf7f2 ≈ 6.9:1). The previous
+        // #0b8aa3 lightened on hover and dropped to about 3.8:1.
+        accentHi: "#065e70",
         accentDim: "rgba(8, 113, 135, 0.35)",
         accentSoft: "rgba(8, 113, 135, 0.08)",
         // Warm highlight — used for illustration fills and one soft band
@@ -45,7 +46,8 @@ const config: Config = {
         // Semantic (light-safe)
         rise: "#1f8f5f",
         fall: "#c8434f",
-        care: "#9a6a0f",
+        // Amber status text. #8a5e0c on cream is about 5.3:1; #9a6a0f was 4.4:1.
+        care: "#8a5e0c",
       },
       fontFamily: {
         // `--font-sans` / `--font-mono` are the self-hosted next/font faces

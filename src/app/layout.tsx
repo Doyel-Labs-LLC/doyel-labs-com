@@ -168,16 +168,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`no-js ${inter.variable} ${jetbrainsMono.variable}`}
-      suppressHydrationWarning
-    >
+    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <head>
-        {/* Removes the `no-js` hook before first paint so scroll-reveal can
-         * run. If JS is off, the class stays and every reveal is visible.
-         * This inline script is hashed into the CSP at build time. */}
-        <script dangerouslySetInnerHTML={{ __html: "document.documentElement.classList.remove('no-js')" }} />
         {/* Structured data. JSON-LD is not executable so it is exempt from
          * CSP `script-src`. We emit two graphs: Organization (who we are)
          * and WebSite (how the site is structured). Both are static and
