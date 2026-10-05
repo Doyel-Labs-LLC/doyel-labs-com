@@ -8,12 +8,39 @@ import { adminAssets } from "../../server/analytics/admin-assets.generated";
 import { privateHeaders } from "../../server/analytics/http";
 
 const root = path.resolve("out");
-const publicCsp = readFileSync(path.join(root, "_headers"), "utf8")
-  .match(/^\s+Content-Security-Policy: (.+)$/m)?.[1];
-if (!publicCsp) throw new Error("Missing generated public CSP");
+const cspByPath = new Map<string, string>();
+let currentPath = "";
+for (const line of readFileSync(path.join(root, "_headers"), "utf8").split("\n")) {
+  if (line.startsWith("/") || line === "/*") {
+    currentPath = line.trim();
+    continue;
+  }
+  const policy = line.match(/^\s+Content-Security-Policy:\s*(.+)$/);
+  if (policy && currentPath) cspByPath.set(currentPath, policy[1]);
+}
+if (!cspByPath.get("/*")) throw new Error("Missing generated public CSP");
+
+const redirects = new Map<string, { to: string; code: number }>();
+for (const line of readFileSync(path.resolve("public/_redirects"), "utf8").split("\n")) {
+  const trimmed = line.trim();
+  if (!trimmed || trimmed.startsWith("#")) continue;
+  const [from, to, status] = trimmed.split(/\s+/);
+  if (!from || !to || from.includes("*")) continue;
+  redirects.set(from.endsWith("/") ? from : `${from}/`, { to, code: Number(status) || 301 });
+}
+
+function cspFor(pathname: string): string {
+  const slashed = pathname.endsWith("/") ? pathname : `${pathname}/`;
+  return cspByPath.get(pathname) ?? cspByPath.get(slashed) ?? cspByPath.get("/*")!;
+}
 createServer(async (request, response) => {
   try {
     const url = new URL(request.url ?? "/", "http://127.0.0.1:3191");
+    const redirect = redirects.get(url.pathname.endsWith("/") ? url.pathname : `${url.pathname}/`);
+    if (redirect) {
+      response.writeHead(redirect.code, { Location: redirect.to }).end();
+      return;
+    }
     if (url.pathname.startsWith("/api/")) {
       response.writeHead(503, { "Content-Type": "application/json", "Cache-Control": "no-store" });
       response.end(JSON.stringify({ status: "disabled" }));
@@ -40,7 +67,7 @@ createServer(async (request, response) => {
     const types: Record<string, string> = { ".html": "text/html", ".js": "text/javascript", ".css": "text/css", ".woff2": "font/woff2", ".txt": "text/plain", ".svg": "image/svg+xml", ".png": "image/png", ".ico": "image/x-icon" };
     response.writeHead(200, {
       "Content-Type": types[path.extname(file)] ?? "application/octet-stream",
-      ...(file.endsWith(".html") ? { "Content-Security-Policy": publicCsp } : {}),
+      ...(file.endsWith(".html") ? { "Content-Security-Policy": cspFor(url.pathname) } : {}),
     });
     response.end(await readFile(file));
   } catch {

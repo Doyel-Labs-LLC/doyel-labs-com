@@ -103,6 +103,12 @@ export function Footer() {
           <Link href="/legal/terms/" className="hover:text-accentHi">
             Legal
           </Link>
+          <a
+            href={`https://${site.domain}/admin/analytics/`}
+            className="inline-flex min-h-11 min-w-11 items-center hover:text-accentHi"
+          >
+            Owner login
+          </a>
         </div>
         <p className="mt-8 max-w-prose text-[12px] leading-relaxed text-muted">
           © {year} {site.company}. {companyLegal} Terms and privacy notices are under review by counsel.
