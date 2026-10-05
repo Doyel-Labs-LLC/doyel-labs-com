@@ -24,7 +24,6 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { WebsiteSteadfastFrame } from "@/components/frames/websites-preview";
 import { Illus } from "@/components/illus";
 import { Photo } from "@/components/photo";
-import { Reveal } from "@/components/reveal";
 import { addOns, carePlan, money, refused, websiteBuild, websiteFaq } from "@/lib/offer";
 import { site } from "@/lib/site";
 
@@ -127,7 +126,6 @@ export default function Websites() {
       </section>
 
       {/* PRICING — the build */}
-      <Reveal>
         <Section id="pricing">
           <Split visual={<Illus name="three-days" className="mx-auto max-w-md" />}>
             <Eyebrow>The build</Eyebrow>
@@ -141,10 +139,8 @@ export default function Websites() {
             </div>
           </Split>
         </Section>
-      </Reveal>
 
       {/* CARE PLAN */}
-      <Reveal>
         <Section id="care">
           <Split reverse visual={<Photo name="websites-care" fallback="care" alt="A small-business storefront with an open sign, seen in warm morning light" className="mx-auto max-w-md" />}>
             <Eyebrow>After launch</Eyebrow>
@@ -154,10 +150,8 @@ export default function Websites() {
             <Body>{carePlan.cancel}</Body>
           </Split>
         </Section>
-      </Reveal>
 
       {/* ADD-ONS + REFUSALS */}
-      <Reveal>
         <Section>
           <Grid2>
             <div>
@@ -188,10 +182,8 @@ export default function Websites() {
             </div>
           </Grid2>
         </Section>
-      </Reveal>
 
       {/* FAQ */}
-      <Reveal>
         <Section id="faq">
           <Eyebrow>Questions people ask</Eyebrow>
           <H2>Before you decide.</H2>
@@ -199,7 +191,6 @@ export default function Websites() {
             <Faq items={websiteFaq} />
           </div>
         </Section>
-      </Reveal>
 
       <Close eyebrow="Start a website" title="Send the name of your business and one paragraph about it.">
         That&apos;s enough to start. A person will reply with what we need from you and a date it goes live.

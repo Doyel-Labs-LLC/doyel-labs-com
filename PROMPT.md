@@ -293,8 +293,9 @@ site's look (`src/lib/contact-email.ts`): linen background, one ivory
 rounded card, Georgia headings (the email-safe cousin of Fraunces), an
 amber bar, a solid teal pill button, and a plain-text twin. Light only.
 
-**Motion.** Hero fade-in and one scroll reveal, gated on a `no-js`
-class removed by a hashed inline script. Reduced motion disables all.
+**Motion.** Hero fade-in only. Sections are visible on first paint;
+do not hide them until scroll. Reduced motion finishes the hero
+immediately.
 
 **Icon.** Four rounded squares. Ships as `favicon.ico` (16/32/48),
 `favicon-48/96/192/512.png` (Google Search needs a multiple of 48px),
@@ -307,14 +308,16 @@ class removed by a hashed inline script. Reduced motion disables all.
   bootstrap scripts are hashed at build time by
   `scripts/csp-hashes.mjs` into `out/_headers`. The catch-all CSP is merged
   into the single existing `/*` block; a second `/*` block silently drops
-  the site-wide headers on Cloudflare Pages (the build fails if one exists). `style-src` keeps
-  `'unsafe-inline'` (Next critical CSS). `connect-src` is `'self'`,
+  the site-wide headers on Cloudflare Pages (the build fails if one exists).
+  Public `style-src` is `'self'` plus hashes of any style blocks. It does
+  not allow `'unsafe-inline'`. The owner dashboard still does, because
+  chart heights are dynamic. `connect-src` is `'self'`,
   the analytics host selected at build time, and Turnstile only.
-  `report-uri` set.
+  There is no `report-uri`.
 - HSTS with preload, `X-Content-Type-Options: nosniff`,
   `X-Frame-Options: DENY`, `frame-ancestors 'none'`,
   `Referrer-Policy: strict-origin-when-cross-origin`,
-  Permissions-Policy without `interest-cohort`. Verify on the live site
+  Permissions-Policy that disables sensors and `interest-cohort`. Verify on the live site
   with `curl -I`, not only in the file. `_headers` never applies to
   Pages Functions, so `/api/contact` sets the same headers itself.
 - Analytics, disclosed in full: **Cloudflare Web Analytics** (cookieless
@@ -331,7 +334,7 @@ class removed by a hashed inline script. Reduced motion disables all.
 - Contact form (`functions/api/contact.ts`): same-origin `Origin`
   required; `Content-Type: application/json` required; body capped at
   16 KB while streaming (never fully buffered); Turnstile verified with a strict hostname check (production accepts
-  only doyel-labs.com hosts); rate limit counted
+  only doyel-labs.com hosts); per-IP and per-email (hashed) rate limits counted
   after Turnstile passes; **fails closed on every deployment** (production and preview) if the
   Turnstile secret or the rate-limit binding is missing; 5-second
   timeouts on Turnstile and Resend; errors return a generic message

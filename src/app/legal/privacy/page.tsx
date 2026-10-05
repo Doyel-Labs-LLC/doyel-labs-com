@@ -4,7 +4,15 @@ import { loadLegal } from "@/lib/legal";
 
 export const metadata: Metadata = {
   title: "Privacy Policy",
+  description:
+    "What Doyel Labs does with information when you visit doyel-labs.com, send the contact form, or use software we build or host. Analytics and location counts match the build you are looking at.",
   alternates: { canonical: "/legal/privacy/" },
+  openGraph: {
+    title: "Privacy Policy",
+    description:
+      "What Doyel Labs does with information when you visit doyel-labs.com, send the contact form, or use software we build or host.",
+    url: "/legal/privacy/",
+  },
 };
 
 export default function PrivacyPage() {

@@ -52,7 +52,7 @@ export function ContactForm({
       subject: String(fd.get("subject") || ""),
       message: String(fd.get("message") || "").trim(),
       preferredTimes: String(fd.get("preferredTimes") || ""),
-      website: String(fd.get("website") || ""),
+      website: String(fd.get("dl_hp") || ""),
       turnstileToken: token,
     };
     if (payload.website) {
@@ -133,8 +133,8 @@ export function ContactForm({
   return (
     <form onSubmit={submit} className={compact ? "space-y-4" : "space-y-5"} noValidate aria-busy={sending || undefined}>
       <label className="hidden" aria-hidden="true">
-        Website (leave blank)
-        <input type="text" name="website" autoComplete="off" tabIndex={-1} />
+        Leave this field blank
+        <input type="text" name="dl_hp" autoComplete="off" tabIndex={-1} />
       </label>
 
       <div className="grid gap-4 md:grid-cols-2">

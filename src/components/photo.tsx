@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Illus, type IllusName } from "@/components/illus";
 import { generatedImages } from "@/lib/generated-images.generated";
 
@@ -13,15 +12,26 @@ import { generatedImages } from "@/lib/generated-images.generated";
  *
  * The list of files is generated at build time by
  * scripts/generate-public-paths.mjs, so this works in any component.
+ *
+ * Sized <img> elements, not next/image: the optimizer writes
+ * style="color:transparent", which would force style-src 'unsafe-inline'
+ * on every public page.
  */
-const EXTENSIONS = ["webp", "jpg", "jpeg", "png"] as const;
+const RASTER = ["jpg", "jpeg", "png"] as const;
 
+function generatedFile(name: string, ext: string): string | null {
+  const file = `${name}.${ext}`;
+  return generatedImages.includes(file) ? `/media/generated/${file}` : null;
+}
+
+/** Prefer a JPEG/PNG url for the <img> src so a browser that cannot
+ *  decode WebP still has a picture. WebP, when present, is a <source>. */
 export function generatedImage(name: string): string | null {
-  for (const ext of EXTENSIONS) {
-    const file = `${name}.${ext}`;
-    if (generatedImages.includes(file)) return `/media/generated/${file}`;
+  for (const ext of RASTER) {
+    const src = generatedFile(name, ext);
+    if (src) return src;
   }
-  return null;
+  return generatedFile(name, "webp");
 }
 
 export function Photo({
@@ -49,15 +59,25 @@ export function Photo({
 }) {
   const src = generatedImage(name);
   if (!src) return <Illus name={fallback} className={className} decorative />;
-  return (
-    <Image
+  const webp = generatedFile(name, "webp");
+  const img = (
+    <img
       src={src}
       alt={alt}
       width={width}
       height={height}
-      priority={priority}
-      sizes="(min-width: 768px) 448px, 100vw"
-      className={`h-auto w-full ${frame ? "rounded-card shadow-card ring-1 ring-ink/5" : ""} ${className}`}
+      // Synchronous decode so a full-page capture paints the photo instead
+      // of an empty reserved box. These slots are few and already sized.
+      decoding="sync"
+      fetchPriority={priority ? "high" : undefined}
+      className={`block h-auto w-full ${frame ? "rounded-card shadow-card ring-1 ring-ink/5" : ""} ${className}`}
     />
+  );
+  if (!webp || webp === src) return img;
+  return (
+    <picture className="block w-full">
+      <source srcSet={webp} type="image/webp" />
+      {img}
+    </picture>
   );
 }

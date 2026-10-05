@@ -5,6 +5,7 @@ import { createPortal } from "react-dom";
 import { buttonClass } from "@/components/button-styles";
 import { ContactForm } from "@/components/contact-form";
 import { response } from "@/lib/offer";
+import { lockPageScroll } from "@/lib/scroll-lock";
 import { site } from "@/lib/site";
 
 /**
@@ -64,8 +65,7 @@ function Modal({ onClose }: { onClose: () => void }) {
     } else {
       panelRef.current?.focus();
     }
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
+    const unlock = lockPageScroll();
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
@@ -91,7 +91,7 @@ function Modal({ onClose }: { onClose: () => void }) {
     document.addEventListener("keydown", onKey);
     return () => {
       document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = prevOverflow;
+      unlock();
     };
   }, [onClose]);
 
@@ -109,7 +109,7 @@ function Modal({ onClose }: { onClose: () => void }) {
         aria-labelledby="contact-title"
         aria-describedby="contact-desc"
         tabIndex={-1}
-        className="hero-in relative my-6 w-full max-w-xl rounded-panel border border-line bg-surface p-6 shadow-lift focus:outline-none md:p-10"
+        className="hero-in relative my-6 w-full max-w-xl rounded-panel border border-line bg-surface p-6 shadow-lift focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent md:p-10"
       >
         <button
           type="button"

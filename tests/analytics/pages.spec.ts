@@ -44,7 +44,10 @@ test("public pages and contact keep their existing routing without analytics con
   }
   const contact = await request.get(`${base}/api/contact`);
   expect(contact.status()).toBe(405);
-  const invalid = await request.post(`${base}/api/contact`, { data: Buffer.from("not-json"), headers: { "Content-Type": "application/json" } });
+  const invalid = await request.post(`${base}/api/contact`, {
+    data: Buffer.from("not-json"),
+    headers: { "Content-Type": "application/json", Origin: "http://127.0.0.1:3192" },
+  });
   expect(invalid.status()).toBe(400);
   expect(await invalid.json()).toEqual({ error: "Invalid JSON body." });
   const legacy = await request.get(`${base}/founder/`, { maxRedirects: 0 });

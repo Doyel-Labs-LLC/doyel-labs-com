@@ -52,8 +52,3 @@ export const programStatus = {
   bai: { label: "Private beta", body: "In private testing with a small group of operators." },
   connectionloop: { label: "In private testing", body: "A shared calendar, lists, notes, and photos for one family or group. Invite-only." },
 } as const;
-
-/** Analytics. Plausible only, cookieless. Injected at build time. */
-export const analytics = {
-  plausibleDomain: process.env.NEXT_PUBLIC_PLAUSIBLE_DOMAIN || "",
-};

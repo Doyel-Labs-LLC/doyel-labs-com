@@ -23,7 +23,6 @@ import { PayrollBatchFrame } from "@/components/frames/payroll-batch";
 import { WebsiteSteadfastFrame } from "@/components/frames/websites-preview";
 import { Photo } from "@/components/photo";
 import { Quote } from "@/components/quote";
-import { Reveal } from "@/components/reveal";
 import { steadfastCase } from "@/lib/demo/websites";
 import { products } from "@/lib/products";
 import { baiDisclaimer, programStatus, site } from "@/lib/site";
@@ -83,7 +82,6 @@ export default function Work() {
       </section>
 
       {/* 2. STEADFAST */}
-      <Reveal>
         <Section id="steadfast">
           <Split visual={<Photo name="work-steadfast-context" fallback="flow" alt="A two-lane highway across Montana at dawn with a single delivery vehicle in the distance" className="mx-auto max-w-md" />}>
             <Eyebrow>Client · Transportation</Eyebrow>
@@ -100,10 +98,8 @@ export default function Work() {
             </div>
           </Split>
         </Section>
-      </Reveal>
 
       {/* 3. IN THEIR WORDS */}
-      <Reveal>
         <Section>
           <Eyebrow>In their words</Eyebrow>
           <H2>What SteadFast said about the work.</H2>
@@ -111,10 +107,8 @@ export default function Work() {
             <Quote t={steadfastTestimonial} full />
           </div>
         </Section>
-      </Reveal>
 
       {/* 4. INSIDE THE PAYROLL WORKSPACE */}
-      <Reveal>
         <Section>
           <Eyebrow>Inside the payroll workspace</Eyebrow>
           <H2>Two of the screens the operator uses.</H2>
@@ -126,10 +120,8 @@ export default function Work() {
             </Grid2>
           </div>
         </Section>
-      </Reveal>
 
       {/* 5. IN THE LAB */}
-      <Reveal>
         <Section id="lab">
           <Eyebrow>In the lab</Eyebrow>
           <H2>Two products we&apos;re building for ourselves.</H2>
@@ -149,7 +141,6 @@ export default function Work() {
           </div>
           <p className="mt-6 max-w-prose text-[12px] leading-relaxed text-muted">{baiDisclaimer}</p>
         </Section>
-      </Reveal>
 
       {/* 6. CLOSE */}
       <Close title="Want something like this for your business?">

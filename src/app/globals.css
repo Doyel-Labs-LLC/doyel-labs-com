@@ -221,25 +221,10 @@ code,
   scrollbar-color: rgba(27, 31, 38, 0.18) transparent;
 }
 
-/* ── Scroll reveal ───────────────────────────────────────────────
- * <Reveal> children start slightly lowered and transparent, then settle
- * when IntersectionObserver adds `.reveal--in`. Without JS (html.no-js)
- * everything is simply visible. */
-.reveal {
-  opacity: 0;
-  transform: translate3d(0, 16px, 0);
-  transition:
-    opacity 700ms var(--m-ease),
-    transform 700ms var(--m-ease);
-}
-.reveal--in {
-  opacity: 1;
-  transform: translate3d(0, 0, 0);
-}
-html.no-js .reveal {
-  opacity: 1;
-  transform: none;
-  transition: none;
+/* Dialogs lock page scroll with a class so they never write an inline style. */
+html.scroll-lock,
+html.scroll-lock body {
+  overflow: hidden;
 }
 
 /* ── Hero fade-in on load ─────────────────────────────────────── */
@@ -332,7 +317,8 @@ details[open] .faq-icon {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-  .reveal {
+  .hero-in {
+    animation: none;
     opacity: 1;
     transform: none;
   }

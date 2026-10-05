@@ -21,16 +21,21 @@ import { ContactWidget } from "@/components/contact-modal";
 import { HeroPreview } from "@/components/hero-preview";
 import { Photo } from "@/components/photo";
 import { Quote } from "@/components/quote";
-import { Reveal } from "@/components/reveal";
 import { textLink } from "@/components/button-styles";
 import { carePlan, customSoftware, response, websiteBuild } from "@/lib/offer";
 import { promise, site } from "@/lib/site";
 import { steadfastTestimonial } from "@/lib/testimonials";
 
 export const metadata: Metadata = {
-  title: `${site.company} — Websites and custom software. Real people build it.`,
+  // Absolute: the root layout template would otherwise append the site name again.
+  title: { absolute: `${site.company} — Websites and custom software. Real people build it.` },
   description: `Websites for ${websiteBuild.priceLabel}, live in ${websiteBuild.turnaround}. Custom software quoted per project. You talk to a person, not a chatbot. ${site.city}.`,
   alternates: { canonical: `https://${site.domain}/` },
+  openGraph: {
+    title: `${site.company} — Websites and custom software. Real people build it.`,
+    description: `Websites for ${websiteBuild.priceLabel}, live in ${websiteBuild.turnaround}. Custom software quoted per project. You talk to a person, not a chatbot. ${site.city}.`,
+    url: `https://${site.domain}/`,
+  },
 };
 
 export default function Home() {
@@ -76,7 +81,6 @@ export default function Home() {
       </section>
 
       {/* 2. THE OFFER — three lanes */}
-      <Reveal>
         <Section>
           <Eyebrow>What we build</Eyebrow>
           <H2>Three ways to start. One person on the other end.</H2>
@@ -104,10 +108,8 @@ export default function Home() {
             </Grid3>
           </div>
         </Section>
-      </Reveal>
 
       {/* 3. THE PROMISE */}
-      <Reveal>
         <Section>
           <Split visual={<Photo name="home-answer" fallback="answer" alt="A person at a desk taking a phone call in a bright workshop office" className="mx-auto max-w-md" />}>
             <Eyebrow>Why it&apos;s different</Eyebrow>
@@ -127,10 +129,8 @@ export default function Home() {
             </div>
           </Split>
         </Section>
-      </Reveal>
 
       {/* 4. PROOF */}
-      <Reveal>
         <Section tone="warm">
           <Eyebrow>Built and in use</Eyebrow>
           <H2>What we built for SteadFast Transportation.</H2>
@@ -146,10 +146,8 @@ export default function Home() {
             </GhostLink>
           </div>
         </Section>
-      </Reveal>
 
       {/* 5. HOW IT WORKS */}
-      <Reveal>
         <Section>
           <Eyebrow>How it works</Eyebrow>
           <H2>A real conversation, then a real build.</H2>
@@ -168,7 +166,6 @@ export default function Home() {
             </Feature>
           </div>
         </Section>
-      </Reveal>
 
       {/* 6. CLOSE */}
       <Close title="Tell us what your business does. We&apos;ll tell you what we can build.">

@@ -22,7 +22,6 @@ import { Breadcrumbs } from "@/components/breadcrumbs";
 import { PayrollPaystubFrame } from "@/components/frames/payroll-paystub";
 import { PayrollScaFrame } from "@/components/frames/payroll-sca";
 import { Photo } from "@/components/photo";
-import { Reveal } from "@/components/reveal";
 import { customSoftware, refused, response } from "@/lib/offer";
 import { payrollDisclaimer, site } from "@/lib/site";
 
@@ -133,7 +132,6 @@ export default function Software() {
       </section>
 
       {/* 2. WHAT WE CAN BUILD */}
-      <Reveal>
         <Section>
           <Eyebrow>What we can build</Eyebrow>
           <H2>Software shaped around how your business already works.</H2>
@@ -147,10 +145,8 @@ export default function Software() {
             </Grid3>
           </div>
         </Section>
-      </Reveal>
 
       {/* 3. HOW A PROJECT RUNS */}
-      <Reveal>
         <Section id="how">
           <Split visual={<Photo name="software-scope" fallback="scope" alt="A shop owner and a builder reviewing a printed plan at a workbench" className="mx-auto max-w-md" />}>
             <Eyebrow>How a software project runs</Eyebrow>
@@ -173,10 +169,8 @@ export default function Software() {
             </Feature>
           </div>
         </Section>
-      </Reveal>
 
       {/* 4. ONE EXAMPLE */}
-      <Reveal>
         <Section>
           <Split reverse visual={<PayrollPaystubFrame />}>
             <Eyebrow>One example</Eyebrow>
@@ -194,10 +188,8 @@ export default function Software() {
             </div>
           </Split>
         </Section>
-      </Reveal>
 
       {/* 5. WHAT WE WON'T BUILD */}
-      <Reveal>
         <Section>
           <Eyebrow>What we won&apos;t build</Eyebrow>
           <H2>Some things are off the table on purpose.</H2>
@@ -217,7 +209,6 @@ export default function Software() {
           </div>
           <Body>Every &ldquo;no&rdquo; here is about a specific build, not a limit on what we&apos;ll try.</Body>
         </Section>
-      </Reveal>
 
       {/* 6. CLOSE */}
       <Close eyebrow="Start a software project" title="Describe the job you want done. We&apos;ll write back with a scope and a price.">
