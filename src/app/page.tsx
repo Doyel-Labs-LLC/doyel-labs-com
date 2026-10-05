@@ -26,10 +26,18 @@ import { carePlan, customSoftware, response, websiteBuild } from "@/lib/offer";
 import { promise, site } from "@/lib/site";
 import { steadfastTestimonial } from "@/lib/testimonials";
 
+const homeTitle = `${site.company} — Websites and custom software. Real people build it.`;
+const homeDescription = `Websites for ${websiteBuild.priceLabel}, live in ${websiteBuild.turnaround}. Custom software quoted per project. You talk to a person, not a chatbot. ${site.city}.`;
+
 export const metadata: Metadata = {
-  title: `${site.company} — Websites and custom software. Real people build it.`,
-  description: `Websites for ${websiteBuild.priceLabel}, live in ${websiteBuild.turnaround}. Custom software quoted per project. You talk to a person, not a chatbot. ${site.city}.`,
+  title: { absolute: homeTitle },
+  description: homeDescription,
   alternates: { canonical: `https://${site.domain}/` },
+  openGraph: {
+    title: homeTitle,
+    description: homeDescription,
+    url: `https://${site.domain}/`,
+  },
 };
 
 export default function Home() {

@@ -39,8 +39,7 @@ code {
   color: #1b1f26;
 }
 
-/* Focus ring uses the cyan accent — visible on the dark canvas without
- * looking like a browser default. */
+/* Focus ring uses the teal accent, visible on the cream canvas. */
 :focus-visible {
   outline: 2px solid #087187;
   outline-offset: 2px;
@@ -142,8 +141,8 @@ code {
   text-underline-offset: 3px;
 }
 .prose-legal a:hover {
-  color: #0b8aa3;
-  text-decoration-color: #0b8aa3;
+  color: #065e70;
+  text-decoration-color: #065e70;
 }
 .prose-legal code {
   font-family: var(--font-mono), "JetBrains Mono", "Cascadia Mono", Consolas, monospace;
@@ -322,8 +321,10 @@ html.no-js .reveal {
     transition-duration: 0.001ms !important;
     scroll-behavior: auto !important;
   }
-  .reveal {
-    opacity: 1;
-    transform: none;
+  .reveal,
+  .hero-in {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
   }
 }

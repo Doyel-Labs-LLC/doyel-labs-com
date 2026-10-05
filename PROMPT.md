@@ -231,7 +231,7 @@ at home in the first second.
 | `surface` / `surface2` | `#ffffff` / `#f3efe8` | Cards, frames / warm band |
 | `ink` | `#1b1f26` | Text |
 | `mute` / `muted` | 0.80 / 0.68 alpha ink | Body / captions (AA) |
-| `accent` / `accentHi` | `#087187` / `#0b8aa3` | Teal: links, CTAs, eyebrow bars |
+| `accent` / `accentHi` | `#087187` / `#065e70` | Teal: links, CTAs, eyebrow bars. Hover is darker so it stays AA on cream. |
 | `warm` / `warmSoft` | `#f2b455` / 16% | Illustration fills, one soft band wash. Never text. |
 | `rise` / `fall` / `care` | green / red / amber | Status only |
 

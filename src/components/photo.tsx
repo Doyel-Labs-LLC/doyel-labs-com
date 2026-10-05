@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { Illus, type IllusName } from "@/components/illus";
 import { generatedImages } from "@/lib/generated-images.generated";
 
@@ -14,7 +13,7 @@ import { generatedImages } from "@/lib/generated-images.generated";
  * The list of files is generated at build time by
  * scripts/generate-public-paths.mjs, so this works in any component.
  */
-const EXTENSIONS = ["jpg", "jpeg", "webp", "png"] as const;
+const EXTENSIONS = ["webp", "jpg", "jpeg", "png"] as const;
 
 export function generatedImage(name: string): string | null {
   for (const ext of EXTENSIONS) {
@@ -50,12 +49,13 @@ export function Photo({
   const src = generatedImage(name);
   if (!src) return <Illus name={fallback} className={className} decorative />;
   return (
-    <Image
+    <img
       src={src}
       alt={alt}
       width={width}
       height={height}
-      priority={priority}
+      decoding="async"
+      fetchPriority={priority ? "high" : "auto"}
       className={`h-auto w-full ${frame ? "rounded-[6px] shadow-card" : ""} ${className}`}
     />
   );

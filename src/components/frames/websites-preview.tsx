@@ -1,12 +1,11 @@
-import Image from "next/image";
 import { steadfastCase } from "@/lib/demo/websites";
 
 /**
  * Real-screenshot preview of steadfasttransportationinc.com wrapped in a
  * minimal browser-chrome frame. The screenshot lives at
  * `/public/media/websites/steadfast-hero.png` and is 258 KB, already
- * sized for a marketing preview. `next/image` handles responsive
- * sizing; the outer chrome is a hairline card.
+ * sized for a marketing preview. Width and height reserve the box so
+ * the screenshot does not shift the page. The outer chrome is a hairline card.
  */
 export function WebsiteSteadfastFrame() {
   return (
@@ -26,13 +25,14 @@ export function WebsiteSteadfastFrame() {
         </div>
         {/* Screenshot */}
         <div className="relative">
-          <Image
-            src="/media/websites/steadfast-hero-v2.jpg"
+          <img
+            src="/media/websites/steadfast-hero-v2.webp"
             alt={`Screenshot of ${steadfastCase.domain} home page — a rural transportation company site built by Doyel Labs.`}
             width={1600}
             height={900}
+            decoding="async"
+            fetchPriority="high"
             className="h-auto w-full"
-            priority
           />
         </div>
       </div>

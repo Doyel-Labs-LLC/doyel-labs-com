@@ -15,16 +15,23 @@ import {
   Split,
 } from "@/components/chrome";
 import { Breadcrumbs } from "@/components/breadcrumbs";
-import { ContactPageForm } from "@/components/contact-page-form";
+import { ContactForm } from "@/components/contact-form";
 import { Photo } from "@/components/photo";
 import { Reveal } from "@/components/reveal";
 import { customSoftware, response, websiteBuild } from "@/lib/offer";
 import { site } from "@/lib/site";
 
+const contactDescription = `Contact ${site.company}. One paragraph about your business is all we need. A person replies ${response.window}, ${response.usually}. Call ${site.phone}, ${site.hoursShort}.`;
+
 export const metadata: Metadata = {
   title: "Contact — talk to a person",
-  description: `Contact ${site.company}. One paragraph about your business is all we need. A person replies ${response.window}, ${response.usually}. Call ${site.phone}, ${site.hoursShort}.`,
+  description: contactDescription,
   alternates: { canonical: `https://${site.domain}/contact/` },
+  openGraph: {
+    title: "Contact — talk to a person",
+    description: contactDescription,
+    url: `https://${site.domain}/contact/`,
+  },
 };
 
 const link = "text-ink underline decoration-accentDim underline-offset-4 hover:text-accentHi";
@@ -76,7 +83,7 @@ export default function Contact() {
           <h2 className="sr-only">Send a message</h2>
           <div className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] md:gap-16">
             <div>
-              <ContactPageForm />
+              <ContactForm />
             </div>
             <div className="space-y-5">
               <Notice>
