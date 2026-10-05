@@ -17,7 +17,6 @@ import {
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { ContactPageForm } from "@/components/contact-page-form";
 import { Photo } from "@/components/photo";
-import { Reveal } from "@/components/reveal";
 import { customSoftware, response, websiteBuild } from "@/lib/offer";
 import { site } from "@/lib/site";
 
@@ -25,6 +24,11 @@ export const metadata: Metadata = {
   title: "Contact — talk to a person",
   description: `Contact ${site.company}. One paragraph about your business is all we need. A person replies ${response.window}, ${response.usually}. Call ${site.phone}, ${site.hoursShort}.`,
   alternates: { canonical: `https://${site.domain}/contact/` },
+  openGraph: {
+    title: "Contact — talk to a person",
+    description: `Contact ${site.company}. One paragraph about your business is all we need. A person replies ${response.window}, ${response.usually}. Call ${site.phone}, ${site.hoursShort}.`,
+    url: `https://${site.domain}/contact/`,
+  },
 };
 
 const link = "text-ink underline decoration-accentDim underline-offset-4 hover:text-accentInk";
@@ -71,7 +75,6 @@ export default function Contact() {
       </section>
 
       {/* 2. FORM + DIRECT LINES */}
-      <Reveal>
         <Section>
           <h2 className="sr-only">Send a message</h2>
           <div className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] md:gap-16">
@@ -111,10 +114,8 @@ export default function Contact() {
             </div>
           </div>
         </Section>
-      </Reveal>
 
       {/* 3. WHAT HAPPENS NEXT */}
-      <Reveal>
         <Section>
           <Eyebrow>What happens next</Eyebrow>
           <H2>Three steps, no surprises.</H2>
@@ -131,10 +132,8 @@ export default function Contact() {
             </Feature>
           </div>
         </Section>
-      </Reveal>
 
       {/* 4. WHAT WE DON'T DO */}
-      <Reveal>
         <Section>
           <Split reverse visual={<Photo name="contact-call" fallback="call" alt="A phone handset resting on a notebook next to a mug on a warm wooden desk" className="mx-auto max-w-md" />}>
             <Eyebrow>What we don&apos;t do</Eyebrow>
@@ -142,7 +141,6 @@ export default function Contact() {
             <Checks items={NOT_DONE} />
           </Split>
         </Section>
-      </Reveal>
     </Page>
   );
 }

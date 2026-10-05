@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { steadfastCase } from "@/lib/demo/websites";
 import { response, websiteBuild } from "@/lib/offer";
 import { BrowserFrame } from "@/components/frames/websites-preview";
@@ -14,15 +13,14 @@ export function HeroPreview() {
       <figure className="not-prose relative">
         <div className="relative">
           <BrowserFrame url={`www.${steadfastCase.domain}`}>
-            <Image
+            <img
               src="/media/websites/steadfast-contractors-v2-1120.webp"
               alt={`Live site we built for ${steadfastCase.name}, at ${steadfastCase.domain}.`}
               width={1120}
               height={630}
-              priority
+              decoding="sync"
               fetchPriority="high"
-              sizes="(min-width: 1024px) 560px, (min-width: 768px) 50vw, 100vw"
-              className="h-auto w-full"
+              className="block h-auto w-full"
             />
           </BrowserFrame>
           <OfferCard />

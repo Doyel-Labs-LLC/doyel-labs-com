@@ -2,10 +2,11 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { LogoMark } from "@/components/chrome";
 import { ContactWidget } from "@/components/contact-modal";
+import { lockPageScroll } from "@/lib/scroll-lock";
 import { site } from "@/lib/site";
 
 /**
@@ -43,6 +44,8 @@ export function MobileNav({
   const [open, setOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
+  const buttonRef = useRef<HTMLButtonElement | null>(null);
+  const panelRef = useRef<HTMLDivElement | null>(null);
 
   // Track mount so we don't try to `createPortal` during SSR (document
   // doesn't exist during static export prerender).
@@ -52,14 +55,39 @@ export function MobileNav({
 
   useEffect(() => {
     if (!open) return;
+    const focusable = () =>
+      panelRef.current
+        ? Array.from(panelRef.current.querySelectorAll<HTMLElement>(FOCUSABLE)).filter(
+            (node) => node.tabIndex !== -1 && node.offsetParent !== null,
+          )
+        : [];
+    focusable()[0]?.focus();
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setOpen(false);
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const nodes = focusable();
+      if (nodes.length === 0) return;
+      const first = nodes[0];
+      const last = nodes[nodes.length - 1];
+      const active = document.activeElement;
+      if (e.shiftKey && (active === first || !panelRef.current?.contains(active))) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && active === last) {
+        e.preventDefault();
+        first.focus();
+      }
     };
-    window.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", onKey);
+    const unlock = lockPageScroll();
     return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
+      document.removeEventListener("keydown", onKey);
+      unlock();
+      buttonRef.current?.focus();
     };
   }, [open]);
 
@@ -67,10 +95,12 @@ export function MobileNav({
     open && mounted ? (
       <div
         id="mobile-nav-panel"
+        ref={panelRef}
         role="dialog"
         aria-modal="true"
         aria-label="Menu"
-        className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-bg"
+        tabIndex={-1}
+        className="fixed inset-0 z-50 flex flex-col overflow-y-auto bg-bg focus-visible:outline-none"
         onClick={(e) => {
           if (e.target === e.currentTarget) setOpen(false);
         }}
@@ -201,6 +231,7 @@ export function MobileNav({
   return (
     <div className="md:hidden">
       <button
+        ref={buttonRef}
         type="button"
         onClick={() => setOpen(true)}
         aria-expanded={open}
@@ -238,6 +269,9 @@ const EXPLORE_LINKS = [
   { href: "/websites/#pricing", label: "Website pricing" },
   { href: "/websites/#faq", label: "Questions people ask" },
 ];
+
+const FOCUSABLE =
+  'a[href], button:not([disabled]), input:not([disabled]):not([type="hidden"]), select:not([disabled]), textarea:not([disabled]), iframe, [tabindex]:not([tabindex="-1"])';
 
 const SUPPORT_LINKS = [
   { href: "/security/", label: "Security" },

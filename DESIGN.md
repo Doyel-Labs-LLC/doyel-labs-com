@@ -64,10 +64,9 @@ paper shapes) as fallbacks. Names: `call`, `answer`, `three-days`, `keys`,
 
 ## Motion
 
-Hero fade-in (`.hero-in`) and one scroll reveal (`<Reveal>`). The `<html>`
-element starts with `no-js`; a hashed inline script removes it before
-paint. If JS never runs, every reveal is simply visible. Reduced motion
-disables everything.
+Hero fade-in (`.hero-in`) only. Do not hide sections until scroll: a
+visitor, a crawler, and a full-page capture must see every section on
+first paint. Reduced motion finishes the hero immediately.
 
 ## Icon
 

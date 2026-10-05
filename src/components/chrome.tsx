@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { ANALYTICS_ORIGIN } from "@/lib/analytics-config";
 import { companyLegal, site } from "@/lib/site";
 import { response } from "@/lib/offer";
 import { buttonClass, textLink } from "@/components/button-styles";
@@ -114,6 +115,12 @@ export function Footer() {
         <p className="mt-10 max-w-prose text-[13px] leading-relaxed text-muted">
           © {year} {site.company}. {companyLegal} Terms and privacy notices are under review by counsel.
         </p>
+        <a
+          href={`${ANALYTICS_ORIGIN}/admin/analytics/`}
+          className="mt-2 inline-flex min-h-11 items-center text-[13px] text-muted hover:text-accent"
+        >
+          Owner login
+        </a>
       </div>
     </footer>
   );

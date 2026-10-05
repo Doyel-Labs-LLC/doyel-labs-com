@@ -23,7 +23,6 @@ import { ContactWidget } from "@/components/contact-modal";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Illus } from "@/components/illus";
 import { Photo } from "@/components/photo";
-import { Reveal } from "@/components/reveal";
 import { textLink } from "@/components/button-styles";
 import { products } from "@/lib/products";
 import { programStatus, site } from "@/lib/site";
@@ -98,7 +97,6 @@ export default function About() {
       </section>
 
       {/* 2. WHY A PERSON */}
-      <Reveal>
         <Section id="why">
           <Split visual={<Illus name="answer" className="mx-auto max-w-sm" />}>
             <Eyebrow>Why a person</Eyebrow>
@@ -113,10 +111,8 @@ export default function About() {
             </Body>
           </Split>
         </Section>
-      </Reveal>
 
       {/* 3. HOW WE USE AI */}
-      <Reveal>
         <Section id="ai">
           <Eyebrow>How we use AI</Eyebrow>
           <H2>AI builds most of it. A person answers for all of it.</H2>
@@ -138,10 +134,8 @@ export default function About() {
             </Feature>
           </div>
         </Section>
-      </Reveal>
 
       {/* 4. THE FACTS */}
-      <Reveal>
         <Section id="facts">
           <Eyebrow>The facts</Eyebrow>
           <H2>The plain details.</H2>
@@ -175,10 +169,8 @@ export default function About() {
             </Grid2>
           </div>
         </Section>
-      </Reveal>
 
       {/* 5. WHO ANSWERS */}
-      <Reveal>
         <Section id="who-answers">
           <Eyebrow>Who you&apos;ll talk to</Eyebrow>
           <H2>The person on the other end.</H2>
@@ -226,7 +218,6 @@ export default function About() {
             </div>
           </div>
         </Section>
-      </Reveal>
 
       {/* 6. CLOSE */}
       <Close title="Have a business and an idea? Start there.">

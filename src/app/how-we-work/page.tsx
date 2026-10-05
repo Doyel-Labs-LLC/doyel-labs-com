@@ -21,7 +21,6 @@ import { ContactWidget } from "@/components/contact-modal";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Illus } from "@/components/illus";
 import { Photo } from "@/components/photo";
-import { Reveal } from "@/components/reveal";
 import { carePlan, customSoftware, response, websiteBuild } from "@/lib/offer";
 import { site } from "@/lib/site";
 
@@ -114,7 +113,6 @@ export default function HowWeWork() {
       </section>
 
       {/* 2. THE STEPS */}
-      <Reveal>
         <Section id="steps">
           <Eyebrow>The steps</Eyebrow>
           <H2>From first message to long after launch.</H2>
@@ -139,10 +137,8 @@ export default function HowWeWork() {
             </Feature>
           </div>
         </Section>
-      </Reveal>
 
       {/* 3. MONEY */}
-      <Reveal>
         <Section id="money">
           <Eyebrow>Money, plainly</Eyebrow>
           <H2>Every price is fixed and written down first.</H2>
@@ -169,10 +165,8 @@ export default function HowWeWork() {
             </Grid2>
           </div>
         </Section>
-      </Reveal>
 
       {/* 4. OWNERSHIP */}
-      <Reveal>
         <Section id="ownership">
           <Split visual={<Illus name="keys" className="mx-auto max-w-sm" />}>
             <Eyebrow>Ownership</Eyebrow>
@@ -187,10 +181,8 @@ export default function HowWeWork() {
             </Body>
           </Split>
         </Section>
-      </Reveal>
 
       {/* 5. FAQ */}
-      <Reveal>
         <Section id="faq">
           <Eyebrow>Questions people ask</Eyebrow>
           <H2>Before you send that first message.</H2>
@@ -198,7 +190,6 @@ export default function HowWeWork() {
             <Faq items={faq} />
           </div>
         </Section>
-      </Reveal>
 
       {/* 6. CLOSE */}
       <Close title="Start with one paragraph about your business.">

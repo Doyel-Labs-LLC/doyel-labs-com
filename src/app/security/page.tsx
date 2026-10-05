@@ -17,7 +17,6 @@ import {
 } from "@/components/chrome";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Illus } from "@/components/illus";
-import { Reveal } from "@/components/reveal";
 import { site } from "@/lib/site";
 import { analyticsLabel } from "@/lib/analytics-config";
 import { locationAnalyticsEnabled } from "@/lib/location-config";
@@ -26,6 +25,11 @@ export const metadata: Metadata = {
   title: "Security — what this website does with your information",
   description: `How ${site.domain} handles your information, in plain English: no cookies, no tracking, and a contact form that emails a person. Every line is backed by the site's code.`,
   alternates: { canonical: `https://${site.domain}/security/` },
+  openGraph: {
+    title: "Security — what this website does with your information",
+    description: `How ${site.domain} handles your information, in plain English: no cookies, no tracking, and a contact form that emails a person. Every line is backed by the site's code.`,
+    url: `https://${site.domain}/security/`,
+  },
 };
 
 const REPO_URL = "https://github.com/Doyel-Labs-LLC/doyel-labs-com";
@@ -69,7 +73,6 @@ export default function Security() {
       </section>
 
       {/* 2. WHEN YOU VISIT */}
-      <Reveal>
         <Section>
           <Eyebrow>When you visit</Eyebrow>
           <H2>What we count when you visit, and what we don&apos;t.</H2>
@@ -104,10 +107,8 @@ export default function Security() {
             </Notice>
           </div>
         </Section>
-      </Reveal>
 
       {/* 3. WHEN YOU SEND THE FORM — the data map */}
-      <Reveal>
         <Section id="contact-form">
           <Eyebrow>When you send the form</Eyebrow>
           <H2>Where your message goes, step by step.</H2>
@@ -116,16 +117,17 @@ export default function Security() {
           </Body>
           <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-5">
             <Feature step="01" title="It must come from here">
-              The message has to be sent from {site.domain} and stay under 16 KB. Anything else is refused before it is
-              read.
+              The message has to be JSON sent from {site.domain}, not from another website, and stay under 16 KB.
+              Anything else is refused before it is read.
             </Feature>
             <Feature step="02" title="A person check">
-              A Cloudflare Turnstile check confirms you&apos;re a person. If the check can&apos;t run, the form refuses to
-              send rather than sending unchecked.
+              A Cloudflare Turnstile check confirms you&apos;re a person. On this site and on every preview deployment, if
+              the check can&apos;t run, the form refuses to send rather than sending unchecked. In production the check
+              only accepts a token minted for {site.domain}.
             </Feature>
-            <Feature step="03" title="A per-address limit">
-              A limit on messages per address stops floods. It counts only after the person check, so bots can&apos;t use
-              up your allowance.
+            <Feature step="03" title="A limit per network and per email">
+              A limit on messages per network address and per email address stops floods. The email is kept only as a
+              hash. The limit counts only after the person check, so bots can&apos;t use up your allowance.
             </Feature>
             <Feature step="04" title="Emailed to a person">
               The message is emailed to {site.supportEmail} through Resend, a mail-delivery service, and lands in a Google
@@ -140,10 +142,8 @@ export default function Security() {
           <MetaRow>
             Processors: Cloudflare (hosting, Turnstile, analytics) · Resend (email delivery) · Google Workspace (mailbox) · {analyticsLabel}</MetaRow>
         </Section>
-      </Reveal>
 
       {/* 4. WHAT WE DON'T DO */}
-      <Reveal>
         <Section>
           <Eyebrow>What we don&apos;t do</Eyebrow>
           <H2>Three things this site will never add.</H2>
@@ -162,10 +162,8 @@ export default function Security() {
             </Grid3>
           </div>
         </Section>
-      </Reveal>
 
       {/* 5. REPORTING A PROBLEM */}
-      <Reveal>
         <Section>
           <Eyebrow>Reporting a problem</Eyebrow>
           <H2>Found something wrong? Tell a person.</H2>
@@ -187,7 +185,6 @@ export default function Security() {
             </a>
           </MetaRow>
         </Section>
-      </Reveal>
 
       {/* 6. CLOSE */}
       <Close eyebrow="Questions" title="Ask a person about any of this.">

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import type { ReactNode } from "react";
 import { steadfastCase } from "@/lib/demo/websites";
 
@@ -33,14 +32,14 @@ export function WebsiteSteadfastFrame() {
   return (
     <figure className="not-prose">
       <BrowserFrame url={`www.${steadfastCase.domain}`}>
-        <Image
+        <img
           src="/media/websites/steadfast-hero-v2-1120.webp"
           alt={`Screenshot of ${steadfastCase.domain} home page — a rural transportation company site built by Doyel Labs.`}
           width={1120}
           height={630}
-          sizes="(min-width: 1024px) 520px, (min-width: 768px) 50vw, 100vw"
-          className="h-auto w-full"
-          priority
+          decoding="sync"
+          fetchPriority="high"
+          className="block h-auto w-full"
         />
       </BrowserFrame>
       <figcaption className="mt-4 text-[14px] text-muted">

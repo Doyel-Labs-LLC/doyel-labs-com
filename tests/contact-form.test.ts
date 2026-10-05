@@ -31,6 +31,13 @@ describe("cleanContact", () => {
   it("keeps the honeypot value so the function can drop the request", () => {
     expect(cleanContact({ website: "http://spam" }).honeypot).toBe("http://spam");
   });
+
+  it("strips NUL bytes before validation", () => {
+    const c = cleanContact({ email: "ada@example.com\u0000", message: "hello\u0000 there" });
+    expect(c.email).toBe("ada@example.com");
+    expect(c.message).toBe("hello there");
+    expect(c.email).not.toContain("\u0000");
+  });
 });
 
 describe("EMAIL_RE", () => {

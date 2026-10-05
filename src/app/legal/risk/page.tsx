@@ -7,6 +7,12 @@ export const metadata: Metadata = {
   description:
     "Risk disclosure for the BAI trading-desk program built by Doyel Labs. BAI is one of several programs Doyel Labs ships; the company itself builds custom software, websites, and payroll workspaces.",
   alternates: { canonical: "/legal/risk/" },
+  openGraph: {
+    title: "Risk disclosure — BAI program",
+    description:
+      "Risk disclosure for the BAI trading-desk program built by Doyel Labs. BAI is one of several programs Doyel Labs ships; the company itself builds custom software, websites, and payroll workspaces.",
+    url: "/legal/risk/",
+  },
   robots: { index: true, follow: true },
 };
 

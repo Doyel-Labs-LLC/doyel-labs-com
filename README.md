@@ -1,366 +1,152 @@
 # doyel-labs.com
 
 Company website for **Doyel Labs LLC** (Casper, Wyoming). Static export,
-deployed on Cloudflare Pages with a serverless contact-form function.
+deployed on Cloudflare Pages. Production is the `master` branch of this
+repo, Pages project **`website`**.
 
-**v10 (September 2026):** eight pages on a warm light theme, a published
-website offer ($1,299 build + $99/month care, from `src/lib/offer.ts`),
-self-hosted fonts, a hashed strict CSP (`scripts/csp-hashes.mjs`), a
-hardened contact function, first-party analytics with an owner-only
-dashboard at `/admin/analytics/` (Cloudflare Access), image slots with
-illustration fallbacks (`IMAGES.md`), and CI. Retired routes 301 via
-`public/_redirects`.
-
-Build pipeline: `prebuild` generates the public-path allowlist and the
-generated-image list → `next build` → `scripts/package-admin.mjs` moves
-the admin export into the Functions bundle → `scripts/csp-hashes.mjs`
-writes the per-page CSP into `out/_headers`. Node 22.18+ is required
-(`.nvmrc`).
+The live site is the warm linen design (v12 layout and copy, v13 palette):
+Fraunces and Figtree, self-hosted; cream canvas `#f6eee2`, ivory cards,
+teal `#087187`. Prices live only in `src/lib/offer.ts`. The brief is
+`PROMPT.md`. Tokens are in `DESIGN.md` and `tailwind.config.ts`.
 
 - **Framework:** Next.js 16 (App Router) + React 19 + TypeScript
-- **Styling:** Tailwind CSS 3, cyan accent (`#10c7eb`) on a softened
-  near-black canvas
-- **Rendering:** `output: 'export'` — static HTML, no server runtime
-- **Deploy:** Cloudflare Pages, `master` branch = production
-- **Contact form:** Cloudflare Pages Function → Resend → Google Workspace
-- **Analytics:** Plausible only. Cookieless. No session replay.
+- **Rendering:** `output: 'export'` — static HTML, no Next server runtime
+- **Contact:** Pages Function `POST /api/contact` → Resend → Google Workspace,
+  plus one automatic receipt to the visitor
+- **Analytics:** chosen at build time (`NEXT_PUBLIC_ANALYTICS_PROVIDER`).
+  Production uses Cloudflare Web Analytics plus first-party approximate
+  location counts. The owner dashboard is `/admin/analytics/`, behind
+  Cloudflare Access, and is not part of the public export.
 
-The source-of-truth design brief lives in `PROMPT.md` (v9). Read it before
-you write copy. Prices live only in `src/lib/offer.ts`.
+Build pipeline: `prebuild` writes the public-path allowlist and the
+generated-image list → `next build` → `scripts/package-admin.mjs` moves
+the admin export into the Functions bundle → `scripts/csp-hashes.mjs`
+writes a hashed Content-Security-Policy into the single `/*` block of
+`out/_headers`. Node 22 (`.nvmrc`).
 
-## Repo layout
+## Checks
 
+```bash
+npm ci
+npm run typecheck    # site, Pages Function, and the location-retention worker
+npm run lint
+npm test             # vitest
+npm run test:analytics
+npm run build
+npm run test:e2e     # Playwright, including the rendering regression
 ```
-public/
-  _headers               Cloudflare Pages response headers (CSP, HSTS)
-  _redirects             Redirect table
-  robots.txt
-  .well-known/security.txt
-  favicon.*, apple-touch-icon.png, logo.svg
-  manifest.webmanifest
-  media/
-    payroll/             (empty; product frames use synthetic data)
-    websites/            Real SteadFast screenshots + logo (v2 = optimized)
-    bai/                 (empty)
-    connectionloop/      (empty)
 
-content/
-  legal/                 Legal MDX drafts (under counsel review)
-    terms.md
-    privacy.md
-    payroll-data.md
-    risk.md
-
-src/
-  lib/
-    site.ts              Company facts, phone, emails, disclaimers
-    legal.ts             Loads content/legal/*.md
-    changelog.ts         Single source of truth for /changelog/ + RSS
-    testimonials.ts      Named client testimonials (opt-in only)
-    writing.ts           Blog post index
-    demo/                Synthetic demo data for product frames
-  components/
-    chrome.tsx           Header, Footer, Page, Eyebrow, H1, H2, Lead, Card,
-                         GhostLink, LogoMark, AccentChip, MetaRow, Feature,
-                         Notice, Grid2/3, StatusChip
-    mobile-nav.tsx       Full-screen mobile drawer (createPortal-rendered)
-    hero-preview.tsx     Layered SteadFast site + SCA card for home hero
-    contact-modal.tsx    Modal contact form (ContactWidget)
-    contact-page-form.tsx Inline contact form on /contact/
-    turnstile.tsx        Cloudflare Turnstile widget
-    quote.tsx            Named client quote block
-    client-badge.tsx     Client logo + name + link
-    reveal.tsx           IntersectionObserver-based scroll-reveal
-    breadcrumbs.tsx      Breadcrumb nav + JSON-LD schema
-    product-frame.tsx    Dark hairline box that holds a product screen
-    frames/              One file per synthetic product screen
-    legal-page.tsx       Shared shell for /legal/*
-  app/
-    layout.tsx           Root metadata, Organization + WebSite JSON-LD
-    globals.css          Tokens, reveal animation, prose-legal
-    page.tsx             /
-    services/            /services and children (websites, payroll, custom-software)
-    industries/          /industries and /industries/federal-service-contractors
-    pricing/
-    work/
-    case-studies/steadfast/
-    reviews/
-    how-we-work/
-    start/
-    faq/
-    contact/
-    company/
-    founder/
-    engineering/
-    security/
-    press/
-    support/
-    status/              (client component, live health checks from browser)
-    changelog/           HTML changelog + rss.xml route
-    docs/                and children (websites, payroll, bai, connectionloop)
-    writing/             Blog index + posts
-    programs/            /programs and children (bai, connectionloop)
-    legal/               /legal/{terms,privacy,payroll-data,risk}
-    sitemap.ts           XML sitemap generator (static export)
-    sitemap/             Human-readable sitemap page (grouped index)
-    opengraph-image.tsx  1200x630 OG card via next/og
-
-functions/
-  api/
-    contact.ts           Cloudflare Pages Function — POST /api/contact
-                         → Resend email delivery
-                         → Turnstile verify
-                         → KV-based per-IP rate limit
-  tsconfig.json          Separate TS config for the Pages function
-
-scripts/
-  optimize-images.mjs    Re-runnable: resizes + re-encodes screenshots
-                         with mozjpeg + emits WebP variants
-
-PROMPT.md                Design brief (v8). Source of truth for positioning.
-AUDIT.md                 Rebuild audit trail (what was on the machine).
-DESIGN.md                Design system tokens and rationale.
-```
+`npm run check` runs typecheck, lint, vitest, and the build. CI
+(`.github/workflows/ci.yml`) runs the same gates plus the analytics tests
+and Playwright, and fails if `out/_headers` has a second `/*` block or
+allows `'unsafe-inline'` in `script-src` or public `style-src`.
 
 ## Local development
 
 ```bash
 npm install
-npm run dev             # dev server on :3100
+npm run dev          # http://127.0.0.1:3100
 ```
 
-Environment variables you can set locally to exercise the full stack:
+Copy `.env.example` for the build-time public variables. Pages Function
+secrets (`RESEND_API_KEY`, `TURNSTILE_SECRET_KEY`) and the `RATE_LIMITER`
+or `CONTACT_KV` binding are set in the Cloudflare dashboard, not in git.
+A local process with no `CF_PAGES_BRANCH` may omit Turnstile and the rate
+limiter. Every Pages deployment, including previews, refuses to run
+without both.
+
+## Deploy
+
+Pushing `master` builds the site on Cloudflare Pages (project `website`,
+root directory the repo root, build command `npm run build`, output `out`).
+There is no `wrangler.toml` on purpose: adding one would switch the
+project to Workers static assets and stop the automatic `out/` upload.
+
+Do not deploy from a laptop unless the Git integration is down:
 
 ```bash
-NEXT_PUBLIC_TURNSTILE_SITE_KEY=<from Cloudflare Turnstile dashboard>
-NEXT_PUBLIC_PLAUSIBLE_DOMAIN=doyel-labs.com
-NEXT_PUBLIC_API_BASE=https://bai-control-plane-staging.fly.dev
-```
-
-Other useful commands:
-
-```bash
-npm run typecheck       # strict TypeScript check (site + function)
-npm run lint            # ESLint
-npm test                # vitest — contact-form validation
-npm run build           # static export to out/ + CSP hashes into out/_headers
-npm run check           # all of the above
-node scripts/optimize-images.mjs    # re-encode screenshots
-```
-
-## Deploying to Cloudflare Pages
-
-**Repo:** [github.com/Doyel-Labs-LLC/doyel-labs-com](https://github.com/Doyel-Labs-LLC/doyel-labs-com)
-· default branch `master` · project name `website` on the Cloudflare side.
-
-The site is a **classic Cloudflare Pages** project (not Workers with Static
-Assets). There is intentionally **no `wrangler.toml`** in the repo — its
-presence would enroll the project in the Workers-with-Assets flow and
-override the automatic upload of the `out/` directory.
-
-### Deploy from a local terminal
-
-```bash
-npm run build
 npx wrangler pages deploy out --project-name=website --branch=master
 ```
 
-### Auto-deploy from Git
-
-Pushing to `master` triggers a Cloudflare Pages build. If auto-deploys are
-disabled or a build fails, fall back to the manual command above.
-
-### Required Pages secrets
-
-Set these in the Cloudflare Pages project settings (Settings → Environment variables):
+### Pages settings the function needs
 
 | Name | Kind | Purpose |
 |---|---|---|
-| `RESEND_API_KEY` | Encrypted | Sends contact-form emails via Resend. Sending-access scope only. |
+| `RESEND_API_KEY` | Encrypted | Contact mail. Sending-access scope only. |
 | `RESEND_FROM` | Plain | e.g. `Doyel Labs Website <noreply@doyel-labs.com>` |
-| `CONTACT_TO` | Plain | Destination inbox, default `support@doyel-labs.com` |
-| `TURNSTILE_SECRET_KEY` | Encrypted | Cloudflare Turnstile server-side verify secret |
-| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Plain | Turnstile client widget key (build-time) |
-| `NEXT_PUBLIC_PLAUSIBLE_DOMAIN` | Plain | `doyel-labs.com` — enables analytics |
+| `CONTACT_TO` | Plain | Default `support@doyel-labs.com` |
+| `TURNSTILE_SECRET_KEY` | Encrypted | Server-side Turnstile verify |
+| `NEXT_PUBLIC_TURNSTILE_SITE_KEY` | Plain | Widget key, baked in at build time |
+| `NEXT_PUBLIC_ANALYTICS_PROVIDER` | Plain | `cloudflare` in production |
+| `NEXT_PUBLIC_CF_WEB_ANALYTICS_TOKEN` | Plain | Web Analytics site token |
+| `NEXT_PUBLIC_LOCATION_ANALYTICS_ENABLED` | Plain | `true` only with the Cloudflare provider |
 
-Also required: a **Rate Limiting binding** named `RATE_LIMITER` (5 requests
-per 300 seconds, keyed by IP) or, as a fallback, a **KV binding** named
-`CONTACT_KV`. In production (`CF_PAGES_BRANCH=master`) the function refuses
-to send if the Turnstile secret or a rate-limit binding is missing.
+Bindings: `RATE_LIMITER` (5 requests / 300 seconds) or fallback `CONTACT_KV`.
+The function counts per IP and per email (the email key is a SHA-256 hash).
+Production Turnstile tokens must be minted for `doyel-labs.com` or `www`.
 
-## Adding a changelog entry (post-v22 pattern)
+## Repo layout
 
-Since v22 the changelog is a single source of truth. Do NOT edit
-`src/app/changelog/page.tsx` or `src/app/changelog/rss.xml/route.ts`
-directly — they both read from `src/lib/changelog.ts`.
-
-Prepend a new object to the `entries` array in `src/lib/changelog.ts`:
-
-```ts
-{
-  id: "v27-your-change-slug",
-  version: "v27",           // optional, one per ship
-  date: "2026-09-21",       // YYYY-MM-DD
-  section: "Company",       // one of: Company, Design, Performance,
-                            // Accessibility, SEO, Writing, Bugfix,
-                            // Payroll, BAI, ConnectionLoop
-  title: "One-line summary",
-  body: "One paragraph of what actually changed and why.",
-},
+```
+public/                _headers, _redirects, robots.txt, media, icons
+content/legal/         Counsel drafts. Raw HTML is escaped at render.
+functions/api/contact.ts
+src/app/               /, /websites, /software, /work, /how-we-work,
+                       /about, /contact, /security, /legal/*, admin export
+src/components/        chrome, contact form, Photo, frames
+src/lib/               site facts, offer, contact contract, emails,
+                       contact-guard, legal loader, analytics config
+src/fonts/             Fraunces and Figtree, self-hosted
+server/analytics/      Owner dashboard and location ingest
+workers/location-retention/
+scripts/csp-hashes.mjs Hashed CSP, merged into the one /* header block
+tests/                 vitest and Playwright
 ```
 
-On next build:
-- The `/changelog/` page renders it in the timeline
-- The RSS feed at `/changelog/rss.xml` includes it
-- The homepage "Recently shipped" band shows it (auto-picks the top 3)
+## Contact form
 
-## Adding a testimonial
+`functions/api/contact.ts` handles `POST /api/contact`.
 
-Testimonials require **written permission from the quoted party**. Never
-add anonymous or fabricated copy.
+1. The request must come from this site (`Origin`, and not
+   `Sec-Fetch-Site: cross-site`), be JSON, and stay under 16 KB.
+2. A filled honeypot (`dl_hp` in the form, `website` in the JSON) returns
+   `{ ok: true }` and sends nothing.
+3. Fields are cleaned with the same rules as the browser, including NUL
+   bytes.
+4. Turnstile is verified. Production accepts only `doyel-labs.com` and
+   `www`. A missing secret fails closed on every Pages deployment.
+5. After Turnstile, the IP and the hashed email are rate-limited. A
+   missing binding fails closed on every deployment.
+6. Resend delivers the notification. Logs record a static event and the
+   HTTP status. They do not include the Resend body, the message, or the
+   Turnstile hostname.
+7. One best-effort receipt goes to the visitor (`src/lib/contact-email.ts`).
+   It never repeats the message, greets by first name only when the name
+   is plain letters, and is capped per address (one per day when
+   `CONTACT_KV` is bound). A receipt failure is logged and does not fail
+   the request. The success card mentions the receipt only when the
+   response says `receipt: true`.
 
-Edit `src/lib/testimonials.ts` — add a `Testimonial` object to the
-`testimonials` array, newest first. Fields: `id`, `attribution`, `role`,
-`company`, `companyUrl`, `logo`, `short`, `full`, `scope`, `date`, `verify`.
-
-On next build, the new testimonial appears on `/reviews/` (with its own
-`schema.org/Review` JSON-LD entity) and — if you swap the home-page
-`<Quote>` component to use it — on the home page.
-
-## Adding a blog post
-
-1. Prepend a new `Post` entry to the `posts` array in `src/lib/writing.ts`
-   with slug, title, excerpt, date, readingTime, tags.
-2. Create `src/app/writing/<slug>/page.tsx` — copy an existing post
-   (`ai-native-software-what-we-write-what-we-generate/page.tsx` is a
-   good template) and rewrite. Include:
-   - `<script type="application/ld+json">` with `BlogPosting` schema
-   - Breadcrumbs
-   - Standard hero with date + reading time + tag row
-   - Body inside `<article>`, using local `Section` / `P` / `Callout`
-     helpers per post so styling can drift per piece if needed
-3. Add the path to `src/app/sitemap.ts` and to `src/app/sitemap/page.tsx`
-   (human sitemap).
+Both email templates match the site: linen canvas, one ivory card,
+Georgia headings, an amber bar, a teal pill. That module must not import
+`site.ts` (it reads `process.env`).
 
 ## Adding a legal page
 
-1. Add `content/legal/<slug>.md` with frontmatter:
+1. Add `content/legal/<slug>.md` with `title`, `version`, and
+   `under_review` frontmatter. Write markdown. Do not put raw HTML in the
+   draft: it is escaped, and a `<script>` would otherwise be hashed into
+   `script-src`.
+2. Add `src/app/legal/<slug>/page.tsx` that calls `loadLegal` and sets a
+   description plus a canonical Open Graph URL.
+3. Add the slug to the legal nav and to `src/app/sitemap.ts`.
+4. Leave `under_review: true` until counsel signs.
 
-   ```
-   ---
-   kind: <kind>
-   version: YYYY-MM-DD
-   title: <Human title>
-   under_review: true
-   ---
+## Images
 
-   # Human title
-
-   Body markdown here — no inline "DRAFT FOR COUNSEL" banners.
-   The LegalPage shell renders a proper Notice when
-   `under_review: true`.
-   ```
-
-2. Add a route file under `src/app/legal/<slug>/page.tsx`:
-
-   ```tsx
-   import { LegalPage } from "@/components/legal-page";
-   import { loadLegal } from "@/lib/legal";
-   export const metadata = { title: "<Human title>" };
-   export default function() {
-     return <LegalPage doc={loadLegal("<slug>")} />;
-   }
-   ```
-
-3. Add the slug to the `NAV` array in `src/components/legal-page.tsx`.
-4. Add the URL to `src/app/sitemap.ts` and to the "Legal" section of
-   `src/app/sitemap/page.tsx`.
-5. Keep `under_review: true` until counsel signs.
-
-## Adding a redacted screenshot
-
-The site does not need screenshots to run — most product screens are
-drawn from `src/components/frames/*` with synthetic data. If you want to
-add a real screen capture:
-
-1. **Capture** outside git (`C:\Users\bdoye\Desktop\...`), not in the repo.
-2. **Redact** before you save:
-   - Legal names → `OPERATOR 04`, `J. REED`, `MEMBER 02`
-   - SSN, EIN, routing, account numbers, tokens → `•••-••-••••`
-   - Dollar amounts → round demo figures, consistently
-   - Chat, emails, phone numbers
-   - Never commit a raw capture
-3. **Optimize.** Save at max 1600px wide. Run
-   `node scripts/optimize-images.mjs` to re-encode with mozjpeg and emit
-   a WebP variant. This drops file size ~65% at the same visible quality.
-4. **File** under `public/media/<product>/<screen>-v2.jpg` (the `-v2`
-   suffix invalidates any CDN cache on the old URL).
-5. **Use.** Reference from a `next/image` element with explicit
-   `width` and `height`.
-6. **Verify** the exported image: if any redaction is partly readable,
-   reject it.
-
-## Contact form architecture
-
-`functions/api/contact.ts` is a Cloudflare Pages Function that runs at the
-edge on every `POST /api/contact` request. Flow:
-
-1. Client (either `<ContactWidget>` modal or the inline `<ContactPageForm>`)
-   POSTs JSON with `name`, `email`, `projectType`, `subject`, `message`,
-   optional `preferredTimes`, and a Cloudflare Turnstile token.
-2. Function validates the payload, silently 200s on honeypot, verifies
-   Turnstile server-side, and checks a per-IP rate limit against
-   `CONTACT_KV` (5 msgs / 5 min).
-3. Composes an HTML + plain-text email via Resend, from
-   `noreply@doyel-labs.com`, to `support@doyel-labs.com` (routes via
-   Google Workspace to the support inbox).
-4. Sends the visitor one best-effort automatic receipt (reply-to
-   `support@`). It never repeats their message and only uses a first
-   name that is plain letters. Receipts to the same address are capped
-   (one per day when `CONTACT_KV` is bound, otherwise the rate limiter).
-   A failure here is logged, not surfaced.
-5. Returns `{ ok: true, receipt }` on success or a JSON error the client
-   renders with a fallback mailto. The success card mentions the
-   receipt only when `receipt` is `true`.
-
-Both templates live in `src/lib/contact-email.ts` (tested in
-`tests/contact-email.test.ts`) and match the site: linen canvas, one
-ivory rounded card, Georgia headings, amber bar, solid teal pill button.
-That file runs in the Worker, so it must not import `site.ts` (which
-reads `process.env`).
-
-## Static export gotchas
-
-- **No API routes.** We're on `output: 'export'`. All server-side
-  behaviour lives in `functions/api/contact.ts` (Cloudflare Pages
-  Functions, separate from Next.js).
-- **No dynamic image optimization.** `next/image` serves the source
-  file. Optimize offline via `scripts/optimize-images.mjs` (SteadFast
-  screenshots) and `scripts/optimize-generated-images.mjs` (WebP copies
-  of the photo slots; `<Photo>` prefers `.webp`).
-- **No `<Link>` prefetching over the network** — Next.js still prefetches
-  RSC data but you'll see them in DevTools as `.txt?_rsc=...` requests,
-  not HTML.
-
-## Design tokens
-
-Full palette + typography in `PROMPT.md` under the "Design" section and
-in `tailwind.config.ts`. Highlights:
-
-- Canvas: `#0a0f14` (softened black, not `#000`)
-- Ink: `#f0f0fa` (spectral off-white)
-- Accent: `#10c7eb` (from the bottom-right cyan square of the icon)
-- Never a second accent color
-
-## Non-negotiables
-
-Do not change without an explicit ask:
-
-- No photos of the founder anywhere on the site
-- No third-party marketing scripts (Plausible only)
-- No fake testimonials, fake logos, fake case studies
-- No pricing figures on service pages (bands only on `/pricing/`)
-- No "small team" / "two-person" / any headcount language
-- No "we specialize in X" — always broad, always any industry
-
-If any of these need to change, first update `PROMPT.md`, then the code.
+Photo slots are `public/media/generated/<name>.jpg` with a `.webp`
+sibling. `<Photo>` prefers the WebP and keeps the JPEG as the `<img>`
+src, with width, height, and synchronous decode. SteadFast screenshots
+live in `public/media/websites/`. See `IMAGES.md`. Use a sized `<img>`,
+not `next/image`: the optimizer emits an inline style, and public pages
+do not allow `style-src 'unsafe-inline'`.
