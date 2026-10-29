@@ -53,7 +53,7 @@ describe("visitor receipt", () => {
     expect(calls).toHaveLength(2);
     expect(calls[0].body.to).toEqual(["support@doyel-labs.com"]);
     expect(calls[0].body.text).toContain("bakery");
-    expect(calls[0].body.html).toContain("#f6eee2");
+    expect(calls[0].body.html).toContain("#efe6d5");
     expect(calls[1].body.to).toEqual(["jordan@example.com"]);
     expect(calls[1].body.subject).toBe("We have your message — Doyel Labs");
     expect(calls[1].body.html).toContain("Thank you, Jordan.");
