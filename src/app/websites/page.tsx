@@ -126,7 +126,7 @@ export default function Websites() {
       </section>
 
       {/* PRICING — the build */}
-        <Section id="pricing">
+        <Section className="reveal" id="pricing">
           <Split visual={<Illus name="three-days" className="mx-auto max-w-md" />}>
             <Eyebrow>The build</Eyebrow>
             <H2>What {websiteBuild.priceLabel} gets you.</H2>
@@ -141,7 +141,7 @@ export default function Websites() {
         </Section>
 
       {/* CARE PLAN */}
-        <Section id="care">
+        <Section className="reveal" id="care">
           <Split reverse visual={<Photo name="websites-care" fallback="care" alt="A small-business storefront with an open sign, seen in warm morning light" className="mx-auto max-w-md" />}>
             <Eyebrow>After launch</Eyebrow>
             <H2>The care plan: a person keeps it running.</H2>
@@ -152,7 +152,7 @@ export default function Websites() {
         </Section>
 
       {/* ADD-ONS + REFUSALS */}
-        <Section>
+        <Section className="reveal">
           <Grid2>
             <div>
               <Eyebrow>Add-ons</Eyebrow>
@@ -184,7 +184,7 @@ export default function Websites() {
         </Section>
 
       {/* FAQ */}
-        <Section id="faq">
+        <Section className="reveal" id="faq">
           <Eyebrow>Questions people ask</Eyebrow>
           <H2>Before you decide.</H2>
           <div className="max-w-3xl">

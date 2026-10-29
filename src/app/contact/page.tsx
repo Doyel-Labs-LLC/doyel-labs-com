@@ -75,7 +75,7 @@ export default function Contact() {
       </section>
 
       {/* 2. FORM + DIRECT LINES */}
-        <Section>
+        <Section className="reveal">
           <h2 className="sr-only">Send a message</h2>
           <div className="grid gap-10 md:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] md:gap-16">
             <div>
@@ -116,7 +116,7 @@ export default function Contact() {
         </Section>
 
       {/* 3. WHAT HAPPENS NEXT */}
-        <Section>
+        <Section className="reveal">
           <Eyebrow>What happens next</Eyebrow>
           <H2>Three steps, no surprises.</H2>
           <div className="mt-10 grid gap-6 md:grid-cols-3">
@@ -134,7 +134,7 @@ export default function Contact() {
         </Section>
 
       {/* 4. WHAT WE DON'T DO */}
-        <Section>
+        <Section className="reveal">
           <Split reverse visual={<Photo name="contact-call" fallback="call" alt="A phone handset resting on a notebook next to a mug on a warm wooden desk" className="mx-auto max-w-md" />}>
             <Eyebrow>What we don&apos;t do</Eyebrow>
             <H2>What we don&apos;t do when you contact us.</H2>

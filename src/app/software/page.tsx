@@ -132,7 +132,7 @@ export default function Software() {
       </section>
 
       {/* 2. WHAT WE CAN BUILD */}
-        <Section>
+        <Section className="reveal">
           <Eyebrow>What we can build</Eyebrow>
           <H2>Software shaped around how your business already works.</H2>
           <div className="mt-10">
@@ -147,7 +147,7 @@ export default function Software() {
         </Section>
 
       {/* 3. HOW A PROJECT RUNS */}
-        <Section id="how">
+        <Section className="reveal" id="how">
           <Split visual={<Photo name="software-scope" fallback="scope" alt="A shop owner and a builder reviewing a printed plan at a workbench" className="mx-auto max-w-md" />}>
             <Eyebrow>How a software project runs</Eyebrow>
             <H2>One call, one page, one price.</H2>
@@ -171,7 +171,7 @@ export default function Software() {
         </Section>
 
       {/* 4. ONE EXAMPLE */}
-        <Section>
+        <Section className="reveal">
           <Split reverse visual={<PayrollPaystubFrame />}>
             <Eyebrow>One example</Eyebrow>
             <H2>A payroll workspace.</H2>
@@ -190,7 +190,7 @@ export default function Software() {
         </Section>
 
       {/* 5. WHAT WE WON'T BUILD */}
-        <Section>
+        <Section className="reveal">
           <Eyebrow>What we won&apos;t build</Eyebrow>
           <H2>Some things are off the table on purpose.</H2>
           <div className="mt-10">
