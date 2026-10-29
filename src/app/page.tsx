@@ -18,7 +18,6 @@ import {
   Split,
 } from "@/components/chrome";
 import { ContactWidget } from "@/components/contact-modal";
-import { HeroPreview } from "@/components/hero-preview";
 import { Photo } from "@/components/photo";
 import { Quote } from "@/components/quote";
 import { textLink } from "@/components/button-styles";
@@ -37,6 +36,55 @@ export const metadata: Metadata = {
     url: `https://${site.domain}/`,
   },
 };
+
+/** Homepage product band. Kept local to the homepage so it can lead with
+ *  what is built without reshaping the shared products catalog. Screenshots
+ *  live under public/media/home/. */
+const builtProducts = [
+  {
+    name: "RouteWage",
+    stage: "Early access",
+    tone: "beta" as const,
+    img: "/media/home/routewage.png",
+    w: 2000,
+    h: 1250,
+    contain: false,
+    alt: "RouteWage — Service Contract Act payroll, correct to the cent",
+    body:
+      "Vertical payroll for USPS route operators. SCA wages correct to the cent, with the employment record for every driver, subcontractor, and employee in one place.",
+    meta: "Web app · all 50 states",
+  },
+  {
+    name: "ConnectionLoop",
+    stage: "Invite-only beta",
+    tone: "soon" as const,
+    img: "/media/home/connectionloop.png",
+    w: 780,
+    h: 1688,
+    contain: true,
+    alt: "ConnectionLoop — a shared place for your people",
+    body:
+      "A shared calendar, lists, photos, and chat for one family or group. Invite-only, free, no ads, and no public feed.",
+    meta: "iOS · Android",
+  },
+  {
+    name: "Doxie Drop",
+    stage: "In testing",
+    tone: "beta" as const,
+    img: "/media/home/doxiedrop.png",
+    w: 1920,
+    h: 1080,
+    contain: false,
+    alt: "Doxie Drop — an arcade dropper game",
+    body:
+      "A fast, friendly arcade dropper — levels, daily dashes, and a cast of characters to unlock. Our first game.",
+    meta: "Mobile · in play testing",
+  },
+];
+
+function stagePill(tone: "beta" | "soon"): string {
+  return tone === "soon" ? "bg-warmSoft text-care" : "bg-accent/10 text-accentDeep";
+}
 
 export default function Home() {
   return (
@@ -74,100 +122,173 @@ export default function Home() {
               <AccentChip>You own the code</AccentChip>
             </div>
           </div>
-          <div className="hero-in hero-in--5">
-            <HeroPreview />
+          <div className="hero-in hero-in--5 tilt-scene">
+            <div className="tilt">
+              <figure className="hero-photo m-0">
+                <Photo
+                  name="home-answer"
+                  fallback="answer"
+                  alt="A person at a desk taking a phone call in morning light"
+                  frame={false}
+                  priority
+                  width={1200}
+                  height={900}
+                />
+                <figcaption className="photo-chip">
+                  <span className="photo-dot" aria-hidden="true" />
+                  <span className="leading-snug">
+                    <span className="block text-[15px] font-semibold text-ink">A real person, answering</span>
+                    <span className="block text-[13px] text-muted">
+                      {site.phone} · reply {response.window}
+                    </span>
+                  </span>
+                </figcaption>
+              </figure>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* 2. THE OFFER — three lanes */}
-        <Section>
-          <Eyebrow>What we build</Eyebrow>
-          <H2>Three ways to start. One person on the other end.</H2>
-          <div className="mt-10">
-            <Grid3>
-              <Card title={`Website — ${websiteBuild.priceLabel}`} accent>
-                Five pages on your own domain, a contact form to your inbox, no cookie banner. Live in {websiteBuild.turnaround}{" "}
-                once your content is in.{" "}
-                <Link href="/websites/" className={textLink}>
-                  What&apos;s included
-                </Link>
-              </Card>
-              <Card title={`Care plan — ${carePlan.priceLabel}/month`}>
-                Hosting, backups, monitoring, and small edits whenever you need them. One number to call. Cancel any month.{" "}
-                <Link href="/websites/#care" className={textLink}>
-                  How it works
-                </Link>
-              </Card>
-              <Card title={`Custom software — ${customSoftware.fromLabel}`}>
-                Internal tools, payroll workspaces, portals, integrations. One call, a written scope, a fixed price.{" "}
-                <Link href="/software/" className={textLink}>
-                  What we can build
-                </Link>
-              </Card>
-            </Grid3>
-          </div>
-        </Section>
+      {/* 2. THE LAB — what we've built (hybrid) */}
+      <Section>
+        <div className="reveal">
+          <Eyebrow>Built and in use</Eyebrow>
+          <H2>The things we&apos;ve built.</H2>
+          <Body>
+            Software we build for other businesses, and products of our own: a payroll platform, a family calendar, and a game —
+            each in active use or testing.
+          </Body>
+        </div>
+        <div className="mt-12">
+          <Grid3>
+            {builtProducts.map((p) => (
+              <article
+                key={p.name}
+                className="reveal flex h-full flex-col overflow-hidden rounded-card border border-line bg-surface p-7 shadow-card transition-transform duration-300 ease-soft hover:-translate-y-1.5 hover:shadow-cardHover"
+              >
+                <div className={`prod-shot mb-6 ${p.contain ? "prod-shot--contain" : ""}`}>
+                  <img src={p.img} alt={p.alt} width={p.w} height={p.h} loading="lazy" decoding="async" />
+                </div>
+                <span
+                  className={`mb-4 self-start rounded-full px-3 py-1 text-[12px] font-semibold uppercase tracking-wide ${stagePill(
+                    p.tone,
+                  )}`}
+                >
+                  {p.stage}
+                </span>
+                <h3 className="font-display text-[22px] font-medium leading-snug text-ink">{p.name}</h3>
+                <p className="mt-2 text-small text-mute">{p.body}</p>
+                <p className="mt-auto pt-5 text-[13px] text-muted">{p.meta}</p>
+              </article>
+            ))}
+          </Grid3>
+        </div>
+      </Section>
 
-      {/* 3. THE PROMISE */}
-        <Section>
-          <Split visual={<Photo name="home-answer" fallback="answer" alt="A person at a desk taking a phone call in a bright workshop office" className="mx-auto max-w-md" />}>
-            <Eyebrow>Why it&apos;s different</Eyebrow>
-            <H2>
-              Built with AI. <span className="text-accent">Checked by a person.</span>
-            </H2>
-            <Body>{promise.body}</Body>
+      {/* 3. THE OFFER — three lanes */}
+      <Section className="reveal">
+        <Eyebrow>What we build</Eyebrow>
+        <H2>Three ways to start. One person on the other end.</H2>
+        <div className="mt-10">
+          <Grid3>
+            <Card title={`Website — ${websiteBuild.priceLabel}`} accent>
+              Five pages on your own domain, a contact form to your inbox, no cookie banner. Live in {websiteBuild.turnaround}{" "}
+              once your content is in.{" "}
+              <Link href="/websites/" className={textLink}>
+                What&apos;s included
+              </Link>
+            </Card>
+            <Card title={`Care plan — ${carePlan.priceLabel}/month`}>
+              Hosting, backups, monitoring, and small edits whenever you need them. One number to call. Cancel any month.{" "}
+              <Link href="/websites/#care" className={textLink}>
+                How it works
+              </Link>
+            </Card>
+            <Card title={`Custom software — ${customSoftware.fromLabel}`}>
+              Internal tools, payroll workspaces, portals, integrations. One call, a written scope, a fixed price.{" "}
+              <Link href="/software/" className={textLink}>
+                What we can build
+              </Link>
+            </Card>
+          </Grid3>
+        </div>
+      </Section>
+
+      {/* 4. THE PROMISE */}
+      <Section className="reveal">
+        <Split visual={<Photo name="software-scope" fallback="scope" alt="A scope document and a build plan on a desk" className="mx-auto max-w-md" />}>
+          <Eyebrow>Why it&apos;s different</Eyebrow>
+          <H2>
+            Built with AI. <span className="text-accent">Checked by a person.</span>
+          </H2>
+          <Body>{promise.body}</Body>
+          <Body>
+            We&apos;re open about it: AI does most of the building. That&apos;s why a real website costs{" "}
+            {websiteBuild.priceLabel} instead of eight thousand. A person checks every change, stands behind it, and
+            picks up the phone.
+          </Body>
+          <div className="mt-8">
+            <PrimaryLink href="/how-we-work/" small>
+              How we work
+            </PrimaryLink>
+          </div>
+        </Split>
+      </Section>
+
+      {/* 5. PROOF */}
+      <Section tone="warm" className="reveal">
+        <Eyebrow>Built and in use</Eyebrow>
+        <H2>What we built for SteadFast Transportation.</H2>
+        <div className="mt-10">
+          <Split
+            visual={
+              <img
+                src="/media/websites/steadfast-hero-v2.jpg"
+                alt="The SteadFast Transportation website, built by Doyel Labs"
+                width={1120}
+                height={630}
+                loading="lazy"
+                decoding="async"
+                className="w-full rounded-card border border-line shadow-lift"
+              />
+            }
+          >
             <Body>
-              We&apos;re open about it: AI does most of the building. That&apos;s why a real website costs{" "}
-              {websiteBuild.priceLabel} instead of eight thousand. A person checks every change, stands behind it, and
-              picks up the phone.
+              A marketing site and a payroll workspace for a transportation operator in Montana. Both live, both in daily use.
             </Body>
-            <div className="mt-8">
-              <PrimaryLink href="/how-we-work/" small>
-                How we work
-              </PrimaryLink>
+            <div className="mt-8 max-w-3xl">
+              <Quote t={steadfastTestimonial} />
+            </div>
+            <div className="mt-6">
+              <GhostLink href="/work/" small>
+                See the work
+              </GhostLink>
             </div>
           </Split>
-        </Section>
+        </div>
+      </Section>
 
-      {/* 4. PROOF */}
-        <Section tone="warm">
-          <Eyebrow>Built and in use</Eyebrow>
-          <H2>What we built for SteadFast Transportation.</H2>
-          <Body>
-            A marketing site and a payroll workspace for a transportation operator in Montana. Both live, both in daily use.
-          </Body>
-          <div className="mt-8 max-w-3xl">
-            <Quote t={steadfastTestimonial} />
-          </div>
-          <div className="mt-6">
-            <GhostLink href="/work/" small>
-              See the work
-            </GhostLink>
-          </div>
-        </Section>
+      {/* 6. HOW IT WORKS */}
+      <Section className="reveal">
+        <Eyebrow>How it works</Eyebrow>
+        <H2>A real conversation, then a real build.</H2>
+        <div className="mt-10 grid gap-6 md:grid-cols-4">
+          <Feature step="01" title="You reach out">
+            Form, email, or phone. A person reads it and replies {response.window}, {response.usually}.
+          </Feature>
+          <Feature step="02" title="We talk">
+            A short call about your business. No pitch, no pressure. If it&apos;s a website, we collect your content right then.
+          </Feature>
+          <Feature step="03" title="We build">
+            Websites go live in {websiteBuild.turnaround}. Software gets a written scope and a fixed price first, then daily progress.
+          </Feature>
+          <Feature step="04" title="A person stays on">
+            Something needs changing? Call the same number. No help desk, no queue.
+          </Feature>
+        </div>
+      </Section>
 
-      {/* 5. HOW IT WORKS */}
-        <Section>
-          <Eyebrow>How it works</Eyebrow>
-          <H2>A real conversation, then a real build.</H2>
-          <div className="mt-10 grid gap-6 md:grid-cols-4">
-            <Feature step="01" title="You reach out">
-              Form, email, or phone. A person reads it and replies {response.window}, {response.usually}.
-            </Feature>
-            <Feature step="02" title="We talk">
-              A short call about your business. No pitch, no pressure. If it&apos;s a website, we collect your content right then.
-            </Feature>
-            <Feature step="03" title="We build">
-              Websites go live in {websiteBuild.turnaround}. Software gets a written scope and a fixed price first, then daily progress.
-            </Feature>
-            <Feature step="04" title="A person stays on">
-              Something needs changing? Call the same number. No help desk, no queue.
-            </Feature>
-          </div>
-        </Section>
-
-      {/* 6. CLOSE */}
+      {/* 7. CLOSE */}
       <Close title="Tell us what your business does. We&apos;ll tell you what we can build.">
         One paragraph is enough. If you&apos;re not sure what you need yet, that&apos;s fine — most people aren&apos;t.
       </Close>

@@ -13,13 +13,13 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // v13: warm linen canvas with ivory cards and a sand band. No pure
-        // white anywhere, so the page feels like paper in afternoon light.
-        bg: "#f6eee2",
-        surface: "#fffaf2",
-        surface2: "#f1e7d8",
+        // v14: a deeper vellum canvas — warmer and more "material" than the
+        // old linen, and off the generated-cream tell. Ivory cards, sand band.
+        bg: "#efe6d5",
+        surface: "#fbf6ec",
+        surface2: "#e7dbc4",
         // Type
-        ink: "#1b1f26",
+        ink: "#191b1e",
         mute: "rgba(27, 31, 38, 0.80)",
         // 0.68 alpha clears WCAG AA (4.5:1) for small text on the cream
         // canvas and on white cards (≈ #626366 on #f6eee2 ≈ 5.3:1).
@@ -33,6 +33,8 @@ const config: Config = {
         accentHi: "#0b8aa3",
         // Solid-button hover / pressed: darker, so hover raises contrast.
         accentInk: "#06596a",
+        // Deepest teal — reserved for large Fraunces display accents.
+        accentDeep: "#06485a",
         accentDim: "rgba(8, 113, 135, 0.35)",
         accentSoft: "rgba(8, 113, 135, 0.08)",
         // Warm highlight — used for illustration fills and one soft band
@@ -59,11 +61,13 @@ const config: Config = {
       },
       fontSize: {
         // Named scale (PROMPT.md §7). Headings are sentence case, Fraunces.
-        display: ["64px", { lineHeight: "1.04", letterSpacing: "-0.025em", fontWeight: "500" }],
-        displaySm: ["42px", { lineHeight: "1.08", letterSpacing: "-0.02em", fontWeight: "500" }],
-        h2: ["44px", { lineHeight: "1.1", letterSpacing: "-0.02em", fontWeight: "500" }],
-        h2Sm: ["32px", { lineHeight: "1.15", letterSpacing: "-0.015em", fontWeight: "500" }],
-        h3: ["24px", { lineHeight: "1.25", letterSpacing: "-0.01em", fontWeight: "500" }],
+        // v14: larger, lower-weight display so Fraunces reads high-contrast
+        // and editorial — the single boldest move on the page.
+        display: ["80px", { lineHeight: "0.98", letterSpacing: "-0.03em", fontWeight: "440" }],
+        displaySm: ["46px", { lineHeight: "1.04", letterSpacing: "-0.025em", fontWeight: "450" }],
+        h2: ["48px", { lineHeight: "1.06", letterSpacing: "-0.025em", fontWeight: "450" }],
+        h2Sm: ["33px", { lineHeight: "1.12", letterSpacing: "-0.02em", fontWeight: "460" }],
+        h3: ["25px", { lineHeight: "1.22", letterSpacing: "-0.012em", fontWeight: "480" }],
         lead: ["20px", { lineHeight: "1.6" }],
         body: ["18px", { lineHeight: "1.65" }],
         small: ["16px", { lineHeight: "1.6" }],

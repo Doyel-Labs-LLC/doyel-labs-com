@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { Analytics } from "@/components/analytics";
+import { Motion } from "@/components/motion";
 import { promise, site } from "@/lib/site";
 import { carePlan, customSoftware, websiteBuild } from "@/lib/offer";
 
@@ -97,7 +98,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f6eee2",
+  themeColor: "#efe6d5",
   colorScheme: "light",
 };
 
@@ -190,6 +191,18 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-screen bg-bg font-sans text-ink antialiased">
+        {/* Branded preloader. Self-dismisses via CSS, so it clears without
+         * JS; the motion script lifts it sooner on load. */}
+        <div id="preloader" aria-hidden="true">
+          <div className="preloader-mark">
+            <span />
+            <span />
+            <span />
+            <span />
+          </div>
+        </div>
+        {/* Paper-grain texture over the whole page. */}
+        <div className="grain" aria-hidden="true" />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:border focus:border-line2 focus:bg-surface focus:px-5 focus:py-2.5 focus:text-[15px] focus:font-semibold focus:text-ink focus:shadow-card"
@@ -198,6 +211,7 @@ export default function RootLayout({
         </a>
         {children}
         <Analytics />
+        <Motion />
       </body>
     </html>
   );
