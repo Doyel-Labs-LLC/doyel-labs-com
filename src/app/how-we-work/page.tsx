@@ -106,8 +106,10 @@ export default function HowWeWork() {
               <AccentChip>You own the code</AccentChip>
             </div>
           </div>
-          <div className="hero-in hero-in--5">
-            <Photo name="how-we-work-scope" fallback="scope" alt="A one-page written scope on a wooden table beside a coffee mug" className="mx-auto max-w-md" priority />
+          <div className="hero-in hero-in--5 tilt-scene">
+            <div className="tilt">
+              <Photo name="how-we-work-scope" fallback="scope" alt="A one-page written scope on a wooden table beside a coffee mug" className="mx-auto max-w-md" priority />
+            </div>
           </div>
         </div>
       </section>

@@ -85,8 +85,10 @@ export default function About() {
               <AccentChip>{site.hoursShort}</AccentChip>
             </div>
           </div>
-          <div className="hero-in hero-in--5">
-            <Photo name="about-casper" fallback="casper" alt="Casper Mountain and the Wyoming plains at golden hour" className="mx-auto max-w-md" priority />
+          <div className="hero-in hero-in--5 tilt-scene">
+            <div className="tilt">
+              <Photo name="about-casper" fallback="casper" alt="Casper Mountain and the Wyoming plains at golden hour" className="mx-auto max-w-md" priority />
+            </div>
           </div>
         </div>
       </section>
