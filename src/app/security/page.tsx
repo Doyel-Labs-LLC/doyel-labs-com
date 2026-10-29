@@ -120,7 +120,7 @@ export default function Security() {
               The message has to be JSON sent from {site.domain}, not from another website, and stay under 16 KB.
               Anything else is refused before it is read.
             </Feature>
-            <Feature step="02" title="A person check">
+            <Feature step="02" title="A real-person check">
               A Cloudflare Turnstile check confirms you&apos;re a person. On this site and on every preview deployment, if
               the check can&apos;t run, the form refuses to send rather than sending unchecked. In production the check
               only accepts a token minted for {site.domain}.
