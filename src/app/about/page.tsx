@@ -97,7 +97,7 @@ export default function About() {
       </section>
 
       {/* 2. WHY A PERSON */}
-        <Section id="why">
+        <Section className="reveal" id="why">
           <Split visual={<Illus name="answer" className="mx-auto max-w-sm" />}>
             <Eyebrow>Why a person</Eyebrow>
             <H2>Plenty of tools will generate a website. Few people will answer the phone about it.</H2>
@@ -113,7 +113,7 @@ export default function About() {
         </Section>
 
       {/* 3. HOW WE USE AI */}
-        <Section id="ai">
+        <Section className="reveal" id="ai">
           <Eyebrow>How we use AI</Eyebrow>
           <H2>AI builds most of it. A person answers for all of it.</H2>
           <Body>
@@ -136,7 +136,7 @@ export default function About() {
         </Section>
 
       {/* 4. THE FACTS */}
-        <Section id="facts">
+        <Section className="reveal" id="facts">
           <Eyebrow>The facts</Eyebrow>
           <H2>The plain details.</H2>
           <div className="mt-10">
@@ -171,7 +171,7 @@ export default function About() {
         </Section>
 
       {/* 5. WHO ANSWERS */}
-        <Section id="who-answers">
+        <Section className="reveal" id="who-answers">
           <Eyebrow>Who you&apos;ll talk to</Eyebrow>
           <H2>The person on the other end.</H2>
           <div className="mt-10 grid items-start gap-10 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:gap-16">

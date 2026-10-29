@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { usePathname } from "next/navigation";
 
 /**
  * Progressive motion for the marketing pages: scroll "paper folds", a
@@ -11,31 +12,37 @@ import { useEffect } from "react";
  * JavaScript and with reduced motion — styles here are only ever set at
  * runtime (never server-rendered), so no public page emits a style
  * attribute and the strict CSP is untouched.
+ *
+ * The reveal/pointer wiring re-runs on every client-side navigation (the
+ * layout, and so this component, persists across routes), so folds on a
+ * page reached via a link arm the same as on a fresh load.
  */
 export function Motion() {
-  useEffect(() => {
-    const root = document.documentElement;
-    root.classList.add("js");
+  const pathname = usePathname();
 
+  // Once: mark JS on, and dismiss the preloader.
+  useEffect(() => {
+    document.documentElement.classList.add("js");
     const preloader = document.getElementById("preloader");
     const lift = () => preloader?.classList.add("lift");
 
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       lift();
       return;
     }
-
-    const cleanups: Array<() => void> = [];
-
-    // Lift the preloader shortly after load; a timer is the safety net.
     const onLoad = () => window.setTimeout(lift, 800);
     if (document.readyState === "complete") onLoad();
     else window.addEventListener("load", onLoad, { once: true });
     const safety = window.setTimeout(lift, 3000);
-    cleanups.push(() => window.clearTimeout(safety));
+    return () => window.clearTimeout(safety);
+  }, []);
 
-    // Scroll folds.
+  // Per route: arm scroll folds and pointer micro-interactions.
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const cleanups: Array<() => void> = [];
+
     const reveals = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
     const io = new IntersectionObserver(
       (entries) => {
@@ -58,11 +65,8 @@ export function Motion() {
       window.clearTimeout(foldFallback);
     });
 
-    const fine = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
-    if (fine) {
-      // Magnetic controls.
-      const magnets = Array.from(document.querySelectorAll<HTMLElement>(".magnetic"));
-      for (const el of magnets) {
+    if (window.matchMedia("(hover: hover) and (pointer: fine)").matches) {
+      for (const el of Array.from(document.querySelectorAll<HTMLElement>(".magnetic"))) {
         const move = (event: MouseEvent) => {
           const r = el.getBoundingClientRect();
           const x = event.clientX - r.left - r.width / 2;
@@ -80,7 +84,6 @@ export function Motion() {
         });
       }
 
-      // Hero photo 3D tilt.
       const tilt = document.querySelector<HTMLElement>(".tilt");
       const scene = tilt?.parentElement;
       if (tilt && scene) {
@@ -103,7 +106,7 @@ export function Motion() {
     }
 
     return () => cleanups.forEach((fn) => fn());
-  }, []);
+  }, [pathname]);
 
   return null;
 }
