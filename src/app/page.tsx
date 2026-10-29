@@ -51,7 +51,7 @@ const builtProducts = [
     contain: false,
     alt: "RouteWage — Service Contract Act payroll, correct to the cent",
     body:
-      "Vertical payroll for USPS route operators. SCA wages correct to the cent, with the employment record for every driver, subcontractor, and employee in one place.",
+      "Payroll software for USPS route operators — SCA wages to the cent, and one clean employment record per worker. It prepares pay runs and records; it does not move money.",
     meta: "Web app · all 50 states",
   },
   {

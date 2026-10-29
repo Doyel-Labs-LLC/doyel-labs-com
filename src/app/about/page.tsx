@@ -76,7 +76,7 @@ export default function About() {
             <div className="hero-in hero-in--3">
               <Lead>
                 {site.company} is a software company in {site.city}, formed {site.founded}. It builds websites and custom
-                software for businesses of any size, and keeps them running afterward.
+                software for businesses, and keeps them running afterward.
               </Lead>
             </div>
             <div className="hero-in hero-in--4 mt-8 flex flex-wrap items-center gap-3">
