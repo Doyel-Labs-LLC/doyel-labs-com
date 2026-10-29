@@ -26,10 +26,10 @@ const brand = {
 
 // Matches tailwind.config.ts.
 const c = {
-  bg: "#f6eee2",
-  surface: "#fffaf2",
-  soft: "#f1e7d8",
-  ink: "#1b1f26",
+  bg: "#efe6d5",
+  surface: "#fbf6ec",
+  soft: "#e7dbc4",
+  ink: "#191b1e",
   mute: "#4a4d53",
   muted: "#626469",
   line: "#e7e1d8",

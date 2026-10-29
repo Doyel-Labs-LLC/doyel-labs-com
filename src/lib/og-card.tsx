@@ -19,8 +19,8 @@ export const ogSize = { width: 1200, height: 630 };
 export const ogContentType = "image/png";
 
 const palette = {
-  bg: "#f6eee2",
-  ink: "#1b1f26",
+  bg: "#efe6d5",
+  ink: "#191b1e",
   mute: "rgba(27, 31, 38, 0.62)",
   accent: "#087187",
   square: {

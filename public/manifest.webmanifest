@@ -4,8 +4,8 @@
   "description": "Doyel Labs LLC \u2014 websites and custom software, built by a person you can call. Casper, Wyoming.",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#f6eee2",
-  "theme_color": "#f6eee2",
+  "background_color": "#efe6d5",
+  "theme_color": "#efe6d5",
   "icons": [
     {
       "src": "/favicon-192.png",

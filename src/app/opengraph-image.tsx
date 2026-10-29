@@ -25,8 +25,8 @@ export const alt =
 /** Palette pulled from Tailwind tokens so the OG image always matches
  * the site. Keep these in sync with `tailwind.config.ts`. */
 const palette = {
-  bg: "#f6eee2",
-  ink: "#1b1f26",
+  bg: "#efe6d5",
+  ink: "#191b1e",
   mute: "rgba(27, 31, 38, 0.62)",
   accent: "#087187",
   square: {
