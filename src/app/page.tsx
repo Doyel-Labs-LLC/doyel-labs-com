@@ -23,7 +23,8 @@ import { Photo } from "@/components/photo";
 import { Quote } from "@/components/quote";
 import { textLink } from "@/components/button-styles";
 import { carePlan, customSoftware, response, websiteBuild } from "@/lib/offer";
-import { products, type Product } from "@/lib/products";
+import { ProductCard } from "@/components/product-card";
+import { products } from "@/lib/products";
 import { promise, site } from "@/lib/site";
 import { steadfastTestimonial } from "@/lib/testimonials";
 
@@ -38,20 +39,6 @@ export const metadata: Metadata = {
     url: `https://${site.domain}/`,
   },
 };
-
-/** Screenshots for each product card. The name, status, tagline, and meta
- *  come from the shared catalog (src/lib/products.ts) so every page agrees;
- *  only the images live here, under public/media/home/. */
-const productMedia: Record<Product["key"], { img: string; w: number; h: number; contain: boolean; alt: string }> = {
-  routewage: { img: "/media/home/routewage.png", w: 1400, h: 875, contain: false, alt: "RouteWage — Service Contract Act payroll" },
-  connectionloop: { img: "/media/home/connectionloop.png", w: 780, h: 1688, contain: true, alt: "ConnectionLoop — a shared place for your people" },
-  doxiedrop: { img: "/media/home/doxiedrop.png", w: 1400, h: 788, contain: false, alt: "Doxie Drop — an arcade dropper game" },
-  bai: { img: "/media/home/bai.jpg", w: 1024, h: 576, contain: false, alt: "BAI Desk — an autonomous trading desk" },
-};
-
-function statusPill(status: Product["status"]): string {
-  return status === "Early Access" ? "bg-accent/10 text-accentDeep" : "bg-warmSoft text-care";
-}
 
 export default function Home() {
   return (
@@ -126,31 +113,11 @@ export default function Home() {
             trading desk — each in early access or testing.
           </Body>
         </div>
-        <div className="mt-12">
+        <div className="reveal mt-12">
           <Grid2>
-            {products.map((p) => {
-              const m = productMedia[p.key];
-              return (
-                <article
-                  key={p.key}
-                  className="reveal flex h-full flex-col overflow-hidden rounded-card border border-line bg-surface p-7 shadow-card transition-transform duration-300 ease-soft hover:-translate-y-1.5 hover:shadow-cardHover"
-                >
-                  <div className={`prod-shot mb-6 ${m.contain ? "prod-shot--contain" : ""}`}>
-                    <img src={m.img} alt={m.alt} width={m.w} height={m.h} decoding="async" />
-                  </div>
-                  <span
-                    className={`mb-4 self-start rounded-full px-3 py-1 text-[12px] font-semibold uppercase tracking-wide ${statusPill(
-                      p.status,
-                    )}`}
-                  >
-                    {p.status}
-                  </span>
-                  <h3 className="font-display text-[22px] font-medium leading-snug text-ink">{p.name}</h3>
-                  <p className="mt-2 text-small text-mute">{p.tagline}</p>
-                  <p className="mt-auto pt-5 text-[13px] text-muted">{p.meta}</p>
-                </article>
-              );
-            })}
+            {products.map((p) => (
+              <ProductCard key={p.key} p={p} />
+            ))}
           </Grid2>
         </div>
       </Section>

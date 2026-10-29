@@ -125,8 +125,10 @@ export default function Software() {
               <AccentChip>Reply {response.window}</AccentChip>
             </div>
           </div>
-          <div className="hero-in hero-in--5">
-            <PayrollScaFrame />
+          <div className="hero-in hero-in--5 tilt-scene">
+            <div className="tilt">
+              <PayrollScaFrame />
+            </div>
           </div>
         </div>
       </section>

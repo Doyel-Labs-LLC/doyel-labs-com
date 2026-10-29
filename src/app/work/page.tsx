@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import {
   AccentChip,
   Body,
-  Card,
   Checks,
   Close,
   Eyebrow,
@@ -14,7 +13,6 @@ import {
   Page,
   Section,
   Split,
-  StatusChip,
 } from "@/components/chrome";
 import { ContactWidget } from "@/components/contact-modal";
 import { Breadcrumbs } from "@/components/breadcrumbs";
@@ -22,6 +20,7 @@ import { PayrollAuditFrame } from "@/components/frames/payroll-audit";
 import { PayrollBatchFrame } from "@/components/frames/payroll-batch";
 import { WebsiteSteadfastFrame } from "@/components/frames/websites-preview";
 import { Photo } from "@/components/photo";
+import { ProductCard } from "@/components/product-card";
 import { Quote } from "@/components/quote";
 import { steadfastCase } from "@/lib/demo/websites";
 import { products } from "@/lib/products";
@@ -30,7 +29,7 @@ import { steadfastTestimonial } from "@/lib/testimonials";
 
 export const metadata: Metadata = {
   title: "Work — what we built for SteadFast Transportation",
-  description: `A marketing site and a password-gated payroll workspace for ${steadfastCase.name}, both live and in daily use. Plus two products in the lab. Built by Doyel Labs, ${site.city}.`,
+  description: `A marketing site and a password-gated payroll workspace for ${steadfastCase.name}, both live and in daily use. Plus the products we're building in the lab. Built by Doyel Labs, ${site.city}.`,
   alternates: { canonical: `https://${site.domain}/work/` },
   openGraph: {
     title: "Work — what we built for SteadFast | Doyel Labs",
@@ -75,8 +74,10 @@ export default function Work() {
               <AccentChip>Ownership disclosed</AccentChip>
             </div>
           </div>
-          <div className="hero-in hero-in--5">
-            <WebsiteSteadfastFrame />
+          <div className="hero-in hero-in--5 tilt-scene">
+            <div className="tilt">
+              <WebsiteSteadfastFrame />
+            </div>
           </div>
         </div>
       </section>
@@ -129,13 +130,7 @@ export default function Work() {
           <div className="mt-10">
             <Grid2>
               {products.map((p) => (
-                <Card key={p.key} title={p.name}>
-                  <p>{p.tagline}</p>
-                  <div className="mt-4 flex flex-wrap items-center gap-3">
-                    <StatusChip>{p.status}</StatusChip>
-                    <span className="text-[13px] text-muted">{p.meta}</span>
-                  </div>
-                </Card>
+                <ProductCard key={p.key} p={p} />
               ))}
             </Grid2>
           </div>
