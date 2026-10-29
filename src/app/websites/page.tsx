@@ -119,8 +119,10 @@ export default function Websites() {
               <AccentChip>{websiteBuild.depositLabel}</AccentChip>
             </div>
           </div>
-          <div className="hero-in hero-in--5">
-            <WebsiteSteadfastFrame />
+          <div className="hero-in hero-in--5 tilt-scene">
+            <div className="tilt">
+              <WebsiteSteadfastFrame />
+            </div>
           </div>
         </div>
       </section>
