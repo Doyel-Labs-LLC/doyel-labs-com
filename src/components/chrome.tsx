@@ -256,7 +256,7 @@ function CtaLink({
 /** Primary CTA — the one solid button on any band. */
 export function PrimaryLink({ href, children, small = false, external = false }: { href: string; children: ReactNode; small?: boolean; external?: boolean }) {
   return (
-    <CtaLink href={href} external={external} className={buttonClass("primary", small ? "small" : "regular")}>
+    <CtaLink href={href} external={external} className={`${small ? "" : "magnetic "}${buttonClass("primary", small ? "small" : "regular")}`}>
       {children}
     </CtaLink>
   );
