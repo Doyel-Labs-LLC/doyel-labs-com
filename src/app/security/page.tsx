@@ -73,7 +73,7 @@ export default function Security() {
       </section>
 
       {/* 2. WHEN YOU VISIT */}
-        <Section>
+        <Section className="reveal">
           <Eyebrow>When you visit</Eyebrow>
           <H2>What we count when you visit, and what we don&apos;t.</H2>
           <Body>
@@ -109,7 +109,7 @@ export default function Security() {
         </Section>
 
       {/* 3. WHEN YOU SEND THE FORM — the data map */}
-        <Section id="contact-form">
+        <Section className="reveal" id="contact-form">
           <Eyebrow>When you send the form</Eyebrow>
           <H2>Where your message goes, step by step.</H2>
           <Body>
@@ -120,7 +120,7 @@ export default function Security() {
               The message has to be JSON sent from {site.domain}, not from another website, and stay under 16 KB.
               Anything else is refused before it is read.
             </Feature>
-            <Feature step="02" title="A person check">
+            <Feature step="02" title="A real-person check">
               A Cloudflare Turnstile check confirms you&apos;re a person. On this site and on every preview deployment, if
               the check can&apos;t run, the form refuses to send rather than sending unchecked. In production the check
               only accepts a token minted for {site.domain}.
@@ -144,7 +144,7 @@ export default function Security() {
         </Section>
 
       {/* 4. WHAT WE DON'T DO */}
-        <Section>
+        <Section className="reveal">
           <Eyebrow>What we don&apos;t do</Eyebrow>
           <H2>Three things this site will never add.</H2>
           <div className="mt-10">
@@ -164,7 +164,7 @@ export default function Security() {
         </Section>
 
       {/* 5. REPORTING A PROBLEM */}
-        <Section>
+        <Section className="reveal">
           <Eyebrow>Reporting a problem</Eyebrow>
           <H2>Found something wrong? Tell a person.</H2>
           <Body>

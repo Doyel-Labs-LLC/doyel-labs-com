@@ -8,6 +8,7 @@ import {
   Eyebrow,
   Feature,
   GhostLink,
+  Grid2,
   Grid3,
   H1,
   H2,
@@ -22,6 +23,7 @@ import { Photo } from "@/components/photo";
 import { Quote } from "@/components/quote";
 import { textLink } from "@/components/button-styles";
 import { carePlan, customSoftware, response, websiteBuild } from "@/lib/offer";
+import { products, type Product } from "@/lib/products";
 import { promise, site } from "@/lib/site";
 import { steadfastTestimonial } from "@/lib/testimonials";
 
@@ -37,53 +39,18 @@ export const metadata: Metadata = {
   },
 };
 
-/** Homepage product band. Kept local to the homepage so it can lead with
- *  what is built without reshaping the shared products catalog. Screenshots
- *  live under public/media/home/. */
-const builtProducts = [
-  {
-    name: "RouteWage",
-    stage: "Early access",
-    tone: "beta" as const,
-    img: "/media/home/routewage.png",
-    w: 2000,
-    h: 1250,
-    contain: false,
-    alt: "RouteWage — Service Contract Act payroll, correct to the cent",
-    body:
-      "Vertical payroll for USPS route operators. SCA wages correct to the cent, with the employment record for every driver, subcontractor, and employee in one place.",
-    meta: "Web app · all 50 states",
-  },
-  {
-    name: "ConnectionLoop",
-    stage: "Invite-only beta",
-    tone: "soon" as const,
-    img: "/media/home/connectionloop.png",
-    w: 780,
-    h: 1688,
-    contain: true,
-    alt: "ConnectionLoop — a shared place for your people",
-    body:
-      "A shared calendar, lists, photos, and chat for one family or group. Invite-only, free, no ads, and no public feed.",
-    meta: "iOS · Android",
-  },
-  {
-    name: "Doxie Drop",
-    stage: "In testing",
-    tone: "beta" as const,
-    img: "/media/home/doxiedrop.png",
-    w: 1920,
-    h: 1080,
-    contain: false,
-    alt: "Doxie Drop — an arcade dropper game",
-    body:
-      "A fast, friendly arcade dropper — levels, daily dashes, and a cast of characters to unlock. Our first game.",
-    meta: "Mobile · in play testing",
-  },
-];
+/** Screenshots for each product card. The name, status, tagline, and meta
+ *  come from the shared catalog (src/lib/products.ts) so every page agrees;
+ *  only the images live here, under public/media/home/. */
+const productMedia: Record<Product["key"], { img: string; w: number; h: number; contain: boolean; alt: string }> = {
+  routewage: { img: "/media/home/routewage.png", w: 1400, h: 875, contain: false, alt: "RouteWage — Service Contract Act payroll" },
+  connectionloop: { img: "/media/home/connectionloop.png", w: 780, h: 1688, contain: true, alt: "ConnectionLoop — a shared place for your people" },
+  doxiedrop: { img: "/media/home/doxiedrop.png", w: 1400, h: 788, contain: false, alt: "Doxie Drop — an arcade dropper game" },
+  bai: { img: "/media/home/bai.jpg", w: 1024, h: 576, contain: false, alt: "BAI Desk — an autonomous trading desk" },
+};
 
-function stagePill(tone: "beta" | "soon"): string {
-  return tone === "soon" ? "bg-warmSoft text-care" : "bg-accent/10 text-accentDeep";
+function statusPill(status: Product["status"]): string {
+  return status === "Early Access" ? "bg-accent/10 text-accentDeep" : "bg-warmSoft text-care";
 }
 
 export default function Home() {
@@ -155,33 +122,36 @@ export default function Home() {
           <Eyebrow>Built and in use</Eyebrow>
           <H2>The things we&apos;ve built.</H2>
           <Body>
-            Software we build for other businesses, and products of our own: a payroll platform, a family calendar, and a game —
-            each in active use or testing.
+            Software we build for other businesses, and four of our own — a payroll platform, a family calendar, a game, and a
+            trading desk — each in early access or testing.
           </Body>
         </div>
         <div className="mt-12">
-          <Grid3>
-            {builtProducts.map((p) => (
-              <article
-                key={p.name}
-                className="reveal flex h-full flex-col overflow-hidden rounded-card border border-line bg-surface p-7 shadow-card transition-transform duration-300 ease-soft hover:-translate-y-1.5 hover:shadow-cardHover"
-              >
-                <div className={`prod-shot mb-6 ${p.contain ? "prod-shot--contain" : ""}`}>
-                  <img src={p.img} alt={p.alt} width={p.w} height={p.h} loading="lazy" decoding="async" />
-                </div>
-                <span
-                  className={`mb-4 self-start rounded-full px-3 py-1 text-[12px] font-semibold uppercase tracking-wide ${stagePill(
-                    p.tone,
-                  )}`}
+          <Grid2>
+            {products.map((p) => {
+              const m = productMedia[p.key];
+              return (
+                <article
+                  key={p.key}
+                  className="reveal flex h-full flex-col overflow-hidden rounded-card border border-line bg-surface p-7 shadow-card transition-transform duration-300 ease-soft hover:-translate-y-1.5 hover:shadow-cardHover"
                 >
-                  {p.stage}
-                </span>
-                <h3 className="font-display text-[22px] font-medium leading-snug text-ink">{p.name}</h3>
-                <p className="mt-2 text-small text-mute">{p.body}</p>
-                <p className="mt-auto pt-5 text-[13px] text-muted">{p.meta}</p>
-              </article>
-            ))}
-          </Grid3>
+                  <div className={`prod-shot mb-6 ${m.contain ? "prod-shot--contain" : ""}`}>
+                    <img src={m.img} alt={m.alt} width={m.w} height={m.h} decoding="async" />
+                  </div>
+                  <span
+                    className={`mb-4 self-start rounded-full px-3 py-1 text-[12px] font-semibold uppercase tracking-wide ${statusPill(
+                      p.status,
+                    )}`}
+                  >
+                    {p.status}
+                  </span>
+                  <h3 className="font-display text-[22px] font-medium leading-snug text-ink">{p.name}</h3>
+                  <p className="mt-2 text-small text-mute">{p.tagline}</p>
+                  <p className="mt-auto pt-5 text-[13px] text-muted">{p.meta}</p>
+                </article>
+              );
+            })}
+          </Grid2>
         </div>
       </Section>
 
@@ -247,7 +217,6 @@ export default function Home() {
                 alt="The SteadFast Transportation website, built by Doyel Labs"
                 width={1120}
                 height={630}
-                loading="lazy"
                 decoding="async"
                 className="w-full rounded-card border border-line shadow-lift"
               />

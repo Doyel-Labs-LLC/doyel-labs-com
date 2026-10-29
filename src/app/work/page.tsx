@@ -25,7 +25,7 @@ import { Photo } from "@/components/photo";
 import { Quote } from "@/components/quote";
 import { steadfastCase } from "@/lib/demo/websites";
 import { products } from "@/lib/products";
-import { baiDisclaimer, programStatus, site } from "@/lib/site";
+import { baiDisclaimer, site } from "@/lib/site";
 import { steadfastTestimonial } from "@/lib/testimonials";
 
 export const metadata: Metadata = {
@@ -82,7 +82,7 @@ export default function Work() {
       </section>
 
       {/* 2. STEADFAST */}
-        <Section id="steadfast">
+        <Section className="reveal" id="steadfast">
           <Split visual={<Photo name="work-steadfast-context" fallback="flow" alt="A two-lane highway across Montana at dawn with a single delivery vehicle in the distance" className="mx-auto max-w-md" />}>
             <Eyebrow>Client · Transportation</Eyebrow>
             <H2>A website and a payroll workspace for a Montana transportation operator.</H2>
@@ -100,7 +100,7 @@ export default function Work() {
         </Section>
 
       {/* 3. IN THEIR WORDS */}
-        <Section>
+        <Section className="reveal">
           <Eyebrow>In their words</Eyebrow>
           <H2>What SteadFast said about the work.</H2>
           <div className="mt-8 max-w-3xl">
@@ -109,7 +109,7 @@ export default function Work() {
         </Section>
 
       {/* 4. INSIDE THE PAYROLL WORKSPACE */}
-        <Section>
+        <Section className="reveal">
           <Eyebrow>Inside the payroll workspace</Eyebrow>
           <H2>Two of the screens the operator uses.</H2>
           <Body>The frames below use synthetic demo data and carry a label saying so. The shapes match the real app.</Body>
@@ -122,9 +122,9 @@ export default function Work() {
         </Section>
 
       {/* 5. IN THE LAB */}
-        <Section id="lab">
+        <Section className="reveal" id="lab">
           <Eyebrow>In the lab</Eyebrow>
-          <H2>Two products we&apos;re building for ourselves.</H2>
+          <H2>Products we&apos;re building for ourselves.</H2>
           <Body>Not client work, and not open to the public yet.</Body>
           <div className="mt-10">
             <Grid2>
@@ -132,7 +132,7 @@ export default function Work() {
                 <Card key={p.key} title={p.name}>
                   <p>{p.tagline}</p>
                   <div className="mt-4 flex flex-wrap items-center gap-3">
-                    <StatusChip>{programStatus[p.key].label}</StatusChip>
+                    <StatusChip>{p.status}</StatusChip>
                     <span className="text-[13px] text-muted">{p.meta}</span>
                   </div>
                 </Card>

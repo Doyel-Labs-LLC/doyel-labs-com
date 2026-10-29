@@ -17,15 +17,13 @@ import {
   Page,
   Section,
   Split,
-  StatusChip,
 } from "@/components/chrome";
 import { ContactWidget } from "@/components/contact-modal";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Illus } from "@/components/illus";
 import { Photo } from "@/components/photo";
 import { textLink } from "@/components/button-styles";
-import { products } from "@/lib/products";
-import { programStatus, site } from "@/lib/site";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: `About — ${site.company}, ${site.city}`,
@@ -53,9 +51,6 @@ const personSchema = {
 const link = textLink;
 
 export default function About() {
-  const bai = products.find((p) => p.key === "bai");
-  const loop = products.find((p) => p.key === "connectionloop");
-
   return (
     <Page>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />
@@ -76,7 +71,7 @@ export default function About() {
             <div className="hero-in hero-in--3">
               <Lead>
                 {site.company} is a software company in {site.city}, formed {site.founded}. It builds websites and custom
-                software for businesses of any size, and keeps them running afterward.
+                software for businesses, and keeps them running afterward.
               </Lead>
             </div>
             <div className="hero-in hero-in--4 mt-8 flex flex-wrap items-center gap-3">
@@ -97,7 +92,7 @@ export default function About() {
       </section>
 
       {/* 2. WHY A PERSON */}
-        <Section id="why">
+        <Section className="reveal" id="why">
           <Split visual={<Illus name="answer" className="mx-auto max-w-sm" />}>
             <Eyebrow>Why a person</Eyebrow>
             <H2>Plenty of tools will generate a website. Few people will answer the phone about it.</H2>
@@ -113,7 +108,7 @@ export default function About() {
         </Section>
 
       {/* 3. HOW WE USE AI */}
-        <Section id="ai">
+        <Section className="reveal" id="ai">
           <Eyebrow>How we use AI</Eyebrow>
           <H2>AI builds most of it. A person answers for all of it.</H2>
           <Body>
@@ -136,7 +131,7 @@ export default function About() {
         </Section>
 
       {/* 4. THE FACTS */}
-        <Section id="facts">
+        <Section className="reveal" id="facts">
           <Eyebrow>The facts</Eyebrow>
           <H2>The plain details.</H2>
           <div className="mt-10">
@@ -171,7 +166,7 @@ export default function About() {
         </Section>
 
       {/* 5. WHO ANSWERS */}
-        <Section id="who-answers">
+        <Section className="reveal" id="who-answers">
           <Eyebrow>Who you&apos;ll talk to</Eyebrow>
           <H2>The person on the other end.</H2>
           <div className="mt-10 grid items-start gap-10 md:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] md:gap-16">
@@ -207,11 +202,10 @@ export default function About() {
                 <H3>In the lab</H3>
               </div>
               <Body className="mt-3">
-                Two products of our own are in testing: {bai?.name ?? "BAI Desk"}{" "}
-                <StatusChip>{programStatus.bai.label}</StatusChip> and {loop?.name ?? "ConnectionLoop"}{" "}
-                <StatusChip>{programStatus.connectionloop.label}</StatusChip>. Neither is for sale yet.{" "}
+                Four products of our own are in testing — a payroll tool, a family calendar, a game, and a trading desk.
+                None is for sale yet.{" "}
                 <Link href="/work/#lab" className={link}>
-                  More on the work page
+                  See them on the work page
                 </Link>
                 .
               </Body>

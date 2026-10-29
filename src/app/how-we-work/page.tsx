@@ -113,7 +113,7 @@ export default function HowWeWork() {
       </section>
 
       {/* 2. THE STEPS */}
-        <Section id="steps">
+        <Section className="reveal" id="steps">
           <Eyebrow>The steps</Eyebrow>
           <H2>From first message to long after launch.</H2>
           <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-5">
@@ -139,7 +139,7 @@ export default function HowWeWork() {
         </Section>
 
       {/* 3. MONEY */}
-        <Section id="money">
+        <Section className="reveal" id="money">
           <Eyebrow>Money, plainly</Eyebrow>
           <H2>Every price is fixed and written down first.</H2>
           <Body>
@@ -167,7 +167,7 @@ export default function HowWeWork() {
         </Section>
 
       {/* 4. OWNERSHIP */}
-        <Section id="ownership">
+        <Section className="reveal" id="ownership">
           <Split visual={<Illus name="keys" className="mx-auto max-w-sm" />}>
             <Eyebrow>Ownership</Eyebrow>
             <H2>You own it. All of it.</H2>
@@ -183,7 +183,7 @@ export default function HowWeWork() {
         </Section>
 
       {/* 5. FAQ */}
-        <Section id="faq">
+        <Section className="reveal" id="faq">
           <Eyebrow>Questions people ask</Eyebrow>
           <H2>Before you send that first message.</H2>
           <div className="max-w-3xl">
