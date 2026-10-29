@@ -38,7 +38,7 @@ export function ContactWidget({
         onClick={() => setOpen(true)}
         aria-haspopup="dialog"
         aria-expanded={open}
-        className={`group/btn ${buttonClass(variant === "primary" ? "primary" : "secondary", size)}`}
+        className={`group/btn ${size === "regular" && variant === "primary" ? "magnetic " : ""}${buttonClass(variant === "primary" ? "primary" : "secondary", size)}`}
       >
         {label}
         <svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16" className="shrink-0 transition-transform duration-200 ease-soft group-hover/btn:translate-x-0.5">
