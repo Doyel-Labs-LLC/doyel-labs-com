@@ -20,8 +20,8 @@ html {
 
 html,
 body {
-  background: #f6eee2;
-  color: #1b1f26;
+  background: #efe6d5;
+  color: #191b1e;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* No page should ever scroll sideways on a phone. Elements that need to
@@ -45,7 +45,9 @@ summary,
 /* Headings: Fraunces with its soft axis turned up so the serif reads
  * friendly rather than formal. Balanced wrapping avoids one-word widows. */
 .font-display {
-  font-variation-settings: "SOFT" 100, "WONK" 0;
+  /* v14: high optical size + SOFT 0 give Fraunces a sharp, high-contrast
+   * cut — the single boldest move on the page. */
+  font-variation-settings: "opsz" 144, "SOFT" 0, "WONK" 0;
   font-optical-sizing: auto;
 }
 h1,
@@ -118,7 +120,7 @@ code,
 }
 
 .surface-card {
-  background: #fffaf2;
+  background: #fbf6ec;
 }
 
 /* Warm panel: a soft cream-to-amber wash for one band per page. */
@@ -126,7 +128,7 @@ code,
   background:
     radial-gradient(ellipse 820px 420px at 100% 0%, rgba(242, 180, 85, 0.24), transparent 62%),
     radial-gradient(ellipse 600px 380px at 0% 100%, rgba(8, 113, 135, 0.06), transparent 60%),
-    #f1e7d8;
+    #e7dbc4;
 }
 
 /* Legal prose. */
@@ -275,7 +277,7 @@ html.scroll-lock body {
   fill-opacity: 0.55;
 }
 .illus .paper {
-  fill: #fffaf2;
+  fill: #fbf6ec;
 }
 .illus .line {
   fill: none;
@@ -297,7 +299,7 @@ html.scroll-lock body {
   border: 1px solid rgba(8, 113, 135, 0.18);
   background:
     radial-gradient(ellipse 640px 320px at 100% 0%, rgba(242, 180, 85, 0.22), transparent 62%),
-    #fffaf2;
+    #fbf6ec;
 }
 
 /* FAQ disclosure: the plus turns into a close mark when open. */
@@ -322,4 +324,142 @@ details[open] .faq-icon {
     opacity: 1;
     transform: none;
   }
+}
+
+/* ── v14 luxury layer: grain, preloader, scroll folds, imagery ─────── */
+
+/* Paper grain — a whisper of texture over the page. The data: URI is
+ * allowed by `img-src 'self' data:`. */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.2;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+}
+
+/* Branded preloader — four squares pop in, then the curtain lifts. It
+ * self-dismisses with a CSS animation (so it clears even without JS); the
+ * motion script lifts it sooner on load. */
+#preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  background: #efe6d5;
+  animation: preloader-out 600ms var(--m-ease) 1300ms forwards;
+}
+#preloader.lift {
+  animation: preloader-out 500ms var(--m-ease) forwards;
+}
+@keyframes preloader-out {
+  to { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+.preloader-mark {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 7px;
+  width: 64px;
+  height: 64px;
+}
+.preloader-mark span {
+  border-radius: 9px;
+  transform: scale(0);
+  opacity: 0;
+  animation: preloader-pop 0.5s var(--m-ease) forwards;
+}
+.preloader-mark span:nth-child(1) { background: #3f444b; animation-delay: 0.05s; }
+.preloader-mark span:nth-child(2) { background: #878a91; animation-delay: 0.17s; }
+.preloader-mark span:nth-child(3) { background: #c7cad0; animation-delay: 0.29s; }
+.preloader-mark span:nth-child(4) { background: #10c7eb; animation-delay: 0.41s; }
+@keyframes preloader-pop {
+  to { transform: scale(1); opacity: 1; }
+}
+
+/* Scroll folds — a page that unfolds section by section. Only when JS is
+ * on AND the visitor accepts motion; otherwise every section is at its
+ * resting, visible state, so crawlers and no-JS visitors see everything. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js .reveal {
+    opacity: 0.001;
+    transform: perspective(1400px) rotateX(12deg) translateY(28px);
+    transform-origin: top center;
+    transition: opacity 0.8s var(--m-ease), transform 0.9s var(--m-ease);
+    will-change: transform, opacity;
+  }
+  html.js .reveal.in {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Tactile pointer touches (transforms set at runtime by the motion
+ * script, desktop fine-pointer only). */
+.magnetic { transition: transform 0.2s var(--m-ease); }
+.tilt-scene { perspective: 1000px; }
+.tilt { transition: transform 0.45s var(--m-ease); transform-style: preserve-3d; }
+
+/* Hero photo with a soft "answering now" caption chip. */
+.hero-photo {
+  position: relative;
+  border-radius: 22px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(60, 44, 20, 0.07), 0 54px 96px -42px rgba(60, 44, 20, 0.44);
+}
+.hero-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 50%, rgba(25, 27, 30, 0.4));
+}
+.photo-chip {
+  position: absolute;
+  left: 16px;
+  right: 16px;
+  bottom: 16px;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  background: rgba(251, 246, 236, 0.9);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-radius: 14px;
+  padding: 0.75rem 0.95rem;
+  box-shadow: 0 1px 2px rgba(60, 44, 20, 0.05), 0 16px 40px -24px rgba(60, 44, 20, 0.28);
+}
+.photo-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #1f8f5f;
+  /* A static halo reads "live" without a never-finishing animation, which
+   * the rendering e2e (awaits every animation's finished) would hang on. */
+  box-shadow: 0 0 0 4px rgba(31, 143, 95, 0.18);
+  flex: none;
+}
+
+/* Product screenshot thumbnails. */
+.prod-shot {
+  aspect-ratio: 16 / 10;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #e7dbc4;
+  border: 1px solid rgba(25, 27, 30, 0.1);
+}
+.prod-shot img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+.prod-shot--contain { background: #f6f1e7; }
+.prod-shot--contain img { object-fit: contain; padding: 10px; }
+
+@media (prefers-reduced-motion: reduce) {
+  #preloader { display: none; }
 }
