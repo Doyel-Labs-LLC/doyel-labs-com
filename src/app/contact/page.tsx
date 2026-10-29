@@ -135,7 +135,7 @@ export default function Contact() {
 
       {/* 4. WHAT WE DON'T DO */}
         <Section className="reveal">
-          <Split reverse visual={<Photo name="contact-call" fallback="call" alt="A phone handset resting on a notebook next to a mug on a warm wooden desk" className="mx-auto max-w-md" />}>
+          <Split reverse visual={<div className="tilt-scene"><div className="tilt"><Photo name="contact-call" fallback="call" alt="A phone handset resting on a notebook next to a mug on a warm wooden desk" className="mx-auto max-w-md" /></div></div>}>
             <Eyebrow>What we don&apos;t do</Eyebrow>
             <H2>What we don&apos;t do when you contact us.</H2>
             <Checks items={NOT_DONE} />

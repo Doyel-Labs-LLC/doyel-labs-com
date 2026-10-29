@@ -66,8 +66,10 @@ export default function Security() {
               </Lead>
             </div>
           </div>
-          <div className="hero-in hero-in--5">
-            <Illus name="lock" className="mx-auto max-w-md" />
+          <div className="hero-in hero-in--5 tilt-scene">
+            <div className="tilt">
+              <Illus name="lock" className="mx-auto max-w-md" />
+            </div>
           </div>
         </div>
       </section>
