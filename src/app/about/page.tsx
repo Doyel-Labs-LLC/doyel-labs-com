@@ -17,15 +17,13 @@ import {
   Page,
   Section,
   Split,
-  StatusChip,
 } from "@/components/chrome";
 import { ContactWidget } from "@/components/contact-modal";
 import { Breadcrumbs } from "@/components/breadcrumbs";
 import { Illus } from "@/components/illus";
 import { Photo } from "@/components/photo";
 import { textLink } from "@/components/button-styles";
-import { products } from "@/lib/products";
-import { programStatus, site } from "@/lib/site";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: `About — ${site.company}, ${site.city}`,
@@ -53,9 +51,6 @@ const personSchema = {
 const link = textLink;
 
 export default function About() {
-  const bai = products.find((p) => p.key === "bai");
-  const loop = products.find((p) => p.key === "connectionloop");
-
   return (
     <Page>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(personSchema) }} />
@@ -207,11 +202,10 @@ export default function About() {
                 <H3>In the lab</H3>
               </div>
               <Body className="mt-3">
-                Two products of our own are in testing: {bai?.name ?? "BAI Desk"}{" "}
-                <StatusChip>{programStatus.bai.label}</StatusChip> and {loop?.name ?? "ConnectionLoop"}{" "}
-                <StatusChip>{programStatus.connectionloop.label}</StatusChip>. Neither is for sale yet.{" "}
+                Four products of our own are in testing — a payroll tool, a family calendar, a game, and a trading desk.
+                None is for sale yet.{" "}
                 <Link href="/work/#lab" className={link}>
-                  More on the work page
+                  See them on the work page
                 </Link>
                 .
               </Body>

@@ -1,83 +1,56 @@
-import { programStatus } from "@/lib/site";
-
 /**
- * One source of truth for Doyel Labs' *own-brand* products and the stage
- * each one is at. This is deliberately separate from client *services*
- * work (which lives under /services and /work): products are software
- * Doyel Labs ships under its own brand.
+ * One source of truth for Doyel Labs' own-brand products and where each
+ * one stands. Home, Work, and About all read this, so the lineup and the
+ * status words stay identical everywhere. This is separate from client
+ * work (the SteadFast build), which lives on /work/.
  *
- * The visitor's #1 confusion this file exists to kill: "what can I use
- * today vs. what is still being built?" Every surface that renders a
- * product reads its stage from here, so the status vocabulary is
- * identical across Home, Work, Services, and the Products page.
- *
- * Facts (labels, availability, path-to-public) are reused from
- * `programStatus` in `site.ts` — never restate a status in two places.
+ * Status vocabulary is deliberately small — two words a visitor reads
+ * instantly. Nothing here is "live" or for sale yet; that is the honest
+ * state, said plainly rather than dressing a test build as shipped.
  */
-
-/**
- * Lifecycle stage. Kept to three so the status reads instantly:
- *   live — shipped and in real use today
- *   beta — real software, private/invite access only
- *   soon — announced, not yet available to anyone outside testing
- *
- * No own-brand product is `live` yet. That is the honest state; the
- * homepage roadmap band says so plainly rather than dressing a beta as
- * a shipped product.
- */
-export type Stage = "live" | "beta" | "soon";
-
-export const stageMeta: Record<
-  Stage,
-  { label: string; blurb: string }
-> = {
-  live: {
-    label: "Live · in use",
-    blurb: "Shipped and running in production today.",
-  },
-  beta: {
-    label: "Private beta",
-    blurb: "Real software, available by invite while we finish review.",
-  },
-  soon: {
-    label: "In private testing",
-    blurb: "In testing now; not yet open outside the pilot group.",
-  },
-};
+export type ProductStatus = "Early Access" | "In Testing";
 
 export type Product = {
-  key: "bai" | "connectionloop";
+  key: "routewage" | "connectionloop" | "doxiedrop" | "bai";
   name: string;
-  stage: Stage;
-  /** One line a prospect reads first. Plain, no hype. */
+  status: ProductStatus;
+  /** One plain line a prospect reads first. No hype. */
   tagline: string;
-  /** Deep link into the products page. */
-  href: string;
-  /** Where it runs / who it's for — one short mono line. */
+  /** Where it runs / who it's for. */
   meta: string;
-  /** The remaining steps to public. Sourced from programStatus.*.body. */
-  pathToPublic: string;
 };
 
 export const products: Product[] = [
   {
-    key: "bai",
-    name: "BAI Desk",
-    stage: "beta",
+    key: "routewage",
+    name: "RouteWage",
+    status: "Early Access",
     tagline:
-      "An autonomous trading desk that runs on your own computer — at your broker, under your rules.",
-    href: "/work/#lab",
-    meta: "Windows · macOS later · US-only at launch",
-    pathToPublic: programStatus.bai.body,
+      "Payroll software for USPS route operators — SCA wages to the cent, and one clean employment record per worker. It prepares pay runs and records; it does not move money.",
+    meta: "Web app · all 50 states",
   },
   {
     key: "connectionloop",
     name: "ConnectionLoop",
-    stage: "soon",
+    status: "In Testing",
     tagline:
-      "An invite-only shared calendar for families and small groups. Free. No ads. No public feed.",
-    href: "/work/#lab",
-    meta: "iOS · Android · invite-only",
-    pathToPublic: programStatus.connectionloop.body,
+      "A shared calendar, lists, photos, and chat for one family or group. Invite-only, free, no ads, and no public feed.",
+    meta: "iOS · Android",
+  },
+  {
+    key: "doxiedrop",
+    name: "Doxie Drop",
+    status: "In Testing",
+    tagline:
+      "A fast, friendly arcade dropper — levels, daily dashes, and a cast of characters to unlock. Our first game.",
+    meta: "Mobile",
+  },
+  {
+    key: "bai",
+    name: "BAI Desk",
+    status: "In Testing",
+    tagline:
+      "An autonomous trading desk that runs on your own computer — at your broker, under your rules. Nothing it does is investment advice.",
+    meta: "Windows · US-only at launch",
   },
 ];

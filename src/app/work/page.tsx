@@ -25,7 +25,7 @@ import { Photo } from "@/components/photo";
 import { Quote } from "@/components/quote";
 import { steadfastCase } from "@/lib/demo/websites";
 import { products } from "@/lib/products";
-import { baiDisclaimer, programStatus, site } from "@/lib/site";
+import { baiDisclaimer, site } from "@/lib/site";
 import { steadfastTestimonial } from "@/lib/testimonials";
 
 export const metadata: Metadata = {
@@ -124,7 +124,7 @@ export default function Work() {
       {/* 5. IN THE LAB */}
         <Section className="reveal" id="lab">
           <Eyebrow>In the lab</Eyebrow>
-          <H2>Two products we&apos;re building for ourselves.</H2>
+          <H2>Products we&apos;re building for ourselves.</H2>
           <Body>Not client work, and not open to the public yet.</Body>
           <div className="mt-10">
             <Grid2>
@@ -132,7 +132,7 @@ export default function Work() {
                 <Card key={p.key} title={p.name}>
                   <p>{p.tagline}</p>
                   <div className="mt-4 flex flex-wrap items-center gap-3">
-                    <StatusChip>{programStatus[p.key].label}</StatusChip>
+                    <StatusChip>{p.status}</StatusChip>
                     <span className="text-[13px] text-muted">{p.meta}</span>
                   </div>
                 </Card>
