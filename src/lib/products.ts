@@ -21,6 +21,8 @@ export type Product = {
   tagline: string;
   /** Where it runs / who it's for. */
   meta: string;
+  /** The product's own site. The card links here. */
+  url: string;
   /** Card screenshot and its natural dimensions. */
   img: string;
   w: number;
@@ -38,6 +40,7 @@ export const products: Product[] = [
     tagline:
       "Payroll software for USPS route operators — SCA wages to the cent, and one clean employment record per worker. It prepares pay runs and records; it does not move money.",
     meta: "Web app · all 50 states",
+    url: "https://routewage.com",
     img: "/media/home/routewage.png",
     w: 1400,
     h: 875,
@@ -51,6 +54,7 @@ export const products: Product[] = [
     tagline:
       "A shared calendar, lists, photos, and chat for one family or group. Invite-only, free, no ads, and no public feed.",
     meta: "iOS · Android",
+    url: "https://connectionloop.app",
     img: "/media/home/connectionloop.png",
     w: 780,
     h: 1688,
@@ -64,6 +68,7 @@ export const products: Product[] = [
     tagline:
       "A fast, friendly arcade dropper — levels, daily dashes, and a cast of characters to unlock. Our first game.",
     meta: "Mobile",
+    url: "https://doxiedrop.app",
     img: "/media/home/doxiedrop.png",
     w: 1400,
     h: 788,
@@ -77,6 +82,7 @@ export const products: Product[] = [
     tagline:
       "An autonomous trading desk that runs on your own computer — at your broker, under your rules. Nothing it does is investment advice.",
     meta: "Windows · US-only at launch",
+    url: "https://baidesk.app",
     img: "/media/home/bai.jpg",
     w: 1024,
     h: 576,
