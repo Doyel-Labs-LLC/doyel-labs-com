@@ -8,7 +8,13 @@ import type { Product } from "@/lib/products";
 export function ProductCard({ p }: { p: Product }) {
   const pill = p.status === "Early Access" ? "bg-accent/10 text-accentDeep" : "bg-warmSoft text-care";
   return (
-    <article className="flex h-full flex-col overflow-hidden rounded-card border border-line bg-surface p-7 shadow-card transition-transform duration-300 ease-soft hover:-translate-y-1.5 hover:shadow-cardHover">
+    <a
+      href={p.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={`${p.name} — open ${p.url.replace(/^https?:\/\//, "")}`}
+      className="group flex h-full flex-col overflow-hidden rounded-card border border-line bg-surface p-7 shadow-card transition-transform duration-300 ease-soft hover:-translate-y-1.5 hover:shadow-cardHover"
+    >
       <div className={`prod-shot mb-6 ${p.contain ? "prod-shot--contain" : ""}`}>
         <img src={p.img} alt={p.alt} width={p.w} height={p.h} decoding="async" />
       </div>
@@ -17,9 +23,9 @@ export function ProductCard({ p }: { p: Product }) {
       >
         {p.status}
       </span>
-      <h3 className="font-display text-[22px] font-medium leading-snug text-ink">{p.name}</h3>
+      <h3 className="font-display text-[22px] font-medium leading-snug text-ink transition-colors group-hover:text-accentDeep">{p.name}</h3>
       <p className="mt-2 text-small text-mute">{p.tagline}</p>
       <p className="mt-auto pt-5 text-[13px] text-muted">{p.meta}</p>
-    </article>
+    </a>
   );
 }
